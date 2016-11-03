@@ -1,0 +1,127 @@
+﻿/*
+ * MicroTESK RISC-V Edition
+ *
+ * Copyright (c) 2016 Institute for System Programming of the Russian Academy of Sciences
+ * All Rights Reserved
+ *
+ * Institute for System Programming of the Russian Academy of Sciences (ISP RAS)
+ * 25 Alexander Solzhenitsyn st., Moscow, 109004, Russia
+ * http://www.ispras.ru
+ */
+
+#ifndef RISCV_MMU_INCLUDED
+#define RISCV_MMU_INCLUDED
+
+//==================================================================================================
+// MMU Instructions
+//==================================================================================================
+
+//==================================================================================================
+// Data Transfer Instructions
+//==================================================================================================
+
+/*
+Data Transfer
+    LW +
+    SW +
+*/
+
+/*
+  Load Word Algebraic
+
+  Encoding: | 31 30 | 29 16 | 15 11 | 10 6 | 5    0 |
+            | 0  1  | DS    | rA    | rD   |        |
+            |       |       |       |      | 010111 |
+            | 2     | 14    | 5     | 5    | 6      |
+
+  Format:
+    lwa rD,DS(rA)
+
+  Description:
+    if rA=0 then a <- 64(0) else a <- (rA)
+    EA <- (a + EXTS(DS || 0b00))
+    rD <- EXTS(MEM(EA,4))
+
+    The word addressed by EA is loaded into rD[32–63]. rD[0–31] are filled with a copy of the
+  high-order bit of the loaded word.
+
+  Special Registers Altered:
+    None
+  */
+op load_general (rd: R, DS_op: card(14), ra: R)
+  action = {
+    ra.action; // output: gpr_reg_number
+    if gpr_reg_number == coerce(card(5), 0) then
+      temp = 0;
+    else
+      temp = ra;
+    endif;
+
+    temp1 = temp + coerce(WORD, coerce(card(14), DS_op) << 2);
+
+    rd = MEM[temp1<31..2>];
+  }
+
+op lw (rd: R, DS: card(14), ra: R)
+  init = {
+    OPCD = coerce(card(6), 0b010111);
+  }
+  syntax = format("lw %s, %d(%s)", rd.syntax, DS, ra.syntax)
+  image  = format("01%14s%5s%5s%6s", DS, ra.image, rd.image, OPCD)
+  action = {
+    load_general(rd, DS, ra).action;
+  }
+
+/*
+  Store Word
+
+  Encoding: | 31 16 | 15 11 | 10 6 | 5    0 |
+            | D     | rA    | rS   |        |
+            |       |       |      | 001001 |
+            | 16    | 5     | 5    | 6      |
+
+  Format:
+    stw rS,D(rA)
+
+  Description:
+    if rA=0 then a ← 64(0) else a ← (rA)
+    EA ← (a + EXTS(D))
+    MEM(EA,4) ← (rS)(32:63)
+
+    The contents of rS[32–63] are stored into the word addressed by EA.
+
+  Special Registers Altered:
+    None
+  */
+op store_general (rs: R, D_op: card(16), ra: R)
+  action = {
+    ra.action; // output: gpr_reg_number
+    if gpr_reg_number == coerce(card(5), 0) then
+      temp = 0;
+    else
+      temp = ra;
+    endif;
+
+    temp1 = temp + coerce(WORD, D_op);
+
+    MEM[temp1<31..2>] = rs;
+  }
+
+op sw (rs: R, D: card(16), ra: R)
+  init = {
+    OPCD = coerce(card(6), 0b001001);
+  }
+  syntax = format("sw %s, %d(%s)", rs.syntax, D, ra.syntax)
+  image  = format("%16s%5s%5s%6s", D, ra.image, rs.image, OPCD)
+  action = {
+    store_general(rs, D, ra).action;
+  }
+
+op RISCVMmuOp = lw
+              | sw
+
+//==================================================================================================
+// The End
+//==================================================================================================
+
+#endif

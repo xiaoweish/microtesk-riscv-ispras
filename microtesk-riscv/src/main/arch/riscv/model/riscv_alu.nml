@@ -1,0 +1,198 @@
+﻿/*
+ * MicroTESK RISC-V Edition
+ *
+ * Copyright (c) 2016 Institute for System Programming of the Russian Academy of Sciences
+ * All Rights Reserved
+ *
+ * Institute for System Programming of the Russian Academy of Sciences (ISP RAS)
+ * 25 Alexander Solzhenitsyn st., Moscow, 109004, Russia
+ * http://www.ispras.ru
+ */
+
+#ifndef RISCV_ALU_INCLUDED
+#define RISCV_ALU_INCLUDED
+
+//==================================================================================================
+// ALU Instructions
+//==================================================================================================
+
+//--------------------------------------------------------------------------------------------------
+// RISC-V Arithmetic
+//--------------------------------------------------------------------------------------------------
+
+/*
+  Instructions:
+    ADD +
+    ADDI +
+    ORI +
+*/
+
+/*
+  Add
+
+  Encoding: | 31 | 30     22 | 21 | 20 16 | 15 11 | 10 6 | 5    0 |
+            | Rc |           | OE | RB    | RA    | RT   |        |
+            |    | 010100001 |    |       |       |      | 111110 |
+            | 1  | 9         | 1  | 5     | 5     | 5    | 6      |
+
+  Format:
+    add rD,rA,rB (OE=0, Rc=0)
+    add. rD,rA,rB (OE=0, Rc=1)
+    addo rD,rA,rB (OE=1, Rc=0)
+    addo. rD,rA,rB (OE=1, Rc=1)
+
+  Description:
+    // rd = rt
+    carry0:63 ← Carry((rA) + (rB))
+    sum0:63 ← (rA) + (rB)
+    if OE=1 then do
+      OV ← carrym ⊕ carrym+1
+      SO ← SO | (carrym ⊕ carrym+1)
+    if Rc=1 then do
+      LT ← summ:63 < 0
+      GT ← summ:63 > 0
+      EQ ← summ:63 = 0
+      CR0 ← LT || GT || EQ || SO
+    rD ← sum
+
+    The sum of the contents of rA and rB is placed into rD.
+
+  Special Registers Altered:
+    CR0 (if Rc=1)
+    SO OV (if OE=1)
+  */
+op add_general (Rc_op: BIT, OE_op: BIT, rt: R, ra: R, rb: R)
+  action = {
+    temp33 = ra<31>::ra<31..0> + rb<31>::rb<31..0>;
+
+    rt = temp33<31..0>;
+
+    if OE_op == coerce(BIT, 1) then
+      XER_OV = temp33<32> ^ temp33<31>;
+      XER_SO = XER_SO | XER_OV;
+    endif;
+
+    if Rc_op == coerce(BIT, 1) then
+      if rt == coerce(WORD, 0) then
+        CR0_EQ = coerce(BIT, 1); // Zero
+      elif rt<31> == coerce(BIT, 1) then
+        CR0_LT = coerce(BIT, 1); // Negative
+      else
+        CR0_GT = coerce(BIT, 1); // Positive
+      endif;
+
+      CR0_SO = XER_SO;
+    endif;
+  }
+
+var Rc [BIT]
+var OE [BIT]
+var XO_9 [card(9)]
+
+// add RT,RA,RB (OE=0 Rc=0)
+op add (rt: R, ra: R, rb: R)
+  init = {
+    Rc = coerce(BIT, 0);
+    OE = coerce(BIT, 0);
+    XO_9 = coerce(card(9), 0b010100001);
+    OPCD = coerce(card(6), 0b111110);
+  }
+  syntax = format("add %s, %s, %s", rt.syntax, ra.syntax, rb.syntax)
+  image  = format("%1s%9s%1s%5s%5s%5s%6s", Rc, XO_9, OE, rb.image, ra.image, rt.image, OPCD)
+  action = {
+    add_general(Rc, OE, rt, ra, rb).action;
+  }
+
+// add. RT,RA,RB (OE=0 Rc=1)
+op add_d (rt: R, ra: R, rb: R)
+  init = {
+    Rc = coerce(BIT, 1);
+    OE = coerce(BIT, 0);
+    XO_9 = coerce(card(9), 0b010100001);
+    OPCD = coerce(card(6), 0b111110);
+  }
+  syntax = format("add. %s, %s, %s", rt.syntax, ra.syntax, rb.syntax)
+  image  = format("%1s%9s%1s%5s%5s%5s%6s", Rc, XO_9, OE, rb.image, ra.image, rt.image, OPCD)
+  action = {
+    add_general(Rc, OE, rt, ra, rb).action;
+  }
+
+/*
+  Add Immediate
+
+  Encoding: | 31 16 | 15 11 | 10 6 | 5    0 |
+            | SIMM  | RA    | RT   |        |
+            |       |       |      | 011100 |
+            | 16    | 5     | 5    | 6      |
+
+  Format:
+    addi rD,rA,SIMM
+
+  Description:
+    if rA=0 then a ← 64(0) else a ← (rA)
+    rD ← a + EXTS(SIMM)
+
+    If rA=0, the sign-extended value of the SIMM field is placed into rD.
+    If rA≠0, the sum of the contents of rA and the sign-extended value of field SIMM is placed into
+    rD.
+  Special Registers Altered:
+    None
+  */
+op addi (rt: R, ra: R, simm: SHORT)
+  init = {
+    OPCD = coerce(card(6), 0b011100);
+  }
+  syntax = format("addi %s, %s, %d", rt.syntax, ra.syntax, simm)
+  image  = format("%16s%5s%5s%6s", simm, ra.image, rt.image, OPCD)
+  action = {
+    ra.action; // output: gpr_reg_number
+    if gpr_reg_number == coerce(card(5), 0) then
+      temp = 0;
+    else
+      temp = ra;
+    endif;
+
+    rt<31..0> = cast(WORD, cast(INT, temp) + cast(INT, sign_extend(WORD, cast(HWORD, simm))));
+  }
+
+/*
+  OR Immediate
+
+  Encoding: | 31 16 | 15 11 | 10 6 | 5    0 |
+            | UIMM  | RA    | RS   |        |
+            |       |       |      | 000110 |
+            | 16    | 5     | 5    | 6      |
+
+  Format:
+    ori rA,rS,UIMM
+
+  Description:
+    result ← (rS) | (32(0) || UIMM)
+    rA ← result
+    The contents of rS are ORed with 480 || UIMM and the result is placed into rA.
+
+  Special Registers Altered:
+    None
+  */
+op ori (ra: R, rs: R, uimm: HWORD)
+  init = {
+    OPCD = coerce(card(6), 0b000110);
+  }
+  syntax = format("ori %s, %s, %d", ra.syntax, rs.syntax, uimm)
+  image  = format("%16s%5s%5s%6s", uimm, ra.image, rs.image, OPCD)
+  action = {
+    ra = rs | coerce(WORD, uimm);
+  }
+
+op RISCVArithmetic = add
+                   | add_d
+                   | addi
+                   | ori
+
+op RISCVAluOp = RISCVArithmetic
+
+//==================================================================================================
+// The End
+//==================================================================================================
+
+#endif

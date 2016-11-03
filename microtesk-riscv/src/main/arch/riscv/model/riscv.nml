@@ -1,0 +1,207 @@
+/*
+ * MicroTESK RISC-V Edition
+ *
+ * Copyright (c) 2016 Institute for System Programming of the Russian Academy of Sciences
+ * All Rights Reserved
+ *
+ * Institute for System Programming of the Russian Academy of Sciences (ISP RAS)
+ * 25 Alexander Solzhenitsyn st., Moscow, 109004, Russia
+ * http://www.ispras.ru
+ */
+
+//==================================================================================================
+// Types
+//==================================================================================================
+
+// Unsigned Types
+type   BIT = card(1)
+type  BYTE = card(8)
+type HWORD = card(16)
+type  WORD = card(32)
+type DWORD = card(64)
+type QWORD = card(128)
+
+// Signed Types
+type SHORT = int(16)
+type INT   = int(32)
+type LONG  = int(64)
+
+// Floating Point Types
+type FLOAT32  = float(23, 8)
+type FLOAT64  = float(52, 11)
+
+//==================================================================================================
+// Registers and Memory
+//==================================================================================================
+
+// Program Counter
+let PC = "CIA"
+reg CIA [DWORD]
+
+// Branch Processing Variables
+mem BRANCH [BIT]
+mem SKIPOP [BIT]
+mem NEXTPC [DWORD]
+
+// General Purpose Registers
+/* The 64-bit PowerPC Architecture provides 32 general purpose registers, each 64 bits wide.
+r0        Volatile register used in function prologs
+r1        Stack frame pointer
+r2        TOC pointer
+r3        Volatile parameter and return value register
+r4-r10    Volatile registers used for function parameters
+r11       Volatile register used in calls by pointer and as an
+          environment pointer for languages which require one
+r12       Volatile register used for exception handling and glink code
+r13       Reserved for use as system thread ID
+r14-r31   Nonvolatile registers used for local variables
+*/
+// e500MC: 32 32-bit General Purpose Registers (GPR)
+reg GPR [32, WORD]
+
+var gpr_reg_number [card(5)]
+mode R (i: card(5)) = GPR[i]
+  syntax = format("r%d", i)
+  image  = format("%5s", i)
+  action = {gpr_reg_number = i;}
+
+// Floating Point (Coprocessor unit 1), general register. MIPS 64
+reg FPR [32, DWORD]
+
+mode FR (i: card(5)) = FPR[i]
+  syntax = format("f%d", i)
+  image  = format("%5s", i)
+
+/* Special-Purpose Registers (SPRs)
+SPRs are on-chip registers that are architecturally part of the processor core. They control the use
+of the debug facilities, timers, interrupts, memory management unit, and other architected processor
+resources and are accessed with the mtspr and mfspr instructions. Unlisted encodings are reserved
+for future use.
+
+The SPR numbers are used in the instruction mnemonics.
+Bit 5 in an SPR number indicates whether an SPR is accessible from user or supervisor software.
+*/
+reg SPR [1024, DWORD]
+
+reg XER[DWORD]           alias = SPR[1]
+reg CSRR0[DWORD]         alias = SPR[58]
+reg CSRR1[DWORD]         alias = SPR[59]
+reg LR[DWORD]            alias = SPR[8] // Link Register
+reg CTR[DWORD]           alias = SPR[9]
+reg DAC1[DWORD]          alias = SPR[316]
+reg DAC2[DWORD]          alias = SPR[317]
+reg DBCR0[DWORD]         alias = SPR[308]
+reg DBCR1[DWORD]         alias = SPR[309]
+reg DBCR2[DWORD]         alias = SPR[310]
+reg DBSR[DWORD]          alias = SPR[304]
+// TODO: SPRs
+
+reg XER_SO[BIT] alias = XER<0> // Summary overflow
+reg XER_OV[BIT] alias = XER<1> // Overflow
+
+/* Condition register
+  The Condition Register (CR) is a 32-bit register which reflects the result of certain operations,
+and provides a mechanism for testing (and branching).*/
+reg CR[WORD]
+
+reg CR0[card(4)] alias = CR<3..0>
+reg CR1[card(4)] alias = CR<7..4>
+reg CR2[card(4)] alias = CR<11..8>
+// TODO: CR3 - CR6
+reg CR7[card(4)] alias = CR<31..28>
+
+reg CR0_LT[BIT] alias = CR0<0> // Negative
+reg CR0_GT[BIT] alias = CR0<1> // Positive
+reg CR0_EQ[BIT] alias = CR0<2> // Zero
+reg CR0_SO[BIT] alias = CR0<3> // Summary overflow
+
+// Main Memory
+mem MEM [2 ** 30, WORD] // 2 * 32 , BYTE
+
+//==================================================================================================
+// Fields of Instruction formats
+//==================================================================================================
+
+var OPCD [card(6)]
+
+//==================================================================================================
+// Variables
+//==================================================================================================
+
+var temp_bit [BIT]
+
+var temp6    [card(6)]
+
+var temp     [WORD]
+var temp0    [WORD]
+var temp1    [WORD]
+var temp2    [WORD]
+var temp3    [WORD]
+
+var tempI    [INT]
+
+var temp64   [DWORD]
+var temp64_0 [DWORD]
+var temp64_1 [DWORD]
+var temp64_2 [DWORD]
+var temp64_3 [DWORD]
+
+var tempL    [LONG]
+
+var temp_fp_s  [FLOAT32]
+var temp_fp_s2 [FLOAT32]
+var temp_fp_d  [FLOAT64]
+var temp_fp_d2 [FLOAT64]
+
+var temp128   [QWORD]
+var temp128_0 [QWORD]
+var temp128_1 [QWORD]
+var temp128_2 [QWORD]
+
+var temp33[card(33)]
+
+var temp65[card(65)]
+
+//==================================================================================================
+// Instructions
+//==================================================================================================
+
+#include "riscv_alu.nml"
+#include "riscv_bpu.nml"
+#include "riscv_mmu.nml"
+#include "riscv_nop.nml"
+#include "riscv_sys.nml"
+#include "riscv_fpu.nml"
+
+op Op = RISCVAluOp
+      | RISCVBpuOp
+      | RISCVMmuOp
+      | RISCVNopOp
+//      | RISCVSysOp
+//      | RISCVFpuOp
+
+op instruction (operation: Op)
+  syntax = operation.syntax
+  image  = operation.image
+  action = {
+    //GPR[0] = coerce(DWORD, 0);
+
+    BRANCH = 0;
+    NEXTPC = coerce(WORD, 0);
+
+    if SKIPOP == 0 then
+      operation.action;
+    else
+      SKIPOP = 0; // still unpredicted for branches etc.
+    endif;
+
+    if (BRANCH == 1) then
+      CIA = NEXTPC;
+    else
+      CIA = CIA + 4;
+    endif;
+  }
+
+//==================================================================================================
+// The End
+//==================================================================================================

@@ -1,0 +1,49 @@
+/*
+ * MicroTESK RISC-V Edition
+ *
+ * Copyright (c) 2016 Institute for System Programming of the Russian Academy of Sciences
+ * All Rights Reserved
+ *
+ * Institute for System Programming of the Russian Academy of Sciences (ISP RAS)
+ * 25 Alexander Solzhenitsyn st., Moscow, 109004, Russia
+ * http://www.ispras.ru
+ */
+
+#ifndef RISCV_NOP_INCLUDED
+#define RISCV_NOP_INCLUDED
+
+//==================================================================================================
+// NOP Instructions
+//==================================================================================================
+
+/*
+  No-Op (nop)
+
+  nop equivalent to ori 0,0,0
+
+  Encoding: | 31 16            | 15 11 | 10  6 | 5    0 |
+            | UIMM             | RA    | RS    |        |
+            | 0000000000000000 | 00000 | 00000 | 011000 |
+            | 16               | 5     | 5     | 6      |
+
+  Format:
+    nop
+  */
+op nop ()
+  init = {
+    OPCD = coerce(card(6), 0b011000);
+  }
+  syntax = format("nop")
+  image  = format("00000000000000000000000000%6s", OPCD)
+  action = {
+    // Do nothing.
+    // ori(GPR(0), GPR(0), 0).action;
+  }
+
+op RISCVNopOp = nop
+
+//==================================================================================================
+// The End
+//==================================================================================================
+
+#endif

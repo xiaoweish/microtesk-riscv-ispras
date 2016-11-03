@@ -1,0 +1,131 @@
+/*
+ * MicroTESK RISC-V Edition
+ *
+ * Copyright (c) 2016 Institute for System Programming of the Russian Academy of Sciences
+ * All Rights Reserved
+ *
+ * Institute for System Programming of the Russian Academy of Sciences (ISP RAS)
+ * 25 Alexander Solzhenitsyn st., Moscow, 109004, Russia
+ * http://www.ispras.ru
+ */
+
+#ifndef RISCV_BPU_INCLUDED
+#define RISCV_BPU_INCLUDED
+
+//==================================================================================================
+// Branch Instructions
+//==================================================================================================
+
+/*
+  B Branch [and Link] [Absolute]
+
+  Encoding: | 31 | 30 | 29 6 | 5    0 |
+            | LK | AA | LI   |        |
+            |    |    |      | 010010 |
+            | 1  | 1  | 24   | 6      |
+
+  Format:
+    b LI (AA=0, LK=0)
+    ba LI (AA=1, LK=0)
+    bl LI (AA=0, LK=1)
+    bla LI (AA=1, LK=1)
+
+  Description:
+    if AA=1 then a <- 64(0) else a <- CIA
+    NIA <- m0 || (a + EXTS(LI||0b00))m:63
+    if LK=1 then LR <- CIA + 4
+
+    The branch target address is the address of the next instruction to be executed.
+    If AA=0 then the branch target address is the sum of LI || 0b00 sign extended and the address
+    of this instruction. If AA=1 then the branch target address is LI || 0b00 sign extended.
+    In 32-bit mode, bits 0:31 of NIA are set to zero
+
+  Special Registers Altered:
+    If LK=1, the sum CIA+4 is placed into the LR.
+    Other registers altered: LR (if LK=1)
+  */
+op branch_general(LK_op: BIT, AA_op: BIT, LI_op: card(24))
+  action = {
+    BRANCH = 1;
+
+    temp = sign_extend(WORD, coerce(card(26), LI_op) << 2);
+
+    if AA_op == coerce(BIT, 0) then
+      NEXTPC<31..0> = temp + CIA<31..0>;
+    else
+      NEXTPC<31..0> = temp;
+    endif;
+
+    if LK_op == coerce(BIT, 1) then
+      LR<31..0> = CIA<31..0> + 4;
+    endif;
+  }
+
+var LK [BIT]
+var AA [BIT]
+
+// b LI (AA=0, LK=0)
+op b (LI: card(24))
+  init = {
+    LK = coerce(BIT, 0);
+    AA = coerce(BIT, 0);
+    OPCD = coerce(card(6), 0b010010);
+  }
+  syntax = format("b %<label>d", LI)
+  image  = format("%1s%1s%24s%6s", LK, AA, LI, OPCD)
+  action = {
+    branch_general(LK, AA, LI).action;
+  }
+
+// ba LI (AA=1, LK=0)
+op ba (LI: card(24))
+  init = {
+    LK = coerce(BIT, 0);
+    AA = coerce(BIT, 1);
+    OPCD = coerce(card(6), 0b010010);
+  }
+  syntax = format("ba %<label>d", LI)
+  image  = format("%1s%1s%24s%6s", LK, AA, LI, OPCD)
+  action = {
+    branch_general(LK, AA, LI).action;
+  }
+
+// bl LI (AA=0, LK=1)
+op bl (LI: card(24))
+  init = {
+    LK = coerce(BIT, 1);
+    AA = coerce(BIT, 0);
+    OPCD = coerce(card(6), 0b010010);
+  }
+  syntax = format("bl %<label>d", LI)
+  image  = format("%1s%1s%24s%6s", LK, AA, LI, OPCD)
+  action = {
+    branch_general(LK, AA, LI).action;
+  }
+
+// bla LI (AA=1, LK=1)
+op bla (LI: card(24))
+  init = {
+    LK = coerce(BIT, 1);
+    AA = coerce(BIT, 1);
+    OPCD = coerce(card(6), 0b010010);
+  }
+  syntax = format("bla %<label>d", LI)
+  image  = format("%1s%1s%24s%6s", LK, AA, LI, OPCD)
+  action = {
+    branch_general(LK, AA, LI).action;
+  }
+
+  op RISCVBpuBranch = b
+                    | ba
+                    | bl
+                    | bla
+
+  op RISCVBpuOp = RISCVBpuBranch
+
+//==================================================================================================
+// The End
+//==================================================================================================
+
+#endif
+

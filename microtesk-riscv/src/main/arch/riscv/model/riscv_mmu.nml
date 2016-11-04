@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MicroTESK RISC-V Edition
  *
  * Copyright (c) 2016 Institute for System Programming of the Russian Academy of Sciences
@@ -42,7 +42,7 @@ Data Transfer
     EA <- (a + EXTS(DS || 0b00))
     rD <- EXTS(MEM(EA,4))
 
-    The word addressed by EA is loaded into rD[32–63]. rD[0–31] are filled with a copy of the
+    The word addressed by EA is loaded into rD[32�63]. rD[0�31] are filled with a copy of the
   high-order bit of the loaded word.
 
   Special Registers Altered:
@@ -84,11 +84,11 @@ op lw (rd: R, DS: card(14), ra: R)
     stw rS,D(rA)
 
   Description:
-    if rA=0 then a ← 64(0) else a ← (rA)
-    EA ← (a + EXTS(D))
-    MEM(EA,4) ← (rS)(32:63)
+    if rA=0 then a < 64(0) else a < (rA)
+    EA < (a + EXTS(D))
+    MEM(EA,4) < (rS)(32:63)
 
-    The contents of rS[32–63] are stored into the word addressed by EA.
+    The contents of rS[32�63] are stored into the word addressed by EA.
 
   Special Registers Altered:
     None

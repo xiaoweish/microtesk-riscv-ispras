@@ -24,7 +24,7 @@ class InstructionALU < RISCVBaseTemplate
 
     trace "\nRISC-V Arithmetic:\n"
 
-    addi r1, r0, 0x11
+    add r1, r2, r3
     trace "(add): r1 = %x", gpr_observer(1)
 
     nop

@@ -318,131 +318,131 @@ label :error
   # Aliases for GPR Registers
   ##################################################################################################
 
-  def r0
+  def x0
     r(0)
   end
 
-  def r1
+  def x1
     r(1)
   end
 
-  def r2
+  def x2
     r(2)
   end
 
-  def r3
+  def x3
     r(3)
   end
 
-  def r4
+  def x4
     r(4)
   end
 
-  def r5
+  def x5
     r(5)
   end
 
-  def r6
+  def x6
     r(6)
   end
 
-  def r7
+  def x7
     r(7)
   end
 
-  def r8
+  def x8
     r(8)
   end
 
-  def r9
+  def x9
     r(9)
   end
 
-  def r10
+  def x10
     r(10)
   end
 
-  def r11
+  def x11
     r(11)
   end
 
-  def r12
+  def x12
     r(12)
   end
 
-  def r13
+  def x13
     r(13)
   end
 
-  def r14
+  def x14
     r(14)
   end
 
-  def r15
+  def x15
     r(15)
   end
 
-  def r16
+  def x16
     r(16)
   end
 
-  def r17
+  def x17
     r(17)
   end
 
-  def r18
+  def x18
     r(18)
   end
 
-  def r19
+  def x19
     r(19)
   end
 
-  def r20
+  def x20
     r(20)
   end
 
-  def r21
+  def x21
     r(21)
   end
 
-  def r22
+  def x22
     r(22)
   end
 
-  def r23
+  def x23
     r(23)
   end
 
-  def r24 
+  def x24
     r(24)
   end
 
-  def r25
+  def x25
     r(25)
   end
 
-  def r26 
+  def x26
     r(26)
   end
 
-  def r27 
+  def x27
     r(27)
   end
 
-  def r28
+  def x28
     r(28)
   end
 
-  def r29
+  def x29
     r(29)
   end
 
-  def r30
+  def x30
     r(30)
   end
 
-  def r31
+  def x31
     r(31)
   end
 

@@ -250,7 +250,7 @@ op sub(rd: X, rs1: X, rs2: X)
   }
 
 /*
-  SLT and SLTU : Set Less Than and Set Less Than Unsigned (R-type)
+  SLT and SLTU: Set Less Than and Set Less Than Unsigned (R-type)
 
   Format: slt rd, rs1, rs2
           sltu rd, rs1, rs2
@@ -344,4 +344,3 @@ op rv32i = lui
 //==================================================================================================
 
 #endif
-

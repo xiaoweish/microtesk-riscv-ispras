@@ -1,0 +1,180 @@
+/*
+ * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+#ifndef RISCV_RV32I_INCLUDED
+#define RISCV_RV32I_INCLUDED
+
+//==================================================================================================
+// RV32I Instructions
+//==================================================================================================
+
+/*
+  Instructions:
+    LUI +
+    AUIPC +
+    JAL
+    JALR
+    BEQ
+    BNE
+    BLT
+    BGE
+    BLTU
+    BGEU
+    LB
+    LH
+    LW
+    LBU
+    LHU
+    SB
+    SH
+    SW
+    ADDI
+    SLTI
+    SLTIU
+    XORI
+    ORI
+    ANDI
+    SLLI
+    SRLI
+    SRAI
+    ADD
+    SUB
+    SLL
+    SLT
+    SLTU
+    XOR
+    SRL
+    SRA
+    OR
+    AND
+    FENCE
+    FENCE.I
+    ECALL
+    EBREAK
+    CSRRW
+    CSRRS
+    CSRRC
+    CSRRWI
+    CSRRSI
+    CSRRCI
+*/
+
+/*
+  LUI : Load Upper Immediate (U-type)
+
+  Format: lui rd, imm
+
+  RV32I:
+
+  LUI (load upper immediate) is used to build 32-bit constants and uses the U-type
+  format. LUI places the U-immediate value in the top 20 bits of the destination
+  register rd, filling in the lowest 12 bits with zeros.
+
+  RV64I:
+
+  LUI (load upper immediate) uses the same opcode as RV32I. LUI places the 20-bit
+  U-immediate into bits 31–12 of register rd and places zero in the lowest 12 bits.
+  The 32-bit result is sign-extended to 64 bits.
+*/
+op lui(rd: X, imm: card(20))
+  syntax = format("lui %s, 0x%x", rd.syntax, imm)
+  image  = format("%20s%s0110111", imm, rd.image)
+  action = {
+    rd = sign_extend(XWORD, imm) << 12;
+  }
+
+/*
+  AUIPC : Add Upper Immediate to PC (U-type)
+
+  Format: auipc rd, imm
+
+  RV32I:
+
+  AUIPC (add upper immediate to pc) is used to build pc-relative addresses and uses
+  the U-type format. AUIPC forms a 32-bit offset from the 20-bit U-immediate, filing
+  in the lowest 12 bits with zeros, adds this offset to the pc, then places the result
+  in register rd.
+
+  RV64I:
+
+  AUIPC (add upper immediate to pc) uses the same opcode as RV32I. AUIPC is used to
+  build pc-relative addresses and uses the U-type format. AUIPC appends 12 low-order
+  zero bits to the 20-bit U-immediate, sign-extends the result to 64 bits, then adds
+  it to the pc and places the result in register rd.
+*/
+op auipc(rd: X, imm: card(20))
+  syntax = format("auipcs %s, 0x%x", rd.syntax, imm)
+  image  = format("%20s%s0010111", imm, rd.image)
+  action = {
+    rd = PC + (sign_extend(XWORD, imm) << 12);
+  }
+
+op rv32i = lui
+         | auipc
+/*
+         | jal
+         | jalr
+         | beq
+         | bne
+         | blt
+         | bge
+         | bltu
+         | bgeu
+         | lb
+         | lh
+         | lw
+         | lbu
+         | lhu
+         | sb
+         | sh
+         | sw
+         | addi
+         | slti
+         | sltiu
+         | xori
+         | ori
+         | andi
+         | slli
+         | srli
+         | srai
+         | add
+         | sub
+         | sll
+         | slt
+         | sltu
+         | xor
+         | srl
+         | sra
+         | or
+         | and
+         | fence
+         | fence.i
+         | ecall
+         | ebreak
+         | csrrw
+         | csrrs
+         | csrrc
+         | csrrwi
+         | csrrsi
+         | csrrci
+*/
+
+//==================================================================================================
+// The End
+//==================================================================================================
+
+#endif
+

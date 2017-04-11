@@ -1,17 +1,38 @@
 /*
- * MicroTESK for RISC-V
- *
- * Copyright (c) 2017 Institute for System Programming of the Russian Academy of Sciences
- * All Rights Reserved
- *
- * Institute for System Programming of the Russian Academy of Sciences (ISP RAS)
- * 25 Alexander Solzhenitsyn st., Moscow, 109004, Russia
- * http://www.ispras.ru
+ * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
+
+//==================================================================================================
+// Configuration of Supported Instruction Sets
+//==================================================================================================
+
+#define RV64I
+
+// Width of X Registers (in bits)
+#ifdef RV64I
+  let XLEN = 64
+#else
+  let XLEN = 32
+#endif
 
 //==================================================================================================
 // Types
 //==================================================================================================
+
+// Configuration-Dependent Word for X Registers
+type XWORD = card(XLEN)
 
 // Unsigned Types
 type   BIT = card(1)
@@ -23,103 +44,111 @@ type QWORD = card(128)
 
 // Signed Types
 type SHORT = int(16)
-type INT   = int(32)
-type LONG  = int(64)
+type   INT = int(32)
+type  LONG = int(64)
 
 // Floating Point Types
-type FLOAT32  = float(23, 8)
-type FLOAT64  = float(52, 11)
+type FLOAT32 = float(23, 8)
+type FLOAT64 = float(52, 11)
 
 //==================================================================================================
 // Registers and Memory
 //==================================================================================================
 
+// General-Purpose Registers
+reg XREG [32, XWORD]
+
 // Program Counter
-let PC = "CIA"
-reg CIA [DWORD]
+reg PC [XWORD]
 
-// Branch Processing Variables
-mem BRANCH [BIT]
-mem SKIPOP [BIT]
-mem NEXTPC [DWORD]
-
-// General Purpose Registers
-reg GPR [32, WORD]
-
-var gpr_reg_number [card(5)]
-mode R (i: card(5)) = GPR[i]
-  syntax = format("x%d", i)
-  image  = format("%5s", i)
-  action = {gpr_reg_number = i;}
-
-// Floating Point (Coprocessor unit 1), general register. MIPS 64
-reg FPR [32, DWORD]
-
-mode FR (i: card(5)) = FPR[i]
-  syntax = format("f%d", i)
-  image  = format("%5s", i)
+// Memory Size is 2 ** XLEN Bytes
+let MEM_SIZE_IN_WORDS = 2 ** (XLEN - 2)
 
 // Main Memory
-mem MEM [2 ** 30, WORD] // 2 * 32 , BYTE
+shared mem MEM [MEM_SIZE_IN_WORDS, WORD]
 
 //==================================================================================================
-// Fields of Instruction formats
+// Addressing Modes
 //==================================================================================================
 
-var OPCD [card(6)]
+mode X (i: card(5)) = XREG [i]
+  syntax = format("x%d", i)
+  image  = format("%5s", i)
 
 //==================================================================================================
 // Variables
 //==================================================================================================
 
-var temp_bit [BIT]
-var temp6    [card(6)]
-var temp32   [WORD]
-var temp64   [DWORD]
-var temp_int    [INT]
-var temp_long    [LONG]
+// Branch Processing Variables
+var BRANCH [BIT]
+var NEXTPC [XWORD]
 
-var temp_fp_s  [FLOAT32]
-var temp_fp_d  [FLOAT64]
-var temp128   [QWORD]
+//==================================================================================================
+// Instruction Types
+//==================================================================================================
+
+/*
+ R-type:  |31             25|24       20|19   15|14  12|11             7|6     0|
+          |     funct7      |    rs2    |  rs1  |funct3|       rd       |opcode |
+          |       7         |     5     |   5   |  3   |       5        |   7   |
+
+ I-type:  |31                         20|19   15|14  12|11             7|6     0|
+          |          imm[11:0]          |  rs1  |funct3|       rd       |opcode |
+          |              12             |   5   |  3   |       5        |   7   |
+
+ S-type:  |31             25|24       20|19   15|14  12|11             7|6     0|
+          |    imm[11:5]    |    rs2    |  rs1  |funct3|   imm[4:0]     |opcode |
+          |       7         |     5     |   5   |  3   |       5        |   7   |
+
+ SB-type: |31   31|30     25|24       20|19   15|14  12|11     8|7     7|6     0|
+          |imm[12]|imm[10:5]|    rs2    |  rs1  |funct3|imm[4:1]|imm[11]|opcode |
+          |   1   |    6    |     5     |   5   |  3   |   4    |   1   |   7   |
+
+ U-type:  |31                                        12|11             7|6     0|
+          |               imm[31:12]                   |       rd       |opcode |
+          |                   20                       |       5        |   7   |
+
+ UJ-type: |31   31|30         21|20   20|19          12|11             7|6     0|
+          |imm[20]|  imm[10:1]  |imm[11]|  imm[19:12]  |       rd       |opcode |
+          |   1   |     10      |   1   |       8      |       5        |   7   |
+*/
+
+//==================================================================================================
+// Instruction Templates
+//==================================================================================================
+
+/*
+U-type:
+
+op <name>(rd: X, imm: card(20))
+  syntax = format("<name> %s, 0x%x", rd.syntax, imm);
+  image  = format("%20s%s<opcode:%7s>", imm, rd.image);
+  action = {
+    // TODO
+  }
+*/
 
 //==================================================================================================
 // Instructions
 //==================================================================================================
 
-#include "riscv_alu.nml"
-#include "riscv_bpu.nml"
-#include "riscv_mmu.nml"
-#include "riscv_nop.nml"
-#include "riscv_sys.nml"
-#include "riscv_fpu.nml"
+#include "riscv_rv32i.nml"
 
-op Op = RISCVAluOp
-   //   | RISCVBpuOp
-    //  | RISCVMmuOp
-      | RISCVNopOp
-//      | RISCVSysOp
-//      | RISCVFpuOp
+op Op = rv32i
 
 op instruction (operation: Op)
   syntax = operation.syntax
   image  = operation.image
   action = {
-    //GPR[0] = coerce(DWORD, 0);
+    XREG[0] = 0;
 
     BRANCH = 0;
-    NEXTPC = coerce(WORD, 0);
+    NEXTPC = 0;
 
-    if SKIPOP == 0 then
-      operation.action;
+    if BRANCH != 0 then
+      PC = NEXTPC;
     else
-      SKIPOP = 0; // still unpredicted for branches etc.
-    endif;
-
-    if (BRANCH == 1) then
-      CIA = NEXTPC;
-    else
-      CIA = CIA + 4;
+      PC = PC + 4;
     endif;
   }
 

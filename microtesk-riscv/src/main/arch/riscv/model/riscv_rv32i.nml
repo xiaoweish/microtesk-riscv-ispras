@@ -22,7 +22,7 @@
 //==================================================================================================
 
 /*
-  Instructions:
+  Instructions (number: 47):
     LUI +
     AUIPC +
     JAL
@@ -44,9 +44,9 @@
     ADDI +
     SLTI +
     SLTIU +
-    XORI
-    ORI
-    ANDI
+    XORI +
+    ORI +
+    ANDI +
     SLLI
     SRLI
     SRAI
@@ -179,6 +179,53 @@ op sltiu(rd: X, rs1: X, imm: card(12))
     endif;
   }
 
+/*
+  XORI: XOR Immediate (I-type)
+
+  Format: xori rd, rs1, imm
+
+  XORI is a logical operation that performs bitwise XOR on register rs1 and
+  the sign-extended 12-bit immediate and place the result in rd.
+  Note, XORI rd, rs1, -1 performs a bitwise logical inversion of register rs1
+  (assembler pseudo-instruction NOT rd, rs).
+*/
+op xori(rd: X, rs1: X, imm: card(12))
+  syntax = format("xori %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s100%s0010011", imm, rs1.image, rd.image)
+  action = {
+    rd = rs1 ^ sign_extend(XWORD, imm);
+  }
+
+/*
+  ORI: OR Immediate (I-type)
+
+  Format: ori rd, rs1, imm
+
+  ORI is a logical operation that performs bitwise OR on register rs1
+  and the sign-extended 12-bit immediate and place the result in rd.
+*/
+op ori(rd: X, rs1: X, imm: card(12))
+  syntax = format("ori %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s110%s0010011", imm, rs1.image, rd.image)
+  action = {
+    rd = rs1 | sign_extend(XWORD, imm);
+  }
+
+/*
+  ANDI: AND Immediate (I-type)
+
+  Format: andi rd, rs1, imm
+
+  ANDI is a logical operation that performs bitwise AND on register rs1
+  and the sign-extended 12-bit immediate and place the result in rd.
+*/
+op andi(rd: X, rs1: X, imm: card(12))
+  syntax = format("andi %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s111%s0010011", imm, rs1.image, rd.image)
+  action = {
+    rd = rs1 & sign_extend(XWORD, imm);
+  }
+
 //==================================================================================================
 
 op rv32i = lui
@@ -204,10 +251,10 @@ op rv32i = lui
          | addi
          | slti
          | sltiu
-/*
          | xori
          | ori
          | andi
+/*
          | slli
          | srli
          | srai

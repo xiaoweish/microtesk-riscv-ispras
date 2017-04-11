@@ -34,6 +34,9 @@
 // Configuration-Dependent Word for X Registers
 type XWORD = card(XLEN)
 
+// Configuration-Dependent Signed Word for X Registers
+type XINT = int(XLEN)
+
 // Unsigned Types
 type   BIT = card(1)
 type  BYTE = card(8)
@@ -118,11 +121,21 @@ var NEXTPC [XWORD]
 //==================================================================================================
 
 /*
+
+I-type:
+
+op <name>(rd: X, rs1: X, imm: card(12))
+  syntax = format("<name> %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s<func3>%s<opcode7>", imm, rs1.image, rd.image)
+  action = {
+    // TODO
+  }
+
 U-type:
 
 op <name>(rd: X, imm: card(20))
-  syntax = format("<name> %s, 0x%x", rd.syntax, imm);
-  image  = format("%20s%s<opcode:%7s>", imm, rd.image);
+  syntax = format("<name> %s, 0x%x", rd.syntax, imm)
+  image  = format("%20s%s<opcode7>", imm, rd.image)
   action = {
     // TODO
   }

@@ -41,9 +41,9 @@
     SB
     SH
     SW
-    ADDI
-    SLTI
-    SLTIU
+    ADDI +
+    SLTI +
+    SLTIU +
     XORI
     ORI
     ANDI
@@ -122,6 +122,65 @@ op auipc(rd: X, imm: card(20))
     rd = PC + (sign_extend(XWORD, imm) << 12);
   }
 
+/*
+  ADDI: Add Immediate (I-type)
+
+  Format: addi rd, rs1, imm
+
+  ADDI adds the sign-extended 12-bit immediate to register rs1. Arithmetic overﬂow is
+  ignored and the result is simply the low XLEN bits of the result. ADDI rd, rs1, 0
+  is used to implement the MV rd, rs1 assembler pseudo-instruction.
+*/
+op addi(rd: X, rs1: X, imm: card(12))
+  syntax = format("addi %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s000%s0010011", imm, rs1.image, rd.image)
+  action = {
+    rd = rs1 + sign_extend(XWORD, imm);
+  }
+
+/*
+  SLTI: Set Less Than Immediate (I-type)
+
+  Format: slti rd, rs1, imm
+
+  SLTI (set less than immediate) places the value 1 in register rd if register rs1 is
+  less than the sign-extended immediate when both are treated as signed numbers,
+  else 0 is written to rd.
+*/
+op slti(rd: X, rs1: X, imm: card(12))
+  syntax = format("slti %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s010%s0010011", imm, rs1.image, rd.image)
+  action = {
+    if cast(XINT, rs1) < sign_extend(XINT, imm) then
+      rd = 1;
+    else
+      rd = 0;
+    endif;
+  }
+
+/*
+  SLTIU: Set Less Than Immediate Unsigned (I-type)
+
+  Format: sltiu rd, rs1, imm
+
+  SLTIU is similar to SLTI but compares the values as unsigned numbers (i.e.,
+  the immediate is first sign-extended to XLEN bits then treated as an unsigned number).
+  Note, SLTIU rd, rs1, 1 sets rd to 1 if rs1 equals zero, otherwise sets rd to 0
+  (assembler pseudo-op SEQZ rd, rs).
+*/
+op sltiu(rd: X, rs1: X, imm: card(12))
+  syntax = format("sltiu %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s011%s0010011", imm, rs1.image, rd.image)
+  action = {
+    if rs1 < sign_extend(XWORD, imm) then
+      rd = 1;
+    else
+      rd = 0;
+    endif;
+  }
+
+//==================================================================================================
+
 op rv32i = lui
          | auipc
 /*
@@ -141,9 +200,11 @@ op rv32i = lui
          | sb
          | sh
          | sw
+*/
          | addi
          | slti
          | sltiu
+/*
          | xori
          | ori
          | andi

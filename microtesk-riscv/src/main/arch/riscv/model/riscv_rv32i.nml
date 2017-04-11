@@ -55,11 +55,11 @@
     SLL
     SLT +
     SLTU +
-    XOR
+    XOR +
     SRL
     SRA
-    OR
-    AND
+    OR +
+    AND +
     FENCE
     FENCE.I
     ECALL
@@ -281,6 +281,36 @@ op sltu(rd: X, rs1: X, rs2: X)
     endif;
   }
 
+/*
+  AND, OR, and XOR (R-type)
+
+  Format: and rd, rs1, rs2
+          or rd, rs1, rs2
+          xor rd, rs1, rs2
+
+  AND, OR, and XOR perform bitwise logical operations.
+*/
+op and(rd: X, rs1: X, rs2: X)
+  syntax = format("and %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0000000%s%s111%s0110011", rs2.image, rs1.image, rd.image)
+  action = {
+    rd = rs1 & rs2;
+  }
+
+op or(rd: X, rs1: X, rs2: X)
+  syntax = format("or %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0000000%s%s110%s0110011", rs2.image, rs1.image, rd.image)
+  action = {
+    rd = rs1 | rs2;
+  }
+
+op xor(rd: X, rs1: X, rs2: X)
+  syntax = format("xor %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0000000%s%s100%s0110011", rs2.image, rs1.image, rd.image)
+  action = {
+    rd = rs1 ^ rs2;
+  }
+
 //==================================================================================================
 
 op rv32i = lui
@@ -313,20 +343,18 @@ op rv32i = lui
          | slli
          | srli
          | srai
+         | sll
+         | srl
+         | sra
 */
          | add
          | sub
-/*
-         | sll
-*/
          | slt
          | sltu
-/*
          | xor
-         | srl
-         | sra
          | or
          | and
+/*
          | fence
          | fence.i
          | ecall

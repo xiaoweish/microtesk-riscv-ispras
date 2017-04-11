@@ -53,8 +53,8 @@
     ADD +
     SUB +
     SLL
-    SLT
-    SLTU
+    SLT +
+    SLTU +
     XOR
     SRL
     SRA
@@ -249,6 +249,38 @@ op sub(rd: X, rs1: X, rs2: X)
     rd = rs1 - rs2;
   }
 
+/*
+  SLT and SLTU : Set Less Than and Set Less Than Unsigned (R-type)
+
+  Format: slt rd, rs1, rs2
+          sltu rd, rs1, rs2
+
+  SLT and SLTU  perform signed and unsigned compares respectively, writing 1 to
+  rd if rs1 < rs2, 0 otherwise. Note, SLTU rd, x0, rs2 sets rd to 1 if rs2 is not
+  equal to zero, otherwise sets rd to zero (assembler pseudo-op SNEZ rd, rs).
+*/
+op slt(rd: X, rs1: X, rs2: X)
+  syntax = format("slt %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0000000%s%s010%s0110011", rs2.image, rs1.image, rd.image)
+  action = {
+    if cast(XINT, rs1) < cast(XINT, rs2) then
+      rd = 1;
+    else
+      rd = 0;
+    endif;
+  }
+
+op sltu(rd: X, rs1: X, rs2: X)
+  syntax = format("sltu %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0000000%s%s011%s0110011", rs2.image, rs1.image, rd.image)
+  action = {
+    if rs1 < rs2 then
+      rd = 1;
+    else
+      rd = 0;
+    endif;
+  }
+
 //==================================================================================================
 
 op rv32i = lui
@@ -286,8 +318,10 @@ op rv32i = lui
          | sub
 /*
          | sll
+*/
          | slt
          | sltu
+/*
          | xor
          | srl
          | sra

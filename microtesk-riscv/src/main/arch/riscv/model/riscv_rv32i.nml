@@ -47,9 +47,9 @@
     XORI +
     ORI +
     ANDI +
-    SLLI
-    SRLI
-    SRAI
+    SLLI +
+    SRLI +
+    SRAI +
     SLL +
     SRL +
     SRA +
@@ -226,6 +226,70 @@ op andi(rd: X, rs1: X, imm: card(12))
     rd = rs1 & sign_extend(XWORD, imm);
   }
 
+
+/*
+  SLLI: Shift Left Logical Immediate (I-type)
+  SRLI: Shift Right Logical Immediate (I-type)
+  SRAI: Shift Right Arithmetic Immediate (I-type)
+
+  Format: slli rd, rs1, imm
+  Format: srli rd, rs1, imm
+  Format: srai rd, rs1, imm
+
+  SLLI is a logical left shift (zeros are shifted into the lower bits).
+  SRLI is a logical right shift (zeros are shifted into the upper bits).
+  SRAI is an arithmetic right shift (the original sign bit is copied into the vacated upper bits).
+
+  RV32I:
+
+  Shifts by a constant are encoded as a specialization of the I-type format. The operand
+  to be shifted is in rs1, and the shift amount is encoded in the lower 5 bits (SHLEN = 5)
+  of the I-immediate ﬁeld. The right shift type is encoded in a high bit of the I-immediate.
+
+  RV64I:
+
+  Shifts by a constant are encoded as a specialization of the I-type format using the same
+  instruction opcode as RV32I. The operand to be shifted is in rs1, and the shift amount
+  is encoded in the lower 6 bits (SHLEN = 6) of the I-immediate ﬁeld for RV64I. The right
+  shift type is  encoded in bit 30. For RV32I, SLLI, SRLI, and SRAI generate an illegal
+  instruction exception if imm[5] = 0.
+*/
+op slli(rd: X, rs1: X, imm: card(SHLEN))
+  syntax = format("slli %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("000000%1s%5s%s001%s0010011",
+                  if SHLEN == 6 then imm<5> else coerce(BIT, 0) endif,
+                  if SHLEN == 5 then imm else imm<4..0> endif,
+                  rs1.image,
+                  rd.image
+                  )
+  action = {
+    rd = rs1 << imm;
+  }
+
+op srli(rd: X, rs1: X, imm: card(SHLEN))
+  syntax = format("srli %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("000000%1s%5s%s101%s0010011",
+                   if SHLEN == 6 then imm<5> else coerce(BIT, 0) endif,
+                   if SHLEN == 5 then imm else imm<4..0> endif,
+                   rs1.image,
+                   rd.image
+                   )
+  action = {
+    rd = rs1 >> imm;
+  }
+
+op srai(rd: X, rs1: X, imm: card(SHLEN))
+  syntax = format("srai %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("010000%1s%5s%s101%s0010011",
+                  if SHLEN == 6 then imm<5> else coerce(BIT, 0) endif,
+                  if SHLEN == 5 then imm else imm<4..0> endif,
+                  rs1.image,
+                  rd.image
+                  )
+  action = {
+    rd = cast(XINT, rs1) >> imm;
+  }
+
 /*
   SLL: Shift Left Logical (R-type)
   SRL: Shift Right Logical (R-type)
@@ -375,11 +439,9 @@ op rv32i = lui
          | xori
          | ori
          | andi
-/*
          | slli
          | srli
          | srai
-*/
          | sll
          | srl
          | sra

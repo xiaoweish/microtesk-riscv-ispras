@@ -380,11 +380,9 @@ op rv32i = lui
          | srli
          | srai
 */
-/*
          | sll
          | srl
          | sra
-*/
          | add
          | sub
          | slt

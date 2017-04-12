@@ -20,11 +20,14 @@
 
 #define RV64I
 
-// Width of X Registers (in bits)
+// XLEN: Width of X Registers (in bits)
+// SHLEN: Number of Bits Required to Store Shift Amount for X Registers
 #ifdef RV64I
   let XLEN = 64
+  let SHLEN = 6
 #else
   let XLEN = 32
+  let SHLEN = 5
 #endif
 
 //==================================================================================================
@@ -77,14 +80,6 @@ shared mem MEM [MEM_SIZE_IN_WORDS, WORD]
 mode X (i: card(5)) = XREG [i]
   syntax = format("x%d", i)
   image  = format("%5s", i)
-
-//==================================================================================================
-// Variables
-//==================================================================================================
-
-// Branch Processing Variables
-var BRANCH [BIT]
-var NEXTPC [XWORD]
 
 //==================================================================================================
 // Instruction Types
@@ -158,18 +153,18 @@ op <name>(rd: X, imm: card(20))
 
 op Op = rv32i
 
+// Temporary Variable to Store Previous Value of PC
+var PREV_PC [XWORD]
+
 op instruction (operation: Op)
   syntax = operation.syntax
   image  = operation.image
   action = {
     XREG[0] = 0;
+    PREV_PC = PC;
 
-    BRANCH = 0;
-    NEXTPC = 0;
-
-    if BRANCH != 0 then
-      PC = NEXTPC;
-    else
+    operation.action;
+    if PC == PREV_PC then
       PC = PC + 4;
     endif;
   }

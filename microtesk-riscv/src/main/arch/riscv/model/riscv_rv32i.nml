@@ -70,7 +70,19 @@
     CSRRWI
     CSRRSI
     CSRRCI
+
+  Pseudoinstructions (number: 8):
+    NOP +
+    MV +
+    NOT +
+    NEG +
+    SEQZ +
+    SNEZ +
+    SLTZ +
+    SGTZ +
 */
+
+//==================================================================================================
 
 /*
   LUI : Load Upper Immediate (U-type)
@@ -413,6 +425,107 @@ op xor(rd: X, rs1: X, rs2: X)
 
 //==================================================================================================
 
+/*
+  NOP: No operation (addi x0, x0, 0)
+
+  Format: nop
+
+  The NOP instruction does not change any user-visible state, except for advancing
+  the pc. NOP is encoded as ADDI x0, x0, 0.
+*/
+pseudo op nop()
+  syntax = "nop"
+  image  = format("%s", addi(X(0), X(0), 0).image)
+  action = {
+    addi(X(0), X(0), 0).action;
+  }
+
+/*
+  MV: Copy register (addi rd, rs, 0)
+
+  Format: mv rd, rs
+*/
+pseudo op mv(rd: X, rs: X)
+  syntax = format("mv %s, %s", rd.syntax, rs.syntax)
+  image  = format("%s", addi(rs, rd, 0).image)
+  action = {
+    addi(rd, rs, 0).action;
+  }
+
+/*
+  NOT: One's complement (xori rd, rs, -1)
+
+  Format: not rd, rs
+*/
+pseudo op not(rd: X, rs: X)
+  syntax = format("not %s, %s", rd.syntax, rs.syntax)
+  image  = format("%s", xori(rs, rd, -1).image)
+  action = {
+    xori(rs, rd, -1).action;
+  }
+
+/*
+  NEG: Two's complement (sub rd, x0, rs)
+
+  Format: neg rd, rs
+*/
+pseudo op neg(rd: X, rs: X)
+  syntax = format("neg %s, %s", rd.syntax, rs.syntax)
+  image  = format("%s", sub(rd, X(0), rs).image)
+  action = {
+    sub(rd, X(0), rs).action;
+  }
+
+/*
+  SEQZ: Set if = zero (sltiu rd, rs, 1)
+
+  Format: seqz rd, rs
+*/
+pseudo op seqz(rd: X, rs: X)
+  syntax = format("seqz %s, %s", rd.syntax, rs.syntax)
+  image  = format("%s", sltiu(rd, rs, 1).image)
+  action = {
+    sltiu(rd, rs, 1).action;
+  }
+
+/*
+  SNEZ: Set if != zero (sltu rd, x0, rs)
+
+  Format: snez rd, rs
+*/
+pseudo op snez(rd: X, rs: X)
+  syntax = format("snez %s, %s", rd.syntax, rs.syntax)
+  image  = format("%s", sltu(rd, X(0), rs).image)
+  action = {
+    sltu(rd, X(0), rs).action;
+  }
+
+/*
+  SLTZ: Set if < zero (slt rd, rs, x0)
+
+  Format: sltz rd, rs
+*/
+pseudo op sltz(rd: X, rs: X)
+  syntax = format("sltz %s, %s", rd.syntax, rs.syntax)
+  image  = format("%s", slt(rd, rs, X(0)).image)
+  action = {
+    slt(rd, rs, X(0)).action;
+  }
+
+/*
+  SGTZ: Set if > zero (slt rd, x0, rs)
+
+  Format: sgtz rd, rs
+*/
+pseudo op sgtz(rd: X, rs: X)
+  syntax = format("sgtz %s, %s", rd.syntax, rs.syntax)
+  image  = format("%s", slt(rd, X(0), rs).image)
+  action = {
+    slt(rd, X(0), rs).action;
+  }
+
+//==================================================================================================
+
 op rv32i = lui
          | auipc
 /*
@@ -464,6 +577,15 @@ op rv32i = lui
          | csrrsi
          | csrrci
 */
+         // Pseudoinstructions
+         | nop
+         | mv
+         | not
+         | neg
+         | seqz
+         | snez
+         | sltz
+         | sgtz
 
 //==================================================================================================
 // The End

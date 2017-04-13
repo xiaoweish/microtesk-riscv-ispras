@@ -25,8 +25,8 @@
   Instructions (number: 47):
     LUI +
     AUIPC +
-    JAL
-    JALR
+    JAL +
+    JALR +
     BEQ
     BNE
     BLT
@@ -134,6 +134,50 @@ op auipc(rd: X, imm: card(20))
   image  = format("%20s%s0010111", imm, rd.image)
   action = {
     rd = PC + (sign_extend(XWORD, imm) << 12);
+  }
+
+/*
+  JAL: Jump and Link (UJ-type)
+
+  Format: jal rd, imm
+
+  The jump and link (JAL) instruction uses the UJ-type format, where the J-immediate
+  encodes a signed offset in multiples of 2 bytes. The offset is sign-extended and added
+  to the pc to form the jump target address. Jumps can therefore target a +/- 1MiB range.
+  JAL stores the address of the instruction following the jump (pc+4) into register rd.
+  The standard software calling convention uses x1 as the return address register.
+
+  The JAL instruction can generate a misaligned instruction fetch exception if the target
+  address is not aligned to a four-byte boundary.
+*/
+op jal(rd: X, imm: card(20))
+  syntax = format("jal %s, 0x%x", rd.syntax, imm)
+  image  = format("%1s%10s%1s%8s%s1101111", imm<19>, imm<9..0>, imm<10>, imm<18..11>, rd.image)
+  action = {
+    rd = PC + 4;
+    PC = PC + (sign_extend(XWORD, imm) << 1);
+  }
+
+/*
+  JALR: Jump and Link Register (I-type)
+
+  Format: jalr rd, rs1, imm
+
+  The indirect jump instruction JALR (jump and link register) uses the I-type encoding.
+  The target address is obtained by adding the 12-bit signed I-immediate to the register rs1,
+  then setting the least-significant bit of the result to zero. The address of the instruction
+  following the jump (pc+4) is written to register rd. Register x0 can be used as the destination
+  if the result is not required.
+
+  The JALR instructions can generate a misaligned instruction fetch exception if the target
+  address is not aligned to a four-byte boundary.
+*/
+op jalr(rd: X, rs1: X, imm: card(12))
+  syntax = format("jalr %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s000%s1100111", imm, rs1.image, rd.image)
+  action = {
+    rd = PC + 4;
+    PC = rs1 + ((sign_extend(XWORD, imm) << 1) >> 1);
   }
 
 /*
@@ -534,9 +578,9 @@ pseudo op sgtz(rd: X, rs: X)
 
 op rv32i = lui
          | auipc
-/*
          | jal
          | jalr
+/*
          | beq
          | bne
          | blt

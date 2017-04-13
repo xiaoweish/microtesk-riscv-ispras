@@ -143,6 +143,15 @@ op <name>(rd: X, imm: card(20))
   action = {
     // TODO
   }
+
+UJ-type:
+
+op <name>(rd: X, imm: card(20))
+  syntax = format("<name> %s, 0x%x", rd.syntax, imm)
+  image  = format("%1s%10s%1s%8s%s1101111", imm<19>, imm<9..0>, imm<10>, imm<18..11>, rd.image)
+  action = {
+    // TODO
+  }
 */
 
 //==================================================================================================

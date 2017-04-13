@@ -73,87 +73,83 @@ class RISCVBaseTemplate < Template
     # Default preparator: It is used when no special case previded below
     # is applicable.
     #
-    preparator(:target => 'R') {
+    preparator(:target => 'X') {
       # TODO:
     }
 
-    preparator(:target => 'R', :arguments => {:i => 0}) {
+    preparator(:target => 'X', :arguments => {:i => 0}) {
       # Empty
     }
 
-    preparator(:target => 'R', :mask => "0000000000000000") {
+    preparator(:target => 'X', :mask => "0000000000000000") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "FFFFFFFFFFFFFFFF") {
+    preparator(:target => 'X', :mask => "FFFFFFFFFFFFFFFF") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "000000000000XXXX") {
+    preparator(:target => 'X', :mask => "000000000000XXXX") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "00000000XXXX0000") {
+    preparator(:target => 'X', :mask => "00000000XXXX0000") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "0000XXXX00000000") {
+    preparator(:target => 'X', :mask => "0000XXXX00000000") {
       # TODO:
       #ori    target, zero, value(32, 47)
       #dsll32 target, target, 0
     }
 
-    preparator(:target => 'R', :mask => "XXXX000000000000") {
+    preparator(:target => 'X', :mask => "XXXX000000000000") {
       # TODO:
       #ori    target, zero,   value(48, 63)
       #dsll32 target, target, 16
     }
 
-    preparator(:target => 'R', :mask => "00000000XXXXXXXX") {
+    preparator(:target => 'X', :mask => "00000000XXXXXXXX") {
       # TODO:
       #ori  target, zero,   value(16, 31)
       #dsll target, target, 16
       #ori  target, target, value(0, 15)
     }
 
-    preparator(:target => 'R', :mask => "0000XXXX0000XXXX") {
+    preparator(:target => 'X', :mask => "0000XXXX0000XXXX") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "XXXX00000000XXXX") {
+    preparator(:target => 'X', :mask => "XXXX00000000XXXX") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "0000XXXXXXXX0000") {
+    preparator(:target => 'X', :mask => "0000XXXXXXXX0000") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "XXXX0000XXXX0000") {
+    preparator(:target => 'X', :mask => "XXXX0000XXXX0000") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "XXXXXXXX00000000") {
+    preparator(:target => 'X', :mask => "XXXXXXXX00000000") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "0000XXXXXXXXXXXX") {
+    preparator(:target => 'X', :mask => "0000XXXXXXXXXXXX") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "XXXXXXXXXXXX0000") {
+    preparator(:target => 'X', :mask => "XXXXXXXXXXXX0000") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "XXXXXXXX0000XXXX") {
+    preparator(:target => 'X', :mask => "XXXXXXXX0000XXXX") {
       # TODO:
     }
 
-    preparator(:target => 'R', :mask => "XXXX0000XXXXXXXX") {
+    preparator(:target => 'X', :mask => "XXXX0000XXXXXXXX") {
       # TODO:
-    }
-
-    preparator(:target => 'FR') {
-      # TODO
     }
 
     ################################################################################################

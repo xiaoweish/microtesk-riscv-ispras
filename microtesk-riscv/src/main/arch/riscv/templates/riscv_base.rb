@@ -315,135 +315,135 @@ label :error
   end
 
   ##################################################################################################
-  # Aliases for GPR Registers
+  # Aliases for X Registers
   ##################################################################################################
 
   def x0
-    r(0)
+    x(0)
   end
 
   def x1
-    r(1)
+    x(1)
   end
 
   def x2
-    r(2)
+    x(2)
   end
 
   def x3
-    r(3)
+    x(3)
   end
 
   def x4
-    r(4)
+    x(4)
   end
 
   def x5
-    r(5)
+    x(5)
   end
 
   def x6
-    r(6)
+    x(6)
   end
 
   def x7
-    r(7)
+    x(7)
   end
 
   def x8
-    r(8)
+    x(8)
   end
 
   def x9
-    r(9)
+    x(9)
   end
 
   def x10
-    r(10)
+    x(10)
   end
 
   def x11
-    r(11)
+    x(11)
   end
 
   def x12
-    r(12)
+    x(12)
   end
 
   def x13
-    r(13)
+    x(13)
   end
 
   def x14
-    r(14)
+    x(14)
   end
 
   def x15
-    r(15)
+    x(15)
   end
 
   def x16
-    r(16)
+    x(16)
   end
 
   def x17
-    r(17)
+    x(17)
   end
 
   def x18
-    r(18)
+    x(18)
   end
 
   def x19
-    r(19)
+    x(19)
   end
 
   def x20
-    r(20)
+    x(20)
   end
 
   def x21
-    r(21)
+    x(21)
   end
 
   def x22
-    r(22)
+    x(22)
   end
 
   def x23
-    r(23)
+    x(23)
   end
 
   def x24
-    r(24)
+    x(24)
   end
 
   def x25
-    r(25)
+    x(25)
   end
 
   def x26
-    r(26)
+    x(26)
   end
 
   def x27
-    r(27)
+    x(27)
   end
 
   def x28
-    r(28)
+    x(28)
   end
 
   def x29
-    r(29)
+    x(29)
   end
 
   def x30
-    r(30)
+    x(30)
   end
 
   def x31
-    r(31)
+    x(31)
   end
 
   ##################################################################################################
@@ -451,7 +451,7 @@ label :error
   ##################################################################################################
 
   def gpr_observer(index)
-    location('GPR', index)
+    location('XREG', index)
   end
 
   def mem_observer(index)

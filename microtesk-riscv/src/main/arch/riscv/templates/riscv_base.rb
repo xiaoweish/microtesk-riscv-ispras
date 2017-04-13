@@ -197,7 +197,7 @@ class RISCVBaseTemplate < Template
     #
     # Default comparator: It is used when no special case is applicable.
     #
-    comparator(:target => 'R') {
+    comparator(:target => 'X') {
       # TODO:
       #lui at, value(16, 31)
       #ori at, target, value(0, 15)
@@ -210,7 +210,7 @@ class RISCVBaseTemplate < Template
     # Special case: Target is $zero register. Since it is read only and
     # always equal zero, it makes no sence to test it.
     #
-    comparator(:target => 'R', :arguments => {:i => 0}) {
+    comparator(:target => 'X', :arguments => {:i => 0}) {
       # Empty
     }
 
@@ -218,7 +218,7 @@ class RISCVBaseTemplate < Template
     # Special case: Value equals 0x00000000. In this case, it is
     # more convenient to test the target against the $zero register.
     #
-    comparator(:target => 'R', :mask => "00000000") {
+    comparator(:target => 'X', :mask => "00000000") {
       #bne zero, target, :check_failed
       #nop
     }

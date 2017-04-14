@@ -80,6 +80,8 @@
     SNEZ +
     SLTZ +
     SGTZ +
+    J +
+    JR +
 */
 
 //==================================================================================================
@@ -572,6 +574,30 @@ pseudo op sgtz(rd: X, rs: X)
     slt(rd, X(0), rs).action;
   }
 
+/*
+  J: Jump (jal x0, offset)
+
+  Format: j offset
+*/
+pseudo op j(offset: card(20))
+  syntax = format("j 0x%x", offset)
+  image  = format("%s", jal(X(0), offset).image)
+  action = {
+    jal(X(0), offset).action;
+  }
+
+/*
+  JR: Jump Register (jalr x0, rs, 0)
+
+  Format: jr rs
+*/
+pseudo op jr(rs: X)
+  syntax = format("jr %s", rs.syntax)
+  image  = format("%s", jalr(X(0), rs, 0).image)
+  action = {
+    jalr(X(0), rs, 0).action;
+  }
+
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
@@ -636,6 +662,8 @@ op rv32i = lui
          | snez
          | sltz
          | sgtz
+         | j
+         | jr
 
 //==================================================================================================
 // The End

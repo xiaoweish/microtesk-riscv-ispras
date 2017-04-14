@@ -71,7 +71,7 @@
     CSRRSI
     CSRRCI
 
-  Pseudoinstructions (number: 10):
+  Pseudoinstructions (number: 16):
     NOP +
     MV +
     NOT +
@@ -82,6 +82,12 @@
     SGTZ +
     J +
     JR +
+    BEQZ +
+    BNEZ +
+    BLEZ +
+    BGEZ +
+    BLTZ +
+    BGTZ +
 */
 
 //==================================================================================================
@@ -702,6 +708,78 @@ pseudo op jr(rs: X)
     jalr(X(0), rs, 0).action;
   }
 
+/*
+  BEQZ: Branch if = zero (beq rs, x0, offset)
+
+  Format: beqz rs, offset
+*/
+pseudo op beqz(rs: X, offset: card(12))
+  syntax = format("beqz %s, 0x%x", rs.syntax, offset)
+  image  = format("%s", beq(rs, X(0), offset).image)
+  action = {
+    beq(rs, X(0), offset).action;
+  }
+
+/*
+  BNEZ: Branch if != zero (bne rs, x0, offset)
+
+  Format: bnez rs, offset
+*/
+pseudo op bnez(rs: X, offset: card(12))
+  syntax = format("bnez %s, 0x%x", rs.syntax, offset)
+  image  = format("%s", bne(rs, X(0), offset).image)
+  action = {
+    bne(rs, X(0), offset).action;
+  }
+
+/*
+  BLEZ: Branch if <= zero (bge x0, rs, offset)
+
+  Format: blez rs, offset
+*/
+pseudo op blez(rs: X, offset: card(12))
+  syntax = format("blez %s, 0x%x", rs.syntax, offset)
+  image  = format("%s", bge(X(0), rs, offset).image)
+  action = {
+    bge(X(0), rs, offset).action;
+  }
+
+/*
+  BGEZ: Branch if >= zero (bge rs, x0, offset)
+
+  Format: bgez rs, offset
+*/
+pseudo op bgez(rs: X, offset: card(12))
+  syntax = format("bgez %s, 0x%x", rs.syntax, offset)
+  image  = format("%s", bge(rs, X(0), offset).image)
+  action = {
+    bge(rs, X(0), offset).action;
+  }
+
+/*
+  BLTZ: Branch if < zero (blt rs, x0, offset)
+
+  Format: bltz rs, offset
+*/
+pseudo op bltz(rs: X, offset: card(12))
+  syntax = format("bltz %s, 0x%x", rs.syntax, offset)
+  image  = format("%s", blt(rs, X(0), offset).image)
+  action = {
+    blt(rs, X(0), offset).action;
+  }
+
+/*
+  BGTZ: Branch if > zero (blt x0, rs, offset)
+
+  Format: bgtz rs, offset
+*/
+pseudo op bgtz(rs: X, offset: card(12))
+  syntax = format("bgtz %s, 0x%x", rs.syntax, offset)
+  image  = format("%s", blt(X(0), rs, offset).image)
+  action = {
+    blt(X(0), rs, offset).action;
+  }
+
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
@@ -768,6 +846,12 @@ op rv32i = lui
          | sgtz
          | j
          | jr
+         | beqz
+         | bnez
+         | blez
+         | bgez
+         | bltz
+         | bgtz
 
 //==================================================================================================
 // The End

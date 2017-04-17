@@ -80,6 +80,21 @@ shared mem MEM [MEM_SIZE_IN_WORDS, WORD]
 mode X (i: card(5)) = XREG [i]
   syntax = format("x%d", i)
   image  = format("%5s", i)
+  
+//==================================================================================================
+// Temporary Variables
+//==================================================================================================
+
+// Previous Value of the PC
+var prev_pc [XWORD]
+
+var tmp_address [XWORD]
+var tmp_word [WORD]
+var tmp_half [HWORD]
+var tmp_byte [BYTE]
+
+// Bit Offset in a Word
+var tmp_bit_offset [card(5)]
 
 //==================================================================================================
 // Instruction Types
@@ -172,18 +187,15 @@ op <name>(rd: X, imm: card(20))
 
 op Op = rv32i
 
-// Temporary Variable to Store Previous Value of PC
-var PREV_PC [XWORD]
-
 op instruction (operation: Op)
   syntax = operation.syntax
   image  = operation.image
   action = {
     XREG[0] = 0;
-    PREV_PC = PC;
+    prev_pc = PC;
 
     operation.action;
-    if PC == PREV_PC then
+    if PC == prev_pc then
       PC = PC + 4;
     endif;
   }

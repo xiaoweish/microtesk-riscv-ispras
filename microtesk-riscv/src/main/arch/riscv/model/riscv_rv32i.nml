@@ -33,11 +33,11 @@
     BGE +
     BLTU +
     BGEU +
-    LB
-    LH
-    LW
-    LBU
-    LHU
+    LB +
+    LH +
+    LW +
+    LBU +
+    LHU +
     SB
     SH
     SW
@@ -290,6 +290,113 @@ op bgeu(rs1: X, rs2: X, imm: card(12))
     if rs1 >= rs2 then
       PC = PC + (sign_extend(XWORD, imm) << 1);
     endif;
+  }
+
+/*
+  LW:  Load Word (I-type)
+  LH:  Load Half (I-type)
+  LHU: Load Half Unsigned (I-type)
+  LB:  Load Byte (I-type)
+  LBU: Load Half Unsigned (I-type)
+
+  Format: lw  rd, rs1, imm
+  Format: lh  rd, rs1, imm
+  Format: lhu rd, rs1, imm
+  Format: lb  rd, rs1, imm
+  Format: lbu rd, rs1, imm
+
+  LW loads a 32-bit value from memory into rd.
+  LH loads a 16-bit value from memory, then sign-extends to 32-bits before storing in rd.
+  LHU loads a 16-bit value from memory but then zero extends to 32-bits before storing in rd.
+  LB and LBU are deﬁned analogously for 8-bit values.
+
+  Load instructions transfer a value between the registers and memory.
+  Loads are encoded in the I-type format. The effective byte address is obtained by adding
+  register rs1 to the sign-extended 12-bit offset. Loads copy a value from memory to
+  register rd.
+
+  For best performance, the effective address for all loads and stores should be
+  naturally aligned for each data type (i.e., on a four-byte boundary for 32-bit accesses,
+  and a two-byte boundary for 16-bit accesses). The base ISA supports misaligned accesses,
+  but these might run extremely slowly depending on the implementation. Furthermore,
+  naturally aligned loads and stores are guaranteed to execute atomically, whereas misaligned
+  loads and stores might not, and hence require additional synchronization to ensure atomicity.
+*/
+op lw(rd: X, rs1: X, imm: card(12))
+  syntax = format("lw %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s010%s0000011", imm, rs1.image, rd.image)
+  action = {
+    tmp_address = rs1 + sign_extend(XWORD, imm);
+
+    if tmp_address<1..0> == 0 then // Word-aligned address
+      tmp_word = MEM[tmp_address >> 2];
+    elif tmp_address<1..0> == 1 then
+      tmp_word = MEM[(tmp_address >> 2) + 1]<7..0> :: MEM[tmp_address >> 2]<31..8>;
+    elif tmp_address<1..0> == 2 then
+      tmp_word = MEM[(tmp_address >> 2) + 1]<15..0> :: MEM[tmp_address >> 2]<31..16>;
+    else
+      tmp_word = MEM[(tmp_address >> 2) + 1]<23..0> :: MEM[tmp_address >> 2]<31..24>;
+    endif;
+
+    rd = sign_extend(XWORD, tmp_word);
+  }
+
+op lh(rd: X, rs1: X, imm: card(12))
+  syntax = format("lh %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s001%s0000011", imm, rs1.image, rd.image)
+  action = {
+    tmp_address = rs1 + sign_extend(XWORD, imm);
+
+    if tmp_address<1..0> != 3 then
+      tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
+      tmp_half = MEM[tmp_address >> 2]<tmp_bit_offset + 15..tmp_bit_offset>;
+    else
+      tmp_half = MEM[(tmp_address >> 2) + 1]<7..0> :: MEM[tmp_address >> 2]<31..24>;
+    endif;
+
+    rd = sign_extend(XWORD, tmp_half);
+  }
+
+op lhu(rd: X, rs1: X, imm: card(12))
+  syntax = format("lhu %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s101%s0000011", imm, rs1.image, rd.image)
+  action = {
+    tmp_address = rs1 + sign_extend(XWORD, imm);
+
+    if tmp_address<1..0> != 3 then
+      tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
+      tmp_half = MEM[tmp_address >> 2]<tmp_bit_offset + 15..tmp_bit_offset>;
+    else
+      tmp_half = MEM[(tmp_address >> 2) + 1]<7..0> :: MEM[tmp_address >> 2]<31..24>;
+    endif;
+
+    rd = zero_extend(XWORD, tmp_half);
+  }
+
+op lb(rd: X, rs1: X, imm: card(12))
+  syntax = format("lb %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s000%s0000011", imm, rs1.image, rd.image)
+  action = {
+    tmp_address = rs1 + sign_extend(XWORD, imm);
+    tmp_word = MEM[tmp_address >> 2];
+
+    tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
+    tmp_byte = tmp_word<tmp_bit_offset + 7..tmp_bit_offset>;
+
+    rd = sign_extend(XWORD, tmp_byte);
+  }
+
+op lbu(rd: X, rs1: X, imm: card(12))
+  syntax = format("lbu %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s100%s0000011", imm, rs1.image, rd.image)
+  action = {
+    tmp_address = rs1 + sign_extend(XWORD, imm);
+    tmp_word = MEM[tmp_address >> 2];
+
+    tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
+    tmp_byte = tmp_word<tmp_bit_offset + 7..tmp_bit_offset>;
+
+    rd = zero_extend(XWORD, tmp_byte);
   }
 
 /*
@@ -794,12 +901,12 @@ op rv32i = lui
          | bge
          | bltu
          | bgeu
-/*
          | lb
          | lh
          | lw
          | lbu
          | lhu
+/*
          | sb
          | sh
          | sw

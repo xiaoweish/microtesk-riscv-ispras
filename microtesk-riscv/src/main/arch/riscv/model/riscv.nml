@@ -194,6 +194,10 @@ op <name>(rd: X, imm: card(20))
 
 #include "riscv_rv32i.nml"
 
+#ifdef RV64I
+  #include "riscv_rv64i.nml"
+#endif
+
 op Op = rv32i
 
 op instruction (operation: Op)

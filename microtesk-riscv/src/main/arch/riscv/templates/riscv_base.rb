@@ -1,17 +1,26 @@
 #
-# MicroTESK RISC-V Edition
+# Copyright 2017 ISP RAS (http://www.ispras.ru)
 #
-# Copyright (c) 2016 Institute for System Programming of the Russian Academy of Sciences
-# All Rights Reserved
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Institute for System Programming of the Russian Academy of Sciences (ISP RAS)
-# 25 Alexander Solzhenitsyn st., Moscow, 109004, Russia
-# http://www.ispras.ru
-# 
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
 require ENV['TEMPLATE']
 
 class RISCVBaseTemplate < Template
+  ##################################################################################################
+  # Settings
+  ##################################################################################################
+
   def initialize
     super
     # Initialize settings here 
@@ -27,6 +36,11 @@ class RISCVBaseTemplate < Template
 
     set_option_value 'base-virtual-address', 0xffffffffa0002000
     set_option_value 'base-physical-address', 0x0000000000002000
+
+    # Defines Alias Methods for X Registers
+    (0..31).each do |i|
+      define_method "x#{i}" do x(i) end
+    end
   end
 
   ##################################################################################################
@@ -311,138 +325,6 @@ label :error
   end
 
   ##################################################################################################
-  # Aliases for X Registers
-  ##################################################################################################
-
-  def x0
-    x(0)
-  end
-
-  def x1
-    x(1)
-  end
-
-  def x2
-    x(2)
-  end
-
-  def x3
-    x(3)
-  end
-
-  def x4
-    x(4)
-  end
-
-  def x5
-    x(5)
-  end
-
-  def x6
-    x(6)
-  end
-
-  def x7
-    x(7)
-  end
-
-  def x8
-    x(8)
-  end
-
-  def x9
-    x(9)
-  end
-
-  def x10
-    x(10)
-  end
-
-  def x11
-    x(11)
-  end
-
-  def x12
-    x(12)
-  end
-
-  def x13
-    x(13)
-  end
-
-  def x14
-    x(14)
-  end
-
-  def x15
-    x(15)
-  end
-
-  def x16
-    x(16)
-  end
-
-  def x17
-    x(17)
-  end
-
-  def x18
-    x(18)
-  end
-
-  def x19
-    x(19)
-  end
-
-  def x20
-    x(20)
-  end
-
-  def x21
-    x(21)
-  end
-
-  def x22
-    x(22)
-  end
-
-  def x23
-    x(23)
-  end
-
-  def x24
-    x(24)
-  end
-
-  def x25
-    x(25)
-  end
-
-  def x26
-    x(26)
-  end
-
-  def x27
-    x(27)
-  end
-
-  def x28
-    x(28)
-  end
-
-  def x29
-    x(29)
-  end
-
-  def x30
-    x(30)
-  end
-
-  def x31
-    x(31)
-  end
-
-  ##################################################################################################
   # Shortcut methods to access memory resources in debug messages.
   ##################################################################################################
 
@@ -505,4 +387,4 @@ label :error
     free_allocated_mode mode
   end
 
-end # PowerPCBaseTemplate
+end # RISCVBaseTemplate

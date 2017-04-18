@@ -22,46 +22,68 @@
 //==================================================================================================
 
 /*
-  Instructions (number: 15):
+  Instructions (number: 12):
     LWU
     LD
     SD
-    SLLI
-    SRLI
-    SRAI
+    SLLI (defined in RV32I)
+    SRLI (defined in RV32I)
+    SRAI (defined in RV32I)
     ADDIW
     SLLIW
     SRLIW
     SRAIW
-    ADDW
-    SUBW
+    ADDW +
+    SUBW +
     SLLW
     SRLW
     SRAW
 */
 
+
 //==================================================================================================
 // Instructions
 //==================================================================================================
 
+/*
+  ADDW and SUBW (R-type)
+
+  Format: addw rd, rs1, rs2
+          subw rd, rs1, rs2
+
+  ADDW and SUBW are RV64I-only instructions that are defined analogously to
+  ADD and SUB but operate on 32-bit values and produce signed 32-bit results. Overflows
+  are ignored, and the low 32-bits of the result is sign-extended to 64-bits and written
+  to the destination register.
+*/
+op addw(rd: X, rs1: X, rs2: X)
+  syntax = format("addw %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0000000%s%s000%s0111011", rs2.image, rs1.image, rd.image)
+  action = {
+    rd = sign_extend(XWORD, rs1<31..0> + rs2<31..0>);
+  }
+
+op subw(rd: X, rs1: X, rs2: X)
+  syntax = format("subw %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0100000%s%s000%s0111011", rs2.image, rs1.image, rd.image)
+  action = {
+    rd = sign_extend(XWORD, rs1<31..0> - rs2<31..0>);
+  }
 
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
 
-/*
-op rv64i = lwu
+op rv64i = /* lwu
          | ld
          | sd
-         | slli
-         | srli
-         | srai
          | addiw
          | slliw
          | srliw
          | sraiw
-         | addw
+         | */ addw
          | subw
+/*
          | sllw
          | srlw
          | sraw

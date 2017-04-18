@@ -199,6 +199,9 @@ op <name>(rd: X, imm: card(20))
 #endif
 
 op Op = rv32i
+#ifdef RV64I
+      | rv64i
+#endif
 
 op instruction (operation: Op)
   syntax = operation.syntax

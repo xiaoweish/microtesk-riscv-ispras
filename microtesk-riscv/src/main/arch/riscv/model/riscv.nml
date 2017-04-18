@@ -89,9 +89,11 @@ mode X (i: card(5)) = XREG [i]
 var prev_pc [XWORD]
 
 var tmp_address [XWORD]
-var tmp_word [WORD]
-var tmp_half [HWORD]
+var tmp_index [XWORD]
 var tmp_byte [BYTE]
+var tmp_half [HWORD]
+var tmp_dword [DWORD]
+var tmp_word [WORD]
 
 // Bit Offset in a Word
 var tmp_bit_offset [card(5)]

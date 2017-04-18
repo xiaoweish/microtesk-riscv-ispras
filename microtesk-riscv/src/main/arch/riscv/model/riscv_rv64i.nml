@@ -30,9 +30,9 @@
     SRLI (defined in RV32I)
     SRAI (defined in RV32I)
     ADDIW +
-    SLLIW
-    SRLIW
-    SRAIW
+    SLLIW +
+    SRLIW +
+    SRAIW +
     ADDW +
     SUBW +
     SLLW +
@@ -58,6 +58,49 @@ op addiw(rd: X, rs1: X, imm: card(12))
   image  = format("%12s%s000%s0011011", imm, rs1.image, rd.image)
   action = {
     rd = sign_extend(XWORD, rs1<31..0> + sign_extend(WORD, imm));
+  }
+
+/*
+  SLLIW (I-type)
+  SRLIW (I-type)
+  SRAIW (I-type)
+
+  Format: slliw rd, rs1, imm
+  Format: srliw rd, rs1, imm
+  Format: sraiw rd, rs1, imm
+
+  Shifts by a constant are encoded as a specialization of the I-type format using the same
+  instruction opcode as RV32I. The operand to be shifted is in rs1, and the shift amount is
+  encoded in the lower 6 bits of the I-immediate field for RV64I. The right shift type is
+  encoded in bit 30.
+
+  SLLIW is a logical left shift (zeros are shifted into the lower bits).
+  SRLIW is a logical right shift (zeros are shifted into the upper bits).
+  SRAIW is an arithmetic right shift (the original sign bit is copied into the vacated upper bits).
+
+  SLLIW, SRLIW, and SRAIW are RV64I-only instructions that are defined analogously to
+  SLLI, SRLI, and SRAI but operate on 32-bit values and produce signed 32-bit results.
+  SLLIW, SRLIW, and SRAIW generate an illegal instruction exception if imm[5] = 0.
+*/
+op slliw(rd: X, rs1: X, imm: card(5))
+  syntax = format("slliw %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("0000000%5s%s001%s0011011", imm, rs1.image, rd.image)
+  action = {
+    rd = sign_extend(XWORD, rs1<31..0> << imm);
+  }
+
+op srliw(rd: X, rs1: X, imm: card(5))
+  syntax = format("srliw %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("0000000%5s%s101%s0011011", imm, rs1.image, rd.image)
+  action = {
+    rd = sign_extend(XWORD, rs1<31..0> >> imm);
+  }
+
+op sraiw(rd: X, rs1: X, imm: card(5))
+  syntax = format("sraiw %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("0100000%5s%s101%s0011011", imm, rs1.image, rd.image)
+  action = {
+    rd = sign_extend(XWORD, cast(INT, rs1<31..0>) >> imm);
   }
 
 /*
@@ -130,11 +173,9 @@ op rv64i = /* lwu
          | ld
          | sd
          | */ addiw
-/*
          | slliw
          | srliw
          | sraiw
-*/
          | addw
          | subw
          | sllw

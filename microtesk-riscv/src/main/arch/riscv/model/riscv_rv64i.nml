@@ -29,7 +29,7 @@
     SLLI (defined in RV32I)
     SRLI (defined in RV32I)
     SRAI (defined in RV32I)
-    ADDIW
+    ADDIW +
     SLLIW
     SRLIW
     SRAIW
@@ -44,6 +44,22 @@
 //==================================================================================================
 // Instructions
 //==================================================================================================
+
+/*
+  ADDIW (I-type)
+
+  Format: addiw rd, rs1, imm
+
+  ADDIW is an RV64I-only instruction that adds the sign-extended 12-bit immediate to
+  register rs1 and produces the proper sign-extension of a 32-bit result in rd. Overflows
+  are ignored and the result is the low 32 bits of the result sign-extended to 64 bits.
+*/
+op addiw(rd: X, rs1: X, imm: card(12))
+  syntax = format("addiw %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  image  = format("%12s%s000%s0011011", imm, rs1.image, rd.image)
+  action = {
+    rd = sign_extend(XWORD, rs1<31..0> + sign_extend(WORD, imm));
+  }
 
 /*
   ADDW and SUBW (R-type)
@@ -77,11 +93,13 @@ op subw(rd: X, rs1: X, rs2: X)
 op rv64i = /* lwu
          | ld
          | sd
-         | addiw
+         | */ addiw
+/*
          | slliw
          | srliw
          | sraiw
-         | */ addw
+/*
+         | addw
          | subw
 /*
          | sllw

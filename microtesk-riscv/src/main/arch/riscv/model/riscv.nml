@@ -40,6 +40,12 @@ type XWORD = card(XLEN)
 // Configuration-Dependent Signed Word for X Registers
 type XINT = int(XLEN)
 
+// Configuration-Dependent Double Word
+type XDWORD = card(XLEN*2)
+
+// Configuration-Dependent Signed Double Word
+type XLONG = int(XLEN*2)
+
 // Unsigned Types
 type   BIT = card(1)
 type  BYTE = card(8)
@@ -195,14 +201,18 @@ op <name>(rd: X, imm: card(20))
 //==================================================================================================
 
 #include "riscv_rv32i.nml"
+#include "riscv_rv32m.nml"
 
 #ifdef RV64I
   #include "riscv_rv64i.nml"
+  #include "riscv_rv64m.nml"
 #endif
 
 op Op = rv32i
+      | rv32m
 #ifdef RV64I
       | rv64i
+      | rv64m
 #endif
 
 op instruction (operation: Op)

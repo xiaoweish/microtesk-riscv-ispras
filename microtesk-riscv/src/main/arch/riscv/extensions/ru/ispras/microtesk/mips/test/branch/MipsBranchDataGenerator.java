@@ -129,7 +129,7 @@ public abstract class MipsBranchDataGenerator extends BranchDataGenerator {
   }
 
   private static String getInstructionName(final TestBaseQuery query) {
-    return query.getContext().get(TestBaseContext.INSTRUCTION);
+    return (String) query.getContext().get(TestBaseContext.INSTRUCTION);
   }
 
   private static TestDataProvider generate(final TestBaseQuery query, final Map<String, Long> values) {
@@ -137,7 +137,7 @@ public abstract class MipsBranchDataGenerator extends BranchDataGenerator {
     InvariantChecks.checkNotNull(values);
 
     final Map<String, Node> unknowns = Utils.extractUnknown(query);
-    final Map<String, Node> bindings = new LinkedHashMap<>();
+    final Map<String, Object> bindings = new LinkedHashMap<>();
 
     for (final Map.Entry<String, Node> entry : unknowns.entrySet()) {
       final String name = entry.getKey();

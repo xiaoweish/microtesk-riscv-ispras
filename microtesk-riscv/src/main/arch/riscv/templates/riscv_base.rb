@@ -81,7 +81,7 @@ class RISCVBaseTemplate < Template
     # Simple exception handler. Continues execution from the next instruction.
     #
     exception_handler {
-      section(:org => 0x380, :exception => ['IntegerOverflow', 'SystemCall', 'Breakpoint']) {
+      entry_point(:org => 0x380, :exception => ['IntegerOverflow', 'SystemCall', 'Breakpoint']) {
         trace 'Exception handler (EPC = 0x%x)', location('CPR', 14 * 8)
     #TODO:
         #mfc0 ra, c0_epc

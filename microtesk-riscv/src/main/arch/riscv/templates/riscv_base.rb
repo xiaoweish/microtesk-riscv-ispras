@@ -34,9 +34,6 @@ class RISCVBaseTemplate < Template
     # Sets the token used in separator lines printed into test programs
     set_option_value 'separator-token', "="
 
-    set_option_value 'base-virtual-address', 0xffffffffa0002000
-    set_option_value 'base-physical-address', 0x0000000000002000
-
     # Defines Alias Methods for X Registers
     (0..31).each do |i|
       define_method "x#{i}" do x(i) end
@@ -63,6 +60,22 @@ class RISCVBaseTemplate < Template
       define_ascii_string :id => :ascii,  :text => '.ascii',  :zero_term => false
       define_ascii_string :id => :asciiz, :text => '.asciiz', :zero_term => true
     }
+
+    #
+    # Defines .text section.
+    #
+    # pa: base physical address (used for memory allocation).
+    # va: base virtual address (used for encoding instructions that refer to labels).
+    #
+    section_text(:pa => 0x0, :va => 0x0) {}
+
+    #
+    # Defines .data section.
+    #
+    # pa: base physical address (used for memory allocation).
+    # va: base virtual address (used for encoding instructions that refer to labels).
+    #
+    section_data(:pa => 0x0008_0000, :va => 0x0008_0000) {}
 
     #
     # Simple exception handler. Continues execution from the next instruction.

@@ -22,9 +22,9 @@
   </allocation>
 
   <delaySlot size="0"/>
-  
+
+  <!-- Data generators for branch instructions  
   <extensions>
-    <!-- Data generators for branch instructions
     <extension name="beq-if-then"     path="ru.ispras.microtesk.mips.test.branch.MipsEqDataGenerator"/>
     <extension name="beql-if-then"    path="ru.ispras.microtesk.mips.test.branch.MipsEqDataGenerator"/>
     <extension name="bne-if-then"     path="ru.ispras.microtesk.mips.test.branch.MipsNeqDataGenerator"/>
@@ -48,6 +48,6 @@
     <extension name="jr-goto"   path="ru.ispras.microtesk.mips.test.branch.MipsGotoDataGenerator"/>
     <extension name="jal-goto"  path="ru.ispras.microtesk.mips.test.branch.MipsGotoDataGenerator"/>
     <extension name="jalr-goto" path="ru.ispras.microtesk.mips.test.branch.MipsGotoDataGenerator"/>
-    -->
   </extensions>
+  -->
 </settings>

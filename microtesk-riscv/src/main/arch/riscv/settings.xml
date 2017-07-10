@@ -12,7 +12,7 @@
   </memory>
 
   <allocation>
-    <mode name="R">
+    <mode name="X">
       <strategy name="random" free-bias="50" used-bias="50"/>
       <range min="0" max="31">
         <exclude item="0"/>
@@ -21,10 +21,10 @@
     </mode>
   </allocation>
 
-  <delaySlot size="1"/>
-
+  <delaySlot size="0"/>
+  
   <extensions>
-    <!-- Data generators for branch instructions -->
+    <!-- Data generators for branch instructions
     <extension name="beq-if-then"     path="ru.ispras.microtesk.mips.test.branch.MipsEqDataGenerator"/>
     <extension name="beql-if-then"    path="ru.ispras.microtesk.mips.test.branch.MipsEqDataGenerator"/>
     <extension name="bne-if-then"     path="ru.ispras.microtesk.mips.test.branch.MipsNeqDataGenerator"/>
@@ -48,5 +48,6 @@
     <extension name="jr-goto"   path="ru.ispras.microtesk.mips.test.branch.MipsGotoDataGenerator"/>
     <extension name="jal-goto"  path="ru.ispras.microtesk.mips.test.branch.MipsGotoDataGenerator"/>
     <extension name="jalr-goto" path="ru.ispras.microtesk.mips.test.branch.MipsGotoDataGenerator"/>
+    -->
   </extensions>
 </settings>

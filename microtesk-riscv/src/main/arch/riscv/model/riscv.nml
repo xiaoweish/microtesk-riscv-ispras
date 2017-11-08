@@ -83,10 +83,62 @@ shared mem MEM [MEM_SIZE_IN_WORDS, WORD]
 // Addressing Modes
 //==================================================================================================
 
+/*
+"zero", "ra  ", "sp  ", "gp  ", "tp  ", "t0  ",  "t1  ",  "t2 ",
+"s0  ", "s1  ", "a0  ", "a1  ", "a2  ", "a3  ",  "a4  ",  "a5 ",
+"a6  ", "a7  ", "s2  ", "s3  ", "s4  ", "s5  ",  "s6  ",  "s7 ",
+"s8  ", "s9  ", "s10 ", "s11 ", "t3  ", "t4  ",  "t5  ",  "t6  "
+*/
+
+// Hard-wired zero
+mode ZERO () = XREG [0]
+  syntax = format("zero")
+
+// Return address
+mode RA () = XREG [1]
+  syntax = format("ra")
+
+// Stack pointer
+mode SP () = XREG [2]
+  syntax = format("sp")
+
+// Global pointer
+mode GP () = XREG [3]
+  syntax = format("gp")
+
+// Thread pointer
+mode TP () = XREG [4]
+  syntax = format("tp")
+
+// Temporaries Caller
+mode TemporariesCaller (i: card(3))
+  syntax = format("t%d", i)
+
+/* Saved register Callee
+x8 s0/fp Saved register/frame pointer Callee
+x9 s1 Saved register Callee */
+mode SavedCallee (i: card(4))
+  syntax = format("s%d", i)
+
+// Function arguments Caller
+mode FunctionCaller (i: card(3))
+  syntax = format("a%d", i)
+
 mode X (i: card(5)) = XREG [i]
-  syntax = format("x%d", i)
+  syntax = format("%s", if i == 0 then ZERO().syntax
+                        elif i == 1 then RA().syntax
+                        elif i == 2 then SP().syntax
+                        elif i == 3 then GP().syntax
+                        elif i == 4 then TP().syntax
+                        elif i >= 5 && i <= 7 then TemporariesCaller(coerce(card(3), i-5)).syntax
+                        elif i >= 8 && i <= 9 then SavedCallee(coerce(card(4), i-8)).syntax
+                        elif i >= 10 && i <= 17 then FunctionCaller(coerce(card(3), i-10)).syntax
+                        elif i >= 18 && i <= 27 then SavedCallee(coerce(card(4), i-16)).syntax
+                        elif i >= 28 && i <= 31 then TemporariesCaller(coerce(card(3), i-25)).syntax
+                        else "error"
+                        endif)
   image  = format("%5s", i)
-  
+
 //==================================================================================================
 // Temporary Variables
 //==================================================================================================
@@ -215,7 +267,7 @@ op Op = rv32i
       | rv64m
 #endif
 
-op instruction (operation: Op)
+op instruction(operation: Op)
   syntax = operation.syntax
   image  = operation.image
   action = {

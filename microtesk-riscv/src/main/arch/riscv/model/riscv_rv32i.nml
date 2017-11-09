@@ -972,8 +972,7 @@ op fencei()
     // TODO
   }
 
-/* The CSRRW (Atomic Read/Write CSR) instruction atomically swaps values in the CSRs and
-  integer registers. */
+/* CSRRW (Atomic Read/Write CSR) */
 op csrrw(rd: X, csr: CSRs, rs1: X)
   syntax = format("csrrw %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
   image  = format("%12s%5s001%5s1110011", csr.image, rs1.image, rd.image)
@@ -984,37 +983,165 @@ op csrrw(rd: X, csr: CSRs, rs1: X)
     csr = rs1;
   }
 
-/* The CSRRS (Atomic Read and Set Bits in CSR) instruction reads the value of the CSR, zero-
-  extends the value to XLEN bits, and writes it to integer register rd. */
+/* CSRRS (Atomic Read and Set Bits in CSR) */
 op csrrs(rd: X, csr: CSRs, rs1: X)
   syntax = format("csrrs %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
   image  = format("%12s%5s010%5s1110011", csr.image, rs1.image, rd.image)
   action = {
+    if rs1.i != 0 then
+      csr = csr | rs1;
+    endif;
+    rd = zero_extend(XWORD, csr);
+  }
+
+/* CSRRC (Atomic Read and Clear Bits in CSR) */
+op csrrc(rd: X, csr: CSRs, rs1: X)
+  syntax = format("csrrc %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
+  image  = format("%12s%5s011%5s1110011", csr.image, rs1.image, rd.image)
+  action = {
+    if rs1.i != 0 then
+      csr = csr & ~rs1;
+    endif;
+    rd = zero_extend(XWORD, csr);
+  }
+
+/* The CSRRWI, CSRRSI, and CSRRCI variants are similar to CSRRW, CSRRS, and CSRRC re-
+  spectively, except they update the CSR using an XLEN-bit value obtained by zero-extending a 5-bit
+  unsigned immediate (uimm[4:0]) */
+op csrrwi(rd: X, csr: CSRs, imm: card(5))
+  syntax = format("csrrwi %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
+  image  = format("%12s%5s101%5s1110011", csr.image, imm, rd.image)
+  action = {
     if rd.i != 0 then
       rd = zero_extend(XWORD, csr);
     endif;
-    csr = csr | rs1;
+    csr = zero_extend(XWORD, imm);
+  }
+
+op csrrsi(rd: X, csr: CSRs, imm: card(5))
+  syntax = format("csrrsi %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
+  image  = format("%12s%5s110%5s1110011", csr.image, imm, rd.image)
+  action = {
+    if imm != 0 then
+      csr = csr | zero_extend(XWORD, imm);
+    endif;
+    rd = zero_extend(XWORD, csr);
+  }
+
+op csrrci(rd: X, csr: CSRs, imm: card(5))
+  syntax = format("csrrci %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
+  image  = format("%12s%5s111%5s1110011", csr.image, imm, rd.image)
+  action = {
+    if imm != 0 then
+      csr = csr & ~zero_extend(XWORD, imm);
+    endif;
+    rd = zero_extend(XWORD, csr);
   }
 
 op rv32i_system = csrrw
                 | csrrs
+                | csrrc
+                | csrrwi
+                | csrrsi
+                | csrrci
                 | ecall
                 | ebreak
                 | fence
                 | fencei
 
+// Pseudoinstructions
+// Write CSR
+pseudo op csrw(csr: CSRs, rs1: X)
+  syntax = format("csrw %s, %s", csr.syntax, rs1.syntax)
+  image  = format("%32s", csrrw(X(0), csr, rs1).image)
+  action = {
+    csrrw(X(0), csr, rs1).action;
+  }
+
+// Read CSR
+pseudo op csrr(rd: X, csr: CSRs)
+  syntax = format("csrr %s, %s", rd.syntax, csr.syntax)
+  image  = format("%32s", csrrs(rd, csr, X(0)).image)
+  action = {
+    csrrs(rd, csr, X(0)).action;
+  }
+
+// Set bits in CSR
+pseudo op csrs(csr: CSRs, rs1: X)
+  syntax = format("csrs %s, %s", csr.syntax, rs1.syntax)
+  image  = format("%32s", csrrs(X(0), csr, rs1).image)
+  action = {
+    csrrs(X(0), csr, rs1).action;
+  }
+
+// Clear bits in CSR
+pseudo op csrc(csr: CSRs, rs1: X)
+  syntax = format("csrc %s, %s", csr.syntax, rs1.syntax)
+  image  = format("%32s", csrrc(X(0), csr, rs1).image)
+  action = {
+    csrrc(X(0), csr, rs1).action;
+  }
+
+// Write CSR, immediate
+pseudo op csrwi(csr: CSRs, imm: card(5))
+  syntax = format("csrwi %s, 0x%x", csr.syntax, imm)
+  image  = format("%32s", csrrwi(X(0), csr, imm).image)
+  action = {
+    csrrwi(X(0), csr, imm).action;
+  }
+
+// Set bits in CSR, immediate
+pseudo op csrsi(csr: CSRs, imm: card(5))
+  syntax = format("csrsi %s, 0x%x", csr.syntax, imm)
+  image  = format("%32s", csrrsi(X(0), csr, imm).image)
+  action = {
+    csrrsi(X(0), csr, imm).action;
+  }
+
+// Clear bits in CSR, immediate
+pseudo op csrci(csr: CSRs, imm: card(5))
+  syntax = format("csrci %s, 0x%x", csr.syntax, imm)
+  image  = format("%32s", csrrci(X(0), csr, imm).image)
+  action = {
+    csrrci(X(0), csr, imm).action;
+  }
+
+// Read FP control/status register
+pseudo op frcsr(rd: X)
+  syntax = format("frcsr %s", rd.syntax)
+  image  = format("%32s", csrrs(rd, FCSR(), X(0)).image)
+  action = {
+    csrrs(rd, FCSR(), X(0)).action;
+  }
 /*
-         | fence
-         | fence.i
-         | ecall
-         | ebreak
-         | csrrw
-         | csrrs
-         | csrrc
-         | csrrwi
-         | csrrsi
-         | csrrci
+
+
+fscsr rd, rs csrrw rd, fcsr, rs Swap FP control/status register
+fscsr rs csrrw x0, fcsr, rs Write FP control/status register
+frrm rd csrrs rd, frm, x0 Read FP rounding mode
+fsrm rd, rs csrrw rd, frm, rs Swap FP rounding mode
+fsrm rs csrrw x0, frm, rs Write FP rounding mode
+fsrmi rd, imm csrrwi rd, frm, imm Swap FP rounding mode, immediate
+fsrmi imm csrrwi x0, frm, imm Write FP rounding mode, immediate
+frflags rd csrrs rd, fflags, x0 Read FP exception 
+ags
+fsflags rd, rs csrrw rd, fflags, rs Swap FP exception 
+ags
+fsflags rs csrrw x0, fflags, rs Write FP exception 
+ags
+fsflagsi rd, imm csrrwi rd, fflags, imm Swap FP exception 
+ags, immediate
+fsflagsi imm csrrwi x0, fflags, imm Write FP exception 
+ags, immediate
 */
+op rv32i_pseudo_system = csrw
+                       | csrr
+                       | csrs
+                       | csrc
+                       | csrwi
+                       | csrsi
+                       | csrci
+                       | frcsr
 
 //==================================================================================================
 // Instruction Groups
@@ -1057,6 +1184,7 @@ op rv32i = lui
          | xor
          | or
          | and
+         | rv32i_system
 
          // Pseudoinstructions
          | nop
@@ -1075,7 +1203,7 @@ op rv32i = lui
          | bgez
          | bltz
          | bgtz
-         | rv32i_system
+         | rv32i_pseudo_system
 
 //==================================================================================================
 // The End

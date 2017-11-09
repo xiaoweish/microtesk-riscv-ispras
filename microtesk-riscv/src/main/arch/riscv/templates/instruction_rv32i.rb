@@ -51,6 +51,15 @@ class InstructionRV32I < RISCVBaseTemplate
     sub t2, t1, t0
     trace "(sub): x7 = %x", gpr_observer(7)
 
+    trace "System instructions:"
+    csrrw t0, risc_time, t1
+    csrrs t0, risc_time, t1
+
+    ecall
+    ebreak
+    fence 0x0, 0x0
+    fencei
+
     nop
     nop
   end

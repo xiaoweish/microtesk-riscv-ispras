@@ -941,22 +941,7 @@ pseudo op bgtz(rs: X, offset: card(12))
 // System instructions
 //==================================================================================================
 
-/*
-         | fence
-         | fence.i
-         | ecall
-         | ebreak
-         | csrrw
-         | csrrs
-         | csrrc
-         | csrrwi
-         | csrrsi
-         | csrrci
-*/
-
-/*
-  The ECALL instruction is used to make a request to the supporting execution environment.
-*/
+/* The ECALL instruction is used to make a request to the supporting execution environment. */
 op ecall()
   syntax = format("ecall")
   image  = format("%12s00000%3s00000%7s", "000000000000", "000", "1110011")
@@ -964,10 +949,8 @@ op ecall()
     // TODO
   }
 
-/*
-  The EBREAK instruction is used by debuggers to cause control to be transferred back to a debugging
-  environment.
-*/
+/* The EBREAK instruction is used by debuggers to cause control to be transferred back to
+   a debugging environment. */
 op ebreak()
   syntax = format("ebreak")
   image  = format("%12s00000%3s00000%7s", "000000000001", "000", "1110011")
@@ -989,21 +972,49 @@ op fencei()
     // TODO
   }
 
-/*
-  The CSRRW (Atomic Read/Write CSR) instruction atomically swaps values in the CSRs and
-  integer registers.
-*/
+/* The CSRRW (Atomic Read/Write CSR) instruction atomically swaps values in the CSRs and
+  integer registers. */
 op csrrw(rd: X, csr: CSRs, rs1: X)
   syntax = format("csrrw %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
   image  = format("%12s%5s001%5s1110011", csr.image, rs1.image, rd.image)
   action = {
-    // TODO
+    if rd.i != 0 then
+      rd = zero_extend(XWORD, csr);
+    endif;
+    csr = rs1;
   }
 
-op rv32i_system = ecall
+/* The CSRRS (Atomic Read and Set Bits in CSR) instruction reads the value of the CSR, zero-
+  extends the value to XLEN bits, and writes it to integer register rd. */
+op csrrs(rd: X, csr: CSRs, rs1: X)
+  syntax = format("csrrs %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
+  image  = format("%12s%5s010%5s1110011", csr.image, rs1.image, rd.image)
+  action = {
+    if rd.i != 0 then
+      rd = zero_extend(XWORD, csr);
+    endif;
+    csr = csr | rs1;
+  }
+
+op rv32i_system = csrrw
+                | csrrs
+                | ecall
                 | ebreak
                 | fence
                 | fencei
+
+/*
+         | fence
+         | fence.i
+         | ecall
+         | ebreak
+         | csrrw
+         | csrrs
+         | csrrc
+         | csrrwi
+         | csrrsi
+         | csrrci
+*/
 
 //==================================================================================================
 // Instruction Groups

@@ -62,6 +62,12 @@ class InstructionRV32I < RISCVBaseTemplate
 
     csrw time, t0
     csrr t0, time
+    csrs time, t0
+    csrc time, t0
+    csrwi time, 0x5
+    csrsi time, 0x5
+    csrci time, 0x5
+    frcsr t0
 
     ecall
     ebreak

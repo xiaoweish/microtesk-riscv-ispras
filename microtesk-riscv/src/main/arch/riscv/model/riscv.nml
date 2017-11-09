@@ -159,10 +159,10 @@ mode INSTRET() = CSR[0xC02]
   syntax = format("instret")
   image = format("%12s", csr_index)
 
-mode CSRs = USTATUS | UIE | UTVEC
-          | USCRATCH | UEPC | UCAUSE | UTVAL | UIP
-          | FFLAGS | FRM | FCSR
-          | CYCLE | TIME | INSTRET
+mode CSR_MODE = USTATUS | UIE | UTVEC
+              | USCRATCH | UEPC | UCAUSE | UTVAL | UIP
+              | FFLAGS | FRM | FCSR
+              | CYCLE | TIME | INSTRET
 
 //==================================================================================================
 // Addressing Modes

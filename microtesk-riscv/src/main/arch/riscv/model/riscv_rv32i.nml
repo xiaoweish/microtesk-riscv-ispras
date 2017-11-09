@@ -973,7 +973,7 @@ op fencei()
   }
 
 /* CSRRW (Atomic Read/Write CSR) */
-op csrrw(rd: X, csr: CSRs, rs1: X)
+op csrrw(rd: X, csr: CSR_MODE, rs1: X)
   syntax = format("csrrw %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
   image  = format("%12s%5s001%5s1110011", csr.image, rs1.image, rd.image)
   action = {
@@ -984,7 +984,7 @@ op csrrw(rd: X, csr: CSRs, rs1: X)
   }
 
 /* CSRRS (Atomic Read and Set Bits in CSR) */
-op csrrs(rd: X, csr: CSRs, rs1: X)
+op csrrs(rd: X, csr: CSR_MODE, rs1: X)
   syntax = format("csrrs %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
   image  = format("%12s%5s010%5s1110011", csr.image, rs1.image, rd.image)
   action = {
@@ -995,7 +995,7 @@ op csrrs(rd: X, csr: CSRs, rs1: X)
   }
 
 /* CSRRC (Atomic Read and Clear Bits in CSR) */
-op csrrc(rd: X, csr: CSRs, rs1: X)
+op csrrc(rd: X, csr: CSR_MODE, rs1: X)
   syntax = format("csrrc %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
   image  = format("%12s%5s011%5s1110011", csr.image, rs1.image, rd.image)
   action = {
@@ -1008,7 +1008,7 @@ op csrrc(rd: X, csr: CSRs, rs1: X)
 /* The CSRRWI, CSRRSI, and CSRRCI variants are similar to CSRRW, CSRRS, and CSRRC re-
   spectively, except they update the CSR using an XLEN-bit value obtained by zero-extending a 5-bit
   unsigned immediate (uimm[4:0]) */
-op csrrwi(rd: X, csr: CSRs, imm: card(5))
+op csrrwi(rd: X, csr: CSR_MODE, imm: card(5))
   syntax = format("csrrwi %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
   image  = format("%12s%5s101%5s1110011", csr.image, imm, rd.image)
   action = {
@@ -1018,7 +1018,7 @@ op csrrwi(rd: X, csr: CSRs, imm: card(5))
     csr = zero_extend(XWORD, imm);
   }
 
-op csrrsi(rd: X, csr: CSRs, imm: card(5))
+op csrrsi(rd: X, csr: CSR_MODE, imm: card(5))
   syntax = format("csrrsi %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
   image  = format("%12s%5s110%5s1110011", csr.image, imm, rd.image)
   action = {
@@ -1028,7 +1028,7 @@ op csrrsi(rd: X, csr: CSRs, imm: card(5))
     rd = zero_extend(XWORD, csr);
   }
 
-op csrrci(rd: X, csr: CSRs, imm: card(5))
+op csrrci(rd: X, csr: CSR_MODE, imm: card(5))
   syntax = format("csrrci %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
   image  = format("%12s%5s111%5s1110011", csr.image, imm, rd.image)
   action = {
@@ -1051,7 +1051,7 @@ op rv32i_system = csrrw
 
 // Pseudoinstructions
 // Write CSR
-pseudo op csrw(csr: CSRs, rs1: X)
+pseudo op csrw(csr: CSR_MODE, rs1: X)
   syntax = format("csrw %s, %s", csr.syntax, rs1.syntax)
   image  = format("%32s", csrrw(X(0), csr, rs1).image)
   action = {
@@ -1059,7 +1059,7 @@ pseudo op csrw(csr: CSRs, rs1: X)
   }
 
 // Read CSR
-pseudo op csrr(rd: X, csr: CSRs)
+pseudo op csrr(rd: X, csr: CSR_MODE)
   syntax = format("csrr %s, %s", rd.syntax, csr.syntax)
   image  = format("%32s", csrrs(rd, csr, X(0)).image)
   action = {
@@ -1067,7 +1067,7 @@ pseudo op csrr(rd: X, csr: CSRs)
   }
 
 // Set bits in CSR
-pseudo op csrs(csr: CSRs, rs1: X)
+pseudo op csrs(csr: CSR_MODE, rs1: X)
   syntax = format("csrs %s, %s", csr.syntax, rs1.syntax)
   image  = format("%32s", csrrs(X(0), csr, rs1).image)
   action = {
@@ -1075,7 +1075,7 @@ pseudo op csrs(csr: CSRs, rs1: X)
   }
 
 // Clear bits in CSR
-pseudo op csrc(csr: CSRs, rs1: X)
+pseudo op csrc(csr: CSR_MODE, rs1: X)
   syntax = format("csrc %s, %s", csr.syntax, rs1.syntax)
   image  = format("%32s", csrrc(X(0), csr, rs1).image)
   action = {
@@ -1083,7 +1083,7 @@ pseudo op csrc(csr: CSRs, rs1: X)
   }
 
 // Write CSR, immediate
-pseudo op csrwi(csr: CSRs, imm: card(5))
+pseudo op csrwi(csr: CSR_MODE, imm: card(5))
   syntax = format("csrwi %s, 0x%x", csr.syntax, imm)
   image  = format("%32s", csrrwi(X(0), csr, imm).image)
   action = {
@@ -1091,7 +1091,7 @@ pseudo op csrwi(csr: CSRs, imm: card(5))
   }
 
 // Set bits in CSR, immediate
-pseudo op csrsi(csr: CSRs, imm: card(5))
+pseudo op csrsi(csr: CSR_MODE, imm: card(5))
   syntax = format("csrsi %s, 0x%x", csr.syntax, imm)
   image  = format("%32s", csrrsi(X(0), csr, imm).image)
   action = {
@@ -1099,7 +1099,7 @@ pseudo op csrsi(csr: CSRs, imm: card(5))
   }
 
 // Clear bits in CSR, immediate
-pseudo op csrci(csr: CSRs, imm: card(5))
+pseudo op csrci(csr: CSR_MODE, imm: card(5))
   syntax = format("csrci %s, 0x%x", csr.syntax, imm)
   image  = format("%32s", csrrci(X(0), csr, imm).image)
   action = {
@@ -1113,9 +1113,9 @@ pseudo op frcsr(rd: X)
   action = {
     csrrs(rd, FCSR(), X(0)).action;
   }
+
+
 /*
-
-
 fscsr rd, rs csrrw rd, fcsr, rs Swap FP control/status register
 fscsr rs csrrw x0, fcsr, rs Write FP control/status register
 frrm rd csrrs rd, frm, x0 Read FP rounding mode

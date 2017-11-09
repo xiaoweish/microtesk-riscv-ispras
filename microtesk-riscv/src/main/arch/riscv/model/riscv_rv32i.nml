@@ -938,6 +938,74 @@ pseudo op bgtz(rs: X, offset: card(12))
   }
 
 //==================================================================================================
+// System instructions
+//==================================================================================================
+
+/*
+         | fence
+         | fence.i
+         | ecall
+         | ebreak
+         | csrrw
+         | csrrs
+         | csrrc
+         | csrrwi
+         | csrrsi
+         | csrrci
+*/
+
+/*
+  The ECALL instruction is used to make a request to the supporting execution environment.
+*/
+op ecall()
+  syntax = format("ecall")
+  image  = format("%12s00000%3s00000%7s", "000000000000", "000", "1110011")
+  action = {
+    // TODO
+  }
+
+/*
+  The EBREAK instruction is used by debuggers to cause control to be transferred back to a debugging
+  environment.
+*/
+op ebreak()
+  syntax = format("ebreak")
+  image  = format("%12s00000%3s00000%7s", "000000000001", "000", "1110011")
+  action = {
+    // TODO
+  }
+
+op fence(pred: card(4), succ: card(4))
+  syntax = format("fence 0x%x, 0x%x", pred, succ)
+  image  = format("%4s%4s%4s00000%3s00000%7s", "0000", pred, succ, "000", "0001111")
+  action = {
+    // TODO
+  }
+
+op fencei()
+  syntax = format("fence.i")
+  image  = format("%12s00000%3s00000%7s", "000000000000", "001", "0001111")
+  action = {
+    // TODO
+  }
+
+/*
+  The CSRRW (Atomic Read/Write CSR) instruction atomically swaps values in the CSRs and
+  integer registers.
+*/
+op csrrw(rd: X, csr: CSRs, rs1: X)
+  syntax = format("csrrw %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
+  image  = format("%12s%5s001%5s1110011", csr.image, rs1.image, rd.image)
+  action = {
+    // TODO
+  }
+
+op rv32i_system = ecall
+                | ebreak
+                | fence
+                | fencei
+
+//==================================================================================================
 // Instruction Groups
 //==================================================================================================
 
@@ -978,18 +1046,7 @@ op rv32i = lui
          | xor
          | or
          | and
-/*
-         | fence
-         | fence.i
-         | ecall
-         | ebreak
-         | csrrw
-         | csrrs
-         | csrrc
-         | csrrwi
-         | csrrsi
-         | csrrci
-*/
+
          // Pseudoinstructions
          | nop
          | mv
@@ -1007,6 +1064,7 @@ op rv32i = lui
          | bgez
          | bltz
          | bgtz
+         | rv32i_system
 
 //==================================================================================================
 // The End

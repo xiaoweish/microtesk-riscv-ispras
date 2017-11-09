@@ -79,6 +79,46 @@ let MEM_SIZE_IN_WORDS = 2 ** (XLEN - 2)
 // Main Memory
 shared mem MEM [MEM_SIZE_IN_WORDS, WORD]
 
+// Control and status registers (CSRs)
+reg CSR[0xfff, XWORD]
+
+var csr_index[card(12)]
+
+// User Trap Setup
+// User status register
+mode USTATUS() = CSR[0x000]
+  init = { csr_index = 0x000; }
+  syntax = format("ustatus")
+  image = format("%12s", csr_index)
+
+// User interrupt-enable register
+mode UIE() = CSR[0x004]
+  init = { csr_index = 0x004; }
+  syntax = format("uie")
+  image = format("%12s", csr_index)
+
+/*
+reg ustatus[XWORD] alias = CSR[0x000] // User status register
+reg uie[XWORD] alias = CSR[0x004] // User interrupt-enable register
+reg utvec[XWORD] alias = CSR[0x005] // User trap handler base address
+// User Trap Handling
+reg uscratch[XWORD] alias = CSR[0x040] // Scratch register for user trap handlers
+reg uepc[XWORD] alias = CSR[0x041] // User exception program counter
+reg ucause[XWORD] alias = CSR[0x042] // User trap cause
+reg utval[XWORD] alias = CSR[0x043] // User bad address or instruction
+reg uip[XWORD] alias = CSR[0x044] // User interrupt pending
+// User Floating-Point CSRs
+reg fflags[XWORD] alias = CSR[0x001] // Floating-Point Accrued Exceptions
+reg frm[XWORD] alias = CSR[0x002] // Floating-Point Dynamic Rounding Mode
+reg fcsr[XWORD] alias = CSR[0x003] // Floating-Point Control and Status Register (frm + fflags)
+// User Counter/Timers
+reg cycle[XWORD] alias = CSR[0xC00] // Cycle counter for RDCYCLE instruction
+reg time[XWORD] alias = CSR[0xC01] // Timer for RDTIME instruction
+reg instret[XWORD] alias = CSR[0xC02] // Instructions-retired counter for RDINSTRET instruction
+*/
+
+mode CSRs = USTATUS | UIE
+
 //==================================================================================================
 // Addressing Modes
 //==================================================================================================

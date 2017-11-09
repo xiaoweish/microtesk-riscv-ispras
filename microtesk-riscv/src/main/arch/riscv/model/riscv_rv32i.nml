@@ -138,7 +138,7 @@ op lui(rd: X, imm: card(20))
   it to the pc and places the result in register rd.
 */
 op auipc(rd: X, imm: card(20))
-  syntax = format("auipcs %s, 0x%x", rd.syntax, imm)
+  syntax = format("auipc %s, 0x%x", rd.syntax, imm)
   image  = format("%20s%s0010111", imm, rd.image)
   action = {
     rd = PC + (sign_extend(XWORD, imm) << 12);

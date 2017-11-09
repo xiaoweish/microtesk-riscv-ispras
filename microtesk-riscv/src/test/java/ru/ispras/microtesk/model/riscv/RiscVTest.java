@@ -19,8 +19,8 @@ import org.junit.Assert;
 import ru.ispras.microtesk.Logger.EventType;
 import ru.ispras.microtesk.test.testutils.TemplateTest;
 
-public class RISCVTest extends TemplateTest {
-  public RISCVTest () {
+public class RiscVTest extends TemplateTest {
+  public RiscVTest () {
     super(
         "riscv",
         "src/main/arch/riscv/templates"

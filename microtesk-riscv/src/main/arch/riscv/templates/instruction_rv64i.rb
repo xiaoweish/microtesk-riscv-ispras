@@ -27,9 +27,9 @@ class InstructionRV64I < RISCVBaseTemplate
   def run
     trace "Run RV64I instruction:"
 
-    lwu t0, t1, 0x0
+    #lwu t0, t1, 0x0
     trace "t0 = %x", gpr_observer(5)
-    ld t2, t3, 0x0
+    #ld t2, t3, 0x0
     #sd t4, t5, 0x0
 
     addiw a0, a1, 0x11

@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import ru.ispras.microtesk.test.Statistics;
 
-public class InstructionRV64ITestCase extends RISCVTest {
+public class InstructionRV64ITestCase extends RiscVTest {
   @Test
   public void test() {
     final Statistics statistics = run("instruction_rv64i.rb");

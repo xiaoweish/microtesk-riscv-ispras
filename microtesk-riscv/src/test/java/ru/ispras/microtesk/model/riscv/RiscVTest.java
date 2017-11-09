@@ -20,7 +20,10 @@ import ru.ispras.microtesk.Logger.EventType;
 import ru.ispras.microtesk.test.testutils.TemplateTest;
 
 public class RiscVTest extends TemplateTest {
-  public RiscVTest () {
+  /**
+   * Default constructor.
+   */
+  public RiscVTest() {
     super(
         "riscv",
         "src/main/arch/riscv/templates"
@@ -37,7 +40,7 @@ public class RiscVTest extends TemplateTest {
   }
 
   protected boolean isExpectedError(final String message) {
-    return message.contains("Exception handler for TLBMiss is not found") ||
-           message.contains("Exception handler for TLBInvalid is not found");
+    return message.contains("Exception handler for TLBMiss is not found")
+           || message.contains("Exception handler for TLBInvalid is not found");
   }
 }

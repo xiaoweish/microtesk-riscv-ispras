@@ -1,6 +1,8 @@
 TESTS = instruction_alu\
         instruction_bpu\
-        instruction_mmu
+        instruction_mmu\
+        instruction_rv32i\
+        instruction_rv64i
 
 all: $(TESTS)
 

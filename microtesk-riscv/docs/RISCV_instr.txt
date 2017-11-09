@@ -1,0 +1,262 @@
+
+RV32I Base Instruction Set
+LUI
+AUIPC
+JAL
+JALR
+BEQ
+BNE
+BLT
+BGE
+BLTU
+BGEU
+LB
+LH
+LW
+LBU
+LHU
+SB
+SH
+SW
+ADDI
+SLTI
+SLTIU
+XORI
+ORI
+ANDI
+SLLI
+SRLI
+SRAI
+ADD
+SUB
+SLL
+SLT
+SLTU
+XOR
+SRL
+SRA
+OR
+AND
+FENCE
+FENCE.I
+ECALL
+EBREAK
+CSRRW
+CSRRS
+CSRRC
+CSRRWI
+CSRRSI
+CSRRCI
+-------------
+Total: 47
+
+RV64I Base Instruction Set (in addition to RV32I)
+LWU
+LD
+SD
+SLLI
+SRLI
+SRAI
+ADDIW
+SLLIW
+SRLIW
+SRAIW
+ADDW
+SUBW
+SLLW
+SRLW
+SRAW
+-------------
+Total: 15
+
+RV32M Standard Extension
+MUL
+MULH
+MULHSU
+MULHU
+DIV
+DIVU
+REM
+REMU
+-------------
+Total: 8
+
+RV64M Standard Extension (in addition to RV32M)
+MULW
+DIVW
+DIVUW
+REMW
+REMUW
+-------------
+Total: 5
+
+RV32A Standard Extension
+LR.W
+SC.W
+AMOSWAP.W
+AMOADD.W
+AMOXOR.W
+AMOAND.W
+AMOOR.W
+AMOMIN.W
+AMOMAX.W
+AMOMINU.W
+AMOMAXU.W
+-------------
+Total: 11
+
+RV64A Standard Extension (in addition to RV32A)
+LR.D
+SC.D
+AMOSWAP.D
+AMOADD.D
+AMOXOR.D
+AMOAND.D
+AMOOR.D
+AMOMIN.D
+AMOMAX.D
+AMOMINU.D
+AMOMAXU.D
+-------------
+Total: 11
+
+RV32F Standard Extension
+FLW
+FSW
+FMADD.S
+FMSUB.S
+FNMSUB.S
+FNMADD.S
+FADD.S
+FSUB.S
+FMUL.S
+FDIV.S
+FSQRT.S
+FSGNJ.S
+FSGNJN.S
+FSGNJX.S
+FMIN.S
+FMAX.S
+FCVT.W.S
+FCVT.WU.S
+FMV.X.S
+FEQ.S
+FLT.S
+FLE.S
+FCLASS.S
+FCVT.S.W
+FCVT.S.WU
+FMV.S.X
+-------------
+Total: 26
+
+RV64F Standard Extension (in addition to RV32F)
+FCVT.L.S
+FCVT.LU.S
+FCVT.S.L
+FCVT.S.LU
+-------------
+Total: 4
+
+RV32D Standard Extension
+FLD
+FSD
+FMADD.D
+FMSUB.D
+FNMSUB.D
+FNMADD.D
+FADD.D
+FSUB.D
+FMUL.D
+FDIV.D
+FSQRT.D
+FSGNJ.D
+FSGNJN.D
+FSGNJX.D
+FMIN.D
+FMAX.D
+FCVT.S.D
+FCVT.D.S
+FEQ.D
+FLT.D
+FLE.D
+FCLASS.D
+FCVT.W.D
+FCVT.WU.D
+FCVT.D.W
+FCVT.D.WU
+-------------
+Total: 26
+
+RV64D Standard Extension (in addition to RV32D)
+FCVT.L.D
+FCVT.LU.D
+FMV.X.D
+FCVT.D.L
+FCVT.D.LU
+FMV.D.X
+-------------
+Total: 6
+
+"C" Standard Extension for Compressed Instructions
+C.ADDI4SPN (RES, nzimm=0)
+C.FLD (RV32/64)
+C.LQ (RV128)
+C.LW
+C.FLW (RV32)
+C.LD (RV64/128)
+C.FSD (RV32/64)
+C.SQ (RV128)
+C.SW
+C.FSW (RV32)
+C.SD (RV64/128)
+C.NOP
+C.ADDI (HINT, nzimm=0)
+C.JAL (RV32)
+C.ADDIW (RV64/128; RES, rd=0)
+C.LI (HINT, rd=0)
+C.ADDI16SP (RES, nzimm=0)
+C.LUI (RES, nzimm=0; HINT, rd=0)
+C.SRLI (RV32 NSE, nzimm[5]=1)
+C.SRLI64 (RV128; RV32/64 HINT)
+C.SRAI (RV32 NSE, nzimm[5]=1)
+C.SRAI64 (RV128; RV32/64 HINT)
+C.ANDI
+C.SUB
+C.XOR
+C.OR
+C.AND
+C.SUBW (RV64/128; RV32 RES)
+C.ADDW (RV64/128; RV32 RES)
+C.J
+C.BEQZ
+C.BNEZ
+
+C.SLLI (HINT, rd=0; RV32 NSE, nzimm[5]=1)
+C.SLLI64 (RV128; RV32/64 HINT; HINT, rd=0)
+C.FLDSP (RV32/64)
+C.LQSP (RV128; RES, rd=0)C.LWSP (RES, rd=0)
+C.FLWSP (RV32)
+C.LDSP (RV64/128; RES, rd=0)
+C.JR (RES, rs1=0)
+C.MV (HINT, rd=0)
+C.EBREAK
+C.JALR
+C.ADD (HINT, rd=0)
+C.FSDSP (RV32/64)
+C.SQSP (RV128)
+C.SWSP
+C.FSWSP (RV32)
+C.SDSP (RV64/128)
+-------------
+Total: 48
+
+--------------
+Pseudoinstruction: list 112 of riscv-spec-v2.1.pdf
+Total: 35
+
+
+
+
+
+

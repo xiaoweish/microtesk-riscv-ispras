@@ -31,6 +31,9 @@ class RISCVBaseTemplate < Template
     # Sets the indentation token used in test programs
     set_option_value 'indent-token', "\t"
 
+    # Sets the single-line comment text used in test programs
+    set_option_value 'comment-token', "#"
+
     # Sets the token used in separator lines printed into test programs
     set_option_value 'separator-token', "="
 
@@ -67,7 +70,7 @@ class RISCVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section_text(:pa => 0x0, :va => 0x0) {}
+    section_text(:pa => 0x2000, :va => 0x2000) {}
 
     #
     # Defines .data section.
@@ -335,6 +338,138 @@ label :error
     6.times {
       nop
     }
+  end
+
+  ##################################################################################################
+  # Shortcuts for registers
+  ##################################################################################################
+
+  def zero
+    X(0)
+  end
+
+  def ra
+    X(1)
+  end
+
+  def sp
+    X(2)
+  end
+
+  def gp
+    X(3)
+  end
+
+  def tp
+    X(4)
+  end
+
+  def t0
+    X(5)
+  end
+
+  def t1
+    X(6)
+  end
+
+  def t2
+    X(7)
+  end
+
+  def s0
+    X(8)
+  end
+
+  def s1
+    X(9)
+  end
+
+  def a0
+    X(10)
+  end
+
+  def a1
+    X(11)
+  end
+
+  def a2
+    X(12)
+  end
+
+  def a3
+    X(13)
+  end
+
+  def a4
+    X(14)
+  end
+
+  def a5
+    X(15)
+  end
+
+  def a6
+    X(16)
+  end
+
+  def a7
+    X(17)
+  end
+
+  def s2
+    X(18)
+  end
+
+  def s3
+    X(19)
+  end
+
+  def s4
+    X(20)
+  end
+
+  def s5
+    X(21)
+  end
+
+  def s6
+    X(22)
+  end
+
+  def s7
+    X(23)
+  end
+
+  def s8
+    X(24)
+  end
+
+  def s9
+    X(25)
+  end
+
+  def s10
+    X(26)
+  end
+
+  def s11
+    X(27)
+  end
+
+  def t3
+    X(28)
+  end
+
+  def t4
+    X(29)
+  end
+
+  def t5
+    X(30)
+  end
+
+  def t6
+    X(31)
   end
 
   ##################################################################################################

@@ -323,7 +323,7 @@ op bgeu(rs1: X, rs2: X, imm: card(12))
   loads and stores might not, and hence require additional synchronization to ensure atomicity.
 */
 op lw(rd: X, rs1: X, imm: card(12))
-  syntax = format("lw %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  syntax = format("lw %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s010%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
@@ -342,7 +342,7 @@ op lw(rd: X, rs1: X, imm: card(12))
   }
 
 op lh(rd: X, rs1: X, imm: card(12))
-  syntax = format("lh %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  syntax = format("lh %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s001%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
@@ -358,7 +358,7 @@ op lh(rd: X, rs1: X, imm: card(12))
   }
 
 op lhu(rd: X, rs1: X, imm: card(12))
-  syntax = format("lhu %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  syntax = format("lhu %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s101%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
@@ -374,7 +374,7 @@ op lhu(rd: X, rs1: X, imm: card(12))
   }
 
 op lb(rd: X, rs1: X, imm: card(12))
-  syntax = format("lb %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  syntax = format("lb %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s000%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
@@ -386,7 +386,7 @@ op lb(rd: X, rs1: X, imm: card(12))
   }
 
 op lbu(rd: X, rs1: X, imm: card(12))
-  syntax = format("lbu %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  syntax = format("lbu %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s100%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
@@ -409,8 +409,8 @@ op lbu(rd: X, rs1: X, imm: card(12))
   The SW, SH, and SB instructions store 32-bit, 16-bit, and 8-bit values from
   the low bits of register rs2 to memory.
 */
-op sw(rs1: X, rs2: X, imm: card(12))
-  syntax = format("sw %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
+op sw(rs2: X, rs1: X, imm: card(12))
+  syntax = format("sw %s, 0x%x(%s)", rs2.syntax, imm, rs1.syntax)
   image  = format("%7s%s%s010%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
@@ -426,8 +426,8 @@ op sw(rs1: X, rs2: X, imm: card(12))
     endif;
   }
 
-op sh(rs1: X, rs2: X, imm: card(12))
-  syntax = format("sh %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
+op sh(rs2: X, rs1: X, imm: card(12))
+  syntax = format("sh %s, 0x%x(%s)", rs2.syntax, imm, rs1.syntax)
   image  = format("%7s%s%s001%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
@@ -440,8 +440,8 @@ op sh(rs1: X, rs2: X, imm: card(12))
     endif;
   }
 
-op sb(rs1: X, rs2: X, imm: card(12))
-  syntax = format("sb %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
+op sb(rs2: X, rs1: X, imm: card(12))
+  syntax = format("sb %s, 0x%x(%s)", rs2.syntax, imm, rs1.syntax)
   image  = format("%7s%s%s000%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
@@ -1114,7 +1114,6 @@ pseudo op frcsr(rd: X)
     csrrs(rd, FCSR(), X(0)).action;
   }
 
-
 /*
 fscsr rd, rs csrrw rd, fcsr, rs Swap FP control/status register
 fscsr rs csrrw x0, fcsr, rs Write FP control/status register
@@ -1142,6 +1141,30 @@ op rv32i_pseudo_system = csrw
                        | csrsi
                        | csrci
                        | frcsr
+
+//==================================================================================================
+// Pseudoinstructions
+//==================================================================================================
+
+// Load address
+pseudo op la(rd : X, symbol : WORD)
+  syntax = format("la %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
+                          addi(rd, rd, symbol<11..0>).image)
+  action = {
+    auipc(rd, symbol<31..12>).action;
+    addi(rd, rd, symbol<11..0>).action;
+  }
+
+// Load global
+pseudo op lb_global(rd : X, symbol : WORD)
+  syntax = format("lb %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
+                          lb(rd, rd, symbol<11..0>).image)
+  action = {
+    auipc(rd, symbol<31..12>).action;
+    lb(rd, rd, symbol<11..0>).action;
+  }
 
 //==================================================================================================
 // Instruction Groups
@@ -1183,8 +1206,8 @@ op rv32i = lui
          | sltu
          | xor
          | or
-         | and
-         | rv32i_system
+         | and // 37
+         | rv32i_system // 10
 
          // Pseudoinstructions
          | nop
@@ -1202,8 +1225,10 @@ op rv32i = lui
          | blez
          | bgez
          | bltz
-         | bgtz
-         | rv32i_pseudo_system
+         | bgtz // 16
+         | rv32i_pseudo_system // 8
+         | la
+         | lb_global
 
 //==================================================================================================
 // The End

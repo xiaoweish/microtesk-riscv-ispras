@@ -55,7 +55,7 @@ class InstructionRV32I < RISCVBaseTemplate
 #    srli s0, s0, 12
  #   slli s0, s0, 12
 
-    sb a0, s0, 0x0
+    #sb a0, s0, 0x0
 
     trace "System instructions:"
     csrrw t0, risc_time, t1

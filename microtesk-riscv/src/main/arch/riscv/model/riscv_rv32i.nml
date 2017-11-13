@@ -322,6 +322,7 @@ op bgeu(rs1: X, rs2: X, imm: card(12))
   naturally aligned loads and stores are guaranteed to execute atomically, whereas misaligned
   loads and stores might not, and hence require additional synchronization to ensure atomicity.
 */
+
 op lw(rd: X, rs1: X, imm: card(12))
   syntax = format("lw %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s010%s0000011", imm, rs1.image, rd.image)
@@ -329,13 +330,13 @@ op lw(rd: X, rs1: X, imm: card(12))
     tmp_address = rs1 + sign_extend(XWORD, imm);
 
     if tmp_address<1..0> == 0 then // Word-aligned address
-      tmp_word = MEM[tmp_address >> 2];
+      tmp_word = MEM[coerce(card(MEM_SIZE), tmp_address >> 2)];
     elif tmp_address<1..0> == 1 then
-      tmp_word = MEM[(tmp_address >> 2) + 1]<7..0> :: MEM[tmp_address >> 2]<31..8>;
+      tmp_word = MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<7..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..8>;
     elif tmp_address<1..0> == 2 then
-      tmp_word = MEM[(tmp_address >> 2) + 1]<15..0> :: MEM[tmp_address >> 2]<31..16>;
+      tmp_word = MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<15..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..16>;
     else
-      tmp_word = MEM[(tmp_address >> 2) + 1]<23..0> :: MEM[tmp_address >> 2]<31..24>;
+      tmp_word = MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<23..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..24>;
     endif;
 
     rd = sign_extend(XWORD, tmp_word);
@@ -343,15 +344,15 @@ op lw(rd: X, rs1: X, imm: card(12))
 
 op lh(rd: X, rs1: X, imm: card(12))
   syntax = format("lh %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
-  image  = format("%12s%s001%s0000011", imm, rs1.image, rd.image)
+  image  = format("%12s%5s001%5s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
 
     if tmp_address<1..0> != 3 then
       tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-      tmp_half = MEM[tmp_address >> 2]<tmp_bit_offset + 15..tmp_bit_offset>;
+      tmp_half = MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<tmp_bit_offset + 15..tmp_bit_offset>;
     else
-      tmp_half = MEM[(tmp_address >> 2) + 1]<7..0> :: MEM[tmp_address >> 2]<31..24>;
+      tmp_half = MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<7..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..24>;
     endif;
 
     rd = sign_extend(XWORD, tmp_half);
@@ -365,9 +366,9 @@ op lhu(rd: X, rs1: X, imm: card(12))
 
     if tmp_address<1..0> != 3 then
       tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-      tmp_half = MEM[tmp_address >> 2]<tmp_bit_offset + 15..tmp_bit_offset>;
+      tmp_half = MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<tmp_bit_offset + 15..tmp_bit_offset>;
     else
-      tmp_half = MEM[(tmp_address >> 2) + 1]<7..0> :: MEM[tmp_address >> 2]<31..24>;
+      tmp_half = MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<7..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..24>;
     endif;
 
     rd = zero_extend(XWORD, tmp_half);
@@ -380,7 +381,7 @@ op lb(rd: X, rs1: X, imm: card(12))
     tmp_address = rs1 + sign_extend(XWORD, imm);
 
     tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-    tmp_byte = MEM[tmp_address >> 2]<tmp_bit_offset + 7..tmp_bit_offset>;
+    tmp_byte = MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<tmp_bit_offset + 7..tmp_bit_offset>;
 
     rd = sign_extend(XWORD, tmp_byte);
   }
@@ -392,7 +393,7 @@ op lbu(rd: X, rs1: X, imm: card(12))
     tmp_address = rs1 + sign_extend(XWORD, imm);
 
     tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-    tmp_byte = MEM[tmp_address >> 2]<tmp_bit_offset + 7..tmp_bit_offset>;
+    tmp_byte = MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<tmp_bit_offset + 7..tmp_bit_offset>;
 
     rd = zero_extend(XWORD, tmp_byte);
   }
@@ -409,6 +410,7 @@ op lbu(rd: X, rs1: X, imm: card(12))
   The SW, SH, and SB instructions store 32-bit, 16-bit, and 8-bit values from
   the low bits of register rs2 to memory.
 */
+
 op sw(rs2: X, rs1: X, imm: card(12))
   syntax = format("sw %s, 0x%x(%s)", rs2.syntax, imm, rs1.syntax)
   image  = format("%7s%s%s010%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
@@ -416,13 +418,13 @@ op sw(rs2: X, rs1: X, imm: card(12))
     tmp_address = rs1 + sign_extend(XWORD, imm);
 
     if tmp_address<1..0> == 0 then // Word-aligned address
-      MEM[tmp_address >> 2] = rs2<31..0>;
+      MEM[coerce(card(MEM_SIZE), tmp_address >> 2)] = rs2<31..0>;
     elif tmp_address<1..0> == 1 then
-      MEM[(tmp_address >> 2) + 1]<7..0> :: MEM[tmp_address >> 2]<31..8> = rs2<31..0>;
+      MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<7..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..8> = rs2<31..0>;
     elif tmp_address<1..0> == 2 then
-      MEM[(tmp_address >> 2) + 1]<15..0> :: MEM[tmp_address >> 2]<31..16> = rs2<31..0>;
+      MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<15..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..16> = rs2<31..0>;
     else
-      MEM[(tmp_address >> 2) + 1]<23..0> :: MEM[tmp_address >> 2]<31..24> = rs2<31..0>;
+      MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<23..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..24> = rs2<31..0>;
     endif;
   }
 
@@ -434,20 +436,30 @@ op sh(rs2: X, rs1: X, imm: card(12))
 
     if tmp_address<1..0> != 3 then
       tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-      MEM[tmp_address >> 2]<tmp_bit_offset + 15..tmp_bit_offset> = rs2<15..0>;
+      MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<tmp_bit_offset + 15..tmp_bit_offset> = rs2<15..0>;
     else
-      MEM[(tmp_address >> 2) + 1]<7..0> :: MEM[tmp_address >> 2]<31..24> = rs2<15..0>;
+      MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<7..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..24> = rs2<15..0>;
     endif;
   }
 
 op sb(rs2: X, rs1: X, imm: card(12))
   syntax = format("sb %s, 0x%x(%s)", rs2.syntax, imm, rs1.syntax)
-  image  = format("%7s%s%s000%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
+  image  = format("%7s%5s%5s000%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
     tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-    MEM[tmp_address >> 2]<tmp_bit_offset + 7..tmp_bit_offset> = rs2<7..0>;
+    MEM[coerce(card(MEM_SIZE), tmp_address >> 2)] = 0x0;
+    //MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<(tmp_bit_offset + 7)..tmp_bit_offset> = rs2<7..0>;
   }
+
+op rv32i_mmu = lb
+             | lh
+             | lw
+             | lbu
+             | lhu
+             | sb
+             | sh
+             | sw
 
 /*
   ADDI: Add Immediate (I-type)
@@ -1157,6 +1169,7 @@ pseudo op la(rd : X, symbol : WORD)
   }
 
 // Load global
+
 pseudo op lb_global(rd : X, symbol : WORD)
   syntax = format("lb %s, %<label>d", rd.syntax, symbol)
   image  = format("%s%s", auipc(rd, symbol<31..12>).image,
@@ -1180,14 +1193,7 @@ op rv32i = lui
          | bge
          | bltu
          | bgeu
-         | lb
-         | lh
-         | lw
-         | lbu
-         | lhu
-         | sb
-         | sh
-         | sw
+         | rv32i_mmu // 8
          | addi
          | slti
          | sltiu

@@ -34,8 +34,8 @@ class InstructionRV64I < RISCVBaseTemplate
     srli s0, s0, 12
     slli s0, s0, 12
 
-    ld t2, s0, 0x0
-    sd t4, s0, 0x0
+    #ld t2, s0, 0x0
+    #sd t4, s0, 0x0
 
     addiw a0, a1, 0x11
     slliw t0, a1, 0x11

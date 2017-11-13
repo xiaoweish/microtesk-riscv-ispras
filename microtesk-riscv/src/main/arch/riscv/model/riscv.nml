@@ -73,8 +73,11 @@ reg XREG [32, XWORD]
 // Program Counter
 reg PC [XWORD]
 
+// Memory Size
+let MEM_SIZE = XLEN - 2
+
 // Memory Size is 2 ** XLEN Bytes
-let MEM_SIZE_IN_WORDS = 2 ** (XLEN - 2)
+let MEM_SIZE_IN_WORDS = 2 ** (MEM_SIZE)
 
 // Main Memory
 shared mem MEM [MEM_SIZE_IN_WORDS, WORD]

@@ -27,7 +27,16 @@ class InstructionRV32A < RISCVBaseTemplate
   def run
     trace "Run RV32A instruction:"
 
-    amoswap_w t0, t1, t2
+    auipc s0, 0x80
+    srli s0, s0, 12
+    slli s0, s0, 12
+
+    lr_w t0, s0
+    sc_w t0, t1, s0
+
+    amoswap_w t0, t1, s0
+    amoadd_w t0, t1, s0
+    amoand_w t0, t1, s0
 
     nop
     nop

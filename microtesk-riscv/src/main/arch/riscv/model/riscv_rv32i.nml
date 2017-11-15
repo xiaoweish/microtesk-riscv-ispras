@@ -330,13 +330,13 @@ op lw(rd: X, rs1: X, imm: card(12))
     tmp_address = rs1 + sign_extend(XWORD, imm);
 
     if tmp_address<1..0> == 0 then // Word-aligned address
-      tmp_word = MEM[coerce(card(MEM_SIZE), tmp_address >> 2)];
+      tmp_word = MEM[tmp_address >> 2];
     elif tmp_address<1..0> == 1 then
-      tmp_word = MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<7..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..8>;
+      tmp_word = MEM[tmp_address >> 2 + 1]<7..0> :: MEM[tmp_address >> 2]<31..8>;
     elif tmp_address<1..0> == 2 then
-      tmp_word = MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<15..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..16>;
+      tmp_word = MEM[tmp_address >> 2 + 1]<15..0> :: MEM[tmp_address >> 2]<31..16>;
     else
-      tmp_word = MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<23..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..24>;
+      tmp_word = MEM[tmp_address >> 2 + 1]<23..0> :: MEM[tmp_address >> 2]<31..24>;
     endif;
 
     rd = sign_extend(XWORD, tmp_word);
@@ -350,9 +350,9 @@ op lh(rd: X, rs1: X, imm: card(12))
 
     if tmp_address<1..0> != 3 then
       tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-      tmp_half = MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<tmp_bit_offset + 15..tmp_bit_offset>;
+      tmp_half = MEM[tmp_address >> 2]<tmp_bit_offset + 15..tmp_bit_offset>;
     else
-      tmp_half = MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<7..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..24>;
+      tmp_half = MEM[(tmp_address >> 2) + 1]<7..0> :: MEM[tmp_address >> 2]<31..24>;
     endif;
 
     rd = sign_extend(XWORD, tmp_half);
@@ -366,9 +366,9 @@ op lhu(rd: X, rs1: X, imm: card(12))
 
     if tmp_address<1..0> != 3 then
       tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-      tmp_half = MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<tmp_bit_offset + 15..tmp_bit_offset>;
+      tmp_half = MEM[tmp_address >> 2]<tmp_bit_offset + 15..tmp_bit_offset>;
     else
-      tmp_half = MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<7..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..24>;
+      tmp_half = MEM[(tmp_address >> 2) + 1]<7..0> :: MEM[tmp_address >> 2]<31..24>;
     endif;
 
     rd = zero_extend(XWORD, tmp_half);
@@ -381,7 +381,7 @@ op lb(rd: X, rs1: X, imm: card(12))
     tmp_address = rs1 + sign_extend(XWORD, imm);
 
     tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-    tmp_byte = MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<tmp_bit_offset + 7..tmp_bit_offset>;
+    tmp_byte = MEM[tmp_address >> 2]<tmp_bit_offset + 7..tmp_bit_offset>;
 
     rd = sign_extend(XWORD, tmp_byte);
   }
@@ -393,7 +393,7 @@ op lbu(rd: X, rs1: X, imm: card(12))
     tmp_address = rs1 + sign_extend(XWORD, imm);
 
     tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-    tmp_byte = MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<tmp_bit_offset + 7..tmp_bit_offset>;
+    tmp_byte = MEM[tmp_address >> 2]<tmp_bit_offset + 7..tmp_bit_offset>;
 
     rd = zero_extend(XWORD, tmp_byte);
   }

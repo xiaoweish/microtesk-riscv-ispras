@@ -241,6 +241,7 @@ var prev_pc [XWORD]
 
 var tmp_address [XWORD]
 var tmp_index [XWORD]
+var tmp_bit [BIT]
 var tmp_byte [BYTE]
 var tmp_half [HWORD]
 var tmp_dword [DWORD]

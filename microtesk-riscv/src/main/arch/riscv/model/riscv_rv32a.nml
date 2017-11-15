@@ -35,23 +35,124 @@ AMOMINU.W
 AMOMAXU.W
 */
 
-var ordering_aq[BIT]
-var ordering_rl[BIT]
+//var ordering_aq[BIT]
+//var ordering_rl[BIT]
 
+let MEM_DWORD = 8
+let MEM_WORD  = 4
+let MEM_HWORD = 2
+let MEM_BYTE  = 1
+
+var temp_address_load[DWORD]
+var temp_address_tail[card(2)]
+
+op check_aligned(op_type: card(4), address: XWORD)
+  action = {
+    if (op_type == MEM_DWORD && address<2..0> != 0) ||
+       (op_type == MEM_WORD && address<1..0> != 0) ||
+       (op_type == MEM_HWORD && address<0> != 0) then
+      //exception("");
+      trace("For best performance, the effective address for all loads and stores should be");
+      trace("naturally aligned for each data type");
+      tmp_bit = 1;
+    endif;
+  }
+
+var load_value[DWORD]
+
+op load_data(op_type: card(4), address: XWORD)
+  action = {
+    tmp_bit = 0;
+    check_aligned(op_type, address).action;
+    if tmp_bit != 1 then
+      if op_type == MEM_DWORD then
+        load_value<63..0> = MEM[address >> 2 + 1]::MEM[address >> 2];
+      elif op_type == MEM_WORD then
+        load_value = 0;
+        load_value<31..0> = MEM[address >> 2];
+      endif;
+    endif;
+  }
+
+op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
+  action = {
+    tmp_bit = 0;
+    check_aligned(op_type, address).action;
+    if tmp_bit != 1 then
+      if op_type == MEM_DWORD then
+        MEM[address >> 2 + 1]::MEM[address >> 2] = store_value;
+      elif op_type == MEM_WORD then
+        MEM[address >> 2] = store_value<31..0>;
+      endif;
+    endif;
+  }
+
+op lr_w(rd: X, rs1: X)
+  syntax = format("lr.w %s, (%s)", rd.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00010", "0", "0", "00000", rs1.image, "010", rd.image)
+  action = {
+    load_data(MEM_WORD, coerce(XWORD, rs1)).action; // return load_value
+    rd = sign_extend(XWORD, load_value<31..0>);
+  }
+
+// SC writes a word in rs2 to the address in rs1, provided a valid reservation still exists on that address.
+op sc_w(rd: X, rs2: X, rs1: X)
+  syntax = format("sc.w %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00011", "0", "0", rs2.image, rs1.image, "010", rd.image)
+  action = {
+    store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, rs2)).action;
+    rd = 0;
+  }
+
+/*
+  The atomic memory operation (AMO) instructions perform read-modify-write operations for
+  multiprocessor synchronization and are encoded with an R-type instruction format.
+*/
 op amoswap_w(rd: X, rs1: X, rs2: X)
 /*  init = {
     opcode_xtype = 0b0101111;
     funct3 = 0b010;
     funct7<6..2> = 0b00001;
-    ordering_rl = 1;
-    ordering_aq = 1;
+    ordering_rl = 0;
+    ordering_aq = 0;
     funct7<0> = ordering_rl;
     funct7<1> = ordering_aq;
   }*/
-  syntax = format("amoswap.w %s, %s(%s)", rd.syntax, rs2.syntax, rs1.syntax)
-  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00001", "1", "1", rs2.image, rs1.image, "010", rd.image)
+  syntax = format("amoswap.w %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00001", "0", "0", rs2.image, rs1.image, "010", rd.image)
   action = {
-    // TODO
+    load_data(MEM_WORD, coerce(XWORD, rs1)).action; // return load_value
+    rd = zero_extend(XWORD, load_value<31..0>);
+    store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, rs2)).action;
   }
 
-op rv32a = amoswap_w
+op amoadd_w(rd: X, rs1: X, rs2: X)
+  syntax = format("amoadd.w %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00000", "0", "0", rs2.image, rs1.image, "010", rd.image)
+  action = {
+    load_data(MEM_WORD, coerce(XWORD, rs1)).action; // return load_value
+    rd = zero_extend(XWORD, load_value<31..0>);
+    tmp_word = rd<31..0> + rs2<31..0>;
+    store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, tmp_word)).action;
+  }
+
+op amoand_w(rd: X, rs1: X, rs2: X)
+  syntax = format("amoand.w %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "01100", "0", "0", rs2.image, rs1.image, "010", rd.image)
+  action = {
+    load_data(MEM_WORD, coerce(XWORD, rs1)).action; // return load_value
+    rd = zero_extend(XWORD, load_value<31..0>);
+    tmp_word = rd<31..0> & rs2<31..0>;
+    store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, tmp_word)).action;
+  }
+
+op rv32a = lr_w
+         | sc_w
+         | amoswap_w
+         | amoadd_w
+         | amoand_w
+
+
+
+
+

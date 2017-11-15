@@ -25,7 +25,7 @@ require_relative 'riscv_base'
 class InstructionRV32I < RISCVBaseTemplate
 
   def run
-    trace "Run RV32I instruction:"
+    trace "RV32I instructions:"
 
     lui t3, 8
     auipc t4, 0
@@ -39,25 +39,63 @@ class InstructionRV32I < RISCVBaseTemplate
     label :jalr_label
     nop
 
+#    jalr
+#    beq
+#    bne
+#    blt
+#    bge
+#    bltu
+#    bgeu
+
+    auipc s0, 0x80
+    srli s0, s0, 12
+    slli s0, s0, 12
+
+    lb a0, s0, 0x0
+    lh a0, s0, 0x0
+    lw a0, s0, 0x0
+    lbu a0, s0, 0x0
+    lhu a0, s0, 0x0
+    sb a0, s0, 0x0
+    sh a0, s0, 0x0
+    sw a0, s0, 0x0
+
+    addi t0, t1, 0x17
+    slti t0, t1, 0x17
+    sltiu t0, t1, 0x17
+    xori t0, t1, 0x17
+    ori t0, t1, 0x11
+    andi t0, t1, 0x15
+    slli t0, t1, 0x1
+    srli t0, t1, 0x3
+    srai t0, t1, 0x7
+    sll t0, t1, t2
+    srl t0, t1, t2
+    sra t0, t1, t2
+    add t0, t1, t2
+    sub t0, t1, t2
+    slt t0, t1, t2
+    sltu t0, t1, t2
+    xor t0, t1, t2
+    OR t0, t1, t2
+    AND t0, t1, t2
+
     addi t0, t1, 15
     trace "(addi): x5 = %x", gpr_observer(5)
-
     addi t1, t2, 7
     trace "(addi): x6 = %x", gpr_observer(6)
-
     add t2, t1, t0
     trace "(add): x7 = %x", gpr_observer(7)
-
     sub t2, t1, t0
     trace "(sub): x7 = %x", gpr_observer(7)
 
-    auipc s0, 0x80
-#    srli s0, s0, 12
- #   slli s0, s0, 12
-
-    #sb a0, s0, 0x0
-
     trace "System instructions:"
+
+    fence
+    fencei
+    ecall
+    ebreak
+
     csrrw t0, risc_time, t1
     csrrs t0, risc_time, t1
     csrrc t0, risc_time, t1
@@ -66,6 +104,7 @@ class InstructionRV32I < RISCVBaseTemplate
     csrrsi t0, risc_time, 0x2
     csrrci t0, risc_time, 0x3
 
+    trace "Pseudo instructions:"
     csrw time, t0
     csrr t0, time
     csrs time, t0
@@ -75,10 +114,6 @@ class InstructionRV32I < RISCVBaseTemplate
     csrci time, 0x5
     frcsr t0
 
-    ecall
-    ebreak
-    fence
-    fencei
 
     nop
     nop

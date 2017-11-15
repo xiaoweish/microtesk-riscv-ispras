@@ -31,11 +31,13 @@ class InstructionRV64I < RISCVBaseTemplate
     trace "t0 = %x", gpr_observer(5)
 
     auipc s0, 0x80
+    trace "s0 = %x", gpr_observer(8)
     srli s0, s0, 12
     slli s0, s0, 12
+    srai t0, s0, 12
 
-    #ld t2, s0, 0x0
-    #sd t4, s0, 0x0
+    ld t2, s0, 0x0
+    sd t4, s0, 0x0
 
     addiw a0, a1, 0x11
     slliw t0, a1, 0x11

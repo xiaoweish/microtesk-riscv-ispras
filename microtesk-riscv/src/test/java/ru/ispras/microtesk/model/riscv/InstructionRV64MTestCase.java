@@ -19,10 +19,10 @@ import org.junit.Test;
 
 import ru.ispras.microtesk.test.Statistics;
 
-public class InstructionMmuTestCase extends RiscVTest {
+public class InstructionRV64MTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("instruction_mmu.rb");
+    final Statistics statistics = run("instruction_rv64m.rb");
     Assert.assertNotNull(statistics);
   }
 }

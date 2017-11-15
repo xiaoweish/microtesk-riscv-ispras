@@ -38,7 +38,7 @@ AMOMAXU.W
 var ordering_aq[BIT]
 var ordering_rl[BIT]
 
-op amoswapW(rd: X, rs1: X, rs2: X)
+op amoswap_w(rd: X, rs1: X, rs2: X)
 /*  init = {
     opcode_xtype = 0b0101111;
     funct3 = 0b010;
@@ -54,4 +54,4 @@ op amoswapW(rd: X, rs1: X, rs2: X)
     // TODO
   }
 
-op rv32a = amoswapW
+op rv32a = amoswap_w

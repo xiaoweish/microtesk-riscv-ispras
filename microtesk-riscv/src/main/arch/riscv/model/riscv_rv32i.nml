@@ -448,8 +448,7 @@ op sb(rs2: X, rs1: X, imm: card(12))
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
     tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
-    MEM[coerce(card(MEM_SIZE), tmp_address >> 2)] = 0x0;
-    //MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<(tmp_bit_offset + 7)..tmp_bit_offset> = rs2<7..0>;
+    MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<(tmp_bit_offset + 7)..tmp_bit_offset> = rs2<7..0>;
   }
 
 op rv32i_mmu = lb
@@ -969,9 +968,10 @@ op ebreak()
     // TODO
   }
 
-op fence(pred: card(4), succ: card(4))
-  syntax = format("fence 0x%x, 0x%x", pred, succ)
-  image  = format("%4s%4s%4s00000%3s00000%7s", "0000", pred, succ, "000", "0001111")
+op fence()//(pred: card(4), succ: card(4))
+  // syntax = format("fence 0x%x, 0x%x", pred, succ) TODO:
+  syntax = format("fence")
+  image  = format("%4s%4s%4s00000%3s00000%7s", "0000", "0000", "0000", "000", "0001111")
   action = {
     // TODO
   }

@@ -19,31 +19,22 @@ require_relative 'riscv_base'
 #
 # Description:
 #
-# This small tests for BPU instructions.
+# This small tests for RV64M instructions.
 #
 
-class InstructionBPU < RISCVBaseTemplate
+class InstructionRV64M < RISCVBaseTemplate
 
   def run
-    trace "Run BPU instruction:"
+    trace "Run 64M instruction:"
 
-    trace "\n\n"
+    mulw t0, t1, t2
+    divw t0, t1, t2
+    divuw t0, t1, t2
+    remw t0, t1, t2
+    remuw t0, t1, t2
 
     nop
-#    trace "0"
-#    b :branch1
-#    label :branch2
-#    trace "2"
-#    nop
-#    b :branch3
-#    label :branch1
-#    trace "1"
-#    b :branch2
-#    nop
-#    label :branch3
-#    trace "3"
-#    nop
-
+    nop
   end
 
 end

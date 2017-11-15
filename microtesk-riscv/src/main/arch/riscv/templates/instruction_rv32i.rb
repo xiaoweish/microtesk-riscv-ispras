@@ -77,7 +77,7 @@ class InstructionRV32I < RISCVBaseTemplate
 
     ecall
     ebreak
-    fence 0x0, 0x0
+    fence
     fencei
 
     nop

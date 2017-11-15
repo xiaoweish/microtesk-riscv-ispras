@@ -19,27 +19,25 @@ require_relative 'riscv_base'
 #
 # Description:
 #
-# This small tests for MMU instructions.
+# This small tests for RV32M instructions.
 #
-class InstructionMMU < RISCVBaseTemplate
+
+class InstructionRV32M < RISCVBaseTemplate
 
   def run
-    trace "Run MMU instruction:"
+    trace "Run RV32M instruction:"
 
-    #addi r1, r0, 0x0fff
-    #addi r2, r0, 0x0123
-    #addi r5, r0, 0x0f00
-    trace "\nRISCV Load/Store:\n"
+    mul t0, t1, t2
+    mulh t0, t1, t2
+    mulhsu t0, t1, t2
+    mulhu t0, t1, t2
+    div t0, t1, t2
+    divu t0, t1, t2
+    rem t0, t1, t2
+    remu t0, t1, t2
 
-    #sw r2, 0x0, r1
-    trace "r2 = %x", gpr_observer(2)
-    #sw r5, 0x4, r1
-    trace "r5 = %x", gpr_observer(5)
-
-    #lw r3, 0x0, r1
-    trace "r3 = %x", gpr_observer(3)
-    #lw r4, 0x1, r1
-    trace "r4 = %x", gpr_observer(4)
+    nop
+    nop
   end
 
 end

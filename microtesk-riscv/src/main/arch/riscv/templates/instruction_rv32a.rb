@@ -19,26 +19,15 @@ require_relative 'riscv_base'
 #
 # Description:
 #
-# This small tests for ALU instructions.
+# This small tests for RV32A instructions.
 #
-class InstructionALU < RISCVBaseTemplate
+
+class InstructionRV32A < RISCVBaseTemplate
 
   def run
-    trace "Run ALU instruction:"
+    trace "Run RV32A instruction:"
 
-    trace "\nRISC-V Arithmetic:\n"
-
-    addi x5, x6, 15
-    trace "(addi): x5 = %x", gpr_observer(5)
-
-    addi x6, x7, 7
-    trace "(addi): x6 = %x", gpr_observer(6)
-
-    add x7, x6, x5
-    trace "(add): x7 = %x", gpr_observer(7)
-
-    sub x7, x6, x5
-    trace "(sub): x7 = %x", gpr_observer(7)
+    amoswap_w t0, t1, t2
 
     nop
     nop

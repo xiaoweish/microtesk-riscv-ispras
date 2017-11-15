@@ -41,6 +41,9 @@ public class RiscVTest extends TemplateTest {
 
   protected boolean isExpectedError(final String message) {
     return message.contains("Exception handler for TLBMiss is not found")
-           || message.contains("Exception handler for TLBInvalid is not found");
+           || message.contains("Exception handler for TLBInvalid is not found")
+           || message.contains(
+           "Warning: Failed to load the MMU model. Physical memory will be accessed directly.");
+
   }
 }

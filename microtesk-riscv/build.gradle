@@ -339,7 +339,6 @@ task translateRISCV(type: JavaExec) {
   args = [
     '-t',
     "${project.projectDir}/build/target/arch/riscv/model/riscv.nml",
-    "${project.projectDir}/build/target/arch/riscv/model/mmu/riscv.mmu",
     '-od',
     "${project.projectDir}/build/generated-src/models",
     '-ed',

@@ -1,4 +1,4 @@
 ARCH=riscv
 
 all:
-	sh $(MICROTESK_HOME)/bin/compile.sh $(ARCH).nml mmu/$(ARCH).mmu --extension-dir ../extensions --ri RV64FULL
+	sh $(MICROTESK_HOME)/bin/compile.sh $(ARCH).nml --extension-dir ../extensions --ri RV64FULL

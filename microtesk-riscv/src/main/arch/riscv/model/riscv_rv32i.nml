@@ -565,7 +565,6 @@ op andi(rd: X, rs1: X, imm: card(12))
     rd = rs1 & sign_extend(XWORD, imm);
   }
 
-
 /*
   SLLI: Shift Left Logical Immediate (I-type)
   SRLI: Shift Right Logical Immediate (I-type)

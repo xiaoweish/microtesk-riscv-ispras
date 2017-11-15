@@ -343,7 +343,9 @@ task translateRISCV(type: JavaExec) {
     '-od',
     "${project.projectDir}/build/generated-src/models",
     '-ed',
-    "${project.projectDir}/build/target/arch/riscv/extensions"
+    "${project.projectDir}/build/target/arch/riscv/extensions",
+    '-ri',
+    "${specRevision}"
   ]
 }
 

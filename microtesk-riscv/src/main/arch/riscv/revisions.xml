@@ -4,4 +4,25 @@
  <revision name="RV64I">
   <includes name="RV32I"/>
  </revision>
+ <revision name="RV32M"/>
+ <revision name="RV64M">
+  <includes name="RV32M"/>
+  <includes name="RV64I"/>
+ </revision>
+ <revision name="RV32A"/>
+ <revision name="RV64A">
+  <includes name="RV32A"/>
+  <includes name="RV64I"/>
+ </revision>
+ <revision name="RV32FULL">
+  <includes name="RV32I"/>
+  <includes name="RV32M"/>
+  <includes name="RV32A"/>
+ </revision>
+ <revision name="RV64FULL">
+  <includes name="RV64I"/>
+  <includes name="RV64M"/>
+  <includes name="RV64A"/>
+  <includes name="RV32FULL"/>
+</revision>
 </revisions>

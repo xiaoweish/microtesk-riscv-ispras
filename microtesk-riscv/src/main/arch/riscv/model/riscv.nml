@@ -247,6 +247,10 @@ var tmp_half [HWORD]
 var tmp_dword [DWORD]
 var tmp_word [WORD]
 
+var tmp_int1 [INT]
+var tmp_int2 [INT]
+
+
 // Bit Offset in a Word
 var tmp_bit_offset [card(5)]
 

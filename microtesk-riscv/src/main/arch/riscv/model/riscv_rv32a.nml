@@ -21,19 +21,17 @@
 // RV32A Standard Extension
 //==================================================================================================
 
-/*
-LR.W
-SC.W
-AMOSWAP.W
-AMOADD.W
-AMOXOR.W
-AMOAND.W
-AMOOR.W
-AMOMIN.W
-AMOMAX.W
-AMOMINU.W
-AMOMAXU.W
-*/
+/*  LR.W +
+    SC.W +
+    AMOSWAP.W +
+    AMOADD.W +
+    AMOXOR.W +
+    AMOAND.W +
+    AMOOR.W +
+    AMOMIN.W +
+    AMOMAX.W +
+    AMOMINU.W +
+    AMOMAXU.W + */
 
 //var ordering_aq[BIT]
 //var ordering_rl[BIT]
@@ -51,9 +49,9 @@ op check_aligned(op_type: card(4), address: XWORD)
     if (op_type == MEM_DWORD && address<2..0> != 0) ||
        (op_type == MEM_WORD && address<1..0> != 0) ||
        (op_type == MEM_HWORD && address<0> != 0) then
-      //exception("");
       trace("For best performance, the effective address for all loads and stores should be");
       trace("naturally aligned for each data type");
+      exception("Address Error: rv32a");
       tmp_bit = 1;
     endif;
   }
@@ -146,13 +144,100 @@ op amoand_w(rd: X, rs1: X, rs2: X)
     store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, tmp_word)).action;
   }
 
+op amoor_w(rd: X, rs1: X, rs2: X)
+  syntax = format("amoor.w %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "01000", "0", "0", rs2.image, rs1.image, "010", rd.image)
+  action = {
+    load_data(MEM_WORD, coerce(XWORD, rs1)).action; // return load_value
+    rd = zero_extend(XWORD, load_value<31..0>);
+    tmp_word = rd<31..0> | rs2<31..0>;
+    store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, tmp_word)).action;
+  }
+
+op amoxor_w(rd: X, rs1: X, rs2: X)
+  syntax = format("amoxor.w %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00100", "0", "0", rs2.image, rs1.image, "010", rd.image)
+  action = {
+    load_data(MEM_WORD, coerce(XWORD, rs1)).action; // return load_value
+    rd = zero_extend(XWORD, load_value<31..0>);
+    tmp_word = rd<31..0> | rs2<31..0>;
+    store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, tmp_word)).action;
+  }
+
+op amomin_w(rd: X, rs1: X, rs2: X)
+  syntax = format("amomin.w %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "10000", "0", "0", rs2.image, rs1.image, "010", rd.image)
+  action = {
+    load_data(MEM_WORD, coerce(XWORD, rs1)).action; // return load_value
+    rd = zero_extend(XWORD, load_value<31..0>);
+    tmp_int1 = coerce(INT, rd);
+    tmp_int2 = coerce(INT, rs2);
+    if tmp_int1 < tmp_int2 then
+      tmp_word = rd<31..0>;
+    else
+      tmp_word = rs2<31..0>;
+    endif;
+    store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, tmp_word)).action;
+  }
+
+op amomax_w(rd: X, rs1: X, rs2: X)
+  syntax = format("amomax.w %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "10100", "0", "0", rs2.image, rs1.image, "010", rd.image)
+  action = {
+    load_data(MEM_WORD, coerce(XWORD, rs1)).action; // return load_value
+    rd = zero_extend(XWORD, load_value<31..0>);
+    tmp_int1 = coerce(INT, rd);
+    tmp_int2 = coerce(INT, rs2);
+    if tmp_int1 > tmp_int2 then
+      tmp_word = rd<31..0>;
+    else
+      tmp_word = rs2<31..0>;
+    endif;
+    store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, tmp_word)).action;
+  }
+
+op amominu_w(rd: X, rs1: X, rs2: X)
+  syntax = format("amominu.w %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "11000", "0", "0", rs2.image, rs1.image, "010", rd.image)
+  action = {
+    load_data(MEM_WORD, coerce(XWORD, rs1)).action; // return load_value
+    rd = zero_extend(XWORD, load_value<31..0>);
+    if rd<31..0> < rs2<31..0> then
+      tmp_word = rd<31..0>;
+    else
+      tmp_word = rs2<31..0>;
+    endif;
+    store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, tmp_word)).action;
+  }
+
+op amomaxu_w(rd: X, rs1: X, rs2: X)
+  syntax = format("amomaxu.w %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
+  image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "11100", "0", "0", rs2.image, rs1.image, "010", rd.image)
+  action = {
+    load_data(MEM_WORD, coerce(XWORD, rs1)).action; // return load_value
+    rd = zero_extend(XWORD, load_value<31..0>);
+    tmp_int1 = coerce(INT, rd);
+    tmp_int2 = coerce(INT, rs2);
+    if rd<31..0> > rs2<31..0> then
+      tmp_word = rd<31..0>;
+    else
+      tmp_word = rs2<31..0>;
+    endif;
+    store_data(MEM_WORD, coerce(XWORD, rs1), coerce(DWORD, tmp_word)).action;
+  }
+
+//==================================================================================================
+
 op rv32a = lr_w
          | sc_w
          | amoswap_w
          | amoadd_w
          | amoand_w
+         | amoor_w
+         | amoxor_w
+         | amomin_w
+         | amomax_w
+         | amominu_w
+         | amomaxu_w
 
-
-
-
-
+//==================================================================================================

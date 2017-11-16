@@ -37,6 +37,12 @@ class InstructionRV32A < RISCVBaseTemplate
     amoswap_w t0, t1, s0
     amoadd_w t0, t1, s0
     amoand_w t0, t1, s0
+    amoor_w t0, t1, s0
+    amoxor_w t0, t1, s0
+    amomin_w t0, t1, s0
+    amomax_w t0, t1, s0
+    amominu_w t0, t1, s0
+    amomaxu_w t0, t1, s0
 
     nop
     nop

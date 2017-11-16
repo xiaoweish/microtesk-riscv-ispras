@@ -1,8 +1,9 @@
-TESTS = instruction_alu\
-        instruction_bpu\
-        instruction_mmu\
-        instruction_rv32i\
+TESTS = instruction_rv32i\
         instruction_rv64i\
+        instruction_rv32m\
+        instruction_rv64m\
+        instruction_rv32a\
+        instruction_rv64a\
         bubble_sort_byte
 
 all: $(TESTS)

@@ -22,6 +22,7 @@
 // SHLEN: Number of Bits Required to Store Shift Amount for X Registers
 #ifdef RV64I
   let XLEN = 64
+  let XLEN_RANGE = 63
   let SHLEN = 6
 #else
   let XLEN = 32
@@ -250,6 +251,8 @@ var tmp_word [WORD]
 var tmp_int1 [INT]
 var tmp_int2 [INT]
 
+var tmp_long1 [LONG]
+var tmp_long2 [LONG]
 
 // Bit Offset in a Word
 var tmp_bit_offset [card(5)]
@@ -369,7 +372,7 @@ op <name>(rd: X, imm: card(20))
   #include "riscv_rv64m.nml"
 #endif
 #ifdef RV64A
-  //#include "riscv_rv64a.nml"
+  #include "riscv_rv64a.nml"
 #endif
 
 op Op = rv32i
@@ -384,6 +387,9 @@ op Op = rv32i
 #endif
 #ifdef RV64M
       | rv64m
+#endif
+#ifdef RV64A
+      | rv64a
 #endif
 
 op instruction(operation: Op)

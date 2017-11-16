@@ -1128,25 +1128,116 @@ pseudo op frcsr(rd: X)
     csrrs(rd, FCSR(), X(0)).action;
   }
 
+// Swap FP control/status register
+pseudo op fscsr(rd: X, rs: X)
+  syntax = format("fscsr %s, %s", rd.syntax, rs.syntax)
+  image  = format("%32s", csrrw(rd, FCSR(), rs).image)
+  action = {
+    csrrw(rd, FCSR(), rs).action;
+  }
+
+// Write FP control/status register
+pseudo op fscsr2(rs: X)
+  syntax = format("fscsr %s", rs.syntax)
+  image  = format("%32s", csrrw(X(0), FCSR(), rs).image)
+  action = {
+    csrrw(X(0), FCSR(), rs).action;
+  }
+
+// Read FP rounding mode
+pseudo op frrm(rd: X)
+  syntax = format("frrm %s", rd.syntax)
+  image  = format("%32s", csrrs(rd, FRM(), X(0)).image)
+  action = {
+    csrrs(rd, FRM(), X(0)).action;
+  }
+
+// Swap FP rounding mode
+pseudo op fsrm(rd: X, rs: X)
+  syntax = format("fsrm %s, %s", rd.syntax, rs.syntax)
+  image  = format("%32s", csrrw(rd, FRM(), rs).image)
+  action = {
+    csrrw(rd, FRM(), rs).action;
+  }
+
+// Write FP rounding mode
+pseudo op fsrm2(rs: X)
+  syntax = format("fsrm %s", rs.syntax)
+  image  = format("%32s", csrrw(X(0), FRM(), rs).image)
+  action = {
+    csrrw(X(0), FRM(), rs).action;
+  }
+
+// Swap FP rounding mode, immediate
+pseudo op fsrmi(rd: X, imm: card(5))
+  syntax = format("fsrmi %s, 0x%x", rd.syntax, imm)
+  image  = format("%32s", csrrwi(rd, FRM(), imm).image)
+  action = {
+    csrrwi(rd, FRM(), imm).action;
+  }
+
+// Write FP rounding mode, immediate
+pseudo op fsrmi2(imm: card(5))
+  syntax = format("fsrmi 0x%x", imm)
+  image  = format("%32s", csrrwi(X(0), FRM(), imm).image)
+  action = {
+    csrrwi(X(0), FRM(), imm).action;
+  }
+
+// Read FP exception flags
+pseudo op frflags(rd: X)
+  syntax = format("frflags %s", rd.syntax)
+  image  = format("%32s", csrrs(rd, FFLAGS(), X(0)).image)
+  action = {
+    csrrs(rd, FFLAGS(), X(0)).action;
+  }
+
+// Swap FP exception flags
+pseudo op fsflags(rd: X, rs: X)
+  syntax = format("fsflags %s, %s", rd.syntax, rs.syntax)
+  image  = format("%32s", csrrw(rd, FFLAGS(), rs).image)
+  action = {
+    csrrw(rd, FFLAGS(), rs).action;
+  }
+
+// Write FP exception flags
+pseudo op fsflags2(rs: X)
+  syntax = format("fsflags %s", rs.syntax)
+  image  = format("%32s", csrrw(X(0), FFLAGS(), rs).image)
+  action = {
+    csrrw(X(0), FFLAGS(), rs).action;
+  }
+
+// Swap FP exception flags, immediate
+pseudo op fsflagsi(rd: X, imm: card(5))
+  syntax = format("fsflagsi %s, 0x%x", rd.syntax, imm)
+  image  = format("%32s", csrrwi(rd, FFLAGS(), imm).image)
+  action = {
+    csrrwi(rd, FFLAGS(), imm).action;
+  }
+
+// Write FP exception flags, immediate
+pseudo op fsflagsi2(imm: card(5))
+  syntax = format("fsflagsi 0x%x", imm)
+  image  = format("%32s", csrrwi(X(0), FFLAGS(), imm).image)
+  action = {
+    csrrwi(X(0), FFLAGS(), imm).action;
+  }
+
+// Read FP exception flags
+pseudo op frflags(rd: X)
+  syntax = format("frflags %s", rd.syntax)
+  image  = format("%32s", csrrs(rd, FFLAGS(), X(0)).image)
+  action = {
+    csrrs(rd, FFLAGS(), X(0)).action;
+  }
+
 /*
-fscsr rd, rs csrrw rd, fcsr, rs Swap FP control/status register
-fscsr rs csrrw x0, fcsr, rs Write FP control/status register
-frrm rd csrrs rd, frm, x0 Read FP rounding mode
-fsrm rd, rs csrrw rd, frm, rs Swap FP rounding mode
-fsrm rs csrrw x0, frm, rs Write FP rounding mode
-fsrmi rd, imm csrrwi rd, frm, imm Swap FP rounding mode, immediate
-fsrmi imm csrrwi x0, frm, imm Write FP rounding mode, immediate
-frflags rd csrrs rd, fflags, x0 Read FP exception 
-ags
-fsflags rd, rs csrrw rd, fflags, rs Swap FP exception 
-ags
-fsflags rs csrrw x0, fflags, rs Write FP exception 
-ags
-fsflagsi rd, imm csrrwi rd, fflags, imm Swap FP exception 
-ags, immediate
-fsflagsi imm csrrwi x0, fflags, imm Write FP exception 
-ags, immediate
+rdinstret[h] rd csrrs rd, instret[h], x0 Read instructions-retired counter
+rdcycle[h] rd csrrs rd, cycle[h], x0 Read cycle counter
+rdtime[h] rd csrrs rd, time[h], x0 Read real-time clock
 */
+
 op rv32i_pseudo_system = csrw
                        | csrr
                        | csrs
@@ -1155,6 +1246,18 @@ op rv32i_pseudo_system = csrw
                        | csrsi
                        | csrci
                        | frcsr
+                       | fscsr
+                       | fscsr2
+                       | frrm
+                       | fsrm
+                       | fsrm2
+                       | fsrmi
+                       | fsrmi2
+                       | frflags
+                       | fsflags
+                       | fsflags2
+                       | fsflagsi
+                       | fsflagsi2
 
 // Load address
 pseudo op la(rd : X, symbol : WORD)
@@ -1262,7 +1365,7 @@ op rv32i = lui
          | bgez
          | bltz
          | bgtz // 16
-         | rv32i_pseudo_system // 8
+         | rv32i_pseudo_system // 20
          | la
          | lb_global
          | li

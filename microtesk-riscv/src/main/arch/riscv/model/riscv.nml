@@ -391,7 +391,8 @@ op Op = rv32i // 47 +
 #ifdef RV64A
       | rv64a // 11
 #endif
-// Total: 47+47+
+// Total: 47+47+~40 = ~134
+
 op instruction(operation: Op)
   syntax = operation.syntax
   image  = operation.image

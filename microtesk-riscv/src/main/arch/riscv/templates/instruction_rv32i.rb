@@ -113,6 +113,18 @@ class InstructionRV32I < RISCVBaseTemplate
     csrsi time, 0x5
     csrci time, 0x5
     frcsr t0
+    #fscsr
+    #fscsr2
+    #frrm
+    #fsrm
+    #fsrm2
+    #fsrmi
+    #fsrmi2
+    #frflags
+    #fsflags
+    #fsflags2
+    #fsflagsi
+    #fsflagsi2
 
     nop
     nop

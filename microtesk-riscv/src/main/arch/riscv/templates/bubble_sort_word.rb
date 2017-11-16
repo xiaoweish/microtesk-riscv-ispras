@@ -34,15 +34,15 @@ require_relative 'riscv_base'
 #   until not swapped
 # end procedure
 #
-class BubbleSortByteTemplate < RISCVBaseTemplate
+class BubbleSortWordTemplate < RISCVBaseTemplate
   def pre
     super
 
     data {
       label :data
-      byte rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
-      byte rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
-      byte rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
+      word rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
+      word rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
+      word rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
       label :end
       space 1
     }
@@ -51,37 +51,28 @@ class BubbleSortByteTemplate < RISCVBaseTemplate
   def run
     trace_data :data, :end
 
-    addi a0, zero, 1
-    nop
     add s0, zero, zero
     add s1, zero, zero
-    #la s0, :data # TODO
-    #li s0, :data
     load_address_to_reg s0, :data
-    trace "s0 = %x", gpr_observer(8)
-    #auipc s0, 0x80
-    #srli s0, s0, 12
-    #slli s0, s0, 12
-    trace "s0 = %x", gpr_observer(8)
-    nop
-#    la s1, :end
     load_address_to_reg s1, :end
-    trace "s0 = %x", gpr_observer(9)
     nop
+#    la s0, :data
+#    la s1, :end
 
-    #Or t0, zero, zero
+    addi a0, zero, 4
+    nop
     ########################### Outer loop starts ##############################
     label :repeat
     Or t0, zero, zero
 
-    addi t1, s0, 1
+    addi t1, s0, 4
     ########################### Inner loop starts ##############################
     label :for
     beq t1, s1, :exit_for
-    sub t2, t1, a0 # a0 = 1;
+    sub t2, t1, a0 # a0 = 4;
 
-    lb t4, t1, 0
-    lb t5, t2, 0
+    lw t4, t1, 0
+    lw t5, t2, 0
 
     slt t6, t4, t5
     beq t6, zero, :next
@@ -89,18 +80,18 @@ class BubbleSortByteTemplate < RISCVBaseTemplate
 
     addi t0, zero, 0xf # t0 != 0
 
-    sb t4, t2, 0
-    sb t5, t1, 0
-    nop
+    sw t4, t2, 0
+    sw t5, t1, 0
 
     label :next
-    addi t1, t1, 1
+    addi t1, t1, 4
     j :for
-    nop # TODO
+    nop
     ############################ Inner loop ends ###############################
     label :exit_for
 
     bne t0, zero, :repeat
+    nop
     ############################ Outer loop ends ###############################
 
     trace_data :data, :end

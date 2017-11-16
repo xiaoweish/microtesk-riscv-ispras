@@ -26,15 +26,20 @@ class InstructionRV32M < RISCVBaseTemplate
 
   def run
     trace "Run RV32M instruction:"
+    nop
 
-    mul t0, t1, t2
-    mulh t0, t1, t2
-    mulhsu t0, t1, t2
-    mulhu t0, t1, t2
-    div t0, t1, t2
-    divu t0, t1, t2
-    rem t0, t1, t2
-    remu t0, t1, t2
+    if rv32m == true then
+      mul t0, t1, t2
+      mulh t0, t1, t2
+      mulhsu t0, t1, t2
+      mulhu t0, t1, t2
+      div t0, t1, t2
+      divu t0, t1, t2
+      rem t0, t1, t2
+      remu t0, t1, t2
+    else
+      trace "Error: RV32M"
+    end
 
     nop
     nop

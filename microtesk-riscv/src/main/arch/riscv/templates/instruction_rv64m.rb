@@ -26,12 +26,17 @@ class InstructionRV64M < RISCVBaseTemplate
 
   def run
     trace "Run 64M instruction:"
+    nop
 
-    mulw t0, t1, t2
-    divw t0, t1, t2
-    divuw t0, t1, t2
-    remw t0, t1, t2
-    remuw t0, t1, t2
+    if rv64m == true then
+      mulw t0, t1, t2
+      divw t0, t1, t2
+      divuw t0, t1, t2
+      remw t0, t1, t2
+      remuw t0, t1, t2
+    else
+      trace "Error: RV64M"
+    end
 
     nop
     nop

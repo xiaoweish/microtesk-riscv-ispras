@@ -1060,7 +1060,10 @@ op rv32i_system = csrrw
                 | fence
                 | fencei
 
+//==================================================================================================
 // Pseudoinstructions
+//==================================================================================================
+
 // Write CSR
 pseudo op csrw(csr: CSR_MODE, rs1: X)
   syntax = format("csrw %s, %s", csr.syntax, rs1.syntax)
@@ -1153,10 +1156,6 @@ op rv32i_pseudo_system = csrw
                        | csrci
                        | frcsr
 
-//==================================================================================================
-// Pseudoinstructions
-//==================================================================================================
-
 // Load address
 pseudo op la(rd : X, symbol : WORD)
   syntax = format("la %s, %<label>d", rd.syntax, symbol)
@@ -1168,7 +1167,6 @@ pseudo op la(rd : X, symbol : WORD)
   }
 
 // Load global
-
 pseudo op lb_global(rd : X, symbol : WORD)
   syntax = format("lb %s, %<label>d", rd.syntax, symbol)
   image  = format("%s%s", auipc(rd, symbol<31..12>).image,
@@ -1176,6 +1174,39 @@ pseudo op lb_global(rd : X, symbol : WORD)
   action = {
     auipc(rd, symbol<31..12>).action;
     lb(rd, rd, symbol<11..0>).action;
+  }
+
+// Load immediate
+pseudo op li(rd : X, symbol : XWORD)
+  syntax = format("li %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s%s%s%s%s%s%s%s%s%s",
+#ifdef RV64I
+                        ori(rd, X(0), coerce(card(12), symbol<63..53>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<52..42>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<41..32>)).image,
+                        slli(rd, rd, 10).image,
+#endif
+                        ori(rd, X(0), coerce(card(12), symbol<31..21>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<20..10>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<9..0>)).image)
+  action = {
+#ifdef RV64I
+    ori(rd, X(0), coerce(card(12), symbol<63..53>)).action;
+    slli(rd, rd, 11).action;
+    ori(rd, X(0), coerce(card(12), symbol<52..42>)).action;
+    slli(rd, rd, 11).action;
+    ori(rd, X(0), coerce(card(12), symbol<41..32>)).action;
+    slli(rd, rd, 10).action;
+#endif
+    ori(rd, X(0), coerce(card(12), symbol<31..21>)).action;
+    slli(rd, rd, 11).action;
+    ori(rd, X(0), coerce(card(12), symbol<20..10>)).action;
+    slli(rd, rd, 11).action;
+    ori(rd, X(0), coerce(card(12), symbol<9..0>)).action;
   }
 
 //==================================================================================================
@@ -1234,6 +1265,7 @@ op rv32i = lui
          | rv32i_pseudo_system // 8
          | la
          | lb_global
+         | li
 
 //==================================================================================================
 // The End

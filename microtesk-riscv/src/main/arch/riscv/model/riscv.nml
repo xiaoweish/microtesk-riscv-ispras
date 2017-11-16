@@ -375,23 +375,23 @@ op <name>(rd: X, imm: card(20))
   #include "riscv_rv64a.nml"
 #endif
 
-op Op = rv32i
+op Op = rv32i // 47 + 
 #ifdef RV32M
-      | rv32m
+      | rv32m // 8
 #endif
 #ifdef RV32A
-      | rv32a
+      | rv32a // 11
 #endif
 #ifdef RV64I
-      | rv64i
+      | rv64i // 12
 #endif
 #ifdef RV64M
-      | rv64m
+      | rv64m // 5
 #endif
 #ifdef RV64A
-      | rv64a
+      | rv64a // 11
 #endif
-
+// Total: 47+47+
 op instruction(operation: Op)
   syntax = operation.syntax
   image  = operation.image

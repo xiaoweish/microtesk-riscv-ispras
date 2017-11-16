@@ -114,7 +114,6 @@ class InstructionRV32I < RISCVBaseTemplate
     csrci time, 0x5
     frcsr t0
 
-
     nop
     nop
   end

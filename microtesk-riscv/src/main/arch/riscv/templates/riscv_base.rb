@@ -93,6 +93,34 @@ class RISCVBaseTemplate < Template
         nop
       }
     }
+    ##################################################################################################
+    # Revisions
+    ##################################################################################################
+
+    def rv64i
+      if get_option_value('rev-id') == 'RV64I' or get_option_value('rev-id') == 'RV64FULL' then true
+      else false end
+    end
+
+    def rv32m
+      if get_option_value('rev-id') == 'RV32M' or get_option_value('rev-id') == 'RV64FULL' then true
+      else false end
+    end
+
+    def rv64m
+      if get_option_value('rev-id') == 'RV64M' or get_option_value('rev-id') == 'RV64FULL' then true
+      else false end
+    end
+
+    def rv32a
+      if get_option_value('rev-id') == 'RV32A' or get_option_value('rev-id') == 'RV64FULL' then true
+      else false end
+    end
+
+    def rv64a
+      if get_option_value('rev-id') == 'RV64A' or get_option_value('rev-id') == 'RV64FULL' then true
+      else false end
+    end
 
     ################################################################################################
 
@@ -104,7 +132,19 @@ class RISCVBaseTemplate < Template
     # is applicable.
     #
     preparator(:target => 'X') {
-      # TODO:
+      if rv64i == true then
+        ori  target, zero,   value(53, 63)
+        slli target, target, 11
+        ori  target, target, value(42, 52)
+        slli target, target, 11
+        ori  target, target, value(32, 41)
+        slli target, target, 10
+      end
+      ori  target, target, value(21, 31)
+      slli target, target, 11
+      ori  target, target, value(10,  20)
+      slli target, target, 11
+      ori  target, target, value(0,  9)
     }
 
     preparator(:target => 'X', :arguments => {:i => 0}) {
@@ -496,14 +536,13 @@ label :error
   # Utility method for printing data stored in memory using labels.
   ##################################################################################################
 
-
   def trace_data_addr(begin_addr, end_addr)
-    count = (end_addr - begin_addr) / 8
-    additional_count = (end_addr - begin_addr) % 8
+    count = (end_addr - begin_addr) / 4
+    additional_count = (end_addr - begin_addr) % 4
     if additional_count > 0
        count = count + 1
     end
-    begin_index = begin_addr / 8 
+    begin_index = begin_addr / 4
 
     trace "\nData starts: 0x%x", begin_addr
     trace "Data ends:   0x%x", end_addr
@@ -514,18 +553,25 @@ label :error
 
     trace "\nData values:"
     count.times {
-      trace "%016x (MEM[0x%x]): 0x%016x", addr, index, mem_observer(index)
+      trace "%016x (MEM[0x%x]): 0x%08x", addr, index, mem_observer(index)
       index = index + 1
-      addr = addr + 8
+      addr = addr + 4
     }
     trace ""
   end
 
   def trace_data(begin_label, end_label)
-    begin_addr = 0x00080000 + get_address_of(begin_label) - 0x00080000
-    end_addr = 0x00080000 + get_address_of(end_label) - 0x00080000
+    begin_addr = get_address_of(begin_label)
+    end_addr = get_address_of(end_label)
 
     trace_data_addr(begin_addr, end_addr)
+  end
+
+  def load_address_to_reg(reg_addr, address_label)
+    auipc reg_addr, get_address_of(address_label)>>12
+    srli reg_addr, reg_addr, 12
+    slli reg_addr, reg_addr, 12
+    addi reg_addr, reg_addr, get_address_of(address_label)
   end
 
   ##################################################################################################

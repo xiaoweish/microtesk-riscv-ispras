@@ -56,16 +56,18 @@ class BubbleSortByteTemplate < RISCVBaseTemplate
     add s0, zero, zero
     add s1, zero, zero
     #la s0, :data # TODO
-    auipc s0, 0x80
-    srli s0, s0, 12
-    slli s0, s0, 12
-    nop
+    #li s0, :data
+    load_address_to_reg s0, :data
+    trace "s0 = %x", gpr_observer(8)
+    #auipc s0, 0x80
+    #srli s0, s0, 12
+    #slli s0, s0, 12
+    trace "s0 = %x", gpr_observer(8)
     nop
 #    la s1, :end
-    auipc s1, 0x80
-    srli s1, s1, 12
-    slli s1, s1, 12
-    addi s1, s1, 0xc
+    load_address_to_reg s1, :end
+    trace "s0 = %x", gpr_observer(9)
+    nop
 
     #Or t0, zero, zero
     ########################### Outer loop starts ##############################
@@ -100,35 +102,6 @@ class BubbleSortByteTemplate < RISCVBaseTemplate
 
     bne t0, zero, :repeat
     ############################ Outer loop ends ###############################
-
-    lb a1, s0, 0
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 1
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 2
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 3
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 4
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 5
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 6
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 7
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 8
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 9
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 10
-    trace "a1 = %x", gpr_observer(11)
-    lb a1, s0, 11
-    trace "a1 = %x", gpr_observer(11)
-
-    trace " 0x6, 0x6, 0x8, 0x1"
-    trace " 0x9, 0x6, 0x3, 0x3"
-    trace " 0x9, 0x5, 0x9, 0x2"
 
     trace_data :data, :end
   end

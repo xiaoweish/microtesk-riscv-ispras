@@ -1224,14 +1224,6 @@ pseudo op fsflagsi2(imm: card(5))
     csrrwi(X(0), FFLAGS(), imm).action;
   }
 
-// Read FP exception flags
-pseudo op frflags(rd: X)
-  syntax = format("frflags %s", rd.syntax)
-  image  = format("%32s", csrrs(rd, FFLAGS(), X(0)).image)
-  action = {
-    csrrs(rd, FFLAGS(), X(0)).action;
-  }
-
 /*
 rdinstret[h] rd csrrs rd, instret[h], x0 Read instructions-retired counter
 rdcycle[h] rd csrrs rd, cycle[h], x0 Read cycle counter

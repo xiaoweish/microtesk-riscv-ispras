@@ -571,7 +571,8 @@ label :error
     auipc reg_addr, get_address_of(address_label)>>12
     srli reg_addr, reg_addr, 12
     slli reg_addr, reg_addr, 12
-    addi reg_addr, reg_addr, get_address_of(address_label)
+    temp = 4095
+    addi reg_addr, reg_addr, get_address_of(address_label)&temp
   end
 
   ##################################################################################################

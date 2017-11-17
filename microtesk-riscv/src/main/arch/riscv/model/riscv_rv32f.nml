@@ -48,6 +48,19 @@ FCVT.S.W
 FCVT.S.WU
 FMV.S.X */
 
+var RoundingMode [card(3)] // TODO:
+
+//Round to Nearest, ties to Even
+let RM_RNE = 0x000
+// 001 RTZ Round towards Zero
+let RM_RTZ = 0x001
+// 010 RDN Round Down (towards -infinity)
+let RM_RDN = 0x010
+// 011 RUP Round Up (towards +infinity)
+let RM_RUP = 0x011
+// 100 RMM Round to Nearest, ties to Max Magnitude
+let RM_RMM = 0x100
+
 op flw(rd: FR, rs1: X, imm: card(12))
   syntax = format("flw %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s010%s0000111", imm, rs1.image, rd.image)
@@ -66,10 +79,50 @@ op fsw(rs2: FR, rs1: X, imm: card(12))
     store_data(MEM_WORD, tmp_address, zero_extend(DWORD, rs2<31..0>)).action;
   }
 
+op fadd_s(rd: FR, rs1: FR, rs2: FR)
+  syntax = format("fadd.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0000000%s%s%3s%s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    temp_fps = int_to_float(FLOAT32, rs1<31..0>) + int_to_float(FLOAT32, rs2<31..0>);
+    rd = 0;
+    rd<31..0> = float_to_int(WORD, temp_fps);
+  }
+
+op fsub_s(rd: FR, rs1: FR, rs2: FR)
+  syntax = format("fsub.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0000100%s%s%3s%s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    temp_fps = int_to_float(FLOAT32, rs1<31..0>) - int_to_float(FLOAT32, rs2<31..0>);
+    rd = 0;
+    rd<31..0> = float_to_int(WORD, temp_fps);
+  }
+
+op fmul_s(rd: FR, rs1: FR, rs2: FR)
+  syntax = format("fmul.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0001000%s%s%3s%s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    temp_fps = int_to_float(FLOAT32, rs1<31..0>) * int_to_float(FLOAT32, rs2<31..0>);
+    rd = 0;
+    rd<31..0> = float_to_int(WORD, temp_fps);
+  }
+
+op fdiv_s(rd: FR, rs1: FR, rs2: FR)
+  syntax = format("fdiv.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("0001100%s%s%3s%s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    temp_fps = int_to_float(FLOAT32, rs1<31..0>) * int_to_float(FLOAT32, rs2<31..0>);
+    rd = 0;
+    rd<31..0> = float_to_int(WORD, temp_fps);
+  }
+
 //==================================================================================================
 
 op rv32f = flw
          | fsw
+         | fadd_s
+         | fsub_s
+         | fmul_s
+         | fdiv_s
 
 //==================================================================================================
 

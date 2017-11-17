@@ -4,6 +4,8 @@ TESTS = instruction_rv32i\
         instruction_rv64m\
         instruction_rv32a\
         instruction_rv64a\
+        instruction_rv32f\
+        instruction_rv64f\
         bubble_sort_byte\
         bubble_sort_byte\
 	euclid

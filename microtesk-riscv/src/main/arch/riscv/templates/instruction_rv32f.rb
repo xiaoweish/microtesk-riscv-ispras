@@ -31,6 +31,11 @@ class InstructionRV32F < RISCVBaseTemplate
       fsw ft0, s0, 0x0
       flw ft0, s0, 0x0
 
+      fadd_s ft0, ft1, ft2
+      fsub_s ft0, ft1, ft2
+      fmul_s ft0, ft1, ft2
+      fdiv_s ft0, ft1, ft2
+
     else
       trace "Error: RV32F"
     end

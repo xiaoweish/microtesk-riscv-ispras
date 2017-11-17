@@ -14,15 +14,21 @@
   <includes name="RV32A"/>
   <includes name="RV64I"/>
  </revision>
+ <revision name="RV32F"/>
+ <revision name="RV64F">
+  <includes name="RV32F"/>
+  <includes name="RV64I"/>
+ </revision>
  <revision name="RV32FULL">
   <includes name="RV32I"/>
   <includes name="RV32M"/>
   <includes name="RV32A"/>
+  <includes name="RV32F"/>
  </revision>
  <revision name="RV64FULL">
   <includes name="RV64I"/>
   <includes name="RV64M"/>
   <includes name="RV64A"/>
-  <includes name="RV32FULL"/>
+  <includes name="RV64F"/>
 </revision>
 </revisions>

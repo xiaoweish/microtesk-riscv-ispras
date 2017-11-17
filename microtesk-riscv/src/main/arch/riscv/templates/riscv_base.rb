@@ -122,6 +122,16 @@ class RISCVBaseTemplate < Template
       else false end
     end
 
+    def rv32f
+      if get_option_value('rev-id') == 'RV32F' or get_option_value('rev-id') == 'RV64FULL' then true
+      else false end
+    end
+
+    def rv64f
+      if get_option_value('rev-id') == 'RV64F' or get_option_value('rev-id') == 'RV64FULL' then true
+      else false end
+    end
+
     ################################################################################################
 
     #
@@ -510,6 +520,24 @@ label :error
 
   def t6
     X(31)
+  end
+
+  # Floating Point registers
+
+  def ft0
+    FR(0)
+  end
+
+  def ft1
+    FR(1)
+  end
+
+  def ft2
+    FR(2)
+  end
+
+  def ft3
+    FR(3)
   end
 
   ##################################################################################################

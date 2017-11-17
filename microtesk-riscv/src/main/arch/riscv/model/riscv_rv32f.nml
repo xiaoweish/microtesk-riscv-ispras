@@ -1,0 +1,76 @@
+/*
+ * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+#ifndef RISCV_RV32F_INCLUDED
+#define RISCV_RV32F_INCLUDED
+
+//==================================================================================================
+// RV32F Standard Extension
+//==================================================================================================
+
+/*  FLW
+FSW
+FMADD.S
+FMSUB.S
+FNMSUB.S
+FNMADD.S
+FADD.S
+FSUB.S
+FMUL.S
+FDIV.S
+FSQRT.S
+FSGNJ.S
+FSGNJN.S
+FSGNJX.S
+FMIN.S
+FMAX.S
+FCVT.W.S
+FCVT.WU.S
+FMV.X.S
+FEQ.S
+FLT.S
+FLE.S
+FCLASS.S
+FCVT.S.W
+FCVT.S.WU
+FMV.S.X */
+
+op flw(rd: FR, rs1: X, imm: card(12))
+  syntax = format("flw %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
+  image  = format("%12s%s010%s0000111", imm, rs1.image, rd.image)
+  action = {
+    tmp_address = rs1 + sign_extend(XWORD, imm);
+    load_data(MEM_WORD, tmp_address).action; // return load_value
+    rd = 0;
+    rd<31..0> = load_value<31..0>;
+  }
+
+op fsw(rs2: FR, rs1: X, imm: card(12))
+  syntax = format("fsw %s, 0x%x(%s)", rs2.syntax, imm, rs1.syntax)
+  image  = format("%7s%5s%5s010%5s0100111", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
+  action = {
+    tmp_address = rs1 + sign_extend(XWORD, imm);
+    store_data(MEM_WORD, tmp_address, zero_extend(DWORD, rs2<31..0>)).action;
+  }
+
+//==================================================================================================
+
+op rv32f = flw
+         | fsw
+
+//==================================================================================================
+
+#endif

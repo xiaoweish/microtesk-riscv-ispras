@@ -59,8 +59,12 @@ type   INT = int(32)
 type  LONG = int(64)
 
 // Floating Point Types
-type FLOAT32 = float(23, 8)
-type FLOAT64 = float(52, 11)
+#ifdef RV32F
+  type FLOAT32 = float(23, 8)
+#endif
+#ifdef RV64F
+  type FLOAT64 = float(52, 11)
+#endif
 
 //==================================================================================================
 // Registers and Memory
@@ -68,6 +72,11 @@ type FLOAT64 = float(52, 11)
 
 // General-Purpose Registers
 reg XREG [32, XWORD]
+
+#ifdef RV32F
+  // Floating Point general registers.
+  reg FPR [32, XWORD]
+#endif
 
 // Program Counter
 reg PC [XWORD]
@@ -222,16 +231,30 @@ mode X (i: card(5)) = XREG [i]
                         elif i >= 10 && i <= 17 then FunctionCaller(coerce(card(3), i-10)).syntax
                         elif i >= 18 && i <= 27 then SavedCallee(coerce(card(4), i-16)).syntax
                         elif i >= 28 && i <= 31 then TemporariesCaller(coerce(card(3), i-25)).syntax
-                        else "error"
-                        endif)
+                        else "error" endif)
   image  = format("%5s", i)
 
-/*f0–7 ft0–7 FP temporaries Caller
-f8–9 fs0–1 FP saved registers Callee
-f10–11 fa0–1 FP arguments/return values Caller
-f12–17 fa2–7 FP arguments Caller
-f18–27 fs2–11 FP saved registers Callee
-f28–31 ft8–11 FP temporaries*/
+// FP temporaries Caller
+mode FPTemporariesCaller (i: card(4))
+  syntax = format("ft%d", i)
+
+// FP temporaries Caller
+mode FPSavedCallee (i: card(4))
+  syntax = format("fs%d", i)
+
+/* f10–11 fa0–1 FP arguments/return values Caller
+   f12–17 fa2–7 FP arguments Caller */
+mode FPArgumentsCaller (i: card(3))
+  syntax = format("fa%d", i)
+
+mode FR (i: card(5)) = FPR[i]
+  syntax = format("%s", if i >= 0 && i <= 7 then FPTemporariesCaller(coerce(card(4), i)).syntax
+                        elif i >= 8 && i <= 9 then FPSavedCallee(coerce(card(4), i-8)).syntax
+                        elif i >= 10 && i <= 17 then FPArgumentsCaller(coerce(card(3), i-10)).syntax
+                        elif i >= 18 && i <= 27 then FPSavedCallee(coerce(card(4), i-16)).syntax
+                        elif i >= 28 && i <= 31 then FPTemporariesCaller(coerce(card(4), i-20)).syntax
+                        else "error" endif)
+  image  = format("%5s", i)
 
 //==================================================================================================
 // Temporary Variables
@@ -253,6 +276,13 @@ var tmp_int2 [INT]
 
 var tmp_long1 [LONG]
 var tmp_long2 [LONG]
+
+#ifdef RV32F
+  var temp_fps  [FLOAT32]
+#endif
+#ifdef RV64F
+  var temp_fpd  [FLOAT64]
+#endif
 
 // Bit Offset in a Word
 var tmp_bit_offset [card(5)]
@@ -354,6 +384,67 @@ op <name>(rd: X, imm: card(20))
 */
 
 //==================================================================================================
+// General functions
+//==================================================================================================
+#ifdef RV32A
+#define LOAD_STORE_MEM
+#endif
+#ifdef RV32F
+#define LOAD_STORE_MEM
+#endif
+
+#ifdef LOAD_STORE_MEM
+let MEM_DWORD = 8
+let MEM_WORD  = 4
+let MEM_HWORD = 2
+let MEM_BYTE  = 1
+
+var temp_address_load[DWORD]
+var temp_address_tail[card(2)]
+
+op check_aligned(op_type: card(4), address: XWORD)
+  action = {
+    if (op_type == MEM_DWORD && address<2..0> != 0) ||
+       (op_type == MEM_WORD && address<1..0> != 0) ||
+       (op_type == MEM_HWORD && address<0> != 0) then
+      trace("For best performance, the effective address for all loads and stores should be");
+      trace("naturally aligned for each data type");
+      exception("Address Error: rv32a");
+      tmp_bit = 1;
+    endif;
+  }
+
+var load_value[DWORD]
+
+op load_data(op_type: card(4), address: XWORD)
+  action = {
+    tmp_bit = 0;
+    check_aligned(op_type, address).action;
+    if tmp_bit != 1 then
+      if op_type == MEM_DWORD then
+        load_value<63..0> = MEM[address >> 2 + 1]::MEM[address >> 2];
+      elif op_type == MEM_WORD then
+        load_value = 0;
+        load_value<31..0> = MEM[address >> 2];
+      endif;
+    endif;
+  }
+
+op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
+  action = {
+    tmp_bit = 0;
+    check_aligned(op_type, address).action;
+    if tmp_bit != 1 then
+      if op_type == MEM_DWORD then
+        MEM[address >> 2 + 1]::MEM[address >> 2] = store_value;
+      elif op_type == MEM_WORD then
+        MEM[address >> 2] = store_value<31..0>;
+      endif;
+    endif;
+  }
+#endif
+
+//==================================================================================================
 // Instructions
 //==================================================================================================
 
@@ -363,6 +454,9 @@ op <name>(rd: X, imm: card(20))
 #endif
 #ifdef RV32A
     #include "riscv_rv32a.nml"
+#endif
+#ifdef RV32F
+    #include "riscv_rv32f.nml"
 #endif
 
 #ifdef RV64I
@@ -381,6 +475,9 @@ op Op = rv32i // 47 +
 #endif
 #ifdef RV32A
       | rv32a // 11
+#endif
+#ifdef RV32F
+      | rv32f // 2
 #endif
 #ifdef RV64I
       | rv64i // 12

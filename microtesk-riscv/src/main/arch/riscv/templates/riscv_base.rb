@@ -560,6 +560,12 @@ label :error
     location('MEM', index)
   end
 
+  def fpr_observer(index)
+    if rv32f == true then
+      location('FPR', index)
+    end
+  end
+
   ##################################################################################################
   # Utility method for printing data stored in memory using labels.
   ##################################################################################################

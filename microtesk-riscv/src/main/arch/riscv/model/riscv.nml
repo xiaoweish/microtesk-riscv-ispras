@@ -60,10 +60,15 @@ type  LONG = int(64)
 
 // Floating Point Types
 #ifdef RV32F
-  type FLOAT32 = float(23, 8)
+  type FLOAT32  = float(23, 8)
 #endif
 #ifdef RV64F
-  type FLOAT64 = float(52, 11)
+  type FLOAT64  = float(52, 11)
+#endif
+#ifdef RV64F
+  type FLOATREG = FLOAT64
+#else
+  type FLOATREG = FLOAT32
 #endif
 
 //==================================================================================================
@@ -83,6 +88,7 @@ reg XREG [32, XWORD]
 
 #ifdef RV32F
   // Floating Point general registers.
+  // TODOreg FPR [32, FLOATREG]
   reg FPR [32, XWORD]
 #endif
 
@@ -287,6 +293,8 @@ var tmp_long2 [LONG]
 
 #ifdef RV32F
   var temp_fps  [FLOAT32]
+  var temp_fps2 [FLOAT32]
+  var temp_fps3 [FLOAT32]
 #endif
 #ifdef RV64F
   var temp_fpd  [FLOAT64]

@@ -1,0 +1,75 @@
+/*
+ * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+#ifndef RISCV_RV64F_INCLUDED
+#define RISCV_RV64F_INCLUDED
+
+//==================================================================================================
+// RV64F Standard Extension (in addition to RV32F)
+//==================================================================================================
+
+/*
+  Instructions (number: 5):
+FCVT.L.S
+FCVT.LU.S
+FCVT.S.L
+FCVT.S.LU
+*/
+
+op fcvt_l_s(rd: X, rs1: FR)
+  syntax = format("fcvt.l.s %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1100000%5s%5s%3s%5s1010011", "00010", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    rd = float_to_int(DWORD, rs1);
+  }
+
+op fcvt_lu_s(rd: X, rs1: FR)
+  syntax = format("fcvt.lu.s %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1100000%5s%5s%3s%5s1010011", "00011", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    // TODO:
+    fcvt_l_s(rd, rs1).action;
+  }
+
+op fcvt_s_l(rd: FR, rs1: X)
+  syntax = format("fcvt.s.l %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1101000%5s%5s%3s%5s1010011", "00010", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    rd = int_to_float(FLOAT64, rs1);
+  }
+
+op fcvt_s_lu(rd: FR, rs1: X)
+  syntax = format("fcvt.s.lu %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1101000%5s%5s%3s%5s1010011", "00011", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    // TODO:
+    fcvt_s_l(rd, rs1).action;
+  }
+
+//==================================================================================================
+// Instruction Groups
+//==================================================================================================
+
+op rv64f = fcvt_l_s
+         | fcvt_lu_s
+         | fcvt_s_l
+         | fcvt_s_lu
+
+//==================================================================================================
+// The End
+//==================================================================================================
+
+#endif

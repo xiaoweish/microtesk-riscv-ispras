@@ -24,10 +24,10 @@ class InstructionRV64F < RISCVBaseTemplate
     nop
 
     if rv64f == true then
-      auipc s0, 0x80
-      srli s0, s0, 12
-      slli s0, s0, 12
-
+      fcvt_l_s t0, ft0
+      fcvt_lu_s t0, ft0
+      fcvt_s_l ft0, t0
+      fcvt_s_lu ft0, t0
     else
       trace "Error: RV64F"
     end

@@ -403,10 +403,11 @@ op <name>(rd: X, imm: card(20))
 // General functions
 //==================================================================================================
 #ifdef RV32A
-#define LOAD_STORE_MEM
+  #define LOAD_STORE_MEM
 #endif
 #ifdef RV32F
-#define LOAD_STORE_MEM
+  #define LOAD_STORE_MEM
+  #define ROUNDING_MODE_ON
 #endif
 
 #ifdef LOAD_STORE_MEM
@@ -460,6 +461,21 @@ op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
   }
 #endif
 
+#ifdef ROUNDING_MODE_ON
+var RoundingMode [card(3)] // TODO:
+
+//Round to Nearest, ties to Even
+let RM_RNE = 0x000
+// 001 RTZ Round towards Zero
+let RM_RTZ = 0x001
+// 010 RDN Round Down (towards -infinity)
+let RM_RDN = 0x010
+// 011 RUP Round Up (towards +infinity)
+let RM_RUP = 0x011
+// 100 RMM Round to Nearest, ties to Max Magnitude
+let RM_RMM = 0x100
+#endif
+
 //==================================================================================================
 // Instructions
 //==================================================================================================
@@ -484,6 +500,9 @@ op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
 #ifdef RV64A
   #include "riscv_rv64a.nml"
 #endif
+#ifdef RV64F
+  #include "riscv_rv64f.nml"
+#endif
 
 op Op = rv32i // 47 + 
 #ifdef RV32M
@@ -493,7 +512,7 @@ op Op = rv32i // 47 +
       | rv32a // 11
 #endif
 #ifdef RV32F
-      | rv32f // 2
+      | rv32f // 26
 #endif
 #ifdef RV64I
       | rv64i // 12
@@ -503,6 +522,9 @@ op Op = rv32i // 47 +
 #endif
 #ifdef RV64A
       | rv64a // 11
+#endif
+#ifdef RV64F
+      | rv64f // 4
 #endif
 // Total: 47+47+~40 = ~134
 

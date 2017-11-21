@@ -49,19 +49,6 @@
     FMV.W.X (FMV.S.X) +
 */
 
-var RoundingMode [card(3)] // TODO:
-
-//Round to Nearest, ties to Even
-let RM_RNE = 0x000
-// 001 RTZ Round towards Zero
-let RM_RTZ = 0x001
-// 010 RDN Round Down (towards -infinity)
-let RM_RDN = 0x010
-// 011 RUP Round Up (towards +infinity)
-let RM_RUP = 0x011
-// 100 RMM Round to Nearest, ties to Max Magnitude
-let RM_RMM = 0x100
-
 op flw(rd: FR, rs1: X, imm: card(12))
   syntax = format("flw %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s010%s0000111", imm, rs1.image, rd.image)

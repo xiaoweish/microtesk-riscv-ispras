@@ -54,8 +54,8 @@ class InstructionRV32F < RISCVBaseTemplate
       fcvt_s_w ft0, t0
       fcvt_s_wu ft0, t0
 
-      fmv_x_w t0, ft0
-      fmv_w_x ft0, t0
+     # fmv_x_w t0, ft0
+     # fmv_w_x ft0, t0
 
       feq_s t0, ft0, ft1
       flt_s t0, ft0, ft1

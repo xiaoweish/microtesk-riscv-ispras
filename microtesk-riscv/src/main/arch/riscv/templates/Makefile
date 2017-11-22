@@ -16,7 +16,8 @@ TESTS = arithmetic\
         coverage\
         euclid\
         groups\
-        int_divide
+        int_divide\
+	int_sqrt
 
 all: $(TESTS)
 

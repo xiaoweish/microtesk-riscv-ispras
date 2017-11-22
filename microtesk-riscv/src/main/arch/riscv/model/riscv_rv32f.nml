@@ -247,15 +247,15 @@ op fcvt_s_wu(rd: FR, rs1: X)
     fcvt_s_w(rd, rs1).action;
   }
 
-op fxm_x_w(rd: X, rs1: FR)
-  syntax = format("fxm.x.w %s, %s", rd.syntax, rs1.syntax)
+op fmv_x_w(rd: X, rs1: FR)
+  syntax = format("fmv.x.w %s, %s", rd.syntax, rs1.syntax)
   image  = format("1110000%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
   action = {
     rd = sign_extend(XWORD, rs1<31..0>);
   }
 
-op fxm_w_x(rd: FR, rs1: X)
-  syntax = format("fxm.w.x %s, %s", rd.syntax, rs1.syntax)
+op fmv_w_x(rd: FR, rs1: X)
+  syntax = format("fmv.w.x %s, %s", rd.syntax, rs1.syntax)
   image  = format("1111000%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
   action = {
     rd<31..0> = rs1<31..0>;
@@ -390,8 +390,8 @@ op rv32f = flw
          | fcvt_wu_s
          | fcvt_s_w
          | fcvt_s_wu
-         | fxm_x_w
-         | fxm_w_x
+         | fmv_x_w
+         | fmv_w_x
          | feq_s
          | flt_s
          | fle_s

@@ -33,7 +33,7 @@ class GroupsTemplate < RISCVBaseTemplate
         rv32i_load_upper_imm t3, rand(0, 0xFFFFF)
 
         # Selects from {addi, subi, andi}
-        rv32i_arithmetic_rri s1, s2, rand(0, 0xFFF)
+        rv32i_arithmetic_rri s1, s2, rand(0, 0x7FF)
       }.run
     }
 

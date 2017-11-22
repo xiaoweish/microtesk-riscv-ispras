@@ -63,6 +63,10 @@ class InstructionRV32F < RISCVBaseTemplate
 
       fclass_s t0, ft0
 
+      fmv_s ft0, ft1
+      fabs_s ft0, ft1
+      fneg_s ft0, ft1
+
       trace "Special:"
       addi t0, zero, 5
       addi t1, zero, 4

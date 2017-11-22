@@ -337,6 +337,38 @@ op fclass_s(rd: X, rs1: FR)
   }
 
 //==================================================================================================
+// Pseudoinstructions
+//==================================================================================================
+
+// Copy single-precision register
+pseudo op fmv_s(rd: FR, rs: FR)
+  syntax = format("fmv.s %s, %s", rd.syntax, rs.syntax)
+  image  = format("%32s", fsgnj_s(rd, rs, rs).image)
+  action = {
+    fsgnj_s(rd, rs, rs).action;
+  }
+
+// Single-precision absolute value
+pseudo op fabs_s(rd: FR, rs: FR)
+  syntax = format("fabs.s %s, %s", rd.syntax, rs.syntax)
+  image  = format("%32s", fsgnjx_s(rd, rs, rs).image)
+  action = {
+    fsgnjx_s(rd, rs, rs).action;
+  }
+
+// Single-precision negate
+pseudo op fneg_s(rd: FR, rs: FR)
+  syntax = format("fneg.s %s, %s", rd.syntax, rs.syntax)
+  image  = format("%32s", fsgnjn_s(rd, rs, rs).image)
+  action = {
+    fsgnjn_s(rd, rs, rs).action;
+  }
+
+op rv32f_pseudo = fmv_s
+                | fabs_s
+                | fneg_s
+
+//==================================================================================================
 
 op rv32f = flw
          | fsw
@@ -364,6 +396,7 @@ op rv32f = flw
          | flt_s
          | fle_s
          | fclass_s
+         | rv32f_pseudo
 
 //==================================================================================================
 

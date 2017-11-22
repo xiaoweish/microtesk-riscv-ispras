@@ -1,0 +1,93 @@
+/*
+ * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+#ifndef RISCV_RV64D_INCLUDED
+#define RISCV_RV64D_INCLUDED
+
+//==================================================================================================
+// RV64D Standard Extension (in addition to RV32D)
+//==================================================================================================
+
+/*
+  Instructions (number: 6):
+    FCVT.L.D
+    FCVT.LU.D
+    FMV.X.D
+    FCVT.D.L
+    FCVT.D.LU
+    FMV.D.X
+*/
+
+op fcvt_l_d(rd: X, rs1: FR)
+  syntax = format("fcvt.l.d %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1100001%5s%5s%3s%5s1010011", "00010", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    rd = float_to_int(DWORD, rs1);
+  }
+
+op fcvt_lu_d(rd: X, rs1: FR)
+  syntax = format("fcvt.lu.d %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1100001%5s%5s%3s%5s1010011", "00011", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    // TODO:
+    fcvt_l_d(rd, rs1).action;
+  }
+
+op fcvt_d_l(rd: FR, rs1: X)
+  syntax = format("fcvt.d.l %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1101001%5s%5s%3s%5s1010011", "00010", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    rd = int_to_float(FLOAT64, rs1);
+  }
+
+op fcvt_d_lu(rd: FR, rs1: X)
+  syntax = format("fcvt.d.lu %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1101001%5s%5s%3s%5s1010011", "00011", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  action = {
+    // TODO:
+    fcvt_d_l(rd, rs1).action;
+  }
+
+op fmv_x_d(rd: X, rs1: FR)
+  syntax = format("fxm.x.w %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1110001%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
+  action = {
+    rd = rs1<63..0>;
+  }
+
+op fmv_d_x(rd: FR, rs1: X)
+  syntax = format("fxm.w.x %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1111001%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
+  action = {
+    rd<63..0> = rs1<63..0>;
+  }
+
+//==================================================================================================
+// Instruction Groups
+//==================================================================================================
+
+op rv64d = fcvt_l_d
+         | fcvt_lu_d
+         | fcvt_d_l
+         | fcvt_d_lu
+         | fmv_x_d
+         | fmv_d_x
+
+//==================================================================================================
+// The End
+//==================================================================================================
+
+#endif

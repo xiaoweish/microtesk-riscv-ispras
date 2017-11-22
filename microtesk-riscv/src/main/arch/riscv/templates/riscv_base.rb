@@ -132,6 +132,16 @@ class RISCVBaseTemplate < Template
       else false end
     end
 
+    def rv32d
+      if get_option_value('rev-id') == 'RV32D' or get_option_value('rev-id') == 'RV64FULL' then true
+      else false end
+    end
+
+    def rv64d
+      if get_option_value('rev-id') == 'RV64D' or get_option_value('rev-id') == 'RV64FULL' then true
+      else false end
+    end
+
     ################################################################################################
 
     #

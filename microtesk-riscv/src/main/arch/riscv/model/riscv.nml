@@ -298,6 +298,8 @@ var tmp_long2 [LONG]
 #endif
 #ifdef RV64F
   var temp_fpd  [FLOAT64]
+  var temp_fpd2 [FLOAT64]
+  var temp_fpd3 [FLOAT64]
 #endif
 
 // Bit Offset in a Word
@@ -503,6 +505,12 @@ let RM_RMM = 0x100
 #ifdef RV64F
   #include "riscv_rv64f.nml"
 #endif
+#ifdef RV32D
+  #include "riscv_rv32d.nml"
+#endif
+#ifdef RV64D
+  #include "riscv_rv64d.nml"
+#endif
 
 op Op = rv32i // 47 + 39
 #ifdef RV32M
@@ -512,7 +520,10 @@ op Op = rv32i // 47 + 39
       | rv32a // 11
 #endif
 #ifdef RV32F
-      | rv32f // 26
+      | rv32f // 26 + 3
+#endif
+#ifdef RV32D
+      | rv32d // 26 + 3
 #endif
 #ifdef RV64I
       | rv64i // 12
@@ -526,7 +537,10 @@ op Op = rv32i // 47 + 39
 #ifdef RV64F
       | rv64f // 4
 #endif
-// Total: 47+77+39 = 163
+#ifdef RV64D
+      | rv64d // 6
+#endif
+// Total: (47+77+32)+(39+3+3) = 201
 
 op instruction(operation: Op)
   syntax = operation.syntax

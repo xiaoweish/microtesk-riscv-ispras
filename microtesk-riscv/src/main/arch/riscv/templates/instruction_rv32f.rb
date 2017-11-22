@@ -69,6 +69,7 @@ class InstructionRV32F < RISCVBaseTemplate
       fcvt_s_w ft0, t0
       fcvt_s_w ft1, t1
       fadd_s ft2, ft1, ft0
+      trace "t2: x7 = %x", gpr_observer(7)
       fcvt_w_s t2, ft2
       trace "ft2 = %x", fpr_observer(2)
       trace "t2: x7 = %x", gpr_observer(7)

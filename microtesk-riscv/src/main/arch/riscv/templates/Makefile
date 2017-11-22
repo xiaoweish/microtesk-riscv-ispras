@@ -1,4 +1,6 @@
-TESTS = instruction_rv32i\
+TESTS = arithmetic\
+        block\
+        instruction_rv32i\
         instruction_rv64i\
         instruction_rv32m\
         instruction_rv64m\
@@ -7,8 +9,12 @@ TESTS = instruction_rv32i\
         instruction_rv32f\
         instruction_rv64f\
         bubble_sort_byte\
-        bubble_sort_byte\
-	euclid
+        bubble_sort_hword\
+        bubble_sort_word\
+        coverage\
+        euclid\
+        groups\
+        int_divide
 
 all: $(TESTS)
 

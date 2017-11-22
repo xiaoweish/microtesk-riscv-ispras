@@ -221,7 +221,7 @@ op fcvt_w_s(rd: X, rs1: FR)
   image  = format("1100000%5s%5s%3s%5s1010011", "00000", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     rd = 0;
-    rd<31..0> = float_to_int(WORD, rs1<31..0>);
+    rd<31..0> = float_to_int(WORD, cast(FLOAT32, rs1<31..0>));
   }
 
 op fcvt_wu_s(rd: X, rs1: FR)

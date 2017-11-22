@@ -70,7 +70,7 @@ class RISCVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section_text(:pa => 0x0, :va => 0x00000000) {}
+    section_text(:pa => 0x0000, :va => 0x00000000) {}
 
     #
     # Defines .data section.
@@ -84,7 +84,7 @@ class RISCVBaseTemplate < Template
     # Simple exception handler. Continues execution from the next instruction.
     #
     exception_handler {
-      entry_point(:org => 0x380, :exception => ['IntegerOverflow', 'SystemCall', 'Breakpoint']) {
+      entry_point(:org => 0x100380, :exception => ['IntegerOverflow', 'SystemCall', 'Breakpoint']) {
         trace 'Exception handler (EPC = 0x%x)', location('CPR', 14 * 8)
     #TODO:
         #mfc0 ra, c0_epc

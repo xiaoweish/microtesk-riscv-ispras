@@ -33,19 +33,31 @@ class InstructionRV32I < RISCVBaseTemplate
     nop
     label :jal_label
     nop
-    addi t6, zero, :jalr_label
-    #jalr t0, t6, 0
+    addi s0, s0, :jalr_label
+    # TODO: la
+    trace "s0 = %x", gpr_observer(8)
+    jalr t0, s0, 0
     nop
     label :jalr_label
     nop
-
-#    jalr
-#    beq
-#    bne
-#    blt
-#    bge
-#    bltu
-#    bgeu
+    beq t0, t1, 0x4
+    nop
+    nop
+    bne t0, t1, 0x4
+    nop
+    nop
+    blt t0, t1, 0x4
+    nop
+    nop
+    bge t0, t1, 0x4
+    nop
+    nop
+    bltu t0, t1, 0x4
+    nop
+    nop
+    bgeu t0, t1, 0x4
+    nop
+    nop
 
     auipc s0, 0x80
     srli s0, s0, 12

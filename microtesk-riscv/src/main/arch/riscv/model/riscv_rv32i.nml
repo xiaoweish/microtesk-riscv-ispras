@@ -1318,7 +1318,6 @@ op rv32i = lui
          | bge
          | bltu
          | bgeu
-         | rv32i_mmu // 8
          | addi
          | slti
          | sltiu
@@ -1337,7 +1336,8 @@ op rv32i = lui
          | sltu
          | xor
          | or
-         | and // 37
+         | and // 29
+         | rv32i_mmu // 8
          | rv32i_system // 10
 
          // Pseudoinstructions
@@ -1361,6 +1361,23 @@ op rv32i = lui
          | la
          | lb_global
          | li
+
+//==================================================================================================
+// Special for templates
+//==================================================================================================
+
+op rv32i_load_upper_imm = lui
+                        | auipc
+
+op rv32i_arithmetic_rrr = add
+                        | sub
+                        | xor
+                        | or
+                        | and
+
+op rv32i_arithmetic_rri = xori
+                        | ori
+                        | andi
 
 //==================================================================================================
 // The End

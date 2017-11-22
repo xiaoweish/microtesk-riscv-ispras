@@ -504,7 +504,7 @@ let RM_RMM = 0x100
   #include "riscv_rv64f.nml"
 #endif
 
-op Op = rv32i // 47 + 
+op Op = rv32i // 47 + 39
 #ifdef RV32M
       | rv32m // 8
 #endif
@@ -526,7 +526,7 @@ op Op = rv32i // 47 +
 #ifdef RV64F
       | rv64f // 4
 #endif
-// Total: 47+47+~40 = ~134
+// Total: 47+77+39 = 163
 
 op instruction(operation: Op)
   syntax = operation.syntax

@@ -254,6 +254,8 @@ Total: 48
 --------------
 Pseudoinstruction: list 112 of riscv-spec-v2.1.pdf
 Total: 35
+Pseudoinstruction: list 113 of riscv-spec-v2.1.pdf
+Total: 23
 
 
 

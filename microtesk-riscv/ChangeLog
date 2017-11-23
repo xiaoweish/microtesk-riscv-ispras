@@ -12,5 +12,4 @@
                                               RV32A, RV64A,
                                               RV32F, RV64F,
                                               RV32D, RV64D
- - Test Templates: 20 test templates were added
- - Tool Functions: Updated MicroTESK core
+ - Test Templates: 20 test templates

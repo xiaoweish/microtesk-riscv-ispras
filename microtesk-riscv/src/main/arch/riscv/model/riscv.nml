@@ -556,5 +556,62 @@ op instruction(operation: Op)
   }
 
 //==================================================================================================
+// Special pseudoinstructions
+//==================================================================================================
+
+// Load address
+pseudo op la(rd : X, symbol : WORD)
+  syntax = format("la %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
+                          addi(rd, rd, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rd, symbol<31..12>)).action;
+    instruction(addi(rd, rd, symbol<11..0>)).action;
+  }
+
+// Load global
+pseudo op lb_global(rd : X, symbol : WORD)
+  syntax = format("lb %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
+                          lb(rd, rd, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rd, symbol<31..12>)).action;
+    instruction(lb(rd, rd, symbol<11..0>)).action;
+  }
+
+// Load immediate
+pseudo op li(rd : X, symbol : XWORD)
+  syntax = format("li %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s%s%s%s%s%s%s%s%s%s",
+#ifdef RV64I
+                        ori(rd, X(0), coerce(card(12), symbol<63..53>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<52..42>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<41..32>)).image,
+                        slli(rd, rd, 10).image,
+#endif
+                        ori(rd, X(0), coerce(card(12), symbol<31..21>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<20..10>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<9..0>)).image)
+  action = {
+#ifdef RV64I
+    instruction(ori(rd, X(0), coerce(card(12), symbol<63..53>))).action;
+    instruction(slli(rd, rd, 11)).action;
+    instruction(ori(rd, X(0), coerce(card(12), symbol<52..42>))).action;
+    instruction(slli(rd, rd, 11)).action;
+    instruction(ori(rd, X(0), coerce(card(12), symbol<41..32>))).action;
+    instruction(slli(rd, rd, 10)).action;
+#endif
+    instruction(ori(rd, X(0), coerce(card(12), symbol<31..21>))).action;
+    instruction(slli(rd, rd, 11)).action;
+    instruction(ori(rd, X(0), coerce(card(12), symbol<20..10>))).action;
+    instruction(slli(rd, rd, 11)).action;
+    instruction(ori(rd, X(0), coerce(card(12), symbol<9..0>))).action;
+  }
+
+//==================================================================================================
 // The End
 //==================================================================================================

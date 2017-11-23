@@ -27,36 +27,41 @@ class InstructionRV32I < RISCVBaseTemplate
   def run
     trace "RV32I instructions:"
 
+    la s1, :jal_label
+    trace "s1 = %x", gpr_observer(9)
+    nop
+
     lui t3, 8
-    auipc t4, 0
+    auipc t4, :jal_label
     jal t5, :jal_label
     nop
     label :jal_label
     nop
     addi s0, s0, :jalr_label
-    # TODO: la
+
     trace "s0 = %x", gpr_observer(8)
     jalr t0, s0, 0
     nop
     label :jalr_label
     nop
-    beq t0, t1, 0x4
+    beq t0, t1, :beq_label
     nop
+    label :beq_label
+    bne t0, t1, :bne_label
     nop
-    bne t0, t1, 0x4
+    label :bne_label
+    blt t0, t1, :blt_label
     nop
+    label :blt_label
+    bge t0, t1, :bge_label
     nop
-    blt t0, t1, 0x4
+    label :bge_label
+    bltu t0, t1, :bltu_label
     nop
+    label :bltu_label
+    bgeu t0, t1, :bgeu_label
     nop
-    bge t0, t1, 0x4
-    nop
-    nop
-    bltu t0, t1, 0x4
-    nop
-    nop
-    bgeu t0, t1, 0x4
-    nop
+    label :bgeu_label
     nop
 
     auipc s0, 0x80

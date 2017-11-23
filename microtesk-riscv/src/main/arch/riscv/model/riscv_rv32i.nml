@@ -159,7 +159,7 @@ op auipc(rd: X, imm: card(20))
   address is not aligned to a four-byte boundary.
 */
 op jal(rd: X, imm: card(20))
-  syntax = format("jal %s, 0x%x", rd.syntax, imm)
+  syntax = format("jal %s, %<label>d", rd.syntax, imm)
   image  = format("%1s%10s%1s%8s%s1101111", imm<19>, imm<9..0>, imm<10>, imm<18..11>, rd.image)
   action = {
     rd = PC + 4;
@@ -203,7 +203,7 @@ op jalr(rd: X, rs1: X, imm: card(12))
   BEQ and BNE take the branch if registers rs1 and rs2 are equal or unequal respectively.
 */
 op beq(rs1: X, rs2: X, imm: card(12))
-  syntax = format("beq %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
+  syntax = format("beq %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
   image  = format("%1s%6s%s%s000%4s%1s1100011",
                   imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
   action = {
@@ -213,7 +213,7 @@ op beq(rs1: X, rs2: X, imm: card(12))
   }
 
 op bne(rs1: X, rs2: X, imm: card(12))
-  syntax = format("bne %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
+  syntax = format("bne %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
   image  = format("%1s%6s%s%s001%4s%1s1100011",
                   imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
   action = {
@@ -238,7 +238,7 @@ op bne(rs1: X, rs2: X, imm: card(12))
   comparison respectively.
 */
 op blt(rs1: X, rs2: X, imm: card(12))
-  syntax = format("blt %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
+  syntax = format("blt %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
   image  = format("%1s%6s%s%s100%4s%1s1100011",
                   imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
   action = {
@@ -248,7 +248,7 @@ op blt(rs1: X, rs2: X, imm: card(12))
   }
 
 op bltu(rs1: X, rs2: X, imm: card(12))
-  syntax = format("bltu %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
+  syntax = format("bltu %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
   image  = format("%1s%6s%s%s110%4s%1s1100011",
                   imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
   action = {
@@ -273,7 +273,7 @@ op bltu(rs1: X, rs2: X, imm: card(12))
   and unsigned comparison respectively.
 */
 op bge(rs1: X, rs2: X, imm: card(12))
-  syntax = format("bge %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
+  syntax = format("bge %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
   image  = format("%1s%6s%s%s101%4s%1s1100011",
                   imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
   action = {
@@ -283,7 +283,7 @@ op bge(rs1: X, rs2: X, imm: card(12))
   }
 
 op bgeu(rs1: X, rs2: X, imm: card(12))
-  syntax = format("bgeu %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
+  syntax = format("bgeu %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
   image  = format("%1s%6s%s%s111%4s%1s1100011",
                   imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
   action = {
@@ -857,7 +857,7 @@ pseudo op sgtz(rd: X, rs: X)
   Format: j offset
 */
 pseudo op j(offset: card(20))
-  syntax = format("j 0x%x", offset)
+  syntax = format("j %<label>d", offset)
   image  = format("%s", jal(X(0), offset).image)
   action = {
     jal(X(0), offset).action;
@@ -881,7 +881,7 @@ pseudo op jr(rs: X)
   Format: beqz rs, offset
 */
 pseudo op beqz(rs: X, offset: card(12))
-  syntax = format("beqz %s, 0x%x", rs.syntax, offset)
+  syntax = format("beqz %s, %<label>d", rs.syntax, offset)
   image  = format("%s", beq(rs, X(0), offset).image)
   action = {
     beq(rs, X(0), offset).action;
@@ -893,7 +893,7 @@ pseudo op beqz(rs: X, offset: card(12))
   Format: bnez rs, offset
 */
 pseudo op bnez(rs: X, offset: card(12))
-  syntax = format("bnez %s, 0x%x", rs.syntax, offset)
+  syntax = format("bnez %s, %<label>d", rs.syntax, offset)
   image  = format("%s", bne(rs, X(0), offset).image)
   action = {
     bne(rs, X(0), offset).action;
@@ -905,7 +905,7 @@ pseudo op bnez(rs: X, offset: card(12))
   Format: blez rs, offset
 */
 pseudo op blez(rs: X, offset: card(12))
-  syntax = format("blez %s, 0x%x", rs.syntax, offset)
+  syntax = format("blez %s, %<label>d", rs.syntax, offset)
   image  = format("%s", bge(X(0), rs, offset).image)
   action = {
     bge(X(0), rs, offset).action;
@@ -917,7 +917,7 @@ pseudo op blez(rs: X, offset: card(12))
   Format: bgez rs, offset
 */
 pseudo op bgez(rs: X, offset: card(12))
-  syntax = format("bgez %s, 0x%x", rs.syntax, offset)
+  syntax = format("bgez %s, %<label>d", rs.syntax, offset)
   image  = format("%s", bge(rs, X(0), offset).image)
   action = {
     bge(rs, X(0), offset).action;
@@ -929,7 +929,7 @@ pseudo op bgez(rs: X, offset: card(12))
   Format: bltz rs, offset
 */
 pseudo op bltz(rs: X, offset: card(12))
-  syntax = format("bltz %s, 0x%x", rs.syntax, offset)
+  syntax = format("bltz %s, %<label>d", rs.syntax, offset)
   image  = format("%s", blt(rs, X(0), offset).image)
   action = {
     blt(rs, X(0), offset).action;
@@ -941,7 +941,7 @@ pseudo op bltz(rs: X, offset: card(12))
   Format: bgtz rs, offset
 */
 pseudo op bgtz(rs: X, offset: card(12))
-  syntax = format("bgtz %s, 0x%x", rs.syntax, offset)
+  syntax = format("bgtz %s, %<label>d", rs.syntax, offset)
   image  = format("%s", blt(X(0), rs, offset).image)
   action = {
     blt(X(0), rs, offset).action;
@@ -1251,59 +1251,6 @@ op rv32i_pseudo_system = csrw
                        | fsflagsi
                        | fsflagsi2
 
-// Load address
-pseudo op la(rd : X, symbol : WORD)
-  syntax = format("la %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
-                          addi(rd, rd, symbol<11..0>).image)
-  action = {
-    auipc(rd, symbol<31..12>).action;
-    addi(rd, rd, symbol<11..0>).action;
-  }
-
-// Load global
-pseudo op lb_global(rd : X, symbol : WORD)
-  syntax = format("lb %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
-                          lb(rd, rd, symbol<11..0>).image)
-  action = {
-    auipc(rd, symbol<31..12>).action;
-    lb(rd, rd, symbol<11..0>).action;
-  }
-
-// Load immediate
-pseudo op li(rd : X, symbol : XWORD)
-  syntax = format("li %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s%s%s%s%s%s%s%s%s%s",
-#ifdef RV64I
-                        ori(rd, X(0), coerce(card(12), symbol<63..53>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<52..42>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<41..32>)).image,
-                        slli(rd, rd, 10).image,
-#endif
-                        ori(rd, X(0), coerce(card(12), symbol<31..21>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<20..10>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<9..0>)).image)
-  action = {
-#ifdef RV64I
-    ori(rd, X(0), coerce(card(12), symbol<63..53>)).action;
-    slli(rd, rd, 11).action;
-    ori(rd, X(0), coerce(card(12), symbol<52..42>)).action;
-    slli(rd, rd, 11).action;
-    ori(rd, X(0), coerce(card(12), symbol<41..32>)).action;
-    slli(rd, rd, 10).action;
-#endif
-    ori(rd, X(0), coerce(card(12), symbol<31..21>)).action;
-    slli(rd, rd, 11).action;
-    ori(rd, X(0), coerce(card(12), symbol<20..10>)).action;
-    slli(rd, rd, 11).action;
-    ori(rd, X(0), coerce(card(12), symbol<9..0>)).action;
-  }
-
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
@@ -1358,9 +1305,9 @@ op rv32i = lui
          | bltz
          | bgtz // 16
          | rv32i_pseudo_system // 20
-         | la
-         | lb_global
-         | li
+         //| la
+         //| lb_global
+         //| li
 
 //==================================================================================================
 // Special for templates

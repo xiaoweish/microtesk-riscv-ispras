@@ -3,11 +3,14 @@
 ================================================================================
 
 --------------------------------------------------------------------------------
- 2016/11/03 - 2016/MM/DD
+ 2016/11/03 - 2017/MM/DD
 --------------------------------------------------------------------------------
 
- 2016/11/03 MicroTESK RISC-V 0.0.1
-
- - Specifications: Few instructions of alu was added.
- - Test Templates: New templates instruction_alu.rb
-
+ 2017/11/23 MicroTESK RISC-V 0.0.1
+ - Specifications: Instruction set of RISC-V: RV32I, RV64I,
+                                              RV32M, RV64M,
+                                              RV32A, RV64A,
+                                              RV32F, RV64F,
+                                              RV32D, RV64D
+ - Test Templates: 20 test templates were added
+ - Tool Functions: Updated MicroTESK core

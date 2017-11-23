@@ -612,9 +612,7 @@ label :error
   end
 
   def load_address_to_reg(reg_addr, address_label)
-    auipc reg_addr, get_address_of(address_label)>>12
-    srli reg_addr, reg_addr, 12
-    slli reg_addr, reg_addr, 12
+    lui reg_addr, get_address_of(address_label)>>12
     temp = 4095
     addi reg_addr, reg_addr, get_address_of(address_label)&temp
   end

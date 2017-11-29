@@ -17,12 +17,21 @@ TESTS = arithmetic\
         euclid\
         groups\
         int_divide\
-	int_sqrt
+        int_sqrt\
+        min_max\
+        preparators_test\
+        random\
+        register_allocation
 
-all: $(TESTS)
+SELFCHECK_TESTS = selfcheck_example
+
+all: $(TESTS) $(SELFCHECK_TESTS)
 
 $(TESTS):
 	sh run.sh $@
+
+$(SELFCHECK_TESTS):
+	sh run-sc.sh $@
 
 clean:
 	rm *.s *.o *.bin *.elf *.stdout *.stderr -f

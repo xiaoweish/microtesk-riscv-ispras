@@ -156,14 +156,17 @@ class RISCVBaseTemplate < Template
         ori  target, zero,   value(53, 63)
         slli target, target, 11
         ori  target, target, value(42, 52)
-        slli target, target, 11
-        ori  target, target, value(32, 41)
         slli target, target, 10
+        ori  target, target, value(32, 41)
+        slli target, target, 11
+        ori  target, target, value(21, 31)
       end
-      ori  target, target, value(21, 31)
+      if rv64i == false then
+        ori  target, zero, value(21, 31)
+      end
       slli target, target, 11
       ori  target, target, value(10,  20)
-      slli target, target, 11
+      slli target, target, 10
       ori  target, target, value(0,  9)
     }
 
@@ -172,74 +175,19 @@ class RISCVBaseTemplate < Template
     }
 
     preparator(:target => 'X', :mask => "0000000000000000") {
-      # TODO:
+      Or target, zero, zero
     }
 
     preparator(:target => 'X', :mask => "FFFFFFFFFFFFFFFF") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "000000000000XXXX") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "00000000XXXX0000") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "0000XXXX00000000") {
-      # TODO:
-      #ori    target, zero, value(32, 47)
-      #dsll32 target, target, 0
-    }
-
-    preparator(:target => 'X', :mask => "XXXX000000000000") {
-      # TODO:
-      #ori    target, zero,   value(48, 63)
-      #dsll32 target, target, 16
+      Not target, zero
     }
 
     preparator(:target => 'X', :mask => "00000000XXXXXXXX") {
-      # TODO:
-      #ori  target, zero,   value(16, 31)
-      #dsll target, target, 16
-      #ori  target, target, value(0, 15)
-    }
-
-    preparator(:target => 'X', :mask => "0000XXXX0000XXXX") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "XXXX00000000XXXX") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "0000XXXXXXXX0000") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "XXXX0000XXXX0000") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "XXXXXXXX00000000") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "0000XXXXXXXXXXXX") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "XXXXXXXXXXXX0000") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "XXXXXXXX0000XXXX") {
-      # TODO:
-    }
-
-    preparator(:target => 'X', :mask => "XXXX0000XXXXXXXX") {
-      # TODO:
+      ori  target, zero, value(21, 31)
+      slli target, target, 11
+      ori  target, target, value(10,  20)
+      slli target, target, 10
+      ori  target, target, value(0,  9)
     }
 
     ################################################################################################
@@ -288,12 +236,14 @@ class RISCVBaseTemplate < Template
     # Default comparator: It is used when no special case is applicable.
     #
     comparator(:target => 'X') {
-      # TODO:
-      #lui at, value(16, 31)
-      #ori at, target, value(0, 15)
+      ori  ra, zero, value(21, 31)
+      slli ra, ra, 11
+      ori  ra, ra, value(10,  20)
+      slli ra, ra, 10
+      ori  ra, ra, value(0,  9)
 
-      #bne at, target, :check_failed
-      #nop
+      bne ra, target, :check_failed
+      nop
     }
 
     #
@@ -309,8 +259,8 @@ class RISCVBaseTemplate < Template
     # more convenient to test the target against the $zero register.
     #
     comparator(:target => 'X', :mask => "00000000") {
-      #bne zero, target, :check_failed
-      #nop
+      bne zero, target, :check_failed
+      nop
     }
 
     ################################################################################################
@@ -626,7 +576,7 @@ label :error
       @free_register_allocator = mode_allocator('FREE')
     end
 
-    r(_ @free_register_allocator, attrs)
+    x(_ @free_register_allocator, attrs)
   end
 
   ###################################################################################################

@@ -77,6 +77,9 @@ class InstructionRV32D < RISCVBaseTemplate
       fcvt_w_d t2, ft2
       trace "ft2 = %x", fpr_observer(2)
       trace "t2: x7 = %x", gpr_observer(7)
+
+      #fsw_global
+      #flw_global
     else
       trace "Error: RV32D"
     end

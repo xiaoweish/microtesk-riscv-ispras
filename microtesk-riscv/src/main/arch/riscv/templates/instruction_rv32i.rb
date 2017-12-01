@@ -143,6 +143,18 @@ class InstructionRV32I < RISCVBaseTemplate
     #fsflagsi
     #fsflagsi2
 
+    #lb_global
+    #lh_global
+    #lw_global
+
+    #sb_global
+    #sh_global
+    #sw_global
+
+    # call
+    # tail
+    # li
+
     nop
     nop
   end

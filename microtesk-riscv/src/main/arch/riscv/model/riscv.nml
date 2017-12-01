@@ -421,7 +421,7 @@ let MEM_BYTE  = 1
 var temp_address_load[DWORD]
 var temp_address_tail[card(2)]
 
-op check_aligned(op_type: card(4), address: XWORD)
+pseudo op check_aligned(op_type: card(4), address: XWORD)
   action = {
     if (op_type == MEM_DWORD && address<2..0> != 0) ||
        (op_type == MEM_WORD && address<1..0> != 0) ||
@@ -435,7 +435,7 @@ op check_aligned(op_type: card(4), address: XWORD)
 
 var load_value[DWORD]
 
-op load_data(op_type: card(4), address: XWORD)
+pseudo op load_data(op_type: card(4), address: XWORD)
   action = {
     tmp_bit = 0;
     check_aligned(op_type, address).action;
@@ -449,7 +449,7 @@ op load_data(op_type: card(4), address: XWORD)
     endif;
   }
 
-op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
+pseudo op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
   action = {
     tmp_bit = 0;
     check_aligned(op_type, address).action;
@@ -512,7 +512,7 @@ let RM_RMM = 0x100
   #include "riscv_rv64d.nml"
 #endif
 
-op Op = rv32i // 47 + 39
+op Op = rv32i // 47 + 36
 #ifdef RV32M
       | rv32m // 8
 #endif
@@ -540,7 +540,8 @@ op Op = rv32i // 47 + 39
 #ifdef RV64D
       | rv64d // 6
 #endif
-// Total: (47+77+32)+(39+3+3) = 201
+//pseudo +15
+// Total: (47+77+32)+(36+3+3)+15 = 213
 
 op instruction(operation: Op)
   syntax = operation.syntax
@@ -559,58 +560,7 @@ op instruction(operation: Op)
 // Special pseudoinstructions
 //==================================================================================================
 
-// Load address
-pseudo op la(rd : X, symbol : WORD)
-  syntax = format("la %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
-                          addi(rd, rd, symbol<11..0>).image)
-  action = {
-    instruction(auipc(rd, symbol<31..12>)).action;
-    instruction(addi(rd, rd, symbol<11..0>)).action;
-  }
-
-// Load global
-pseudo op lb_global(rd : X, symbol : WORD)
-  syntax = format("lb %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
-                          lb(rd, rd, symbol<11..0>).image)
-  action = {
-    instruction(auipc(rd, symbol<31..12>)).action;
-    instruction(lb(rd, rd, symbol<11..0>)).action;
-  }
-
-// Load immediate
-pseudo op li(rd : X, symbol : XWORD)
-  syntax = format("li %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s%s%s%s%s%s%s%s%s%s",
-#ifdef RV64I
-                        ori(rd, X(0), coerce(card(12), symbol<63..53>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<52..42>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<41..32>)).image,
-                        slli(rd, rd, 10).image,
-#endif
-                        ori(rd, X(0), coerce(card(12), symbol<31..21>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<20..10>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<9..0>)).image)
-  action = {
-#ifdef RV64I
-    instruction(ori(rd, X(0), coerce(card(12), symbol<63..53>))).action;
-    instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<52..42>))).action;
-    instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<41..32>))).action;
-    instruction(slli(rd, rd, 10)).action;
-#endif
-    instruction(ori(rd, X(0), coerce(card(12), symbol<31..21>))).action;
-    instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<20..10>))).action;
-    instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<9..0>))).action;
-  }
+#include "riscv_pseudo.nml"
 
 //==================================================================================================
 // The End

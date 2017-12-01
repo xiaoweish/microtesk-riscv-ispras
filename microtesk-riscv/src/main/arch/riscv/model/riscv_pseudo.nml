@@ -1,0 +1,219 @@
+/*
+ * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+#ifndef RISCV_PSEUDO_INCLUDED
+#define RISCV_PSEUDO_INCLUDED
+
+//==================================================================================================
+// Pseudo instructions
+//==================================================================================================
+
+/**/
+
+// Load address
+@rev(RV32I)
+pseudo op la(rd : X, symbol : WORD)
+  syntax = format("la %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
+                          addi(rd, rd, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rd, symbol<31..12>)).action;
+    instruction(addi(rd, rd, symbol<11..0>)).action;
+  }
+
+// Load global
+@rev(RV32I)
+pseudo op lb_global(rd : X, symbol : WORD)
+  syntax = format("lb %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
+                          lb(rd, rd, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rd, symbol<31..12>)).action;
+    instruction(lb(rd, rd, symbol<11..0>)).action;
+  }
+
+@rev(RV32I)
+pseudo op lh_global(rd : X, symbol : WORD)
+  syntax = format("lh %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
+                          lh(rd, rd, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rd, symbol<31..12>)).action;
+    instruction(lh(rd, rd, symbol<11..0>)).action;
+  }
+
+@rev(RV32I)
+pseudo op lw_global(rd : X, symbol : WORD)
+  syntax = format("lw %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
+                          lw(rd, rd, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rd, symbol<31..12>)).action;
+    instruction(lw(rd, rd, symbol<11..0>)).action;
+  }
+
+@rev(RV64I)
+pseudo op ld_global(rd : X, symbol : WORD)
+  syntax = format("ld %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
+                          ld(rd, rd, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rd, symbol<31..12>)).action;
+    instruction(ld(rd, rd, symbol<11..0>)).action;
+  }
+
+// Store global
+@rev(RV32I)
+pseudo op sb_global(rd : X, symbol : WORD, rt : X)
+  syntax = format("sb %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
+  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
+                          sb(rd, rt, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rt, symbol<31..12>)).action;
+    instruction(sb(rd, rt, symbol<11..0>)).action;
+  }
+
+@rev(RV32I)
+pseudo op sh_global(rd : X, symbol : WORD, rt : X)
+  syntax = format("sh %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
+  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
+                          sh(rd, rt, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rt, symbol<31..12>)).action;
+    instruction(sh(rd, rt, symbol<11..0>)).action;
+  }
+
+@rev(RV32I)
+pseudo op sw_global(rd : X, symbol : WORD, rt : X)
+  syntax = format("sw %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
+  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
+                          sw(rd, rt, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rt, symbol<31..12>)).action;
+    instruction(sw(rd, rt, symbol<11..0>)).action;
+  }
+
+@rev(RV64I)
+pseudo op sd_global(rd : X, symbol : WORD, rt : X)
+  syntax = format("sd %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
+  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
+                          sd(rd, rt, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rt, symbol<31..12>)).action;
+    instruction(sd(rd, rt, symbol<11..0>)).action;
+  }
+
+// Load immediate
+@rev(RV32I)
+pseudo op li(rd : X, symbol : XWORD)
+  syntax = format("li %s, %<label>d", rd.syntax, symbol)
+  image  = format("%s%s%s%s%s%s%s%s%s%s%s",
+#ifdef RV64I
+                        ori(rd, X(0), coerce(card(12), symbol<63..53>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<52..42>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<41..32>)).image,
+                        slli(rd, rd, 10).image,
+#endif
+                        ori(rd, X(0), coerce(card(12), symbol<31..21>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<20..10>)).image,
+                        slli(rd, rd, 11).image,
+                        ori(rd, X(0), coerce(card(12), symbol<9..0>)).image)
+  action = {
+#ifdef RV64I
+    instruction(ori(rd, X(0), coerce(card(12), symbol<63..53>))).action;
+    instruction(slli(rd, rd, 11)).action;
+    instruction(ori(rd, X(0), coerce(card(12), symbol<52..42>))).action;
+    instruction(slli(rd, rd, 11)).action;
+    instruction(ori(rd, X(0), coerce(card(12), symbol<41..32>))).action;
+    instruction(slli(rd, rd, 10)).action;
+#endif
+    instruction(ori(rd, X(0), coerce(card(12), symbol<31..21>))).action;
+    instruction(slli(rd, rd, 11)).action;
+    instruction(ori(rd, X(0), coerce(card(12), symbol<20..10>))).action;
+    instruction(slli(rd, rd, 11)).action;
+    instruction(ori(rd, X(0), coerce(card(12), symbol<9..0>))).action;
+  }
+
+// Floating-point load global
+@rev(RV32F)
+pseudo op flw_global(rd: FR, rt : X, symbol : WORD)
+  syntax = format("flw %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
+  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
+                          flw(rd, rt, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rt, symbol<31..12>)).action;
+    instruction(flw(rd, rt, symbol<11..0>)).action;
+  }
+
+@rev(RV32D)
+pseudo op fld_global(rd: FR, rt : X, symbol : WORD)
+  syntax = format("fld %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
+  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
+                          fld(rd, rt, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rt, symbol<31..12>)).action;
+    instruction(fld(rd, rt, symbol<11..0>)).action;
+  }
+
+// Floating-point store global
+@rev(RV32F)
+pseudo op fsw_global(rd: FR, rt : X, symbol : WORD)
+  syntax = format("fsw %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
+  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
+                          fsw(rd, rt, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rt, symbol<31..12>)).action;
+    instruction(fsw(rd, rt, symbol<11..0>)).action;
+  }
+
+@rev(RV32D)
+pseudo op fsd_global(rd: FR, rt : X, symbol : WORD)
+  syntax = format("fsd %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
+  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
+                          fsd(rd, rt, symbol<11..0>).image)
+  action = {
+    instruction(auipc(rt, symbol<31..12>)).action;
+    instruction(fsd(rd, rt, symbol<11..0>)).action;
+  }
+
+// Call far-away subroutine
+@rev(RV32I)
+pseudo op call(symbol : WORD)
+  syntax = format("call %<label>d", symbol)
+  image  = format("%s%s", auipc(X(6), symbol<31..12>).image,
+                          jalr(X(1), X(6), symbol<11..0>).image)
+  action = {
+    instruction(auipc(X(6), symbol<31..12>)).action;
+    instruction(sb(X(1), X(6), symbol<11..0>)).action;
+  }
+
+// Tail call far-away subroutine
+@rev(RV32I)
+pseudo op tail(symbol : WORD)
+  syntax = format("tail %<label>d", symbol)
+  image  = format("%s%s", auipc(X(6), symbol<31..12>).image,
+                          jalr(X(0), X(6), symbol<11..0>).image)
+  action = {
+    instruction(auipc(X(6), symbol<31..12>)).action;
+    instruction(sb(X(0), X(6), symbol<11..0>)).action;
+  }
+
+//==================================================================================================
+
+#endif

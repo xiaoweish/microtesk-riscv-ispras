@@ -6,7 +6,7 @@
  2016/11/03 - 2017/MM/DD
 --------------------------------------------------------------------------------
 
- 2017/12/DD MicroTESK RISC-V 0.0.2
+ 2017/12/06 MicroTESK RISC-V 0.0.2
 
  - Specifications: New pseudo instructions for RV32I, RV32F, RV32D
  - Test Templates: 5 new test templates

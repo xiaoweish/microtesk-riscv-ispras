@@ -22,104 +22,130 @@
 //==================================================================================================
 
 /**/
+var jump_imm32[card(32)]
+
+label mode PSEUDO_LABEL(target: WORD, current: WORD) = target<31..0> - current<31..0>
+  init = {
+    jump_imm32 = target<31..0>;
+  }
+  syntax = ""
+  image = format("%s", target<31..0> - current<31..0>)
+
+mode PSEUDO_IMM(imm: card(32)) = imm
+  init = {
+    jump_imm32 = imm;
+  }
+  syntax = format("0x%X", imm)
+  image = format("%s", imm)
+
+mode PSEUDO_OFFSET = PSEUDO_LABEL | PSEUDO_IMM
 
 // Load address
 @rev(RV32I)
-pseudo op la(rd : X, symbol : WORD)
-  syntax = format("la %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
-                          addi(rd, rd, symbol<11..0>).image)
+pseudo op la(rd : X, symbol : PSEUDO_OFFSET)
+  syntax = format("la %s, %s", rd.syntax, symbol.syntax)
+  image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
+                          addi(rd, rd, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rd, symbol<31..12>)).action;
-    instruction(addi(rd, rd, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rd, tmp_word<31..12>)).action;
+    instruction(addi(rd, rd, tmp_word<11..0>)).action;
   }
 
 // Load global
 @rev(RV32I)
-pseudo op lb_global(rd : X, symbol : WORD)
-  syntax = format("lb %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
-                          lb(rd, rd, symbol<11..0>).image)
+pseudo op lb_global(rd : X, symbol : PSEUDO_OFFSET)
+  syntax = format("lb %s, %s", rd.syntax, symbol.syntax)
+  image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
+                          lb(rd, rd, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rd, symbol<31..12>)).action;
-    instruction(lb(rd, rd, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rd, tmp_word<31..12>)).action;
+    instruction(lb(rd, rd, tmp_word<11..0>)).action;
   }
 
 @rev(RV32I)
-pseudo op lh_global(rd : X, symbol : WORD)
-  syntax = format("lh %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
-                          lh(rd, rd, symbol<11..0>).image)
+pseudo op lh_global(rd : X, symbol : PSEUDO_OFFSET)
+  syntax = format("lh %s, %s", rd.syntax, symbol.syntax)
+  image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
+                          lh(rd, rd, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rd, symbol<31..12>)).action;
-    instruction(lh(rd, rd, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rd, tmp_word<31..12>)).action;
+    instruction(lh(rd, rd, tmp_word<11..0>)).action;
   }
 
 @rev(RV32I)
-pseudo op lw_global(rd : X, symbol : WORD)
-  syntax = format("lw %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
-                          lw(rd, rd, symbol<11..0>).image)
+pseudo op lw_global(rd : X, symbol : PSEUDO_OFFSET)
+  syntax = format("lw %s, %s", rd.syntax, symbol.syntax)
+  image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
+                          lw(rd, rd, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rd, symbol<31..12>)).action;
-    instruction(lw(rd, rd, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rd, tmp_word<31..12>)).action;
+    instruction(lw(rd, rd, tmp_word<11..0>)).action;
   }
 
 @rev(RV64I)
-pseudo op ld_global(rd : X, symbol : WORD)
-  syntax = format("ld %s, %<label>d", rd.syntax, symbol)
-  image  = format("%s%s", auipc(rd, symbol<31..12>).image,
-                          ld(rd, rd, symbol<11..0>).image)
+pseudo op ld_global(rd : X, symbol : PSEUDO_OFFSET)
+  syntax = format("ld %s, %s", rd.syntax, symbol.syntax)
+  image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
+                          ld(rd, rd, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rd, symbol<31..12>)).action;
-    instruction(ld(rd, rd, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rd, tmp_word<31..12>)).action;
+    instruction(ld(rd, rd, tmp_word<11..0>)).action;
   }
 
 // Store global
 @rev(RV32I)
-pseudo op sb_global(rd : X, symbol : WORD, rt : X)
-  syntax = format("sb %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
-  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
-                          sb(rd, rt, symbol<11..0>).image)
+pseudo op sb_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  syntax = format("sb %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
+                          sb(rd, rt, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rt, symbol<31..12>)).action;
-    instruction(sb(rd, rt, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rt, tmp_word<31..12>)).action;
+    instruction(sb(rd, rt, tmp_word<11..0>)).action;
   }
 
 @rev(RV32I)
-pseudo op sh_global(rd : X, symbol : WORD, rt : X)
-  syntax = format("sh %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
-  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
-                          sh(rd, rt, symbol<11..0>).image)
+pseudo op sh_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  syntax = format("sh %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
+                          sh(rd, rt, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rt, symbol<31..12>)).action;
-    instruction(sh(rd, rt, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rt, tmp_word<31..12>)).action;
+    instruction(sh(rd, rt, tmp_word<11..0>)).action;
   }
 
 @rev(RV32I)
-pseudo op sw_global(rd : X, symbol : WORD, rt : X)
-  syntax = format("sw %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
-  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
-                          sw(rd, rt, symbol<11..0>).image)
+pseudo op sw_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  syntax = format("sw %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
+                          sw(rd, rt, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rt, symbol<31..12>)).action;
-    instruction(sw(rd, rt, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rt, tmp_word<31..12>)).action;
+    instruction(sw(rd, rt, tmp_word<11..0>)).action;
   }
 
 @rev(RV64I)
-pseudo op sd_global(rd : X, symbol : WORD, rt : X)
-  syntax = format("sd %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
-  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
-                          sd(rd, rt, symbol<11..0>).image)
+pseudo op sd_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  syntax = format("sd %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
+                          sd(rd, rt, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rt, symbol<31..12>)).action;
-    instruction(sd(rd, rt, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rt, tmp_word<31..12>)).action;
+    instruction(sd(rd, rt, tmp_word<11..0>)).action;
   }
 
 // Load immediate
 @rev(RV32I)
 pseudo op li(rd : X, symbol : XWORD)
-  syntax = format("li %s, %<label>d", rd.syntax, symbol)
+  syntax = format("li %s, %s", rd.syntax, symbol)
   image  = format("%s%s%s%s%s%s%s%s%s%s%s",
 #ifdef RV64I
                         ori(rd, X(0), coerce(card(12), symbol<63..53>)).image,
@@ -152,66 +178,72 @@ pseudo op li(rd : X, symbol : XWORD)
 
 // Floating-point load global
 @rev(RV32F)
-pseudo op flw_global(rd: FR, rt : X, symbol : WORD)
-  syntax = format("flw %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
-  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
-                          flw(rd, rt, symbol<11..0>).image)
+pseudo op flw_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  syntax = format("flw %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
+                          flw(rd, rt, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rt, symbol<31..12>)).action;
-    instruction(flw(rd, rt, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rt, tmp_word<31..12>)).action;
+    instruction(flw(rd, rt, tmp_word<11..0>)).action;
   }
 
 @rev(RV32D)
-pseudo op fld_global(rd: FR, rt : X, symbol : WORD)
-  syntax = format("fld %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
-  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
-                          fld(rd, rt, symbol<11..0>).image)
+pseudo op fld_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  syntax = format("fld %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
+                          fld(rd, rt, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rt, symbol<31..12>)).action;
-    instruction(fld(rd, rt, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rt, tmp_word<31..12>)).action;
+    instruction(fld(rd, rt, tmp_word<11..0>)).action;
   }
 
 // Floating-point store global
 @rev(RV32F)
-pseudo op fsw_global(rd: FR, rt : X, symbol : WORD)
-  syntax = format("fsw %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
-  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
-                          fsw(rd, rt, symbol<11..0>).image)
+pseudo op fsw_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  syntax = format("fsw %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
+                          fsw(rd, rt, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rt, symbol<31..12>)).action;
-    instruction(fsw(rd, rt, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rt, tmp_word<31..12>)).action;
+    instruction(fsw(rd, rt, tmp_word<11..0>)).action;
   }
 
 @rev(RV32D)
-pseudo op fsd_global(rd: FR, rt : X, symbol : WORD)
-  syntax = format("fsd %s, %<label>d(%s)", rd.syntax, symbol, rt.syntax)
-  image  = format("%s%s", auipc(rt, symbol<31..12>).image,
-                          fsd(rd, rt, symbol<11..0>).image)
+pseudo op fsd_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  syntax = format("fsd %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
+                          fsd(rd, rt, jump_imm32<11..0>).image)
   action = {
-    instruction(auipc(rt, symbol<31..12>)).action;
-    instruction(fsd(rd, rt, symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(rt, tmp_word<31..12>)).action;
+    instruction(fsd(rd, rt, tmp_word<11..0>)).action;
   }
 
 // Call far-away subroutine
 @rev(RV32I)
-pseudo op call(symbol : WORD)
-  syntax = format("call %<label>d", symbol)
-  image  = format("%s%s", auipc(X(6), symbol<31..12>).image,
-                          jalr(X(1), X(6), symbol<11..0>).image)
+pseudo op call(symbol : PSEUDO_OFFSET)
+  syntax = format("call %s", symbol.syntax)
+  image  = format("%s%s", auipc(X(6), jump_imm32<31..12>).image,
+                          jalr(X(1), X(6), BRANCH_IMM(jump_imm32<11..0>)).image)
   action = {
-    instruction(auipc(X(6), symbol<31..12>)).action;
-    instruction(sb(X(1), X(6), symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(X(6), tmp_word<31..12>)).action;
+    instruction(jalr(X(1), X(6), BRANCH_IMM(tmp_word<11..0>))).action;
   }
 
 // Tail call far-away subroutine
 @rev(RV32I)
-pseudo op tail(symbol : WORD)
-  syntax = format("tail %<label>d", symbol)
-  image  = format("%s%s", auipc(X(6), symbol<31..12>).image,
-                          jalr(X(0), X(6), symbol<11..0>).image)
+pseudo op tail(symbol : PSEUDO_OFFSET)
+  syntax = format("tail %s", symbol.syntax)
+  image  = format("%s%s", auipc(X(6), jump_imm32<31..12>).image,
+                          jalr(X(0), X(6), BRANCH_IMM(jump_imm32<11..0>)).image)
   action = {
-    instruction(auipc(X(6), symbol<31..12>)).action;
-    instruction(sb(X(0), X(6), symbol<11..0>)).action;
+    tmp_word = symbol;
+    instruction(auipc(X(6), tmp_word<31..12>)).action;
+    instruction(jalr(X(0), X(6), BRANCH_IMM(tmp_word<11..0>))).action;
   }
 
 //==================================================================================================

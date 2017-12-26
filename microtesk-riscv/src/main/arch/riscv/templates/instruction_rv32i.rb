@@ -29,10 +29,22 @@ class InstructionRV32I < RISCVBaseTemplate
 
     la s1, :jal_label
     trace "s1 = %x", gpr_observer(9)
+
     nop
 
     lui t3, 8
+    trace "t3 = %x", gpr_observer(28)
     auipc t4, :jal_label
+    trace "t4 = %x", gpr_observer(29)
+    nop
+    jal t5, 4
+    nop
+    j :j_label
+    nop
+    nop
+    nop
+    label :j_label
+    nop
     jal t5, :jal_label
     nop
     label :jal_label
@@ -131,6 +143,7 @@ class InstructionRV32I < RISCVBaseTemplate
     csrsi time, 0x5
     csrci time, 0x5
     frcsr t0
+
     #fscsr
     #fscsr2
     #frrm

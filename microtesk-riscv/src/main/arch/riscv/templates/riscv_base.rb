@@ -500,6 +500,118 @@ label :error
     FR(3)
   end
 
+  def ft4
+    FR(4)
+  end
+
+  def ft5
+    FR(5)
+  end
+
+  def ft6
+    FR(6)
+  end
+
+  def ft7
+    FR(7)
+  end
+
+  def ft8
+    FR(8)
+  end
+
+  def ft9
+    FR(9)
+  end
+
+  def ft10
+    FR(10)
+  end
+
+  def ft11
+    FR(11)
+  end
+
+  def ft12
+    FR(12)
+  end
+
+  def ft13
+    FR(13)
+  end
+
+  def ft14
+    FR(14)
+  end
+
+  def ft15
+    FR(15)
+  end
+
+  def ft16
+    FR(16)
+  end
+
+  def ft17
+    FR(17)
+  end
+
+  def ft18
+    FR(18)
+  end
+
+  def ft19
+    FR(19)
+  end
+
+  def ft20
+    FR(20)
+  end
+
+  def ft21
+    FR(21)
+  end
+
+  def ft22
+    FR(22)
+  end
+
+  def ft23
+    FR(23)
+  end
+
+  def ft24
+    FR(24)
+  end
+
+  def ft25
+    FR(25)
+  end
+
+  def ft26
+    FR(26)
+  end
+
+  def ft27
+    FR(27)
+  end
+
+  def ft28
+    FR(28)
+  end
+
+  def ft29
+    FR(29)
+  end
+
+  def ft30
+    FR(30)
+  end
+
+  def ft31
+    FR(31)
+  end
+
   ##################################################################################################
   # Shortcuts for system registers
   ##################################################################################################

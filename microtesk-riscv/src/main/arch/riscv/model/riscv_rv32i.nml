@@ -96,42 +96,52 @@
 
 /*
   LUI : Load Upper Immediate (U-type)
-
   Format: lui rd, imm
 
   RV32I:
-
   LUI (load upper immediate) is used to build 32-bit constants and uses the U-type
   format. LUI places the U-immediate value in the top 20 bits of the destination
   register rd, filling in the lowest 12 bits with zeros.
 
   RV64I:
-
   LUI (load upper immediate) uses the same opcode as RV32I. LUI places the 20-bit
   U-immediate into bits 31–12 of register rd and places zero in the lowest 12 bits.
   The 32-bit result is sign-extended to 64 bits.
 */
-op lui(rd: X, imm: card(20))
-  syntax = format("lui %s, 0x%x", rd.syntax, imm)
-  image  = format("%20s%s0110111", imm, rd.image)
+var jump_imm20[card(20)]
+
+label mode JUMP_LABEL(target: WORD, current: WORD) = target<19..0> - current<19..0>
+  init = {
+    jump_imm20 = target<19..0>;
+  }
+  syntax = ""
+  image = format("%s", target<19..0> - current<19..0>)
+
+mode JUMP_IMM(imm: int(20)) = imm
+  init = {}
+  syntax = format("0x%X", imm)
+  image = format("%s", imm)
+
+mode JUMP_ADDR = JUMP_LABEL | JUMP_IMM
+
+op lui(rd: X, imm: JUMP_ADDR)
+  syntax = format("lui %s, %s", rd.syntax, imm.syntax)
+  image  = format("%20s%s0110111", imm.image, rd.image)
   action = {
     rd = sign_extend(XWORD, imm) << 12;
   }
 
 /*
   AUIPC : Add Upper Immediate to PC (U-type)
-
   Format: auipc rd, imm
 
   RV32I:
-
   AUIPC (add upper immediate to pc) is used to build pc-relative addresses and uses
   the U-type format. AUIPC forms a 32-bit offset from the 20-bit U-immediate, filing
   in the lowest 12 bits with zeros, adds this offset to the pc, then places the result
   in register rd.
 
   RV64I:
-
   AUIPC (add upper immediate to pc) uses the same opcode as RV32I. AUIPC is used to
   build pc-relative addresses and uses the U-type format. AUIPC appends 12 low-order
   zero bits to the 20-bit U-immediate, sign-extends the result to 64 bits, then adds
@@ -158,9 +168,19 @@ op auipc(rd: X, imm: card(20))
   The JAL instruction can generate a misaligned instruction fetch exception if the target
   address is not aligned to a four-byte boundary.
 */
-op jal(rd: X, imm: card(20))
-  syntax = format("jal %s, %<label>d", rd.syntax, imm)
-  image  = format("%1s%10s%1s%8s%s1101111", imm<19>, imm<9..0>, imm<10>, imm<18..11>, rd.image)
+label mode JUMP_LABEL_M2(target: WORD, current: WORD) = target<20..1> - current<20..1>
+  init = {
+    jump_imm20 = target<20..1>;
+  }
+  syntax = ""
+  image = format("%s", target<20..1> - current<20..1>)
+
+mode JUMP_ADDR_M2 = JUMP_LABEL_M2 | JUMP_IMM
+
+op jal(rd: X, imm: JUMP_ADDR_M2)
+  syntax = format("jal %s, %s", rd.syntax, imm.syntax)
+  image  = format("%1s%10s%1s%8s%s1101111",
+                  jump_imm20<19>, jump_imm20<9..0>, jump_imm20<10>, jump_imm20<18..11>, rd.image)
   action = {
     rd = PC + 4;
     PC = PC + (sign_extend(XWORD, imm) << 1);
@@ -180,12 +200,28 @@ op jal(rd: X, imm: card(20))
   The JALR instructions can generate a misaligned instruction fetch exception if the target
   address is not aligned to a four-byte boundary.
 */
-op jalr(rd: X, rs1: X, imm: card(12))
-  syntax = format("jalr %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
-  image  = format("%12s%s000%s1100111", imm, rs1.image, rd.image)
+var jump_imm12[card(12)]
+
+label mode BRANCH_LABEL(target: WORD, current: WORD) = target<11..0> - current<11..0>
+  init = {
+    jump_imm12 = target<11..0>;
+  }
+  syntax = ""
+  image = format("%s", target<11..0> - current<11..0>)
+
+mode BRANCH_IMM(imm: card(12)) = imm
+  init = {}
+  syntax = format("0x%X", imm)
+  image = format("%s", imm)
+
+mode BRANCH_OFFSET = BRANCH_LABEL | BRANCH_IMM
+
+op jalr(rd: X, rs1: X, imm: BRANCH_OFFSET)
+  syntax = format("jalr %s, %s, %s", rd.syntax, rs1.syntax, imm.syntax)
+  image  = format("%s%s000%s1100111", imm.image, rs1.image, rd.image)
   action = {
     rd = PC + 4;
-    PC = rs1 + ((sign_extend(XWORD, imm) << 1) >> 1);
+    PC = rs1 + ((sign_extend(XWORD, imm) >> 1) << 1);
   }
 
 /*
@@ -202,20 +238,33 @@ op jalr(rd: X, rs1: X, imm: card(12))
 
   BEQ and BNE take the branch if registers rs1 and rs2 are equal or unequal respectively.
 */
-op beq(rs1: X, rs2: X, imm: card(12))
-  syntax = format("beq %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
-  image  = format("%1s%6s%s%s000%4s%1s1100011",
-                  imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
+label mode BRANCH_LABEL_M2(target: WORD, current: WORD) = target<12..1> - current<12..1>
+  init = {
+    jump_imm12 = target<12..1>;
+  }
+  syntax = ""
+  image = format("%s", target<12..1> - current<12..1>)
+
+mode BRANCH_OFFSET_M2 = BRANCH_LABEL_M2 | BRANCH_IMM
+
+internal op branch_image(rs1: X, rs2: X, branch_index: card(3))
+  syntax = format("")
+  image  = format("%1s%6s%5s%5s%3s%4s%1s1100011", jump_imm12<11>, jump_imm12<9..4>, rs2.image,
+                  rs1.image, branch_index, jump_imm12<3..0>, jump_imm12<10>)
+  action = {}
+
+op beq(rs1: X, rs2: X, imm: BRANCH_OFFSET_M2)
+  syntax = format("beq %s, %s, %s", rs1.syntax, rs2.syntax, imm.syntax)
+  image  = format("%s", branch_image(rs1, rs2, 0b000).image)
   action = {
     if rs1 == rs2 then
       PC = PC + (sign_extend(XWORD, imm) << 1);
     endif;
   }
 
-op bne(rs1: X, rs2: X, imm: card(12))
-  syntax = format("bne %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
-  image  = format("%1s%6s%s%s001%4s%1s1100011",
-                  imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
+op bne(rs1: X, rs2: X, imm: BRANCH_OFFSET_M2)
+  syntax = format("bne %s, %s, %s", rs1.syntax, rs2.syntax, imm.syntax)
+  image  = format("%32s", branch_image(rs1, rs2, 0b001).image)
   action = {
     if rs1 != rs2 then
       PC = PC + (sign_extend(XWORD, imm) << 1);
@@ -237,20 +286,18 @@ op bne(rs1: X, rs2: X, imm: card(12))
   BLT and BLTU take the branch if rs1 is less than rs2, using signed and unsigned
   comparison respectively.
 */
-op blt(rs1: X, rs2: X, imm: card(12))
-  syntax = format("blt %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
-  image  = format("%1s%6s%s%s100%4s%1s1100011",
-                  imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
+op blt(rs1: X, rs2: X, imm: BRANCH_OFFSET_M2)
+  syntax = format("blt %s, %s, %s", rs1.syntax, rs2.syntax, imm.syntax)
+  image  = format("%32s", branch_image(rs1, rs2, 0b100).image)
   action = {
     if cast(XINT, rs1) < cast(XINT, rs2) then
       PC = PC + (sign_extend(XWORD, imm) << 1);
     endif;
   }
 
-op bltu(rs1: X, rs2: X, imm: card(12))
-  syntax = format("bltu %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
-  image  = format("%1s%6s%s%s110%4s%1s1100011",
-                  imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
+op bltu(rs1: X, rs2: X, imm: BRANCH_OFFSET_M2)
+  syntax = format("bltu %s, %s, %s", rs1.syntax, rs2.syntax, imm.syntax)
+  image  = format("%32s", branch_image(rs1, rs2, 0b110).image)
   action = {
     if rs1 < rs2 then
       PC = PC + (sign_extend(XWORD, imm) << 1);
@@ -272,20 +319,18 @@ op bltu(rs1: X, rs2: X, imm: card(12))
   BGE and BGEU take the branch if rs1 is greater than or equal to rs2, using signed
   and unsigned comparison respectively.
 */
-op bge(rs1: X, rs2: X, imm: card(12))
-  syntax = format("bge %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
-  image  = format("%1s%6s%s%s101%4s%1s1100011",
-                  imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
+op bge(rs1: X, rs2: X, imm: BRANCH_OFFSET_M2)
+  syntax = format("bge %s, %s, %s", rs1.syntax, rs2.syntax, imm.syntax)
+  image  = format("%32s", branch_image(rs1, rs2, 0b101).image)
   action = {
     if cast(XINT, rs1) >= cast(XINT, rs2) then
       PC = PC + (sign_extend(XWORD, imm) << 1);
     endif;
   }
 
-op bgeu(rs1: X, rs2: X, imm: card(12))
-  syntax = format("bgeu %s, %s, %<label>d", rs1.syntax, rs2.syntax, imm)
-  image  = format("%1s%6s%s%s111%4s%1s1100011",
-                  imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
+op bgeu(rs1: X, rs2: X, imm: BRANCH_OFFSET_M2)
+  syntax = format("bgeu %s, %s, %s", rs1.syntax, rs2.syntax, imm.syntax)
+  image  = format("%32s", branch_image(rs1, rs2, 0b111).image)
   action = {
     if rs1 >= rs2 then
       PC = PC + (sign_extend(XWORD, imm) << 1);
@@ -854,8 +899,8 @@ pseudo op sgtz(rd: X, rs: X)
 
   Format: j offset
 */
-pseudo op j(offset: card(20))
-  syntax = format("j %<label>d", offset)
+pseudo op j(offset: JUMP_ADDR_M2)
+  syntax = format("j %s", offset.syntax)
   image  = format("%s", jal(X(0), offset).image)
   action = {
     jal(X(0), offset).action;
@@ -868,78 +913,54 @@ pseudo op j(offset: card(20))
 */
 pseudo op jr(rs: X)
   syntax = format("jr %s", rs.syntax)
-  image  = format("%s", jalr(X(0), rs, 0).image)
+  image  = format("%s", jalr(X(0), rs, BRANCH_IMM(0)).image)
   action = {
-    jalr(X(0), rs, 0).action;
+    jalr(X(0), rs, BRANCH_IMM(0)).action;
   }
 
-/*
-  BEQZ: Branch if = zero (beq rs, x0, offset)
-
-  Format: beqz rs, offset
-*/
-pseudo op beqz(rs: X, offset: card(12))
-  syntax = format("beqz %s, %<label>d", rs.syntax, offset)
+// BEQZ: Branch if = zero (beq rs, x0, offset). Format: beqz rs, offset
+pseudo op beqz(rs: X, offset: BRANCH_OFFSET_M2)
+  syntax = format("beqz %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", beq(rs, X(0), offset).image)
   action = {
     beq(rs, X(0), offset).action;
   }
 
-/*
-  BNEZ: Branch if != zero (bne rs, x0, offset)
-
-  Format: bnez rs, offset
-*/
-pseudo op bnez(rs: X, offset: card(12))
-  syntax = format("bnez %s, %<label>d", rs.syntax, offset)
+// BNEZ: Branch if != zero (bne rs, x0, offset). Format: bnez rs, offset
+pseudo op bnez(rs: X, offset: BRANCH_OFFSET_M2)
+  syntax = format("bnez %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", bne(rs, X(0), offset).image)
   action = {
     bne(rs, X(0), offset).action;
   }
 
-/*
-  BLEZ: Branch if <= zero (bge x0, rs, offset)
-
-  Format: blez rs, offset
-*/
-pseudo op blez(rs: X, offset: card(12))
-  syntax = format("blez %s, %<label>d", rs.syntax, offset)
+// BLEZ: Branch if <= zero (bge x0, rs, offset). Format: blez rs, offset
+pseudo op blez(rs: X, offset: BRANCH_OFFSET_M2)
+  syntax = format("blez %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", bge(X(0), rs, offset).image)
   action = {
     bge(X(0), rs, offset).action;
   }
 
-/*
-  BGEZ: Branch if >= zero (bge rs, x0, offset)
-
-  Format: bgez rs, offset
-*/
-pseudo op bgez(rs: X, offset: card(12))
-  syntax = format("bgez %s, %<label>d", rs.syntax, offset)
+// BGEZ: Branch if >= zero (bge rs, x0, offset). Format: bgez rs, offset
+pseudo op bgez(rs: X, offset: BRANCH_OFFSET_M2)
+  syntax = format("bgez %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", bge(rs, X(0), offset).image)
   action = {
     bge(rs, X(0), offset).action;
   }
 
-/*
-  BLTZ: Branch if < zero (blt rs, x0, offset)
-
-  Format: bltz rs, offset
-*/
-pseudo op bltz(rs: X, offset: card(12))
-  syntax = format("bltz %s, %<label>d", rs.syntax, offset)
+// BLTZ: Branch if < zero (blt rs, x0, offset). Format: bltz rs, offset
+pseudo op bltz(rs: X, offset: BRANCH_OFFSET_M2)
+  syntax = format("bltz %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", blt(rs, X(0), offset).image)
   action = {
     blt(rs, X(0), offset).action;
   }
 
-/*
-  BGTZ: Branch if > zero (blt x0, rs, offset)
-
-  Format: bgtz rs, offset
-*/
-pseudo op bgtz(rs: X, offset: card(12))
-  syntax = format("bgtz %s, %<label>d", rs.syntax, offset)
+// BGTZ: Branch if > zero (blt x0, rs, offset). Format: bgtz rs, offset
+pseudo op bgtz(rs: X, offset: BRANCH_OFFSET_M2)
+  syntax = format("bgtz %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", blt(X(0), rs, offset).image)
   action = {
     blt(X(0), rs, offset).action;
@@ -1303,9 +1324,6 @@ op rv32i = lui
          | bltz
          | bgtz // 16
          | rv32i_pseudo_system // 20
-         //| la
-         //| lb_global
-         //| li
 
 //==================================================================================================
 // Special for templates

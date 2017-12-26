@@ -24,7 +24,7 @@ class ArithmeticTemplate < RISCVBaseTemplate
     block(:combinator => 'product', :compositor => 'random') {
       iterate {
         xor x(_), x(_), x(_)
-        lui x(_), _
+        ori x(_), x(_), _
       }
 
       iterate {

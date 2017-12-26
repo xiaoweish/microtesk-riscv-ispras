@@ -14,12 +14,157 @@
 
 package ru.ispras.microtesk.model.riscv;
 
+import org.junit.After;
 import org.junit.Assert;
-
+import org.junit.Before;
+import ru.ispras.microtesk.Logger;
 import ru.ispras.microtesk.Logger.EventType;
+import ru.ispras.microtesk.options.Option;
+import ru.ispras.microtesk.test.Statistics;
 import ru.ispras.microtesk.test.testutils.TemplateTest;
+import ru.ispras.microtesk.utils.FileUtils;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 public class RiscVTest extends TemplateTest {
+
+  /**
+   * Test execution phases enumeration.
+   */
+  public enum TestPhase {
+    PROGRAM_GENERATION,
+    COMPILATION,
+    EMULATION,
+    CHECK_TRACES,
+    NONE
+  }
+
+  /**
+   * The execution phase at which the test is allowed to fail.
+   */
+  private TestPhase failPhase;
+
+  /**
+   * The current phase of test execution.
+   */
+  private TestPhase currentPhase;
+
+  /**
+   * Shows whether rest of test execution phases should be skipped for the current test program.
+   */
+  private boolean skipRestPhases;
+
+  /**
+   * The test program name prefix.
+   */
+  private String programPrefix;
+
+  /**
+   * The path to directory containing test program.
+   */
+  private String testDirPath;
+
+  /**
+   * Path to test results.
+   */
+  private static final String TEST_PATH = System.getenv("TEST_PATH");
+
+  /**
+   * Shell interpreter.
+   */
+  private static final File SHELL = new File(System.getenv("SHELL"));
+
+  /**
+   * Test programs extension.
+   */
+  private static final String EXT = "s";
+
+  /* Toolchain parameters. */
+
+  /**
+   * RISC-V toolchain path environment variable name.
+   */
+  private static final String RISCV_TCHAIN_PATH = "RISCV_TCHAIN";
+
+  /**
+   * RISC-V toolchain path environment variable.
+   */
+  private static final String TCHAIN_PATH = System.getenv(RISCV_TCHAIN_PATH);
+
+  /**
+   * RISC-V Linux GNU toolchain components common prefix.
+   */
+  private static final String TCHAIN_PREFIX = "riscv64-unknown-linux-gnu-";
+
+  /* QEMU for RISC-V parameters. */
+
+  /**
+   * QEMU binary name.
+   */
+  private static final String QEMU_BIN = "qemu-system-riscv64";
+
+  /**
+   * QEMU location environment variable name.
+   */
+  private static final String QEMU_VAR = "QEMU_RISCV_PATH";
+
+  /**
+   * QEMU location environment variable.
+   */
+  private static final String QEMU_PATH = System.getenv(QEMU_VAR);
+
+  /**
+   * Timeout for QEMU execution (in milliseconds).
+   */
+  private static final int QEMU_TIMEOUT_MILLIS = 1000;
+
+    /* Trace utils parameters. */
+
+  /**
+   * Trace utils binary name.
+   */
+  private static final String TRACE_BIN = "traceutils";
+
+  /**
+   * Trace utils location environment variable name.
+   */
+  private static final String TRACE_VAR = "TRACE_PATH";
+
+  /**
+   * Trace utils location environment variable.
+   */
+  private static final String TRACE_PATH = System.getenv(TRACE_VAR);
+
+  /**
+   * Trace utils main binary file.
+   */
+  private static final File TRACER =
+      new File(String.format("%s%s%s",TRACE_PATH, File.separator, TRACE_BIN));
+
+  /**
+   * Tracer matching window size (in ticks).
+   */
+  private static final String TRACER_WINDOW_SIZE = "5";
+
+  /**
+   * Revision identifier.
+   */
+  private static final String RISCV_REV = "RV64FULL";
+
   /**
    * Default constructor.
    */
@@ -28,6 +173,7 @@ public class RiscVTest extends TemplateTest {
         "riscv",
         "src/main/arch/riscv/templates"
         );
+    failOnPhase(TestPhase.NONE);
   }
 
   @Override
@@ -46,4 +192,426 @@ public class RiscVTest extends TemplateTest {
            "Warning: Failed to load the MMU model. Physical memory will be accessed directly.");
 
   }
+
+  @Override
+  public Statistics run(final String file) {
+    setProgramPrefix(file);
+    final Path testDirPath = Paths.get(TEST_PATH, getProgramPrefix());
+    setTestDirPath(testDirPath);
+
+    setCommandLineOption(Option.TRACER_LOG);
+    setCommandLineOption(Option.OUTDIR, getTestDirPath());
+    setCommandLineOption(Option.CODE_EXT, EXT);
+    setCommandLineOption(Option.DATA_EXT, EXT);
+    setCommandLineOption(Option.REVID, RISCV_REV);
+    return super.run(file);
+  }
+
+  private void setProgramPrefix(final String file) {
+    this.programPrefix = FileUtils.getShortFileNameNoExt(file);
+  }
+
+  private void setTestDirPath(final Path testDirPath) {
+    this.testDirPath = testDirPath.toString();
+  }
+
+  private String getProgramPrefix() {
+    return this.programPrefix;
+  }
+
+  private String getTestDirPath() {
+    return this.testDirPath;
+  }
+
+  /**
+   * Sets the specified execution phase at which this test is allowed to fail.
+   * @param phase The test execution phase at which it's allowed to fail.
+   */
+  protected void failOnPhase(final TestPhase phase) {
+    this.failPhase = phase;
+  }
+
+  private void setPhase(final TestPhase phase) {
+    this.currentPhase = phase;
+  }
+
+  private boolean canFailOnCurrentPhase() {
+    return this.currentPhase == this.failPhase;
+  }
+
+  private void skipRestPhases(final boolean skipRestPhases) {
+    this.skipRestPhases = skipRestPhases;
+  }
+
+  private boolean skippedPhase() {
+    return this.skipRestPhases;
+  }
+
+  /**
+   * Sets test parameters.
+   */
+  @Before
+  public void setUp() {
+    setPhase(TestPhase.PROGRAM_GENERATION);
+  }
+
+  /**
+   * Compiles generated test programs and runs them on emulator.
+   */
+  @After
+  public void compileAndEmulate() {
+
+    if (canFailOnCurrentPhase()) {
+
+      /* No test programs are generated by this test, finish it. */
+      return;
+    }
+
+    /* Check whether toolchain has been installed. */
+
+    if (TCHAIN_PATH == null || TCHAIN_PATH.isEmpty()) {
+      Logger.warning(
+          String.format("To compile test programs you should set '%s' environment variable"
+              + " to toolchain 'bin' dir.", RISCV_TCHAIN_PATH));
+      return;
+    }
+
+    final File asm = getToolchainBinary("as");
+    final File linker = getToolchainBinary("ld");
+    final File objCopy = getToolchainBinary("objcopy");
+
+    /* If toolchain is installed, loop on prefix-named test programs,
+     * compile every test program, if it fails, throw error message. */
+    final File testDir = new File(getTestDirPath());
+
+    if (!testDir.exists() || !testDir.isDirectory()) {
+      Assert.fail(String.format("Can't find '%s' test program directory.", getTestDirPath()));
+    }
+
+    final File[] files = testDir.listFiles();
+
+    final Collection<File> auxFiles = new LinkedHashSet<>();
+    final Collection<File> tests = new LinkedHashSet<>();
+
+    Assert.assertFalse("No test programs are generated from this template.", files == null);
+
+    for (final File file : files) {
+
+      final String fileName = file.getName();
+      if (fileName.endsWith(EXT)) {
+        if (fileName.startsWith(getProgramPrefix())) {
+          tests.add(file);
+        } else {
+          auxFiles.add(file);
+        }
+      }
+    }
+
+    for (final File program : tests) {
+      skipRestPhases(false);
+      final File image = compile(program, auxFiles, asm, linker, objCopy);
+      emulate(image);
+    }
+  }
+
+  private void emulate(final File image) {
+
+    /* If QEMU is installed, run the binary image on it. */
+
+    if (QEMU_PATH == null || QEMU_PATH.isEmpty()) {
+      Logger.warning(
+          String.format(
+              "To run aarch64 binaries"
+                  + " you should set '%s' environment variable"
+                  + " to dir with '%s' QEMU binary.", QEMU_VAR, QEMU_BIN));
+      return;
+    }
+
+    final File qemu = new File(String.format("%s%s%s", QEMU_PATH, File.separator, QEMU_BIN));
+    checkExecutable(qemu);
+
+    Logger.message("Start simulation ...");
+    setPhase(TestPhase.EMULATION);
+    final String qemuLog = insertExt(image.getAbsolutePath(), "-qemu.log");
+
+    final String[] qemuArgs = new String[] {
+        "-M",
+        "spike",
+        "-cpu",
+        "any",
+        "-d",
+        "unimp,nochain,in_asm",
+        "-nographic",
+        "-singlestep",
+        "-trace-log",
+        "-D",
+        qemuLog,
+        "-kernel",
+        image.getAbsolutePath()};
+    runCommand(qemu, QEMU_TIMEOUT_MILLIS, qemuArgs);
+
+    final File qemuLogFile = new File(qemuLog);
+    if (!qemuLogFile.exists() || qemuLogFile.isDirectory()) {
+      Assert.fail(
+          String.format("Can't find QEMU trace file: %s", qemuLogFile.getAbsolutePath()));
+    }
+
+    Logger.message("done.");
+
+    Logger.message("Check traces ...");
+    setPhase(TestPhase.CHECK_TRACES);
+
+    final File toolLog = new File(insertExt(image.getAbsolutePath(), ".log"));
+
+    if (!toolLog.exists() || toolLog.isDirectory()) {
+      Assert.fail(
+          String.format("Can't find MicroTESK Tracer log file: %s", toolLog.getAbsolutePath()));
+    }
+
+    /* Use Trace Matcher for logs comparison. */
+    checkExecutable(TRACER);
+
+    final String [] args = new String [] {
+        "-c",
+        String.format("%s %s %s %s %s > %s",
+            TRACER.getAbsolutePath(),
+            "--window-size " + TRACER_WINDOW_SIZE,
+            "--first-dif-stop",
+            toolLog.getAbsolutePath(),
+            qemuLogFile.getAbsolutePath(),
+            compareResultFileName(toolLog, qemuLogFile))};
+    final Collection<Integer> diffReturnValues = new LinkedList<>();
+    diffReturnValues.add(0);
+    diffReturnValues.add(1); // to mask "files are not equal" situation
+
+    runCommand(SHELL, diffReturnValues, args);
+
+    Logger.message("done.");
+  }
+
+  private static String compareResultFileName(final File first, final File second) {
+    return String.format(
+        "%s%s%s-vs-%s.txt",
+        FileUtils.getFileDir(first.getAbsolutePath()),
+        File.separator,
+        FileUtils.getShortFileNameNoExt(first.getName()),
+        FileUtils.getShortFileNameNoExt(second.getName()));
+  }
+
+  private File compile(
+      final File program,
+      final Collection<File> auxFiles,
+      final File asm,
+      final File linker,
+      final File objCpy) {
+
+    Logger.message(String.format("Start compilation of %s ...", program.getName()));
+    setPhase(TestPhase.COMPILATION);
+
+    /* asm -> obj */
+    runCommand(
+        asm,
+        program.getAbsolutePath(),
+        "-o",
+        getOutOption(getNameNoExt(program), "o"));
+
+    for (final File file : auxFiles) {
+      runCommand(
+          asm,
+          file.getAbsolutePath(),
+          "-o",
+          getOutOption(getNameNoExt(file), "o"));
+    }
+
+    /* obj -> elf */
+    final String[] objPaths = getObjFiles(program, auxFiles);
+    final List<String> linkerArgs = new LinkedList<>();
+    Collections.addAll(linkerArgs, objPaths);
+    linkerArgs.add("-Ttext");
+    linkerArgs.add("0x1000");
+    linkerArgs.add("-o");
+    linkerArgs.add(getOutOption(getNameNoExt(program), "elf"));
+    runCommand(linker, linkerArgs.toArray(new String[linkerArgs.size()]));
+
+    final File elfImage = new File(getElf(program));
+
+    Logger.message("done.");
+    return elfImage;
+  }
+
+  private String[] getObjFiles(final File program, final Collection<File> auxFiles) {
+
+    final List<File> files = new LinkedList<>();
+    files.add(program);
+    files.addAll(auxFiles);
+
+    return getFiles(".o", files.toArray(new File[files.size()]));
+  }
+
+  private String getElf(final File program) {
+    final String[] elfFiles = getFiles(".elf", program);
+    return elfFiles[0];
+  }
+
+  private String getImage(final File program) {
+    final String[] binFiles = getFiles(".bin", program);
+    return binFiles[0];
+  }
+
+  private String[] getFiles(final String ext, final File ... files) {
+
+    final String[] result = new String[files.length];
+
+    for (int i = 0; i < files.length; i++) {
+      final File file = files[i];
+      final String pathWithExt = insertExt(file.getAbsolutePath(), ext);
+
+      final File fileWithExt = new File(pathWithExt);
+      if (!fileWithExt.exists() || fileWithExt.isDirectory()) {
+        Assert.fail(String.format("Can't find: %s", pathWithExt));
+      }
+      result[i] = fileWithExt.getAbsolutePath();
+    }
+
+    return result;
+  }
+
+  private static String insertExt(final String path, final String ext) {
+    return String.format(
+        "%s%s",
+        path.substring(0, path.contains(".") ? path.lastIndexOf('.') : path.length()),
+        ext);
+  }
+
+  private void runCommand(final File cmd, final String ... args) {
+    runCommand(cmd, 0, Collections.singletonList(0), args);
+  }
+
+  private void runCommand(final File cmd, final long timeout, final String ... args) {
+    runCommand(cmd, timeout, Collections.singletonList(0), args);
+  }
+
+  private void runCommand(
+      final File cmd,
+      final Collection<Integer> returnValues,
+      final String ... args) {
+
+    runCommand(cmd, 0, returnValues, args);
+  }
+
+  private void runCommand(
+      final File cmd,
+      final long timeout,
+      final Collection<Integer> returnCodes,
+      final String ... args) {
+
+    if (skippedPhase()) {
+      return;
+    }
+
+    final String[] cmdArray = toArray(cmd, args);
+
+    try {
+      final ProcessBuilder builder = new ProcessBuilder(cmdArray);
+      final File errorLog = new File(getTestDirPath() + File.separator + "error-log.txt");
+      builder.redirectError(errorLog);
+      final Process process = builder.start();
+
+      if (timeout > 0) {
+        Thread.sleep(timeout);
+        Logger.message("Timeout is expired for: %s", Arrays.toString(cmdArray));
+        process.destroy();
+      }
+
+      final int exitCode = timeout > 0 ? 0 : process.waitFor();
+
+      if (!returnCodes.contains(exitCode) && !isEmpty(errorLog)) {
+
+        if (canFailOnCurrentPhase()) {
+
+        /* It is planned for test to fail on this phase, finish with success.
+         * The finishing is treated as skipping of the rest of test execution phases. */
+          skipRestPhases(true);
+          return;
+        }
+
+        final byte [] errLogBytes = Files.readAllBytes(Paths.get(errorLog.getPath()));
+
+        Assert.fail(
+            String.format(
+                "Process has been finished with %d error code: %s;%s%s Error log is:%s %s",
+                exitCode,
+                Arrays.toString(cmdArray),
+                System.lineSeparator(),
+                System.lineSeparator(),
+                System.lineSeparator(),
+                new String(errLogBytes, Charset.defaultCharset())));
+      }
+
+      if (timeout == 0) {
+        process.destroy();
+      }
+    } catch (final IOException | InterruptedException e) {
+      e.printStackTrace();
+      Assert.fail(e.getMessage());
+    }
+  }
+
+  private String[] toArray(
+      final File command,
+      final String ... args) {
+
+    final List<String> commands = new LinkedList<>();
+    commands.add(command.getAbsolutePath());
+    Collections.addAll(commands, args);
+
+    return commands.toArray(new String[commands.size()]);
+  }
+
+  private String getOutOption(
+      final String fileNamePrefix,
+      final String ext) {
+
+    return String.format("%s%s%s.%s", getTestDirPath(), File.separator, fileNamePrefix, ext);
+  }
+
+  private static String getNameNoExt(final File file) {
+    return FileUtils.getShortFileNameNoExt(file.getName());
+  }
+
+  private static File getToolchainBinary(final String suffix) {
+
+    final String fullPath =
+        String.format("%s%s%s%s", TCHAIN_PATH, File.separator, TCHAIN_PREFIX, suffix);
+    final File binary = new File(fullPath);
+
+    checkExecutable(binary);
+    return binary;
+  }
+
+  private static void checkExecutable(final File file) {
+
+    Assert.assertTrue(String.format("Can't find: %s", file.getAbsolutePath()), isExecutable(file));
+  }
+
+  private static boolean isExecutable(final File file) {
+    return file.exists() && !file.isDirectory() && file.canExecute();
+  }
+
+  private static boolean isEmpty(final File file) {
+    try {
+      final BufferedReader reader =
+          new BufferedReader(
+              new InputStreamReader(new FileInputStream(file), Charset.defaultCharset()));
+
+      final String firstLine = reader.readLine();
+      reader.close();
+      return firstLine == null;
+
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+    return false;
+  }
+
 }

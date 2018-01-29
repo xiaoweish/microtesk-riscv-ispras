@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -588,7 +588,7 @@ op xori(rd: X, rs1: X, imm: card(12))
   and the sign-extended 12-bit immediate and place the result in rd.
 */
 op ori(rd: X, rs1: X, imm: card(12))
-  syntax = format("ori %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
+  syntax = format("ori %s, %s, %d", rd.syntax, rs1.syntax, imm) // TODO 0x%x
   image  = format("%12s%s110%s0010011", imm, rs1.image, rd.image)
   action = {
     rd = rs1 | sign_extend(XWORD, imm);

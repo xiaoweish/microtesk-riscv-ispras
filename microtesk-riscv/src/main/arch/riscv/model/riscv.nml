@@ -478,6 +478,10 @@ let RM_RUP = 0x011
 let RM_RMM = 0x100
 #endif
 
+// Prints the sign-extended 12-bit immediate
+pseudo op print_imm12(imm: card(12))
+  syntax = format("%d", coerce(int(12), imm))
+
 //==================================================================================================
 // Instructions
 //==================================================================================================

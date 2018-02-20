@@ -190,6 +190,21 @@ class RISCVBaseTemplate < Template
       ori  target, target, value(0,  9)
     }
 
+    preparator(:target => 'FR') {
+      if rv64f == true then
+        prepare(t0, value(0, 63))
+
+        fcvt_s_l target, t0
+      end
+      if rv64f == false then
+        prepare(t0, value(0, 31))
+
+        fcvt_s_w target, t0
+      end
+    }
+
+    preparator(:target => 'USTATUS') {}
+
     ################################################################################################
 
     buffer_preparator(:target => 'DTLB') {
@@ -278,17 +293,6 @@ class RISCVBaseTemplate < Template
     ################################################################################################
 
     # TODO:
-    #text ".nolist"
-    #text ".set noreorder"
-    #text ".set noat"
-    #newline
-    #text "#include \"regdef_k64.h\""
-    #text "#include \"kernel_k64.h\""
-    #newline
-    #text ".list"
-    #text ".text"
-    #text ".globl __start"
-    #newline
     #org 0x2000
     #newline
 

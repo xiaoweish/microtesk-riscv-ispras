@@ -191,15 +191,16 @@ class RISCVBaseTemplate < Template
     }
 
     preparator(:target => 'FR') {
+      #TODO: t5
       if rv64f == true then
-        prepare(t0, value(0, 63))
+        prepare(t5, value(0, 63))
 
-        fcvt_s_l target, t0
+        fcvt_s_l target, t5
       end
       if rv64f == false then
-        prepare(t0, value(0, 31))
+        prepare(t5, value(0, 31))
 
-        fcvt_s_w target, t0
+        fcvt_s_w target, t5
       end
     }
 

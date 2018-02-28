@@ -278,7 +278,6 @@ public class RiscVTest extends TemplateTest {
 
     final File asm = getToolchainBinary("as");
     final File linker = getToolchainBinary("ld");
-    final File objCopy = getToolchainBinary("objcopy");
 
     /* If toolchain is installed, loop on prefix-named test programs,
      * compile every test program, if it fails, throw error message. */
@@ -309,7 +308,7 @@ public class RiscVTest extends TemplateTest {
 
     for (final File program : tests) {
       skipRestPhases(false);
-      final File image = compile(program, auxFiles, asm, linker, objCopy);
+      final File image = compile(program, auxFiles, asm, linker);
       emulate(image);
     }
   }
@@ -402,8 +401,7 @@ public class RiscVTest extends TemplateTest {
       final File program,
       final Collection<File> auxFiles,
       final File asm,
-      final File linker,
-      final File objCpy) {
+      final File linker) {
 
     Logger.message(String.format("Start compilation of %s ...", program.getName()));
     setPhase(TestPhase.COMPILATION);
@@ -451,11 +449,6 @@ public class RiscVTest extends TemplateTest {
   private String getElf(final File program) {
     final String[] elfFiles = getFiles(".elf", program);
     return elfFiles[0];
-  }
-
-  private String getImage(final File program) {
-    final String[] binFiles = getFiles(".bin", program);
-    return binFiles[0];
   }
 
   private String[] getFiles(final String ext, final File ... files) {

@@ -171,7 +171,7 @@ public class RiscVTest extends TemplateTest {
   public RiscVTest() {
     super(
         "riscv",
-        "src/main/arch/riscv/templates"
+        "build/target/arch/riscv/templates"
         );
     failOnPhase(TestPhase.NONE);
   }

@@ -32,22 +32,21 @@
 
   <!-- Data generators for branch instructions -->
   <extensions>
-    <extension name="beq-if-then"     path="ru.ispras.microtesk.riscv.test.branch.RiscvEqDataGenerator"/>
-    <extension name="bne-if-then"     path="ru.ispras.microtesk.riscv.test.branch.RiscvNeqDataGenerator"/>
+    <extension name="beq-if-then"   path="ru.ispras.microtesk.riscv.test.branch.RiscvEqDataGenerator"/>
+    <extension name="bne-if-then"   path="ru.ispras.microtesk.riscv.test.branch.RiscvNeqDataGenerator"/>
     <!--
-    <extension name="bnel-if-then"    path="ru.ispras.microtesk.mips.test.branch.MipsNeqDataGenerator"/>
-    <extension name="bgezal-if-then"  path="ru.ispras.microtesk.mips.test.branch.MipsGezDataGenerator"/>
-    <extension name="bgezall-if-then" path="ru.ispras.microtesk.mips.test.branch.MipsGezDataGenerator"/>
-    <extension name="bgez-if-then"    path="ru.ispras.microtesk.mips.test.branch.MipsGezDataGenerator"/>
-    <extension name="bgezl-if-then"   path="ru.ispras.microtesk.mips.test.branch.MipsGezDataGenerator"/>
-    <extension name="bgtz-if-then"    path="ru.ispras.microtesk.mips.test.branch.MipsGtzDataGenerator"/>
-    <extension name="bgtzl-if-then"   path="ru.ispras.microtesk.mips.test.branch.MipsGtzDataGenerator"/>
-    <extension name="blez-if-then"    path="ru.ispras.microtesk.mips.test.branch.MipsLezDataGenerator"/>
-    <extension name="blezl-if-then"   path="ru.ispras.microtesk.mips.test.branch.MipsLezDataGenerator"/>
-    <extension name="bltzal-if-then"  path="ru.ispras.microtesk.mips.test.branch.MipsLtzDataGenerator"/>
-    <extension name="bltzall-if-then" path="ru.ispras.microtesk.mips.test.branch.MipsLtzDataGenerator"/>
-    <extension name="bltz-if-then"    path="ru.ispras.microtesk.mips.test.branch.MipsLtzDataGenerator"/>
-    <extension name="bltzl-if-then"   path="ru.ispras.microtesk.mips.test.branch.MipsLtzDataGenerator"/>
+    <extension name="blt-if-then"   path="ru.ispras.microtesk.riscv.test.branch.RiscvEqDataGenerator"/>
+    <extension name="bge-if-then"   path="ru.ispras.microtesk.riscv.test.branch.RiscvNeqDataGenerator"/>
+    <extension name="bltu-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvEqDataGenerator"/>
+    <extension name="bgeu-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvNeqDataGenerator"/>
+    -->
+    <extension name="beqz-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvEqzDataGenerator"/>
+    <extension name="bnez-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvNezDataGenerator"/>
+    <!--
+    <extension name="blez-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvEqDataGenerator"/>
+    <extension name="bgez-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvNeqDataGenerator"/>
+    <extension name="bltz-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvEqDataGenerator"/>
+    <extension name="bgtz-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvNeqDataGenerator"/>
     -->
     <extension name="jal-goto"  path="ru.ispras.microtesk.riscv.test.branch.RiscvGotoDataGenerator"/>
     <extension name="jalr-goto" path="ru.ispras.microtesk.riscv.test.branch.RiscvGotoDataGenerator"/>

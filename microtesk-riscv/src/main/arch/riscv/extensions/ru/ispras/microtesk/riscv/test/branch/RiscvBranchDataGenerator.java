@@ -38,6 +38,7 @@ import java.util.Map;
  * @author <a href="mailto:andrewt@ispras.ru">Andrei Tatarnikov</a>
  */
 public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
+
   protected static Long generateEqual(Long rs1, Long rs2) {
     if (rs1 == null) {
       rs1 = rs2;
@@ -67,7 +68,7 @@ public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
     return new Pair<>(rs1, rs2);
   }
 
-  private static long distinctValue(final long x) {
+  protected static long distinctValue(final long x) {
     long value = x;
     do {
       value = Randomizer.get().nextLong();

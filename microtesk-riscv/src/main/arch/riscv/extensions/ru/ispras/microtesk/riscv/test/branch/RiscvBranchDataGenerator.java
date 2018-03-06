@@ -39,6 +39,22 @@ import java.util.Map;
  */
 public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
 
+  protected static long positiveValue() {
+    return Randomizer.get().nextLongRange(1, Long.MAX_VALUE);
+  }
+
+  protected static long negativeValue() {
+    return Randomizer.get().nextLongRange(Long.MIN_VALUE, -1);
+  }
+
+  protected static long nonPositiveValue() {
+    return Randomizer.get().nextLongRange(Long.MIN_VALUE, 0);
+  }
+
+  protected static long nonNegativeValue() {
+    return Randomizer.get().nextLongRange(0, Long.MAX_VALUE);
+  }
+
   protected static Long generateEqual(Long rs1, Long rs2) {
     if (rs1 == null) {
       rs1 = rs2;

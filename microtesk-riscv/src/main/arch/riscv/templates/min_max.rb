@@ -16,7 +16,7 @@ require_relative 'riscv_base'
 #
 # This test template demonstrates how to work with data declaration constucts.
 # The generated program finds minimum and maximum in a 5-element array
-# storing random numbers from 0 to 31. 
+# storing random numbers from 0 to 31.
 #
 class MinMaxTemplate < RISCVBaseTemplate
 
@@ -44,7 +44,7 @@ class MinMaxTemplate < RISCVBaseTemplate
     #la t1, :end
 
     lw t2, t0, 0
-    Or s0, zero, t2 
+    Or s0, zero, t2
     Or s1, zero, t2
 
     label :cycle
@@ -56,7 +56,7 @@ class MinMaxTemplate < RISCVBaseTemplate
     slt t3, t2, s0
     beq t3, zero, :test_max
     nop
-    Or s0, zero, t2 
+    Or s0, zero, t2
 
     label :test_max
     slt t4, s1, t2

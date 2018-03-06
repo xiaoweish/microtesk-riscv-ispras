@@ -23,7 +23,7 @@ class RISCVBaseTemplate < Template
 
   def initialize
     super
-    # Initialize settings here 
+    # Initialize settings here
     @setup_memory       = false
     @setup_cache        = false
     @kseg0_cache_policy = 0
@@ -89,7 +89,7 @@ class RISCVBaseTemplate < Template
     #TODO:
         #mfc0 ra, c0_epc
         #addiu ra, ra, 4
-        #jr ra 
+        #jr ra
         nop
       }
     }

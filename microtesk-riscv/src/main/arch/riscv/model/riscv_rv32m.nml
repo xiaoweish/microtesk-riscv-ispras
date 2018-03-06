@@ -1,12 +1,12 @@
 /*
  * Copyright 2017 ISP RAS (http://www.ispras.ru)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -78,7 +78,7 @@ op mulh(rd: X, rs1: X, rs2: X)
   action = {
     tmp_rv32m = sign_extend(XLONG, rs1) * sign_extend(XLONG, rs2);
     rd = tmp_rv32m<2*XLEN-1..XLEN>;
-  } 
+  }
 
 op mulhu(rd: X, rs1: X, rs2: X)
   syntax = format("mulhu %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)

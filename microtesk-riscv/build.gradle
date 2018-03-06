@@ -430,6 +430,7 @@ test.dependsOn copyModels
 test.dependsOn copyModelCode
 test.dependsOn copyQemu
 test.dependsOn copyTraceUtils
+test.dependsOn generateRiscvTemplates
 
 task sourcesJar(type: Jar, dependsOn: classes) {
   archiveName = projectName + '-src.jar'

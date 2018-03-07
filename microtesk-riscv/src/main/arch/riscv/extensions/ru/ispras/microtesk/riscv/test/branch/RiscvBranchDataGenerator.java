@@ -98,6 +98,11 @@ public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
   }
 
   protected static Long getValue(final String name, final TestBaseQuery query) {
+    final BitVector value = getValueAsBitVector(name, query);
+    return null != value ? value.longValue() : null;
+  }
+
+  protected static BitVector getValueAsBitVector(final String name, final TestBaseQuery query) {
     final String op = getInstructionName(query);
     final Node node = query.getBindings().get(op + "." + name);
 
@@ -106,12 +111,12 @@ public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
 
     if (ExprUtils.isValue(node)) {
       final NodeValue value = (NodeValue) node;
-      return value.getBitVector().longValue();
+      return value.getBitVector();
     }
 
     final NodeVariable var = (NodeVariable) node;
     if (var.getData().hasValue()) {
-      return var.getData().getValue(BitVector.class).longValue();
+      return var.getData().getValue(BitVector.class);
     }
 
     return null;

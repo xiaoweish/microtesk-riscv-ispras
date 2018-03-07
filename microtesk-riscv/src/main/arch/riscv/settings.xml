@@ -34,12 +34,10 @@
   <extensions>
     <extension name="beq-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvEqDataGenerator"/>
     <extension name="bne-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvNeqDataGenerator"/>
-    <!--
-    <extension name="blt-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvEqDataGenerator"/>
-    <extension name="bge-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvNeqDataGenerator"/>
-    <extension name="bltu-if-then" path="ru.ispras.microtesk.riscv.test.branch.RiscvEqDataGenerator"/>
-    <extension name="bgeu-if-then" path="ru.ispras.microtesk.riscv.test.branch.RiscvNeqDataGenerator"/>
-    -->
+    <extension name="blt-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvLtDataGenerator"/>
+    <extension name="bge-if-then"  path="ru.ispras.microtesk.riscv.test.branch.RiscvGeDataGenerator"/>
+    <!-- extension name="bltu-if-then" path="ru.ispras.microtesk.riscv.test.branch.RiscvLtuDataGenerator"/-->
+    <!-- extension name="bgeu-if-then" path="ru.ispras.microtesk.riscv.test.branch.RiscvGeuDataGenerator"/-->
     <extension name="beqz-if-then" path="ru.ispras.microtesk.riscv.test.branch.RiscvEqzDataGenerator"/>
     <extension name="bnez-if-then" path="ru.ispras.microtesk.riscv.test.branch.RiscvNezDataGenerator"/>
     <extension name="blez-if-then" path="ru.ispras.microtesk.riscv.test.branch.RiscvLezDataGenerator"/>

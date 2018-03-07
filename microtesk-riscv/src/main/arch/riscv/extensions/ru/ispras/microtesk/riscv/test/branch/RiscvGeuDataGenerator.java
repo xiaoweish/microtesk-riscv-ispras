@@ -27,7 +27,7 @@ import ru.ispras.testbase.knowledge.iterator.Iterator;
  * @author <a href="mailto:andrewt@ispras.ru">Andrei Tatarnikov</a>
  */
 public final class RiscvGeuDataGenerator extends RiscvBranchDataGenerator {
-  private static final BigInteger MAX = new BigInteger("FFFFFFFFFFFFFFFF");
+  private static final BigInteger MAX = BigInteger.ONE.shiftLeft(64).subtract(BigInteger.ONE);
 
   @Override
   public Iterator<TestData> generateThen(final TestBaseQuery query) {

@@ -16,11 +16,15 @@ package ru.ispras.microtesk.model.riscv;
 
 import org.junit.Assert;
 import org.junit.Test;
+import ru.ispras.microtesk.options.Option;
 import ru.ispras.microtesk.test.Statistics;
 
 public class InstructionLdSdTestCase extends RiscVTest {
   @Test
   public void test() {
+    setCommandLineOption(Option.VERBOSE);
+    setCommandLineOption(Option.DEBUG);
+
     final Statistics statistics = run("instruction_ld_sd.rb");
     Assert.assertNotNull(statistics);
   }

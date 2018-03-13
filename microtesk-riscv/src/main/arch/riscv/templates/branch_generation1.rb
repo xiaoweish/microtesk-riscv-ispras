@@ -19,9 +19,12 @@ require_relative 'riscv_base'
 #
 # Description:
 #
-# This test template demonstrates how to generate test cases with branch instructions.
+# This test template demonstrates how to generate test cases with branch instructions
+# including instruction with two parameters such as beq and bne. Currently, there is
+# a limitation: only one parameter is stored and loaded from the stream. Consequently,
+# the second parameter must be a register with a predefined value such as $zero.
 #
-class BranchGenerationTemplate < RISCVBaseTemplate
+class BranchGeneration1Template < RISCVBaseTemplate
 
   def initialize
     super
@@ -102,13 +105,13 @@ class BranchGenerationTemplate < RISCVBaseTemplate
     # A branch structure is as follows:
     #
     #  0: NOP
-    #  1: if (BGEZ) then goto 0
+    #  1: if (BGTZ) then goto 0
     #  2: NOP
-    #  3: if (BGTZ) then goto 2
+    #  3: if (BLTZ) then goto 2
     #  4: NOP
-    #  5: if (BLEZ) then goto 4
+    #  5: if (BEQ) then goto 4
     #  6: NOP
-    #  7: if (BLTZ) then goto 10
+    #  7: if (BNE) then goto 10
     #  8: NOP
     #  9: goto 0
     # 10: NOP
@@ -118,44 +121,44 @@ class BranchGenerationTemplate < RISCVBaseTemplate
     # Parameter 'trace_count_limit' bounds the number of execution traces to be created:
     #   the default value is -1 (no limitation).
     sequence(
-        :engines => {
-            :branch => {:branch_exec_limit => 3,
-                        :block_exec_limit => 3,
-                        :trace_count_limit => -1}}) {
+          :engines => {
+              :branch => {:branch_exec_limit => 3,
+                          :block_exec_limit => 3,
+                          :trace_count_limit => -1}}) {
       label :label0
-        nop  # A basic block should contain at least one instruction
-        bgez s0, :label0 do
-          situation('bgez-if-then', :engine => :branch, :stream => 'branch_data_0')
+        nop
+        bgtz s0, :label0 do
+          situation('bgtz-if-then', :engine => :branch, :stream => 'branch_data_0')
         end
-        addi reg1=get_register, reg1, 1 # reg1 is a random unreserved register
+        addi reg1=get_register, reg1, 1
 
       label :label1
-        nop  # A basic block should not modify the registers used in the branches
-        bgtz s1, :label1 do
-          situation('bgtz-if-then', :engine => :branch, :stream => 'branch_data_1')
+        nop
+        bltz s1, :label1 do
+          situation('bltz-if-then', :engine => :branch, :stream => 'branch_data_1')
         end
-        ori reg2=get_register, reg2, 2 # reg2 is a random unreserved register
+        ori reg2=get_register, reg2, 2
 
       label :label2
         nop
-        blez s2, :label2 do
-          situation('blez-if-then', :engine => :branch, :stream => 'branch_data_2')
+        beq s2, zero, :label2 do
+          situation('beq-if-then', :engine => :branch, :stream => 'branch_data_2')
         end
-        addi reg3=get_register, reg3, 3 # reg3 is a random unreserved register
+        addi reg3=get_register, reg3, 3
 
       label :label3
         nop
-        bltz s3, :label5 do
-          situation('bltz-if-then', :engine => :branch, :stream => 'branch_data_3')
+        bne s3, zero, :label5 do
+          situation('bne-if-then', :engine => :branch, :stream => 'branch_data_3')
         end
-        ori reg4=get_register, reg4, 4 # reg4 is a random unreserved register
+        ori reg4=get_register, reg4, 4
 
       label :label4
         nop
         j :label0 do
-          situation('j-goto', :engine => :branch)
+          situation('b-goto', :engine => :branch)
         end
-        addi reg5=get_register, reg5, 5 # reg5 is a random unreserved register
+        addi reg5=get_register, reg5, 5
 
       label :label5
         nop

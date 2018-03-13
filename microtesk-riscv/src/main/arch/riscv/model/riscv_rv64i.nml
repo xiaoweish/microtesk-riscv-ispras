@@ -93,12 +93,12 @@ op ld(rd: X, rs1: X, imm: card(12))
     tmp_index = tmp_address >> 2;
 
     if tmp_address<1..0> == 0 then // Word-aligned address
-      tmp_dword = MEM[tmp_index + 1] ::
-                  MEM[tmp_index];
+      tmp_dword<63..32> = MEM[tmp_index + 1];
+      tmp_dword<31..0>  = MEM[tmp_index];
     elif tmp_address<1..0> == 1 then
-      tmp_dword = MEM[tmp_index + 2]<7..0> ::
-                  MEM[tmp_index + 1] ::
-                  MEM[tmp_index]<31..8>;
+      tmp_dword<63..56> = MEM[tmp_index + 2]<7..0>;
+      tmp_dword<55..24> = MEM[tmp_index + 1];
+      tmp_dword<23..0>  = MEM[tmp_index]<31..8>;
     elif tmp_address<1..0> == 2 then
       tmp_dword = MEM[tmp_index + 2]<15..0> ::
                   MEM[tmp_index + 1] ::
@@ -109,7 +109,7 @@ op ld(rd: X, rs1: X, imm: card(12))
                   MEM[tmp_index]<31..24>;
     endif;
 
-    rd = sign_extend(XWORD, tmp_dword);
+    rd = tmp_dword;
   }
 
 op sd(rs2: X, rs1: X, imm: card(12))
@@ -120,12 +120,12 @@ op sd(rs2: X, rs1: X, imm: card(12))
     tmp_index = tmp_address >> 2;
 
     if tmp_address<1..0> == 0 then // Word-aligned address
-      MEM[tmp_index + 1] ::
-      MEM[tmp_index] = rs2;
+      MEM[tmp_index + 1] = rs2<63..32>;
+      MEM[tmp_index] = rs2<31..0>;
     elif tmp_address<1..0> == 1 then
-      MEM[tmp_index + 2]<7..0> ::
-      MEM[tmp_index + 1] ::
-      MEM[tmp_index]<31..8> = rs2;
+      MEM[tmp_index + 2]<7..0> = rs2<63..56>;
+      MEM[tmp_index + 1] = rs2<55..24>;
+      MEM[tmp_index]<31..8> = rs2<23..0>;
     elif tmp_address<1..0> == 2 then
       MEM[tmp_index + 2]<15..0> ::
       MEM[tmp_index + 1] ::

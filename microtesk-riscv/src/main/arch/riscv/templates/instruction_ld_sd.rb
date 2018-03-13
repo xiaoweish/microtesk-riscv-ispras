@@ -63,9 +63,7 @@ class InstructionLdSdTemplate < RISCVBaseTemplate
     j :finish
 
     label :report_error
-    trace "Error: t0 != t1"
-    trace "t0 = 0x%x", gpr_observer(5)
-    trace "t1 = 0x%x", gpr_observer(6)
+    trace "Error: t0(0x%x) != t1(0x%x)", gpr_observer(5), gpr_observer(6)
     nop
 
     label :finish

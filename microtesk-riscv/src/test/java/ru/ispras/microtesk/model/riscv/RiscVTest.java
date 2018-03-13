@@ -178,7 +178,7 @@ public class RiscVTest extends TemplateTest {
 
   @Override
   public void onEventLogged(final EventType type, final String message) {
-    if (EventType.ERROR == type || EventType.WARNING == type) {
+    if (EventType.ERROR == type || EventType.WARNING == type || message.startsWith("Error")) {
       if (!isExpectedError(message)) {
         Assert.fail(message);
       }

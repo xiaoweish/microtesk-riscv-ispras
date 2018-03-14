@@ -19,7 +19,7 @@ require_relative 'riscv_base'
 #
 # Description:
 #
-# This test checks LD and SD instructions for different data alignment.
+# This test checks LW and SW instructions for different data alignment.
 # The test makes sure that the loaded value always equals the stored one.
 #
 class InstructionLdSdTemplate < RISCVBaseTemplate
@@ -29,10 +29,8 @@ class InstructionLdSdTemplate < RISCVBaseTemplate
     data {
       org 0x00010000
       label :data
-      dword 0x0, 0x0, 0x0, 0x0,
-            0x0, 0x0, 0x0, 0x0,
-            0x0, 0x0, 0x0, 0x0,
-            0x0, 0x0, 0x0, 0x0
+      word 0x0, 0x0, 0x0, 0x0,
+           0x0, 0x0, 0x0, 0x0
       label :end
       space 1
     }
@@ -41,21 +39,21 @@ class InstructionLdSdTemplate < RISCVBaseTemplate
   def run
     la s0, :data # Address
     trace "s0 = 0x%x", gpr_observer(8)
-    prepare t0, 0xDEADBEEFBAADF00D # Value being loaded/stored
+    prepare t0, 0xFFFFFFFFDEADBEEF # Value being loaded/stored
 
     Or s1, zero, zero # Loop counter
-    Ori s2, s2, 8 # Loop limit
+    Ori s2, s2, 4 # Loop limit
 
     label :start
 
-    sd t0, s0, 0x0
+    sw t0, s0, 0x0
     trace "t0 = 0x%x", gpr_observer(5)
-    ld t1, s0, 0x0
+    lw t1, s0, 0x0
     trace "t1 = 0x%x", gpr_observer(6)
 
     bne t0, t1, :report_error
 
-    addi s0, s0, 8
+    addi s0, s0, 4
     addi s1, s1, 1
     add  s0, s0, s1
 

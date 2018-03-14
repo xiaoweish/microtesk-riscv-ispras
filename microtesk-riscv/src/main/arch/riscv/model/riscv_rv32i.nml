@@ -372,15 +372,16 @@ op lw(rd: X, rs1: X, imm: card(12))
   image  = format("%12s%s010%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
+    tmp_index = tmp_address >> 2;
 
     if tmp_address<1..0> == 0 then // Word-aligned address
-      tmp_word = MEM[tmp_address >> 2];
+      tmp_word = MEM[tmp_index];
     elif tmp_address<1..0> == 1 then
-      tmp_word = MEM[tmp_address >> 2 + 1]<7..0> :: MEM[tmp_address >> 2]<31..8>;
+      tmp_word = MEM[tmp_index + 1]<7..0> :: MEM[tmp_index]<31..8>;
     elif tmp_address<1..0> == 2 then
-      tmp_word = MEM[tmp_address >> 2 + 1]<15..0> :: MEM[tmp_address >> 2]<31..16>;
+      tmp_word = MEM[tmp_index + 1]<15..0> :: MEM[tmp_index]<31..16>;
     else
-      tmp_word = MEM[tmp_address >> 2 + 1]<23..0> :: MEM[tmp_address >> 2]<31..24>;
+      tmp_word = MEM[tmp_index + 1]<23..0> :: MEM[tmp_index]<31..24>;
     endif;
 
     rd = sign_extend(XWORD, tmp_word);
@@ -454,21 +455,24 @@ op lbu(rd: X, rs1: X, imm: card(12))
   The SW, SH, and SB instructions store 32-bit, 16-bit, and 8-bit values from
   the low bits of register rs2 to memory.
 */
-
 op sw(rs2: X, rs1: X, imm: card(12))
   syntax = format("sw %s, %s(%s)", rs2.syntax, print_imm12(imm).syntax, rs1.syntax)
   image  = format("%7s%s%s010%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
+    tmp_index = tmp_address >> 2;
 
     if tmp_address<1..0> == 0 then // Word-aligned address
-      MEM[coerce(card(MEM_SIZE), tmp_address >> 2)] = rs2<31..0>;
+      MEM[tmp_index] = rs2<31..0>;
     elif tmp_address<1..0> == 1 then
-      MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<7..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..8> = rs2<31..0>;
+      MEM[tmp_index + 1]<7..0> ::
+      MEM[tmp_index]<31..8> = rs2<31..0>;
     elif tmp_address<1..0> == 2 then
-      MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<15..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..16> = rs2<31..0>;
+      MEM[tmp_index + 1]<15..0> ::
+      MEM[tmp_index]<31..16> = rs2<31..0>;
     else
-      MEM[coerce(card(MEM_SIZE), (tmp_address >> 2) + 1)]<23..0> :: MEM[coerce(card(MEM_SIZE), tmp_address >> 2)]<31..24> = rs2<31..0>;
+      MEM[tmp_index + 1]<23..0> ::
+      MEM[tmp_index]<31..24> = rs2<31..0>;
     endif;
   }
 

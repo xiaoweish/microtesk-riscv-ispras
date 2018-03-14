@@ -40,7 +40,6 @@ class InstructionLdSdTemplate < RISCVBaseTemplate
 
   def run
     la s0, :data # Address
-    trace "s0 = 0x%x", gpr_observer(8)
     prepare t0, 0xDEADBEEFBAADF00D # Value being loaded/stored
 
     Or s1, zero, zero # Loop counter
@@ -48,6 +47,7 @@ class InstructionLdSdTemplate < RISCVBaseTemplate
 
     label :start
 
+    trace "s0 = 0x%x", gpr_observer(8)
     sd t0, s0, 0x0
     trace "t0 = 0x%x", gpr_observer(5)
     ld t1, s0, 0x0

@@ -91,8 +91,6 @@ class BranchGenerationTemplate < RISCVBaseTemplate
   end
 
   def run
-    org 0x00020000
-
     # Stream  Label            Data  Addr  Size
     stream   :branch_data_0,   s0,   s4,   256
     stream   :branch_data_1,   s1,   s5,   256

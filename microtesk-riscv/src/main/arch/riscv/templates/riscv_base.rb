@@ -70,7 +70,7 @@ class RISCVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section_text(:pa => 0x01000, :va => 0x000001000) {}
+    section_text(:pa => 0x0, :va => 0x0) {}
 
     #
     # Defines .data section.
@@ -293,9 +293,8 @@ class RISCVBaseTemplate < Template
 
     ################################################################################################
 
-    # TODO:
-    #org 0x2000
-    #newline
+    org 0x1000
+    newline
 
 label :__start
     nop

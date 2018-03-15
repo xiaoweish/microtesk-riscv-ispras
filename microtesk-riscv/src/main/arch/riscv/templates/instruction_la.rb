@@ -60,10 +60,10 @@ class InstructionLaTemplate < RISCVBaseTemplate
       la s1, :data
       trace "s1 = 0x%x", gpr_observer(9)
 
-      bne s0, s1, :report_error
+      beq s0, s1, :"label_#{index+1}"
       nop
 
-      j :"label_#{index+1}"
+      j :report_error
       nop
     }
 

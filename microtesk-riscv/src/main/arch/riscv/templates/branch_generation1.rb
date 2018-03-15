@@ -154,7 +154,7 @@ class BranchGeneration1Template < RISCVBaseTemplate
       label :label4
         nop
         j :label0 do
-          situation('b-goto', :engine => :branch)
+          situation('j-goto', :engine => :branch)
         end
         addi reg5=get_register, reg5, 5
 

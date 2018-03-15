@@ -157,7 +157,7 @@ class BranchGeneration2Template < RISCVBaseTemplate
                 situation('bltz-if-then', :engine => :branch,:stream => 'branch_data_3')
               end
               j :labelA do
-                situation('b-goto', :engine => :branch)
+                situation('j-goto', :engine => :branch)
               end
             }
 

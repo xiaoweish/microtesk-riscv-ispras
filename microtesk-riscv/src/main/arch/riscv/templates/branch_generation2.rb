@@ -165,9 +165,9 @@ class BranchGeneration2Template < RISCVBaseTemplate
             iterate {
               # The code must not modify registers s0-s7
               addi reg1=get_register, reg1, 1
-              ori   reg2=get_register, reg2, 2
+              ori  reg2=get_register, reg2, 2
               addi reg3=get_register, reg3, 3
-              ori   reg4=get_register, reg4, 4
+              ori  reg4=get_register, reg4, 4
               addi reg5=get_register, reg5, 5
             }
           }

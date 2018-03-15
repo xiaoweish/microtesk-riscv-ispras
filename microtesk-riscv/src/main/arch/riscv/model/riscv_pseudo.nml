@@ -47,9 +47,21 @@ pseudo op la(rd : X, symbol : PSEUDO_OFFSET)
   image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
                           addi(rd, rd, jump_imm32<11..0>).image)
   action = {
+    /*
+    This is how it is described in the reference manual.
+    Unfortunately, this does not work correctly.
+    The reason is because addi sign-extends the immediate value,
+    which causes incorrect results when the highest bit of the immediate equals 1.
+
     tmp_word = symbol;
     instruction(auipc(rd, tmp_word<31..12>)).action;
     instruction(addi(rd, rd, tmp_word<11..0>)).action;
+    */
+
+    // TODO: Hack to make it work correctly. Need to be replaced when
+    // the implementation of the LA pseudo instruction is clarified.
+    rd = PC + sign_extend(XWORD, symbol);
+    PC = PC + 8;
   }
 
 // Load global

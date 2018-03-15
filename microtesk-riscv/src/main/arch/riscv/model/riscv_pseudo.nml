@@ -24,12 +24,12 @@
 /**/
 var jump_imm32[card(32)]
 
-label mode PSEUDO_LABEL(target: WORD, current: WORD) = target<31..0> - current<31..0>
+label mode PSEUDO_LABEL(target: XWORD, current: XWORD) = target<31..0> - current<31..0>
   init = {
-    jump_imm32 = target<31..0>;
+    jump_imm32 = target<31..0> - current<31..0>;
   }
   syntax = ""
-  image = format("%s", target<31..0> - current<31..0>)
+  image = format("%s", jump_imm32)
 
 mode PSEUDO_IMM(imm: card(32)) = imm
   init = {
@@ -43,25 +43,20 @@ mode PSEUDO_OFFSET = PSEUDO_LABEL | PSEUDO_IMM
 // Load address
 @rev(RV32I)
 pseudo op la(rd : X, symbol : PSEUDO_OFFSET)
+  init = { symbol.init; }
   syntax = format("la %s, %s", rd.syntax, symbol.syntax)
-  image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
+  image  = format("%s%s", auipc(rd, if jump_imm32<11> == 0 then jump_imm32<31..12>
+                                                           else jump_imm32<31..12> + 1 endif).image,
                           addi(rd, rd, jump_imm32<11..0>).image)
   action = {
-    /*
-    This is how it is described in the reference manual.
-    Unfortunately, this does not work correctly.
-    The reason is because addi sign-extends the immediate value,
-    which causes incorrect results when the highest bit of the immediate equals 1.
+    // Here is a trick done to get the correct value in all cases
+    // (RISC-V toolchain does the same):
+    // When symbol<11> is set to 1, symbol<31..12> is added 1 to
+    // eliminate the effect of sign-extension done by the addi instruction.
 
-    tmp_word = symbol;
-    instruction(auipc(rd, tmp_word<31..12>)).action;
-    instruction(addi(rd, rd, tmp_word<11..0>)).action;
-    */
-
-    // TODO: Hack to make it work correctly. Need to be replaced when
-    // the implementation of the LA pseudo instruction is clarified.
-    rd = PC + sign_extend(XWORD, symbol);
-    PC = PC + 8;
+    instruction(auipc(rd, if symbol<11> == 0 then symbol<31..12>
+                                             else symbol<31..12> + 1 endif)).action;
+    instruction(addi(rd, rd, symbol<11..0>)).action;
   }
 
 // Load global

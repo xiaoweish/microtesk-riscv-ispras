@@ -43,7 +43,7 @@ mode PSEUDO_OFFSET = PSEUDO_LABEL | PSEUDO_IMM
 // Load address
 @rev(RV32I)
 pseudo op la(rd : X, symbol : PSEUDO_OFFSET)
-  init = { symbol.init; }
+  init   = { symbol.init; }
   syntax = format("la %s, %s", rd.syntax, symbol.syntax)
   image  = format("%s%s", auipc(rd, if jump_imm32<11> == 0 then jump_imm32<31..12>
                                                            else jump_imm32<31..12> + 1 endif).image,
@@ -62,6 +62,7 @@ pseudo op la(rd : X, symbol : PSEUDO_OFFSET)
 // Load global
 @rev(RV32I)
 pseudo op lb_global(rd : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("lb %s, %s", rd.syntax, symbol.syntax)
   image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
                           lb(rd, rd, jump_imm32<11..0>).image)
@@ -73,6 +74,7 @@ pseudo op lb_global(rd : X, symbol : PSEUDO_OFFSET)
 
 @rev(RV32I)
 pseudo op lh_global(rd : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("lh %s, %s", rd.syntax, symbol.syntax)
   image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
                           lh(rd, rd, jump_imm32<11..0>).image)
@@ -84,6 +86,7 @@ pseudo op lh_global(rd : X, symbol : PSEUDO_OFFSET)
 
 @rev(RV32I)
 pseudo op lw_global(rd : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("lw %s, %s", rd.syntax, symbol.syntax)
   image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
                           lw(rd, rd, jump_imm32<11..0>).image)
@@ -95,6 +98,7 @@ pseudo op lw_global(rd : X, symbol : PSEUDO_OFFSET)
 
 @rev(RV64I)
 pseudo op ld_global(rd : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("ld %s, %s", rd.syntax, symbol.syntax)
   image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
                           ld(rd, rd, jump_imm32<11..0>).image)
@@ -107,6 +111,7 @@ pseudo op ld_global(rd : X, symbol : PSEUDO_OFFSET)
 // Store global
 @rev(RV32I)
 pseudo op sb_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  init   = { symbol.init; }
   syntax = format("sb %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sb(rd, rt, jump_imm32<11..0>).image)
@@ -118,6 +123,7 @@ pseudo op sb_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 
 @rev(RV32I)
 pseudo op sh_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  init   = { symbol.init; }
   syntax = format("sh %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sh(rd, rt, jump_imm32<11..0>).image)
@@ -129,6 +135,7 @@ pseudo op sh_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 
 @rev(RV32I)
 pseudo op sw_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  init   = { symbol.init; }
   syntax = format("sw %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sw(rd, rt, jump_imm32<11..0>).image)
@@ -140,6 +147,7 @@ pseudo op sw_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 
 @rev(RV64I)
 pseudo op sd_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  init   = { symbol.init; }
   syntax = format("sd %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sd(rd, rt, jump_imm32<11..0>).image)
@@ -186,6 +194,7 @@ pseudo op li(rd : X, symbol : XWORD)
 // Floating-point load global
 @rev(RV32F)
 pseudo op flw_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("flw %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           flw(rd, rt, jump_imm32<11..0>).image)
@@ -197,6 +206,7 @@ pseudo op flw_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
 
 @rev(RV32D)
 pseudo op fld_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("fld %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           fld(rd, rt, jump_imm32<11..0>).image)
@@ -209,6 +219,7 @@ pseudo op fld_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
 // Floating-point store global
 @rev(RV32F)
 pseudo op fsw_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("fsw %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           fsw(rd, rt, jump_imm32<11..0>).image)
@@ -220,6 +231,7 @@ pseudo op fsw_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
 
 @rev(RV32D)
 pseudo op fsd_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("fsd %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           fsd(rd, rt, jump_imm32<11..0>).image)
@@ -232,6 +244,7 @@ pseudo op fsd_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
 // Call far-away subroutine
 @rev(RV32I)
 pseudo op call(symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("call %s", symbol.syntax)
   image  = format("%s%s", auipc(X(6), jump_imm32<31..12>).image,
                           jalr(X(1), X(6), BRANCH_IMM(jump_imm32<11..0>)).image)
@@ -244,6 +257,7 @@ pseudo op call(symbol : PSEUDO_OFFSET)
 // Tail call far-away subroutine
 @rev(RV32I)
 pseudo op tail(symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("tail %s", symbol.syntax)
   image  = format("%s%s", auipc(X(6), jump_imm32<31..12>).image,
                           jalr(X(0), X(6), BRANCH_IMM(jump_imm32<11..0>)).image)

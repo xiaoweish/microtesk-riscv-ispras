@@ -1,12 +1,17 @@
 #
-# MicroTESK for RISC-V
+# Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
 #
-# Copyright (c) 2017 Institute for System Programming of the Russian Academy of Sciences
-# All Rights Reserved
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Institute for System Programming of the Russian Academy of Sciences (ISP RAS)
-# 25 Alexander Solzhenitsyn st., Moscow, 109004, Russia
-# http://www.ispras.ru
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 
 require_relative 'riscv_base'
@@ -52,24 +57,13 @@ class BubbleSortByteTemplate < RISCVBaseTemplate
     trace_data :data, :end
 
     addi a0, zero, 1
-    nop
-    add s0, zero, zero
-    add s1, zero, zero
-    #la s0, :data # TODO
-    #li s0, :data
-    load_address_to_reg s0, :data
-    trace "s0 = %x", gpr_observer(8)
-    #auipc s0, 0x80
-    #srli s0, s0, 12
-    #slli s0, s0, 12
-    trace "s0 = %x", gpr_observer(8)
-    nop
-#    la s1, :end
-    load_address_to_reg s1, :end
-    trace "s0 = %x", gpr_observer(9)
-    nop
 
-    #Or t0, zero, zero
+    la s0, :data
+    trace "s0 = %x", gpr_observer(8)
+
+    la s1, :end
+    trace "s0 = %x", gpr_observer(9)
+
     ########################### Outer loop starts ##############################
     label :repeat
     Or t0, zero, zero
@@ -85,18 +79,16 @@ class BubbleSortByteTemplate < RISCVBaseTemplate
 
     slt t6, t4, t5
     beq t6, zero, :next
-    nop
 
     addi t0, zero, 0xf # t0 != 0
 
     sb t4, t2, 0
     sb t5, t1, 0
-    nop
 
     label :next
     addi t1, t1, 1
+
     j :for
-    nop # TODO
     ############################ Inner loop ends ###############################
     label :exit_for
 
@@ -104,6 +96,7 @@ class BubbleSortByteTemplate < RISCVBaseTemplate
     ############################ Outer loop ends ###############################
 
     trace_data :data, :end
+    nop
   end
 
 end

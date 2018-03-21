@@ -19,7 +19,8 @@ require_relative 'riscv_base'
 #
 # Description:
 #
-# This test template demonstrates how to generate test cases by using combinators and compositors.
+# This test template demonstrates how to generate instruction sequences
+# by using combinators and compositors.
 #
 class ArithmeticTemplate < RISCVBaseTemplate
 

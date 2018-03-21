@@ -91,7 +91,6 @@ class BubbleSortWordTemplate < RISCVBaseTemplate
     ############################ Outer loop ends ###############################
 
     trace_data :data, :end
-    nop
   end
 
 end

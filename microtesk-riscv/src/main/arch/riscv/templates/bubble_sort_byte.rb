@@ -56,13 +56,13 @@ class BubbleSortByteTemplate < RISCVBaseTemplate
   def run
     trace_data :data, :end
 
-    addi a0, zero, 1
-
     la s0, :data
     trace "s0 = %x", gpr_observer(8)
 
     la s1, :end
     trace "s0 = %x", gpr_observer(9)
+
+    addi a0, zero, 1
 
     ########################### Outer loop starts ##############################
     label :repeat

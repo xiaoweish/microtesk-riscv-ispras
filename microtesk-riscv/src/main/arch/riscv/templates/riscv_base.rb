@@ -24,9 +24,6 @@ class RISCVBaseTemplate < Template
   def initialize
     super
     # Initialize settings here
-    @setup_memory       = false
-    @setup_cache        = false
-    @kseg0_cache_policy = 0
 
     # Sets the indentation token used in test programs
     set_option_value 'indent-token', "\t"
@@ -37,7 +34,7 @@ class RISCVBaseTemplate < Template
     # Sets the token used in separator lines printed into test programs
     set_option_value 'separator-token', "="
 
-    # Defines Alias Methods for X Registers
+    # Defines alias methods for X registers
     (0..31).each do |i|
       define_method "x#{i}" do |&contents| x(i, &contents) end
     end
@@ -255,25 +252,9 @@ label :test
     #ori  t9, t9, 0xfff8
     #AND  t8, t8, t9
 
-    if @kseg0_cache_policy != 0
-      #ori t8, t9, @kseg0_cache_policy
-    end
-
     #mtc0 t8, c0_config0
     nop
     nop
-
-    if @setup_memory
-      newline
-      #jal :memory_setup
-      nop
-    end
-
-    if @setup_cache
-      newline
-      #jal :cache_setup
-      nop
-    end
   end
 
   ##################################################################################################
@@ -288,13 +269,6 @@ label :success
 label :error
     #TODO:
     newline
-
-    if @setup_memory
-      text "TODO: setup memory"
-    end
-    if @setup_cache
-      text "TODO: setup cache"
-    end
 
     6.times {
       nop

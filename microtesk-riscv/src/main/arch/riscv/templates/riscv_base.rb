@@ -1,5 +1,5 @@
 #
-# Copyright 2017 ISP RAS (http://www.ispras.ru)
+# Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -93,6 +93,7 @@ class RISCVBaseTemplate < Template
         nop
       }
     }
+
     ##################################################################################################
     # Revisions
     ##################################################################################################
@@ -247,19 +248,13 @@ class RISCVBaseTemplate < Template
     # addressing mode.
     #
     # Comparators are described using the same syntax as in preparators and can be
-    # overridden in the same way..
+    # overridden in the same way.
     #
     # Default comparator: It is used when no special case is applicable.
     #
     comparator(:target => 'X') {
-      ori  ra, zero, value(21, 31)
-      slli ra, ra, 11
-      ori  ra, ra, value(10,  20)
-      slli ra, ra, 10
-      ori  ra, ra, value(0,  9)
-
+      prepare ra, value
       bne ra, target, :check_failed
-      nop
     }
 
     #
@@ -675,12 +670,6 @@ label :error
     end_addr = get_address_of(end_label)
 
     trace_data_addr(begin_addr, end_addr)
-  end
-
-  def load_address_to_reg(reg_addr, address_label)
-    lui reg_addr, get_address_of(address_label)>>12
-    temp = 4095
-    addi reg_addr, reg_addr, get_address_of(address_label)&temp
   end
 
   ##################################################################################################

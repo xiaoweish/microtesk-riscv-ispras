@@ -98,56 +98,55 @@ class RISCVBaseTemplate < Template
     # Revisions
     ##################################################################################################
 
+    def rev_id
+      get_option_value('rev-id')
+    end
+
+    def rv64full
+      rev_id == 'RV64FULL'
+    end
+
     def rv64i
-      if get_option_value('rev-id') == 'RV64I' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
+      rev_id == 'RV64I' or rv64full
     end
 
     def rv32m
-      if get_option_value('rev-id') == 'RV32M' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
+      rev_id == 'RV32M' or rv64full
     end
 
     def rv64m
-      if get_option_value('rev-id') == 'RV64M' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
+      rev_id == 'RV64M' or rv64full
     end
 
     def rv32a
-      if get_option_value('rev-id') == 'RV32A' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
+      rev_id == 'RV32A' or rv64full
     end
 
     def rv64a
-      if get_option_value('rev-id') == 'RV64A' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
+      rev_id == 'RV64A' or rv64full
     end
 
     def rv32f
-      if get_option_value('rev-id') == 'RV32F' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
+      rev_id == 'RV32F' or rv64full
     end
 
     def rv64f
-      if get_option_value('rev-id') == 'RV64F' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
+      rev_id == 'RV64F' or rv64full
     end
 
     def rv32d
-      if get_option_value('rev-id') == 'RV32D' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
+      rev_id == 'RV32D' or rv64full
     end
 
     def rv64d
-      if get_option_value('rev-id') == 'RV64D' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
+      rev_id == 'RV64D' or rv64full
     end
 
     ################################################################################################
 
     #
     # The code below specifies an instruction sequence that writes a value
-    # to the specified register (target) via the R addressing mode.
+    # to the specified register (target) via the X addressing mode.
     #
     # Default preparator: It is used when no special case previded below
     # is applicable.
@@ -273,18 +272,6 @@ class RISCVBaseTemplate < Template
       bne zero, target, :check_failed
       nop
     }
-
-    ################################################################################################
-
-    # The code below specifies default situations that generate random values
-    # for instructions which require arguments to be 32-bit sign-extended values.
-
-    # Generator of 32-bit random values which will be sign-extended to fit the target register.
-    random_word = situation('random', :size => 32, :sign_extend => true)
-
-    # Input arguments of all instructions listed below are random words.
-    # set_default_situation 'add'   do random_word end
-    # set_default_situation 'addi'  do random_word end
 
     ################################################################################################
 

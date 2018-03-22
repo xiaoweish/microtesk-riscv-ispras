@@ -216,7 +216,7 @@ class RISCVBaseTemplate < Template
     #
     comparator(:target => 'X') {
       prepare ra, value
-      bne ra, target, :check_failed
+      bne ra, target, :error
     }
 
     #
@@ -232,7 +232,7 @@ class RISCVBaseTemplate < Template
     # more convenient to test the target against the $zero register.
     #
     comparator(:target => 'X', :mask => "00000000") {
-      bne zero, target, :check_failed
+      bne zero, target, :error
     }
 
     ################################################################################################

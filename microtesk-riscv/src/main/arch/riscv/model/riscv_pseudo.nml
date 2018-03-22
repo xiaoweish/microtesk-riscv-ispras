@@ -160,7 +160,7 @@ pseudo op sd_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 // Load immediate
 @rev(RV32I)
 pseudo op li(rd : X, symbol : XWORD)
-  syntax = format("li %s, %s", rd.syntax, symbol)
+  syntax = format("li %s, 0x%X", rd.syntax, symbol)
   image  = format("%s%s%s%s%s%s%s%s%s%s%s",
 #ifdef RV64I
                         ori(rd, X(0), coerce(card(12), symbol<63..53>)).image,

@@ -30,17 +30,17 @@ class TestDataTemplate < RISCVBaseTemplate
   def run
     # Test data for individual registers.
     sequence(:data_combinator => 'product') {
-      add x(8),  (x(9)  do testdata('range', :min => 1, :max => 3) end),
-                 (x(10) do testdata('range', :min => 1, :max => 3) end)
+      add x8,  (x9  do testdata('range', :min => 1, :max => 3) end),
+               (x10 do testdata('range', :min => 1, :max => 3) end)
 
-      sub x(11), (x(12) do testdata('range', :min => 1, :max => 3) end),
-                 (x(13) do testdata('range', :min => 1, :max => 3) end)
+      sub x11, (x12 do testdata('range', :min => 1, :max => 3) end),
+               (x13 do testdata('range', :min => 1, :max => 3) end)
     }.run
 
     # Test data for entire instructions.
     sequence(:data_combinator => 'product') {
-      add x(8),  x(9),  x(10) do testdata('range', :min => 1, :max => 3) end
-      sub x(11), x(12), x(13) do testdata('range', :min => 1, :max => 3) end
+      add x8,  x9,  x10 do testdata('range', :min => 1, :max => 3) end
+      sub x11, x12, x13 do testdata('range', :min => 1, :max => 3) end
     }.run
   end
 

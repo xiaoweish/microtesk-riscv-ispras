@@ -39,7 +39,7 @@ class RISCVBaseTemplate < Template
 
     # Defines Alias Methods for X Registers
     (0..31).each do |i|
-      define_method "x#{i}" do x(i) end
+      define_method "x#{i}" do |&contents| x(i, &contents) end
     end
   end
 
@@ -208,40 +208,6 @@ class RISCVBaseTemplate < Template
 
     ################################################################################################
 
-    buffer_preparator(:target => 'DTLB') {
-      newline
-      comment('Prepare DTLB')
-
-      # TODO:
-    }
-
-    buffer_preparator(:target => 'JTLB') {
-      newline
-      comment('Prepare JTLB')
-
-      # TODO:
-    }
-
-    buffer_preparator(:target => 'L1') {
-      newline
-      comment('Prepare L1')
-
-      # TODO:
-    }
-
-    buffer_preparator(:target => 'L2') {
-      newline
-      comment('Prepare L2')
-
-      # TODO:
-    }
-
-    buffer_preparator(:target => 'MEM') {
-      # Do nothing.
-    }
-
-    ################################################################################################
-
     # The code below specifies a comparator sequence to be used in self-checking tests
     # to test values in the specified register (target) accessed via the REG
     # addressing mode.
@@ -270,7 +236,6 @@ class RISCVBaseTemplate < Template
     #
     comparator(:target => 'X', :mask => "00000000") {
       bne zero, target, :check_failed
-      nop
     }
 
     ################################################################################################

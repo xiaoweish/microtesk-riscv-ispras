@@ -149,42 +149,25 @@ class RISCVBaseTemplate < Template
     # is applicable.
     #
     preparator(:target => 'X') {
-      if rv64i == true then
-        ori  target, zero,   value(53, 63)
-        slli target, target, 11
-        ori  target, target, value(42, 52)
-        slli target, target, 10
-        ori  target, target, value(32, 41)
-        slli target, target, 11
-        ori  target, target, value(21, 31)
-      end
-      if rv64i == false then
-        ori  target, zero, value(21, 31)
-      end
-      slli target, target, 11
-      ori  target, target, value(10,  20)
-      slli target, target, 10
-      ori  target, target, value(0,  9)
+      li target, value
     }
 
     preparator(:target => 'X', :arguments => {:i => 0}) {
       # Empty
     }
 
-    preparator(:target => 'X', :mask => "0000000000000000") {
+    preparator(:target => 'X', :mask => ["0000_0000", "0000_0000_0000_0000"]) {
       Or target, zero, zero
     }
 
-    preparator(:target => 'X', :mask => "FFFFFFFFFFFFFFFF") {
+    preparator(:target => 'X', :mask => ["FFFF_FFFF", "FFFF_FFFF_FFFF_FFFF"]) {
       Not target, zero
     }
 
-    preparator(:target => 'X', :mask => "00000000XXXXXXXX") {
-      ori  target, zero, value(21, 31)
-      slli target, target, 11
-      ori  target, target, value(10,  20)
-      slli target, target, 10
-      ori  target, target, value(0,  9)
+    preparator(:target => 'X', :mask => [
+      "'b00000000_00000000_00000XXX_XXXXXXXX",
+      "'b00000000_00000000_00000000_00000000_00000000_00000000_00000XXX_XXXXXXXX"]) {
+      ori target, zero, value(0, 10)
     }
 
     preparator(:target => 'FR') {
@@ -221,7 +204,7 @@ class RISCVBaseTemplate < Template
 
     #
     # Special case: Target is $zero register. Since it is read only and
-    # always equal zero, it makes no sence to test it.
+    # always equal zero, it makes no sense to test it.
     #
     comparator(:target => 'X', :arguments => {:i => 0}) {
       # Empty
@@ -229,9 +212,9 @@ class RISCVBaseTemplate < Template
 
     #
     # Special case: Value equals 0x00000000. In this case, it is
-    # more convenient to test the target against the $zero register.
+    # more convenient to test the target against the zero register.
     #
-    comparator(:target => 'X', :mask => "00000000") {
+    comparator(:target => 'X', :mask => ["0000_0000", "0000_0000_0000_0000"]) {
       bne zero, target, :error
     }
 

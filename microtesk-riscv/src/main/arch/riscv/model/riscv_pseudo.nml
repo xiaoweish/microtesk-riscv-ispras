@@ -165,30 +165,34 @@ pseudo op li(rd : X, symbol : XWORD)
 #ifdef RV64I
                         ori(rd, X(0), coerce(card(12), symbol<63..53>)).image,
                         slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<52..42>)).image,
+                        ori(rd, rd, coerce(card(12), symbol<52..42>)).image,
                         slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<41..32>)).image,
+                        ori(rd, rd, coerce(card(12), symbol<41..32>)).image,
                         slli(rd, rd, 10).image,
-#endif
+                        ori(rd, rd, coerce(card(12), symbol<31..21>)).image,
+#else
                         ori(rd, X(0), coerce(card(12), symbol<31..21>)).image,
+#endif
                         slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<20..10>)).image,
+                        ori(rd, rd, coerce(card(12), symbol<20..10>)).image,
                         slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<9..0>)).image)
+                        ori(rd, rd, coerce(card(12), symbol<9..0>)).image)
   action = {
 #ifdef RV64I
     instruction(ori(rd, X(0), coerce(card(12), symbol<63..53>))).action;
     instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<52..42>))).action;
+    instruction(ori(rd, rd, coerce(card(12), symbol<52..42>))).action;
     instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<41..32>))).action;
+    instruction(ori(rd, rd, coerce(card(12), symbol<41..32>))).action;
     instruction(slli(rd, rd, 10)).action;
-#endif
+    instruction(ori(rd, rd, coerce(card(12), symbol<31..21>))).action;
+#else
     instruction(ori(rd, X(0), coerce(card(12), symbol<31..21>))).action;
+#endif
     instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<20..10>))).action;
-    instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<9..0>))).action;
+    instruction(ori(rd, rd, coerce(card(12), symbol<20..10>))).action;
+    instruction(slli(rd, rd, 10)).action;
+    instruction(ori(rd, rd, coerce(card(12), symbol<9..0>))).action;
   }
 
 // Floating-point load global

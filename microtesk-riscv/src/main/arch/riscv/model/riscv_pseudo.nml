@@ -163,13 +163,11 @@ pseudo op li32(rd: X, symbol: WORD)
   syntax = format("li %s, 0x%X", rd.syntax, symbol)
   image = format(
      "%s%s",
-     lui(rd, JUMP_IMM(cast(int(20), symbol<31..12>) +
-                                    zero_extend(int(20), symbol<11>))).image,
+     lui(rd, symbol<31..12> + zero_extend(card(20), symbol<11>)).image,
      addi(rd, rd, symbol<11..0>).image
   )
   action = {
-    instruction(lui(rd, JUMP_IMM(cast(int(20), symbol<31..12>) +
-                                 zero_extend(int(20), symbol<11>)))).action;
+    instruction(lui(rd, symbol<31..12> + zero_extend(card(20), symbol<11>))).action;
     instruction(addi(rd, rd, symbol<11..0>)).action;
   }
 

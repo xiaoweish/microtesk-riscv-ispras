@@ -108,25 +108,10 @@
   U-immediate into bits 31–12 of register rd and places zero in the lowest 12 bits.
   The 32-bit result is sign-extended to 64 bits.
 */
-var jump_imm20[card(20)]
 
-label mode JUMP_LABEL(target: WORD, current: WORD) = target<19..0> - current<19..0>
-  init = {
-    jump_imm20 = target<19..0>;
-  }
-  syntax = ""
-  image = format("%s", target<19..0> - current<19..0>)
-
-mode JUMP_IMM(imm: int(20)) = imm
-  init = {}
-  syntax = format("0x%X", imm)
-  image = format("%s", imm)
-
-mode JUMP_ADDR = JUMP_LABEL | JUMP_IMM
-
-op lui(rd: X, imm: JUMP_ADDR)
-  syntax = format("lui %s, %s", rd.syntax, imm.syntax)
-  image  = format("%20s%s0110111", imm.image, rd.image)
+op lui(rd: X, imm: card(20))
+  syntax = format("lui %s, 0x%x", rd.syntax, imm)
+  image  = format("%20s%s0110111", imm, rd.image)
   action = {
     rd = sign_extend(XWORD, imm) << 12;
   }
@@ -168,6 +153,13 @@ op auipc(rd: X, imm: card(20))
   The JAL instruction can generate a misaligned instruction fetch exception if the target
   address is not aligned to a four-byte boundary.
 */
+var jump_imm20[card(20)]
+
+mode JUMP_IMM(imm: int(20)) = imm
+  init = {}
+  syntax = format("0x%X", imm)
+  image = format("%s", imm)
+
 label mode JUMP_LABEL_M2(target: WORD, current: WORD) = target<20..1> - current<20..1>
   init = {
     jump_imm20 = target<20..1>;

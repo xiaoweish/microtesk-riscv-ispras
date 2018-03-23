@@ -421,7 +421,7 @@ let MEM_BYTE  = 1
 var temp_address_load[DWORD]
 var temp_address_tail[card(2)]
 
-pseudo op check_aligned(op_type: card(4), address: XWORD)
+internal op check_aligned(op_type: card(4), address: XWORD)
   action = {
     if (op_type == MEM_DWORD && address<2..0> != 0) ||
        (op_type == MEM_WORD && address<1..0> != 0) ||
@@ -435,7 +435,7 @@ pseudo op check_aligned(op_type: card(4), address: XWORD)
 
 var load_value[DWORD]
 
-pseudo op load_data(op_type: card(4), address: XWORD)
+internal op load_data(op_type: card(4), address: XWORD)
   action = {
     tmp_bit = 0;
     check_aligned(op_type, address).action;
@@ -449,7 +449,7 @@ pseudo op load_data(op_type: card(4), address: XWORD)
     endif;
   }
 
-pseudo op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
+internal op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
   action = {
     tmp_bit = 0;
     check_aligned(op_type, address).action;

@@ -104,9 +104,17 @@ module Encoding
   DCSR_CAUSE_STEP     = 4
   DCSR_CAUSE_HALT     = 5
 
-#define MCONTROL_TYPE(xlen)    (0xfULL<<((xlen)-4))
-#define MCONTROL_DMODE(xlen)   (1ULL<<((xlen)-5))
-#define MCONTROL_MASKMAX(xlen) (0x3fULL<<((xlen)-11))
+  def self.MCONTROL_TYPE(xlen)
+    (0xf<<((xlen)-4))
+  end
+
+  def self.MCONTROL_DMODE(xlen)
+    (1<<((xlen)-5))
+  end
+
+  def self.MCONTROL_MASKMAX(xlen)
+    (0x3f<<((xlen)-11))
+  end
 
   MCONTROL_SELECT  = (1 << 19)
   MCONTROL_TIMING  = (1 << 18)
@@ -147,20 +155,20 @@ module Encoding
   MIP_HEIP = (1 << IRQ_H_EXT)
   MIP_MEIP = (1 << IRQ_M_EXT)
 
-#define SIP_SSIP MIP_SSIP
-#define SIP_STIP MIP_STIP
+  SIP_SSIP = MIP_SSIP
+  SIP_STIP = MIP_STIP
 
   PRV_U = 0
   PRV_S = 1
   PRV_H = 2
   PRV_M = 3
 
-#define SATP32_MODE 0x80000000
-#define SATP32_ASID 0x7FC00000
-#define SATP32_PPN  0x003FFFFF
-  SATP64_MODE 0xF000000000000000
-  SATP64_ASID 0x0FFFF00000000000
-  SATP64_PPN  0x00000FFFFFFFFFFF
+  SATP32_MODE = 0x80000000
+  SATP32_ASID = 0x7FC00000
+  SATP32_PPN  = 0x003FFFFF
+  SATP64_MODE = 0xF000000000000000
+  SATP64_ASID = 0x0FFFF00000000000
+  SATP64_PPN  = 0x00000FFFFFFFFFFF
 
   SATP_MODE_OFF  = 0
   SATP_MODE_SV32 = 1
@@ -211,9 +219,9 @@ module Encoding
 
   PTE_PPN_SHIFT = 10
 
-#define PTE_TABLE(PTE) (((PTE) & (PTE_V | PTE_R | PTE_W | PTE_X)) == PTE_V)
-
-#ifdef __riscv
+  def self.PTE_TABLE(PTE)
+    (((PTE) & (PTE_V | PTE_R | PTE_W | PTE_X)) == PTE_V)
+  end
 
 #if __riscv_xlen == 64
 # define MSTATUS_SD MSTATUS64_SD

@@ -223,17 +223,21 @@ module Encoding
     (((PTE) & (PTE_V | PTE_R | PTE_W | PTE_X)) == PTE_V)
   end
 
-#if __riscv_xlen == 64
-# define MSTATUS_SD MSTATUS64_SD
-# define SSTATUS_SD SSTATUS64_SD
-# define RISCV_PGLEVEL_BITS 9
-# define SATP_MODE SATP64_MODE
-#else
-# define MSTATUS_SD MSTATUS32_SD
-# define SSTATUS_SD SSTATUS32_SD
-# define RISCV_PGLEVEL_BITS 10
-# define SATP_MODE SATP32_MODE
-#endif
+  def self.MSTATUS_SD
+    if rv64i then MSTATUS64_SD else MSTATUS32_SD end
+  end
+
+  def self.SSTATUS_SD
+    if rv64i then SSTATUS64_SD else SSTATUS32_SD end
+  end
+
+  def self.RISCV_PGLEVEL_BITS
+    if rv64i then 9 else 10 end
+  end
+
+  def self.SATP_MODE
+    if rv64i then SATP64_MODE else SATP32_MODE end
+  end
 
   RISCV_PGSHIFT = 12
   RISCV_PGSIZE  = (1 << RISCV_PGSHIFT)

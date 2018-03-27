@@ -43,7 +43,7 @@
 # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #
 
-module Encoding
+module RiscvEncoding
 
   MSTATUS_UIE  = 0x00000001
   MSTATUS_SIE  = 0x00000002
@@ -145,6 +145,18 @@ module Encoding
   MCONTROL_MATCH_MASK_LOW  = 4
   MCONTROL_MATCH_MASK_HIGH = 5
 
+  IRQ_S_SOFT  = 1
+  IRQ_H_SOFT  = 2
+  IRQ_M_SOFT  = 3
+  IRQ_S_TIMER = 5
+  IRQ_H_TIMER = 6
+  IRQ_M_TIMER = 7
+  IRQ_S_EXT   = 9
+  IRQ_H_EXT   = 10
+  IRQ_M_EXT   = 11
+  IRQ_COP     = 12
+  IRQ_HOST    = 13
+
   MIP_SSIP = (1 << IRQ_S_SOFT)
   MIP_HSIP = (1 << IRQ_H_SOFT)
   MIP_MSIP = (1 << IRQ_M_SOFT)
@@ -188,18 +200,6 @@ module Encoding
   PMP_NA4   = 0x10
   PMP_NAPOT = 0x18
 
-  IRQ_S_SOFT  = 1
-  IRQ_H_SOFT  = 2
-  IRQ_M_SOFT  = 3
-  IRQ_S_TIMER = 5
-  IRQ_H_TIMER = 6
-  IRQ_M_TIMER = 7
-  IRQ_S_EXT   = 9
-  IRQ_H_EXT   = 10
-  IRQ_M_EXT   = 11
-  IRQ_COP     = 12
-  IRQ_HOST    = 13
-
   DEFAULT_RSTVEC = 0x00001000
   CLINT_BASE     = 0x02000000
   CLINT_SIZE     = 0x000c0000
@@ -219,8 +219,8 @@ module Encoding
 
   PTE_PPN_SHIFT = 10
 
-  def self.PTE_TABLE(PTE)
-    (((PTE) & (PTE_V | PTE_R | PTE_W | PTE_X)) == PTE_V)
+  def self.PTE_TABLE(pte)
+    (((pte) & (PTE_V | PTE_R | PTE_W | PTE_X)) == PTE_V)
   end
 
   def self.MSTATUS_SD

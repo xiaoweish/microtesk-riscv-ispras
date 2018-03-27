@@ -104,15 +104,15 @@ module RiscvEncoding
   DCSR_CAUSE_STEP     = 4
   DCSR_CAUSE_HALT     = 5
 
-  def self.MCONTROL_TYPE(xlen)
+  def MCONTROL_TYPE(xlen)
     (0xf<<((xlen)-4))
   end
 
-  def self.MCONTROL_DMODE(xlen)
+  def MCONTROL_DMODE(xlen)
     (1<<((xlen)-5))
   end
 
-  def self.MCONTROL_MASKMAX(xlen)
+  def MCONTROL_MASKMAX(xlen)
     (0x3f<<((xlen)-11))
   end
 
@@ -219,23 +219,23 @@ module RiscvEncoding
 
   PTE_PPN_SHIFT = 10
 
-  def self.PTE_TABLE(pte)
+  def PTE_TABLE(pte)
     (((pte) & (PTE_V | PTE_R | PTE_W | PTE_X)) == PTE_V)
   end
 
-  def self.MSTATUS_SD
+  def MSTATUS_SD
     if rv64i then MSTATUS64_SD else MSTATUS32_SD end
   end
 
-  def self.SSTATUS_SD
+  def SSTATUS_SD
     if rv64i then SSTATUS64_SD else SSTATUS32_SD end
   end
 
-  def self.RISCV_PGLEVEL_BITS
+  def RISCV_PGLEVEL_BITS
     if rv64i then 9 else 10 end
   end
 
-  def self.SATP_MODE
+  def SATP_MODE
     if rv64i then SATP64_MODE else SATP32_MODE end
   end
 

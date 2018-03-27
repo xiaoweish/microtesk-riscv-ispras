@@ -169,30 +169,34 @@ module RiscvTest
 
   def INTERRUPT_HANDLER
     # No interrupts should occur
-    j other_exception
+    j :other_exception
   end
 
   def RVTEST_CODE_BEGIN
-        .section .text.init;                                            \
-        .align  6;                                                      \
-        .weak stvec_handler;                                            \
-        .weak mtvec_handler;                                            \
-        .globl _start;                                                  \
-_start:                                                                 \
-        /* reset vector */                                              \
-        j reset_vector;                                                 \
-        .align 2;                                                       \
-trap_vector:                                                            \
-        /* test whether the test came from pass/fail */                 \
-        csrr t5, mcause;                                                \
-        li t6, CAUSE_USER_ECALL;                                        \
-        beq t5, t6, write_tohost;                                       \
-        li t6, CAUSE_SUPERVISOR_ECALL;                                  \
-        beq t5, t6, write_tohost;                                       \
-        li t6, CAUSE_MACHINE_ECALL;                                     \
-        beq t5, t6, write_tohost;                                       \
-        /* if an mtvec_handler is defined, jump to it */                \
-        la t5, mtvec_handler;                                           \
+    # .section .text.init
+    align  6
+    text '.weak stvec_handler'
+    text '.weak mtvec_handler'
+global_label :_start
+    # reset vector
+    j :reset_vector
+
+    align 2
+label :trap_vector
+    # test whether the test came from pass/fail
+    csrr t5, mcause
+
+    li t6, CAUSE_USER_ECALL
+    beq t5, t6, :write_tohost
+
+    li t6, CAUSE_SUPERVISOR_ECALL
+    beq t5, t6, :write_tohost
+
+    li t6, CAUSE_MACHINE_ECALL
+    beq t5, t6, :write_tohost
+
+    # if an mtvec_handler is defined, jump to it
+    la t5, mtvec_handler # TODO: Need support for .weak
         beqz t5, 1f;                                                    \
         jr t5;                                                          \
         /* was it an interrupt or an exception? */                      \
@@ -218,19 +222,20 @@ reset_vector:                                                           \
         CHECK_XLEN;                                                     \
         /* if an stvec_handler is defined, delegate exceptions to it */ \
         la t0, stvec_handler;                                           \
-        beqz t0, 1f;                                                    \
-        csrw stvec, t0;                                                 \
-        li t0, (1 << CAUSE_LOAD_PAGE_FAULT) |                           \
-               (1 << CAUSE_STORE_PAGE_FAULT) |                          \
-               (1 << CAUSE_FETCH_PAGE_FAULT) |                          \
-               (1 << CAUSE_MISALIGNED_FETCH) |                          \
-               (1 << CAUSE_USER_ECALL) |                                \
-               (1 << CAUSE_BREAKPOINT);                                 \
-        csrw medeleg, t0;                                               \
-        csrr t1, medeleg;                                               \
-        bne t0, t1, other_exception;                                    \
-1:      csrwi mstatus, 0;                                               \
-        init;                                                           \
+    beqz t0, 0x1f
+    csrw stvec, t0
+    li t0, (1 << CAUSE_LOAD_PAGE_FAULT)  |
+           (1 << CAUSE_STORE_PAGE_FAULT) |
+           (1 << CAUSE_FETCH_PAGE_FAULT) |
+           (1 << CAUSE_MISALIGNED_FETCH) |
+           (1 << CAUSE_USER_ECALL)       |
+           (1 << CAUSE_BREAKPOINT)
+    csrw medeleg, t0
+    csrr t1, medeleg
+    bne t0, t1, :other_exception
+    # 1:
+    csrwi mstatus, 0
+    text 'init'
     EXTRA_INIT
     EXTRA_INIT_TIMER
     la t0, 0x1f

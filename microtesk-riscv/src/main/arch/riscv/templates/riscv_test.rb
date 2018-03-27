@@ -168,7 +168,7 @@ module RiscvTest
     j other_exception
   end
 
-#define RVTEST_CODE_BEGIN                                               \
+  def RVTEST_CODE_BEGIN                                               \
         .section .text.init;                                            \
         .align  6;                                                      \
         .weak stvec_handler;                                            \
@@ -234,6 +234,7 @@ reset_vector:                                                           \
         csrr a0, mhartid;                                               \
         mret;                                                           \
 1:
+  end
 
   ##################################################################################################
   # End Macro

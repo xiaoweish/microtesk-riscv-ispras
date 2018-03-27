@@ -160,15 +160,19 @@ module RiscvTest
 
   #define EXTRA_TVEC_USER
   #define EXTRA_TVEC_MACHINE
-  #define EXTRA_INIT
-  #define EXTRA_INIT_TIMER
+
+  def EXTRA_INIT
+  end
+
+  def EXTRA_INIT_TIMER
+  end
 
   def INTERRUPT_HANDLER
     # No interrupts should occur
     j other_exception
   end
 
-  def RVTEST_CODE_BEGIN                                               \
+  def RVTEST_CODE_BEGIN
         .section .text.init;                                            \
         .align  6;                                                      \
         .weak stvec_handler;                                            \
@@ -227,13 +231,13 @@ reset_vector:                                                           \
         bne t0, t1, other_exception;                                    \
 1:      csrwi mstatus, 0;                                               \
         init;                                                           \
-        EXTRA_INIT;                                                     \
-        EXTRA_INIT_TIMER;                                               \
-        la t0, 1f;                                                      \
-        csrw mepc, t0;                                                  \
-        csrr a0, mhartid;                                               \
-        mret;                                                           \
-1:
+    EXTRA_INIT
+    EXTRA_INIT_TIMER
+    la t0, 0x1f
+    csrw mepc, t0
+    csrr a0, mhartid
+    mret
+    # 1:
   end
 
   ##################################################################################################
@@ -276,29 +280,29 @@ reset_vector:                                                           \
 
   def RVTEST_DATA_BEGIN
     data {
-      EXTRA_DATA                                                      \
-      .pushsection .tohost,"aw",@progbits;                            \
-      .align 6;
-      .global tohost;
-      tohost:
-      .dword 0;                     \
-      .align 6;
-      .global fromhost;
-      fromhost:
-      .dword 0;                 \
-      .popsection;                                                    \
-      .align 4;
-      .global begin_signature;
-      begin_signature:
+      EXTRA_DATA
+
+      # .pushsection .tohost,"aw",@progbits # TODO: Need support for this directive
+
+      align 6
+      global_label :tohost
+      dword 0
+
+      align 6
+      global_label :fromhost
+      dword 0
+
+      # .popsection # TODO: Need support for this directive
+
+      align 4
+      global_label :begin_signature
     }
   end
 
   def RVTEST_DATA_END
     data {
       align 4
-      # TODO: Need support for global label
-      # .global end_signature
-      # end_signature:
+      global_label :end_signature
     }
   end
 

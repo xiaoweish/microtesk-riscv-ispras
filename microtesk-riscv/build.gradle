@@ -54,7 +54,7 @@ def repoPasswordStr = hasProperty('repoPassword') ? repoPassword : "$System.env.
 
 repositories {
   maven {
-    url 'http://forge.ispras.ru:8082/nexus/content/repositories/releases'
+    url 'https://forge.ispras.ru:8082/nexus/content/repositories/releases'
 
     credentials {
       username repoUserStr
@@ -65,7 +65,7 @@ repositories {
     }
   }
   maven {
-    url 'http://forge.ispras.ru:8082/nexus/content/repositories/snapshots'
+    url 'https://forge.ispras.ru:8082/nexus/content/repositories/snapshots'
 
     credentials {
       username repoUserStr
@@ -285,7 +285,7 @@ jacocoTestReport {
 
 sonarqube {
   properties {
-    property "sonar.host.url", "http://forge.ispras.ru:9000"
+    property "sonar.host.url", "https://forge.ispras.ru:9000"
     property "sonar.jdbc.url", "jdbc:mysql://localhost:3306/sonar"
     property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
     property "sonar.jdbc.username", "sonar"

@@ -98,14 +98,14 @@ module RiscvTest
   def CHECK_XLEN
     li a0, 1
     slli a0, a0, 31
-    if rv64i then bgez a0, 0x1f
-             else bltz a0, 0x1f end
+    if rv64i then bgez a0, label_f(1)
+             else bltz a0, label_f(1) end
     RVTEST_PASS
-    # 1:
+label 1
   end
 
   def INIT_PMP
-    la t0, 1f
+    la t0, label_f(1)
     csrw mtvec, t0
     # Set up a PMP to permit all accesses
     li t0, -1
@@ -113,25 +113,25 @@ module RiscvTest
     li t0, PMP_NAPOT | PMP_R | PMP_W | PMP_X
     csrw pmpcfg0, t0
     align 2
-    # 1:
+label 1
   end
 
   def INIT_SATP
-    la t0, 0x1f
+    la t0, label_f(1)
     csrw mtvec, t0
     csrwi sptbr, 0
     align 2
-    # 1:
+label 1
   end
 
   def DELEGATE_NO_TRAPS
-    la t0, 0x1f
+    la t0, label_f(1)
     csrw mtvec, t0
     csrwi medeleg, 0
     csrwi mideleg, 0
     csrwi mie, 0
     align 2
-    # 1:
+label 1
   end
 
   def RVTEST_ENABLE_SUPERVISOR
@@ -154,8 +154,8 @@ module RiscvTest
 
   def RISCV_MULTICORE_DISABLE
     csrr a0, mhartid
-    # 1:
-    bnez a0, 1
+label 1
+    bnez a0, label_b(1)
   end
 
   #define EXTRA_TVEC_USER
@@ -173,10 +173,11 @@ module RiscvTest
   end
 
   def RVTEST_CODE_BEGIN
-    # .section .text.init
+    # .section .text.init; # TODO
     align  6
-    text '.weak stvec_handler'
-    text '.weak mtvec_handler'
+    # .weak stvec_handler; # TODO
+    # .weak mtvec_handler; # TODO
+
 global_label :_start
     # reset vector
     j :reset_vector
@@ -196,33 +197,40 @@ label :trap_vector
     beq t5, t6, :write_tohost
 
     # if an mtvec_handler is defined, jump to it
-    la t5, mtvec_handler # TODO: Need support for .weak
-        beqz t5, 1f;                                                    \
-        jr t5;                                                          \
-        /* was it an interrupt or an exception? */                      \
-  1:    csrr t5, mcause;                                                \
-        bgez t5, handle_exception;                                      \
-        INTERRUPT_HANDLER;                                              \
-handle_exception:                                                       \
-        /* we don't know how to handle whatever the exception was */    \
-  other_exception:                                                      \
-        /* some unhandlable exception occurred */                       \
-  1:    ori TESTNUM, TESTNUM, 1337;                                     \
-  write_tohost:                                                         \
-        sw TESTNUM, tohost, t5;                                         \
-        j write_tohost;                                                 \
-reset_vector:                                                           \
-        RISCV_MULTICORE_DISABLE;                                        \
-        INIT_SATP;                                                     \
-        INIT_PMP;                                                       \
-        DELEGATE_NO_TRAPS;                                              \
-        li TESTNUM, 0;                                                  \
-        la t0, trap_vector;                                             \
-        csrw mtvec, t0;                                                 \
-        CHECK_XLEN;                                                     \
-        /* if an stvec_handler is defined, delegate exceptions to it */ \
-        la t0, stvec_handler;                                           \
-    beqz t0, 0x1f
+    la t5, :mtvec_handler
+    beqz t5, label_f(1)
+    jr t5
+
+    # was it an interrupt or an exception?
+label 1
+    csrr t5, mcause
+    bgez t5, :handle_exception
+
+    INTERRUPT_HANDLER
+label :handle_exception
+    # we don't know how to handle whatever the exception was
+label :other_exception
+    # some unhandlable exception occurred
+
+label 1
+    ori TESTNUM, TESTNUM, 1337
+
+label :write_tohost
+    sw TESTNUM, tohost, t5 # TODO: tohost = ?
+    j :write_tohost
+
+label :reset_vector
+    RISCV_MULTICORE_DISABLE
+    INIT_SATP
+    INIT_PMP
+    DELEGATE_NO_TRAPS
+    li TESTNUM, 0
+    la t0, :trap_vector
+    csrw mtvec, t0
+    CHECK_XLEN
+    # if an stvec_handler is defined, delegate exceptions to it
+    la t0, :stvec_handler
+    beqz t0, label_f(1)
     csrw stvec, t0
     li t0, (1 << CAUSE_LOAD_PAGE_FAULT)  |
            (1 << CAUSE_STORE_PAGE_FAULT) |
@@ -233,16 +241,16 @@ reset_vector:                                                           \
     csrw medeleg, t0
     csrr t1, medeleg
     bne t0, t1, :other_exception
-    # 1:
+label 1
     csrwi mstatus, 0
-    text 'init'
+    text "init" # TODO: check this
     EXTRA_INIT
     EXTRA_INIT_TIMER
-    la t0, 0x1f
+    la t0, label_f(1)
     csrw mepc, t0
     csrr a0, mhartid
     mret
-    # 1:
+label 1
   end
 
   ##################################################################################################
@@ -269,8 +277,8 @@ reset_vector:                                                           \
 
   def RVTEST_FAIL
     fence
-    # 1:
-    beqz TESTNUM, 1
+label 1
+    beqz TESTNUM, label_b(1)
     sll TESTNUM, TESTNUM, 1
     or TESTNUM, TESTNUM, 1
     ecall

@@ -280,7 +280,7 @@ label 1
 label 1
     beqz TESTNUM, label_b(1)
     sll TESTNUM, TESTNUM, 1
-    or TESTNUM, TESTNUM, 1
+    Or TESTNUM, TESTNUM, 1
     ecall
   end
 

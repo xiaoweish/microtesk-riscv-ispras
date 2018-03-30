@@ -340,7 +340,7 @@ public class RiscVTest extends TemplateTest {
 
     final String[] qemuArgs = new String[] {
         "-M",
-        "spike",
+        "spike_v1.10",
         "-cpu",
         "any",
         "-d",

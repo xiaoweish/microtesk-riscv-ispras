@@ -247,15 +247,15 @@ op fcvt_s_wu(rd: FR, rs1: X)
     fcvt_s_w(rd, rs1).action;
   }
 
-op fmv_x_w(rd: X, rs1: FR)
-  syntax = format("fmv.x.w %s, %s", rd.syntax, rs1.syntax)
+op fmv_x_w(rd: X, rs1: FR) // fmv_s_w
+  syntax = format("fmv.s.w %s, %s", rd.syntax, rs1.syntax)
   image  = format("1110000%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
   action = {
     rd = sign_extend(XWORD, rs1<31..0>);
   }
 
-op fmv_w_x(rd: FR, rs1: X)
-  syntax = format("fmv.w.x %s, %s", rd.syntax, rs1.syntax)
+op fmv_w_x(rd: FR, rs1: X) // fmv_w_s
+  syntax = format("fmv.w.s %s, %s", rd.syntax, rs1.syntax)
   image  = format("1111000%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
   action = {
     rd<31..0> = rs1<31..0>;
@@ -274,7 +274,7 @@ op feq_s(rd: X, rs1: FR, rs2: FR)
     if is_nan(temp_fps) && is_nan(temp_fps2) then
       rd = 0;
     elif is_signaling_nan(temp_fps) && is_signaling_nan(temp_fps2) then
-      exception("Invalid Operation: feq_s");
+      exception("Invalid Operation");
     elif temp_fps == temp_fps2 then
       rd = 1;
     endif;
@@ -289,7 +289,7 @@ op flt_s(rd: X, rs1: FR, rs2: FR)
 
     if is_nan(temp_fps) && is_nan(temp_fps2) then
       rd = 0;
-      exception("Invalid Operation: flt_s");
+      exception("Invalid Operation");
     elif temp_fps < temp_fps2 then
       rd = 1;
     endif;
@@ -304,7 +304,7 @@ op fle_s(rd: X, rs1: FR, rs2: FR)
 
     if is_nan(temp_fps) && is_nan(temp_fps2) then
       rd = 0;
-      exception("Invalid Operation: fle_s");
+      exception("Invalid Operation");
     elif temp_fps <= temp_fps2 then
       rd = 1;
     endif;

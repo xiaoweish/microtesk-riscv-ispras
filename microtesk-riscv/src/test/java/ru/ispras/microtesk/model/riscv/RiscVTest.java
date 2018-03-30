@@ -93,6 +93,11 @@ public class RiscVTest extends TemplateTest {
    */
   private static final String EXT = "s";
 
+  /**
+   * Linker script file extension.
+   */
+  private static final String LINKER_SCRIPT_EXT = "ld";
+
   /* Toolchain parameters. */
 
   /**
@@ -425,8 +430,16 @@ public class RiscVTest extends TemplateTest {
     final String[] objPaths = getObjFiles(program, auxFiles);
     final List<String> linkerArgs = new LinkedList<>();
     Collections.addAll(linkerArgs, objPaths);
-    linkerArgs.add("-Ttext");
-    linkerArgs.add("0x1000");
+
+    final String linkerScriptPath = getLinkerScript(new File(getTestDirPath()));
+    if (linkerScriptPath.length() > 0) {
+      linkerArgs.add("-T");
+      linkerArgs.add(linkerScriptPath);
+    } else {
+      linkerArgs.add("-Ttext");
+      linkerArgs.add("0x1000");
+    }
+
     linkerArgs.add("-o");
     linkerArgs.add(getOutOption(getNameNoExt(program), "elf"));
     runCommand(linker, linkerArgs.toArray(new String[linkerArgs.size()]));
@@ -435,6 +448,25 @@ public class RiscVTest extends TemplateTest {
 
     Logger.message("done.");
     return elfImage;
+  }
+
+  private String getLinkerScript(final File testDirPath) {
+
+    String path = "";
+
+    final File[] files = testDirPath.listFiles();
+    Assert.assertFalse("No test programs are generated from this template.", files == null);
+
+    for (final File file : files) {
+
+      final String fileName = file.getName();
+      if (fileName.endsWith(LINKER_SCRIPT_EXT)) {
+        path = file.getPath();
+        break;
+      }
+    }
+
+    return path;
   }
 
   private String[] getObjFiles(final File program, final Collection<File> auxFiles) {

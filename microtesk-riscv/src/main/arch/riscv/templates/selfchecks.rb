@@ -19,28 +19,27 @@ require_relative 'riscv_base'
 #
 # Description:
 #
-# This test template demonstrates how to generate instruction sequences
-# by using combinators and compositors.
+# This test template demonstrates how MicroTESK creates self-checking test programs.
 #
-class ArithmeticTemplate < RISCVBaseTemplate
+class SelfChecksTemplate < RISCVBaseTemplate
+
+  def initialize
+    super
+    set_option_value 'self-checks', true
+  end
 
   def run
-    # :combinator => 'product': all possible combinations of the inner blocks' instructions.
-    # :compositor => 'random' : random composition (merging) of the combined instructions.
-    block(:combinator => 'product', :compositor => 'random') {
-      iterate {
-        xor x(_), x(_), x(_)
-        ori x(_), x(_), _
-      }
+    sequence {
+      temp_value_0 = rand(0x0000000, 0x7FFFffff)
+      temp_value_1 = rand(0x0000000, 0x7FFFffff)
 
-      iterate {
-        AND   x(_), x(_), x(_)
-        OR    x(_), x(_), x(_)
-      }
+      prepare t1, temp_value_0
+      prepare t2, temp_value_1
 
-      iterate {
-        auipc   x(_), _
-      }
+      add t3, t1, t2
+      trace "\n$t3($28) = $t1($6) + $t2($7) -> %d = %d + %d",
+            gpr_observer(28), gpr_observer(6), gpr_observer(7)
     }.run
   end
+
 end

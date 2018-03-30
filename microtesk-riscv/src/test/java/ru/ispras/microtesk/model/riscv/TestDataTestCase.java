@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * Copyright 2018 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,13 +16,12 @@ package ru.ispras.microtesk.model.riscv;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import ru.ispras.microtesk.test.Statistics;
 
-public class SelfCheckExampleTestCase extends RiscVTest {
+public class TestDataTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("selfchecks.rb");
+    final Statistics statistics = run("testdata.rb");
     Assert.assertNotNull(statistics);
   }
 }

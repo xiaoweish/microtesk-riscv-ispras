@@ -1,5 +1,5 @@
 #
-# Copyright 2017 ISP RAS (http://www.ispras.ru)
+# Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,14 @@
 
 require ENV['TEMPLATE']
 
+# RISC-V macros used to organize tests
+require_relative 'riscv_encoding'
+require_relative 'riscv_test'
+
 class RISCVBaseTemplate < Template
+  include RiscvEncoding
+  include RiscvTest
+
   ##################################################################################################
   # Settings
   ##################################################################################################
@@ -24,9 +31,6 @@ class RISCVBaseTemplate < Template
   def initialize
     super
     # Initialize settings here
-    @setup_memory       = false
-    @setup_cache        = false
-    @kseg0_cache_policy = 0
 
     # Sets the indentation token used in test programs
     set_option_value 'indent-token', "\t"
@@ -37,10 +41,58 @@ class RISCVBaseTemplate < Template
     # Sets the token used in separator lines printed into test programs
     set_option_value 'separator-token', "="
 
-    # Defines Alias Methods for X Registers
+    # Defines alias methods for X registers
     (0..31).each do |i|
-      define_method "x#{i}" do x(i) end
+      define_method "x#{i}" do |&contents| X(i, &contents) end
     end
+  end
+
+  ##################################################################################################
+  # Revisions
+  ##################################################################################################
+
+  def rev_id
+    get_option_value('rev-id')
+  end
+
+  def rv64full
+    rev_id == 'RV64FULL'
+  end
+
+  def rv64i
+    rev_id == 'RV64I' or rv64full
+  end
+
+  def rv32m
+    rev_id == 'RV32M' or rv64full
+  end
+
+  def rv64m
+    rev_id == 'RV64M' or rv64full
+  end
+
+  def rv32a
+    rev_id == 'RV32A' or rv64full
+  end
+
+  def rv64a
+    rev_id == 'RV64A' or rv64full
+  end
+
+  def rv32f
+    rev_id == 'RV32F' or rv64full
+  end
+
+  def rv64f
+    rev_id == 'RV64F' or rv64full
+  end
+
+  def rv32d
+    rev_id == 'RV32D' or rv64full
+  end
+
+  def rv64d
+    rev_id == 'RV64D' or rv64full
   end
 
   ##################################################################################################
@@ -70,7 +122,7 @@ class RISCVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section_text(:pa => 0x01000, :va => 0x000001000) {}
+    section_text(:pa => 0x0, :va => 0x0) {}
 
     #
     # Defines .data section.
@@ -84,9 +136,9 @@ class RISCVBaseTemplate < Template
     # Simple exception handler. Continues execution from the next instruction.
     #
     exception_handler {
-      entry_point(:org => 0x100380, :exception => ['IntegerOverflow', 'SystemCall', 'Breakpoint',
+      entry_point(:org => 0x380, :exception => ['IntegerOverflow', 'SystemCall', 'Breakpoint',
                   'Invalid Operation']) {
-                  trace 'Exception handler (EPC = 0x%x)', location('CPR', 14 * 8)
+        trace 'Exception handler (EPC = 0x%x)', location('CPR', 14 * 8)
     #TODO:
         #mfc0 ra, c0_epc
         #addiu ra, ra, 4
@@ -94,101 +146,36 @@ class RISCVBaseTemplate < Template
         nop
       }
     }
-    ##################################################################################################
-    # Revisions
-    ##################################################################################################
-
-    def rv64i
-      if get_option_value('rev-id') == 'RV64I' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
-    end
-
-    def rv32m
-      if get_option_value('rev-id') == 'RV32M' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
-    end
-
-    def rv64m
-      if get_option_value('rev-id') == 'RV64M' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
-    end
-
-    def rv32a
-      if get_option_value('rev-id') == 'RV32A' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
-    end
-
-    def rv64a
-      if get_option_value('rev-id') == 'RV64A' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
-    end
-
-    def rv32f
-      if get_option_value('rev-id') == 'RV32F' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
-    end
-
-    def rv64f
-      if get_option_value('rev-id') == 'RV64F' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
-    end
-
-    def rv32d
-      if get_option_value('rev-id') == 'RV32D' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
-    end
-
-    def rv64d
-      if get_option_value('rev-id') == 'RV64D' or get_option_value('rev-id') == 'RV64FULL' then true
-      else false end
-    end
 
     ################################################################################################
 
     #
     # The code below specifies an instruction sequence that writes a value
-    # to the specified register (target) via the R addressing mode.
+    # to the specified register (target) via the X addressing mode.
     #
     # Default preparator: It is used when no special case previded below
     # is applicable.
     #
     preparator(:target => 'X') {
-      if rv64i == true then
-        ori  target, zero,   value(53, 63)
-        slli target, target, 11
-        ori  target, target, value(42, 52)
-        slli target, target, 10
-        ori  target, target, value(32, 41)
-        slli target, target, 11
-        ori  target, target, value(21, 31)
-      end
-      if rv64i == false then
-        ori  target, zero, value(21, 31)
-      end
-      slli target, target, 11
-      ori  target, target, value(10,  20)
-      slli target, target, 10
-      ori  target, target, value(0,  9)
+      li target, value
     }
 
     preparator(:target => 'X', :arguments => {:i => 0}) {
       # Empty
     }
 
-    preparator(:target => 'X', :mask => "0000000000000000") {
+    preparator(:target => 'X', :mask => ["0000_0000", "0000_0000_0000_0000"]) {
       Or target, zero, zero
     }
 
-    preparator(:target => 'X', :mask => "FFFFFFFFFFFFFFFF") {
+    preparator(:target => 'X', :mask => ["FFFF_FFFF", "FFFF_FFFF_FFFF_FFFF"]) {
       Not target, zero
     }
 
-    preparator(:target => 'X', :mask => "00000000XXXXXXXX") {
-      ori  target, zero, value(21, 31)
-      slli target, target, 11
-      ori  target, target, value(10,  20)
-      slli target, target, 10
-      ori  target, target, value(0,  9)
+    preparator(:target => 'X', :mask => [
+      "'b00000000_00000000_00000XXX_XXXXXXXX",
+      "'b00000000_00000000_00000000_00000000_00000000_00000000_00000XXX_XXXXXXXX"]) {
+      ori target, zero, value(0, 10)
     }
 
     preparator(:target => 'FR') {
@@ -209,63 +196,23 @@ class RISCVBaseTemplate < Template
 
     ################################################################################################
 
-    buffer_preparator(:target => 'DTLB') {
-      newline
-      comment('Prepare DTLB')
-
-      # TODO:
-    }
-
-    buffer_preparator(:target => 'JTLB') {
-      newline
-      comment('Prepare JTLB')
-
-      # TODO:
-    }
-
-    buffer_preparator(:target => 'L1') {
-      newline
-      comment('Prepare L1')
-
-      # TODO:
-    }
-
-    buffer_preparator(:target => 'L2') {
-      newline
-      comment('Prepare L2')
-
-      # TODO:
-    }
-
-    buffer_preparator(:target => 'MEM') {
-      # Do nothing.
-    }
-
-    ################################################################################################
-
     # The code below specifies a comparator sequence to be used in self-checking tests
     # to test values in the specified register (target) accessed via the REG
     # addressing mode.
     #
     # Comparators are described using the same syntax as in preparators and can be
-    # overridden in the same way..
+    # overridden in the same way.
     #
     # Default comparator: It is used when no special case is applicable.
     #
     comparator(:target => 'X') {
-      ori  ra, zero, value(21, 31)
-      slli ra, ra, 11
-      ori  ra, ra, value(10,  20)
-      slli ra, ra, 10
-      ori  ra, ra, value(0,  9)
-
-      bne ra, target, :check_failed
-      nop
+      prepare ra, value
+      bne ra, target, :error
     }
 
     #
     # Special case: Target is $zero register. Since it is read only and
-    # always equal zero, it makes no sence to test it.
+    # always equal zero, it makes no sense to test it.
     #
     comparator(:target => 'X', :arguments => {:i => 0}) {
       # Empty
@@ -273,32 +220,18 @@ class RISCVBaseTemplate < Template
 
     #
     # Special case: Value equals 0x00000000. In this case, it is
-    # more convenient to test the target against the $zero register.
+    # more convenient to test the target against the zero register.
     #
-    comparator(:target => 'X', :mask => "00000000") {
-      bne zero, target, :check_failed
-      nop
+    comparator(:target => 'X', :mask => ["0000_0000", "0000_0000_0000_0000"]) {
+      bne zero, target, :error
     }
 
     ################################################################################################
 
-    # The code below specifies default situations that generate random values
-    # for instructions which require arguments to be 32-bit sign-extended values.
+    org 0x1000
+    newline
 
-    # Generator of 32-bit random values which will be sign-extended to fit the target register.
-    random_word = situation('random', :size => 32, :sign_extend => true)
-
-    # Input arguments of all instructions listed below are random words.
-    # set_default_situation 'add'   do random_word end
-    # set_default_situation 'addi'  do random_word end
-
-    ################################################################################################
-
-    # TODO:
-    #org 0x2000
-    #newline
-
-label :__start
+global_label :__start
     nop
     #j :test
     nop
@@ -310,25 +243,9 @@ label :test
     #ori  t9, t9, 0xfff8
     #AND  t8, t8, t9
 
-    if @kseg0_cache_policy != 0
-      #ori t8, t9, @kseg0_cache_policy
-    end
-
     #mtc0 t8, c0_config0
     nop
     nop
-
-    if @setup_memory
-      newline
-      #jal :memory_setup
-      nop
-    end
-
-    if @setup_cache
-      newline
-      #jal :cache_setup
-      nop
-    end
   end
 
   ##################################################################################################
@@ -344,13 +261,6 @@ label :error
     #TODO:
     newline
 
-    if @setup_memory
-      text "TODO: setup memory"
-    end
-    if @setup_cache
-      text "TODO: setup cache"
-    end
-
     6.times {
       nop
     }
@@ -360,263 +270,73 @@ label :error
   # Shortcuts for registers
   ##################################################################################################
 
-  def zero
-    X(0)
-  end
-
-  def ra
-    X(1)
-  end
-
-  def sp
-    X(2)
-  end
-
-  def gp
-    X(3)
-  end
-
-  def tp
-    X(4)
-  end
-
-  def t0
-    X(5)
-  end
-
-  def t1
-    X(6)
-  end
-
-  def t2
-    X(7)
-  end
-
-  def s0
-    X(8)
-  end
-
-  def s1
-    X(9)
-  end
-
-  def a0
-    X(10)
-  end
-
-  def a1
-    X(11)
-  end
-
-  def a2
-    X(12)
-  end
-
-  def a3
-    X(13)
-  end
-
-  def a4
-    X(14)
-  end
-
-  def a5
-    X(15)
-  end
-
-  def a6
-    X(16)
-  end
-
-  def a7
-    X(17)
-  end
-
-  def s2
-    X(18)
-  end
-
-  def s3
-    X(19)
-  end
-
-  def s4
-    X(20)
-  end
-
-  def s5
-    X(21)
-  end
-
-  def s6
-    X(22)
-  end
-
-  def s7
-    X(23)
-  end
-
-  def s8
-    X(24)
-  end
-
-  def s9
-    X(25)
-  end
-
-  def s10
-    X(26)
-  end
-
-  def s11
-    X(27)
-  end
-
-  def t3
-    X(28)
-  end
-
-  def t4
-    X(29)
-  end
-
-  def t5
-    X(30)
-  end
-
-  def t6
-    X(31)
-  end
-
-  # Floating Point registers
-
-  def ft0
-    FR(0)
-  end
-
-  def ft1
-    FR(1)
-  end
-
-  def ft2
-    FR(2)
-  end
-
-  def ft3
-    FR(3)
-  end
-
-  def ft4
-    FR(4)
-  end
-
-  def ft5
-    FR(5)
-  end
-
-  def ft6
-    FR(6)
-  end
-
-  def ft7
-    FR(7)
-  end
-
-  def ft8
-    FR(8)
-  end
-
-  def ft9
-    FR(9)
-  end
-
-  def ft10
-    FR(10)
-  end
-
-  def ft11
-    FR(11)
-  end
-
-  def ft12
-    FR(12)
-  end
-
-  def ft13
-    FR(13)
-  end
-
-  def ft14
-    FR(14)
-  end
-
-  def ft15
-    FR(15)
-  end
-
-  def ft16
-    FR(16)
-  end
-
-  def ft17
-    FR(17)
-  end
-
-  def ft18
-    FR(18)
-  end
-
-  def ft19
-    FR(19)
-  end
-
-  def ft20
-    FR(20)
-  end
-
-  def ft21
-    FR(21)
-  end
-
-  def ft22
-    FR(22)
-  end
-
-  def ft23
-    FR(23)
-  end
-
-  def ft24
-    FR(24)
-  end
-
-  def ft25
-    FR(25)
-  end
-
-  def ft26
-    FR(26)
-  end
-
-  def ft27
-    FR(27)
-  end
-
-  def ft28
-    FR(28)
-  end
-
-  def ft29
-    FR(29)
-  end
-
-  def ft30
-    FR(30)
-  end
-
-  def ft31
-    FR(31)
-  end
+  # General-purpose registers
+  def zero(&contents) X(0,  &contents) end
+  def   ra(&contents) X(1,  &contents) end
+  def   sp(&contents) X(2,  &contents) end
+  def   gp(&contents) X(3,  &contents) end
+  def   tp(&contents) X(4,  &contents) end
+  def   t0(&contents) X(5,  &contents) end
+  def   t1(&contents) X(6,  &contents) end
+  def   t2(&contents) X(7,  &contents) end
+  def   s0(&contents) X(8,  &contents) end
+  def   s1(&contents) X(9,  &contents) end
+  def   a0(&contents) X(10, &contents) end
+  def   a1(&contents) X(11, &contents) end
+  def   a2(&contents) X(12, &contents) end
+  def   a3(&contents) X(13, &contents) end
+  def   a4(&contents) X(14, &contents) end
+  def   a5(&contents) X(15, &contents) end
+  def   a6(&contents) X(16, &contents) end
+  def   a7(&contents) X(17, &contents) end
+  def   s2(&contents) X(18, &contents) end
+  def   s3(&contents) X(19, &contents) end
+  def   s4(&contents) X(20, &contents) end
+  def   s5(&contents) X(21, &contents) end
+  def   s6(&contents) X(22, &contents) end
+  def   s7(&contents) X(23, &contents) end
+  def   s8(&contents) X(24, &contents) end
+  def   s9(&contents) X(25, &contents) end
+  def  s10(&contents) X(26, &contents) end
+  def  s11(&contents) X(27, &contents) end
+  def   t3(&contents) X(28, &contents) end
+  def   t4(&contents) X(29, &contents) end
+  def   t5(&contents) X(30, &contents) end
+  def   t6(&contents) X(31, &contents) end
+
+  # Floating-point registers
+  def  ft0(&contents) FR(0,  &contents) end
+  def  ft1(&contents) FR(1,  &contents) end
+  def  ft2(&contents) FR(2,  &contents) end
+  def  ft3(&contents) FR(3,  &contents) end
+  def  ft4(&contents) FR(4,  &contents) end
+  def  ft5(&contents) FR(5,  &contents) end
+  def  ft6(&contents) FR(6,  &contents) end
+  def  ft7(&contents) FR(7,  &contents) end
+  def  ft8(&contents) FR(8,  &contents) end
+  def  ft9(&contents) FR(9,  &contents) end
+  def ft10(&contents) FR(10, &contents) end
+  def ft11(&contents) FR(11, &contents) end
+  def ft12(&contents) FR(12, &contents) end
+  def ft13(&contents) FR(13, &contents) end
+  def ft14(&contents) FR(14, &contents) end
+  def ft15(&contents) FR(15, &contents) end
+  def ft16(&contents) FR(16, &contents) end
+  def ft17(&contents) FR(17, &contents) end
+  def ft18(&contents) FR(18, &contents) end
+  def ft19(&contents) FR(19, &contents) end
+  def ft20(&contents) FR(20, &contents) end
+  def ft21(&contents) FR(21, &contents) end
+  def ft22(&contents) FR(22, &contents) end
+  def ft23(&contents) FR(23, &contents) end
+  def ft24(&contents) FR(24, &contents) end
+  def ft25(&contents) FR(25, &contents) end
+  def ft26(&contents) FR(26, &contents) end
+  def ft27(&contents) FR(27, &contents) end
+  def ft28(&contents) FR(28, &contents) end
+  def ft29(&contents) FR(29, &contents) end
+  def ft30(&contents) FR(30, &contents) end
+  def ft31(&contents) FR(31, &contents) end
 
   ##################################################################################################
   # Shortcuts for system registers
@@ -677,12 +397,6 @@ label :error
     end_addr = get_address_of(end_label)
 
     trace_data_addr(begin_addr, end_addr)
-  end
-
-  def load_address_to_reg(reg_addr, address_label)
-    lui reg_addr, get_address_of(address_label)>>12
-    temp = 4095
-    addi reg_addr, reg_addr, get_address_of(address_label)&temp
   end
 
   ##################################################################################################

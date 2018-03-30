@@ -1,12 +1,17 @@
 #
-# MicroTESK for RISC-V
+# Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
 #
-# Copyright (c) 2017 Institute for System Programming of the Russian Academy of Sciences
-# All Rights Reserved
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Institute for System Programming of the Russian Academy of Sciences (ISP RAS)
-# 25 Alexander Solzhenitsyn st., Moscow, 109004, Russia
-# http://www.ispras.ru
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 
 require_relative 'riscv_base'
@@ -26,7 +31,7 @@ class RandomTemplate < RISCVBaseTemplate
                     range(:value => 0x00000000ffffFFFE..0x00000000ffffFFFF, :bias => 50)) # Large
 
     sequence {
-      # DADD instruction with random operands and biased operand values.
+      # ADD instruction with random operands and biased operand values.
       add get_register, get_register, get_register do situation('random_biased',
         :dist => dist(range(:value=> int_dist,                :bias => 80),  # Simple
                       range(:value=> [0xDEADBEEF, 0xBADF00D], :bias => 20))) # Magic
@@ -35,4 +40,5 @@ class RandomTemplate < RISCVBaseTemplate
       nop
     }.run 1000
   end
+
 end

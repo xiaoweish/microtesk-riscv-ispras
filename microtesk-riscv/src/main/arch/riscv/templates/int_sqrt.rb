@@ -1,12 +1,17 @@
 #
-# MicroTESK for RISC-V
+# Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
 #
-# Copyright (c) 2017 Institute for System Programming of the Russian Academy of Sciences
-# All Rights Reserved
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Institute for System Programming of the Russian Academy of Sciences (ISP RAS)
-# 25 Alexander Solzhenitsyn st., Moscow, 109004, Russia
-# http://www.ispras.ru
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 
 require_relative 'riscv_base'
@@ -22,8 +27,6 @@ require_relative 'riscv_base'
 class IntSqrtTemplate < RISCVBaseTemplate
 
   def run
-    trace "Integer square root: Debug Output\n"
-
     addi s0, zero, rand(0, 1023)
     trace "\nInput parameter value: x8(s0) = %d\n", gpr_observer(8)
 
@@ -39,7 +42,6 @@ class IntSqrtTemplate < RISCVBaseTemplate
 
     slt t4, zero, t0
     beq t4, zero, :done
-    nop
 
     sub  t0, t0, t1
     addi t1, t1, 2
@@ -49,7 +51,6 @@ class IntSqrtTemplate < RISCVBaseTemplate
     add t2, t2, t5
 
     j :cycle
-    nop
 
     label :done
     trace "\nInteger square root of %d: %d", gpr_observer(8), gpr_observer(7)

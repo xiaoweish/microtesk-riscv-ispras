@@ -24,12 +24,12 @@
 /**/
 var jump_imm32[card(32)]
 
-label mode PSEUDO_LABEL(target: WORD, current: WORD) = target<31..0> - current<31..0>
+label mode PSEUDO_LABEL(target: XWORD, current: XWORD) = target<31..0> - current<31..0>
   init = {
-    jump_imm32 = target<31..0>;
+    jump_imm32 = target<31..0> - current<31..0>;
   }
   syntax = ""
-  image = format("%s", target<31..0> - current<31..0>)
+  image = format("%s", jump_imm32)
 
 mode PSEUDO_IMM(imm: card(32)) = imm
   init = {
@@ -43,30 +43,26 @@ mode PSEUDO_OFFSET = PSEUDO_LABEL | PSEUDO_IMM
 // Load address
 @rev(RV32I)
 pseudo op la(rd : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("la %s, %s", rd.syntax, symbol.syntax)
-  image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
+  image  = format("%s%s", auipc(rd, if jump_imm32<11> == 0 then jump_imm32<31..12>
+                                                           else jump_imm32<31..12> + 1 endif).image,
                           addi(rd, rd, jump_imm32<11..0>).image)
   action = {
-    /*
-    This is how it is described in the reference manual.
-    Unfortunately, this does not work correctly.
-    The reason is because addi sign-extends the immediate value,
-    which causes incorrect results when the highest bit of the immediate equals 1.
+    // Here is a trick done to get the correct value in all cases
+    // (RISC-V toolchain does the same):
+    // When symbol<11> is set to 1, symbol<31..12> is added 1 to
+    // eliminate the effect of sign-extension done by the addi instruction.
 
-    tmp_word = symbol;
-    instruction(auipc(rd, tmp_word<31..12>)).action;
-    instruction(addi(rd, rd, tmp_word<11..0>)).action;
-    */
-
-    // TODO: Hack to make it work correctly. Need to be replaced when
-    // the implementation of the LA pseudo instruction is clarified.
-    rd = PC + sign_extend(XWORD, symbol);
-    PC = PC + 8;
+    instruction(auipc(rd, if symbol<11> == 0 then symbol<31..12>
+                                             else symbol<31..12> + 1 endif)).action;
+    instruction(addi(rd, rd, symbol<11..0>)).action;
   }
 
 // Load global
 @rev(RV32I)
 pseudo op lb_global(rd : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("lb %s, %s", rd.syntax, symbol.syntax)
   image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
                           lb(rd, rd, jump_imm32<11..0>).image)
@@ -78,6 +74,7 @@ pseudo op lb_global(rd : X, symbol : PSEUDO_OFFSET)
 
 @rev(RV32I)
 pseudo op lh_global(rd : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("lh %s, %s", rd.syntax, symbol.syntax)
   image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
                           lh(rd, rd, jump_imm32<11..0>).image)
@@ -89,6 +86,7 @@ pseudo op lh_global(rd : X, symbol : PSEUDO_OFFSET)
 
 @rev(RV32I)
 pseudo op lw_global(rd : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("lw %s, %s", rd.syntax, symbol.syntax)
   image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
                           lw(rd, rd, jump_imm32<11..0>).image)
@@ -100,6 +98,7 @@ pseudo op lw_global(rd : X, symbol : PSEUDO_OFFSET)
 
 @rev(RV64I)
 pseudo op ld_global(rd : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("ld %s, %s", rd.syntax, symbol.syntax)
   image  = format("%s%s", auipc(rd, jump_imm32<31..12>).image,
                           ld(rd, rd, jump_imm32<11..0>).image)
@@ -112,6 +111,7 @@ pseudo op ld_global(rd : X, symbol : PSEUDO_OFFSET)
 // Store global
 @rev(RV32I)
 pseudo op sb_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  init   = { symbol.init; }
   syntax = format("sb %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sb(rd, rt, jump_imm32<11..0>).image)
@@ -123,6 +123,7 @@ pseudo op sb_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 
 @rev(RV32I)
 pseudo op sh_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  init   = { symbol.init; }
   syntax = format("sh %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sh(rd, rt, jump_imm32<11..0>).image)
@@ -134,6 +135,7 @@ pseudo op sh_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 
 @rev(RV32I)
 pseudo op sw_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  init   = { symbol.init; }
   syntax = format("sw %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sw(rd, rt, jump_imm32<11..0>).image)
@@ -145,6 +147,7 @@ pseudo op sw_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 
 @rev(RV64I)
 pseudo op sd_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
+  init   = { symbol.init; }
   syntax = format("sd %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sd(rd, rt, jump_imm32<11..0>).image)
@@ -156,41 +159,71 @@ pseudo op sd_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 
 // Load immediate
 @rev(RV32I)
+pseudo op li32(rd: X, symbol: WORD)
+  syntax = format("li %s, 0x%X", rd.syntax, symbol)
+  image = format(
+     "%s%s",
+     lui(rd, symbol<31..12> + zero_extend(card(20), symbol<11>)).image,
+     addi(rd, rd, symbol<11..0>).image
+  )
+  action = {
+    instruction(lui(rd, symbol<31..12> + zero_extend(card(20), symbol<11>))).action;
+    instruction(addi(rd, rd, symbol<11..0>)).action;
+  }
+
+@rev(RV64I)
+pseudo op li64(rd: X, symbol: DWORD)
+  syntax = format("li %s, 0x%X", rd.syntax, symbol)
+  image = format(
+     "%s%s%s%s%s%s%s",
+     li32(rd, symbol<63..32>).image,
+     slli(rd, rd, 11).image,
+     ori(rd, rd, coerce(card(12), symbol<31..21>)).image,
+     slli(rd, rd, 11).image,
+     ori(rd, rd, coerce(card(12), symbol<20..10>)).image,
+     slli(rd, rd, 10).image,
+     ori(rd, rd, coerce(card(12), symbol<9..0>)).image
+  )
+  action = {
+    li32(rd, symbol<63..32>).action;
+    instruction(slli(rd, rd, 11)).action;
+    instruction(ori(rd, rd, coerce(card(12), symbol<31..21>))).action;
+    instruction(slli(rd, rd, 11)).action;
+    instruction(ori(rd, rd, coerce(card(12), symbol<20..10>))).action;
+    instruction(slli(rd, rd, 10)).action;
+    instruction(ori(rd, rd, coerce(card(12), symbol<9..0>))).action;
+  }
+
+@rev(RV32I)
 pseudo op li(rd : X, symbol : XWORD)
-  syntax = format("li %s, %s", rd.syntax, symbol)
-  image  = format("%s%s%s%s%s%s%s%s%s%s%s",
+  syntax = format("li %s, 0x%X", rd.syntax, symbol)
+  image  = format("%s",
 #ifdef RV64I
-                        ori(rd, X(0), coerce(card(12), symbol<63..53>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<52..42>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<41..32>)).image,
-                        slli(rd, rd, 10).image,
+  if symbol<63..31> == 0 || symbol<63..31> == -1 then
+    li32(rd, symbol<31..0>).image
+  else
+    li64(rd, symbol).image
+  endif
+#else
+    li32(rd, symbol).image
 #endif
-                        ori(rd, X(0), coerce(card(12), symbol<31..21>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<20..10>)).image,
-                        slli(rd, rd, 11).image,
-                        ori(rd, X(0), coerce(card(12), symbol<9..0>)).image)
+  )
   action = {
 #ifdef RV64I
-    instruction(ori(rd, X(0), coerce(card(12), symbol<63..53>))).action;
-    instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<52..42>))).action;
-    instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<41..32>))).action;
-    instruction(slli(rd, rd, 10)).action;
+    if symbol<63..31> == 0 || symbol<63..31> == -1 then
+      li32(rd, symbol<31..0>).action;
+    else
+      li64(rd, symbol).action;
+    endif;
+#else
+    li32(rd, symbol).action;
 #endif
-    instruction(ori(rd, X(0), coerce(card(12), symbol<31..21>))).action;
-    instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<20..10>))).action;
-    instruction(slli(rd, rd, 11)).action;
-    instruction(ori(rd, X(0), coerce(card(12), symbol<9..0>))).action;
   }
 
 // Floating-point load global
 @rev(RV32F)
 pseudo op flw_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("flw %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           flw(rd, rt, jump_imm32<11..0>).image)
@@ -202,6 +235,7 @@ pseudo op flw_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
 
 @rev(RV32D)
 pseudo op fld_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("fld %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           fld(rd, rt, jump_imm32<11..0>).image)
@@ -214,6 +248,7 @@ pseudo op fld_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
 // Floating-point store global
 @rev(RV32F)
 pseudo op fsw_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("fsw %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           fsw(rd, rt, jump_imm32<11..0>).image)
@@ -225,6 +260,7 @@ pseudo op fsw_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
 
 @rev(RV32D)
 pseudo op fsd_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("fsd %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           fsd(rd, rt, jump_imm32<11..0>).image)
@@ -237,6 +273,7 @@ pseudo op fsd_global(rd: FR, rt : X, symbol : PSEUDO_OFFSET)
 // Call far-away subroutine
 @rev(RV32I)
 pseudo op call(symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("call %s", symbol.syntax)
   image  = format("%s%s", auipc(X(6), jump_imm32<31..12>).image,
                           jalr(X(1), X(6), BRANCH_IMM(jump_imm32<11..0>)).image)
@@ -249,6 +286,7 @@ pseudo op call(symbol : PSEUDO_OFFSET)
 // Tail call far-away subroutine
 @rev(RV32I)
 pseudo op tail(symbol : PSEUDO_OFFSET)
+  init   = { symbol.init; }
   syntax = format("tail %s", symbol.syntax)
   image  = format("%s%s", auipc(X(6), jump_imm32<31..12>).image,
                           jalr(X(0), X(6), BRANCH_IMM(jump_imm32<11..0>)).image)

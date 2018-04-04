@@ -74,50 +74,6 @@ label :"test_#{testnum}"
     end
   end
 
-  def TEST_INSERT_NOPS_0
-    TEST_INSERT_NOPS(0)
-  end
-
-  def TEST_INSERT_NOPS_1
-    TEST_INSERT_NOPS(1)
-  end
-
-  def TEST_INSERT_NOPS_2
-    TEST_INSERT_NOPS(2)
-  end
-
-  def TEST_INSERT_NOPS_3
-    TEST_INSERT_NOPS(3)
-  end
-
-  def TEST_INSERT_NOPS_4
-    TEST_INSERT_NOPS(4)
-  end
-
-  def TEST_INSERT_NOPS_5
-    TEST_INSERT_NOPS(5)
-  end
-
-  def TEST_INSERT_NOPS_6
-    TEST_INSERT_NOPS(6)
-  end
-
-  def TEST_INSERT_NOPS_7
-    TEST_INSERT_NOPS(7)
-  end
-
-  def TEST_INSERT_NOPS_8
-    TEST_INSERT_NOPS(8)
-  end
-
-  def TEST_INSERT_NOPS_9
-    TEST_INSERT_NOPS(9)
-  end
-
-  def TEST_INSERT_NOPS_10
-    TEST_INSERT_NOPS(10)
-  end
-
   ##################################################################################################
   # RV64UI MACROS
   ##################################################################################################

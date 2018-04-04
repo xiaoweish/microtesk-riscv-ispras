@@ -132,8 +132,55 @@ label :"test_#{testnum}"
 
   def TEST_IMM_OP(testnum, inst, result, val1, imm)
     TEST_CASE(testnum, x30, result) do
-      li  x1, MASK_XLEN(val1)
+      li x1, MASK_XLEN(val1)
       self.send :"#{inst}", x30, x1, SEXT_IMM(imm)
+    end
+  end
+
+  def TEST_IMM_SRC1_EQ_DEST(testnum, inst, result, val1, imm)
+    TEST_CASE(testnum, x1, result) do
+      li x1, MASK_XLEN(val1)
+      self.send :"#{inst}", x1, x1, SEXT_IMM(imm)
+    end
+  end
+
+  def TEST_IMM_DEST_BYPASS(testnum, nop_cycles, inst, result, val1, imm)
+    TEST_CASE(testnum, x6, result) do
+      li x4, 0
+label 1
+      li x1, MASK_XLEN(val1)
+      self.send :"#{inst}", x30, x1, SEXT_IMM(imm)
+      TEST_INSERT_NOPS(nop_cycles)
+      addi x6, x30, 0
+      addi x4, x4, 1
+      li x5, 2
+      bne x4, x5, label_b(1)
+    end
+  end
+
+  def TEST_IMM_SRC1_BYPASS(testnum, nop_cycles, inst, result, val1, imm)
+    TEST_CASE(testnum, x30, result) do
+      li x4, 0
+label 1
+      li x1, MASK_XLEN(val1)
+      TEST_INSERT_NOPS(nop_cycles)
+      self.send :"#{inst}", x30, x1, SEXT_IMM(imm)
+      addi x4, x4, 1
+      li x5, 2
+      bne x4, x5, label_b(1)
+    end
+  end
+
+  def TEST_IMM_ZEROSRC1(testnum, inst, result, imm)
+    TEST_CASE( testnum, x1, result) do
+      self.send :"#{inst}", x1, x0, SEXT_IMM(imm)
+    end
+  end
+
+  def TEST_IMM_ZERODEST(testnum, inst, val1, imm)
+    TEST_CASE(testnum, x0, 0) do
+      li x1, MASK_XLEN(val1)
+      self.send :"#{inst}", x0, x1, SEXT_IMM(imm)
     end
   end
 

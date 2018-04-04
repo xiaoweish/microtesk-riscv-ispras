@@ -149,9 +149,9 @@ label 1
   def TEST_PASSFAIL
     bne x0, TESTNUM(), :pass
 label :fail
-    RVTEST_FAIL
+    RVTEST_FAIL()
 label :pass
-    RVTEST_PASS
+    RVTEST_PASS()
   end
 
   ##################################################################################################

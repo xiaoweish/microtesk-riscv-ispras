@@ -60,8 +60,8 @@ module RiscvTestMacros
   def TEST_CASE( testnum, testreg, correctval, &code)
 label :"test_#{testnum}"
     self.instance_eval &code
-    li  x29, MASK_XLEN(correctval)
-    li  TESTNUM, testnum
+    li x29, MASK_XLEN(correctval)
+    li TESTNUM(), testnum
     bne testreg, x29, :fail
   end
 
@@ -128,7 +128,7 @@ label 1
   end
 
   def TEST_IMM_ZEROSRC1(testnum, inst, result, imm)
-    TEST_CASE( testnum, x1, result) do
+    TEST_CASE(testnum, x1, result) do
       self.send :"#{inst}", x1, x0, SEXT_IMM(imm)
     end
   end
@@ -147,7 +147,7 @@ label 1
   ##################################################################################################
 
   def TEST_PASSFAIL
-    bne x0, TESTNUM, :pass
+    bne x0, TESTNUM(), :pass
 label :fail
     RVTEST_FAIL
 label :pass

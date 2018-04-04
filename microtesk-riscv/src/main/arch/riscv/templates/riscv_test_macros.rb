@@ -140,6 +140,38 @@ label 1
     end
   end
 
+  ##################################################################################################
+  # Tests for an instruction with register operands
+  ##################################################################################################
+
+  def TEST_R_OP(testnum, inst, result, val1)
+    TEST_CASE(testnum, x30, result) do
+      li x1, val1
+      self.send :"#{inst}", x30, x1
+     end
+  end
+
+  def TEST_R_SRC1_EQ_DEST(testnum, inst, result, val1)
+    TEST_CASE(testnum, x1, result)
+      li x1, val1
+      self.send :"#{inst}", x1, x1
+    end
+  end
+
+  def TEST_R_DEST_BYPASS(testnum, nop_cycles, inst, result, val1)
+    TEST_CASE(testnum, x6, result) do
+      li x4, 0
+label 1
+      li x1, val1
+      self.send :"#{inst}", x30, x1
+      TEST_INSERT_NOPS(nop_cycles)
+      addi x6, x30, 0
+      addi x4, x4, 1
+      li x5, 2
+      bne x4, x5, label_b(1)
+    end
+  end
+
   # TODO: Implement the macros here
 
   ##################################################################################################

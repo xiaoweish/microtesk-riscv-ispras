@@ -49,14 +49,21 @@ module RiscvTestMacros
   # Helper macros
   ##################################################################################################
 
-  #define MASK_XLEN(x) ((x) & ((1 << (__riscv_xlen - 1) << 1) - 1))
+  def __riscv_xlen
+    if rv64i then 64 else 32 end
+  end
 
-  #define TEST_CASE( testnum, testreg, correctval, code... ) \
-  #test_ ## testnum: \
-  #    code; \
-  #    li  x29, MASK_XLEN(correctval); \
-  #    li  TESTNUM, testnum; \
-  #    bne testreg, x29, fail;
+  def MASK_XLEN(x)
+     ((x) & ((1 << (__riscv_xlen - 1) << 1) - 1))
+  end
+
+  def TEST_CASE( testnum, testreg, correctval, &code)
+label :"test_#{testnum}"
+    self.instance_eval &code
+    li  x29, MASK_XLEN(correctval)
+    li  TESTNUM, testnum
+    bne testreg, x29, :fail
+  end
 
   # We use a macro hack to simplify code generation for various numbers
   # of bubble cycles.
@@ -109,6 +116,25 @@ module RiscvTestMacros
 
   def TEST_INSERT_NOPS_10
     TEST_INSERT_NOPS(10)
+  end
+
+  ##################################################################################################
+  # RV64UI MACROS
+  ##################################################################################################
+
+  ##################################################################################################
+  # Tests for instructions with immediate operand
+  ##################################################################################################
+
+  def SEXT_IMM(x)
+    ((x) | (-(((x) >> 11) & 1) << 11))
+  end
+
+  def TEST_IMM_OP(testnum, inst, result, val1, imm)
+    TEST_CASE(testnum, x30, result) do
+      li  x1, MASK_XLEN(val1)
+      self.send :"#{inst}", x30, x1, SEXT_IMM(imm)
+    end
   end
 
   # TODO: Implement the macros here

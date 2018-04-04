@@ -19,10 +19,12 @@ require ENV['TEMPLATE']
 # RISC-V macros used to organize tests
 require_relative 'riscv_encoding'
 require_relative 'riscv_test'
+require_relative 'riscv_test_macros'
 
 class RISCVBaseTemplate < Template
   include RiscvEncoding
   include RiscvTest
+  include RiscvTestMacros
 
   ##################################################################################################
   # Settings
@@ -136,8 +138,11 @@ class RISCVBaseTemplate < Template
     # Simple exception handler. Continues execution from the next instruction.
     #
     exception_handler {
-      entry_point(:org => 0x380, :exception => ['IntegerOverflow', 'SystemCall', 'Breakpoint',
-                  'Invalid Operation']) {
+      entry_point(:org => 0x380,
+                  :exception => ['IntegerOverflow',
+                                 'SystemCall',
+                                 'Breakpoint',
+                                 'Invalid Operation']) {
         trace 'Exception handler (EPC = 0x%x)', location('CPR', 14 * 8)
     #TODO:
         #mfc0 ra, c0_epc

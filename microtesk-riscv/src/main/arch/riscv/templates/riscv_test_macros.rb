@@ -152,7 +152,7 @@ label 1
   end
 
   def TEST_R_SRC1_EQ_DEST(testnum, inst, result, val1)
-    TEST_CASE(testnum, x1, result)
+    TEST_CASE(testnum, x1, result) do
       li x1, val1
       self.send :"#{inst}", x1, x1
     end

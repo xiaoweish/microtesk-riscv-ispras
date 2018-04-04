@@ -280,6 +280,26 @@ label 1
     end
   end
 
+  ##################################################################################################
+  # Test memory instructions
+  ##################################################################################################
+
+  def TEST_LD_OP(testnum, inst, result, offset, base)
+    TEST_CASE(testnum, x30, result) do
+      la  x1, base
+      self.send :"#{inst}", x30, x1, offset
+    end
+  end
+
+  def TEST_ST_OP(testnum, load_inst, store_inst, result, offset, base)
+    TEST_CASE( testnum, x30, result) do
+      la x1, base
+      li x2, result
+      self.send :"#{store_inst}", x2, x1, offset
+      self.send :"#{load_inst}", x30, x1, offset
+    end
+  end
+
   # TODO: Implement the macros here
 
   ##################################################################################################

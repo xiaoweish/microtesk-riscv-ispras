@@ -172,6 +172,114 @@ label 1
     end
   end
 
+  ##################################################################################################
+  # Tests for an instruction with register-register operands
+  ##################################################################################################
+
+  def TEST_RR_OP(testnum, inst, result, val1, val2)
+    TEST_CASE( testnum, x30, result) do
+      li x1, MASK_XLEN(val1)
+      li x2, MASK_XLEN(val2)
+      self.send :"#{inst}", x30, x1, x2
+    end
+  end
+
+  def TEST_RR_SRC1_EQ_DEST(testnum, inst, result, val1, val2)
+    TEST_CASE(testnum, x1, result) do
+      li x1, MASK_XLEN(val1)
+      li x2, MASK_XLEN(val2)
+      self.send :"#{inst}", x1, x1, x2
+    end
+  end
+
+  def TEST_RR_SRC2_EQ_DEST(testnum, inst, result, val1, val2)
+    TEST_CASE(testnum, x2, result) do
+      li x1, MASK_XLEN(val1)
+      li x2, MASK_XLEN(val2)
+      self.send :"#{inst}", x2, x1, x2
+    end
+  end
+
+  def TEST_RR_SRC12_EQ_DEST(testnum, inst, result, val1)
+    TEST_CASE(testnum, x1, result) do
+      li x1, MASK_XLEN(val1)
+      self.send :"#{inst}", x1, x1, x1
+    end
+  end
+
+  def TEST_RR_DEST_BYPASS(testnum, nop_cycles, inst, result, val1, val2)
+    TEST_CASE(testnum, x6, result) do
+      li x4, 0
+label 1
+      li x1, MASK_XLEN(val1)
+      li x2, MASK_XLEN(val2)
+      self.send :"#{inst}", x30, x1, x2
+      TEST_INSERT_NOPS(nop_cycles)
+      addi x6, x30, 0
+      addi x4, x4, 1
+      li x5, 2
+      bne x4, x5, label_b(1)
+    end
+  end
+
+  def TEST_RR_SRC12_BYPASS(testnum, src1_nops, src2_nops, inst, result, val1, val2)
+    TEST_CASE(testnum, x30, result) do
+      li x4, 0
+label 1
+      li x1, MASK_XLEN(val1)
+      TEST_INSERT_NOPS(src1_nops)
+      li x2, MASK_XLEN(val2)
+      TEST_INSERT_NOPS(src2_nops)
+      self.send :"#{inst}", x30, x1, x2
+      addi x4, x4, 1
+      li x5, 2
+      bne x4, x5, label_b(1)
+    end
+  end
+
+  def TEST_RR_SRC21_BYPASS(testnum, src1_nops, src2_nops, inst, result, val1, val2)
+    TEST_CASE(testnum, x30, result) do
+      li x4, 0
+label 1
+      li x2, MASK_XLEN(val2)
+      TEST_INSERT_NOPS(src1_nops)
+      li x1, MASK_XLEN(val1)
+      TEST_INSERT_NOPS(src2_nops)
+      self.send :"#{inst}", x30, x1, x2
+      addi x4, x4, 1
+      li x5, 2
+      bne x4, x5, label_b(1)
+    end
+  end
+
+  def TEST_RR_ZEROSRC1(testnum, inst, result, val)
+    TEST_CASE(testnum, x2, result) do
+      li x1, MASK_XLEN(val)
+      self.send :"#{inst}", x2, x0, x1
+    end
+  end
+
+  def TEST_RR_ZEROSRC2(testnum, inst, result, val)
+    TEST_CASE( testnum, x2, result) do
+      li x1, MASK_XLEN(val)
+      self.send :"#{inst}", x2, x1, x0
+    end
+  end
+
+  def TEST_RR_ZEROSRC12(testnum, inst, result)
+    TEST_CASE(testnum, x1, result) do
+      self.send :"#{inst}", x1, x0, x0
+    end
+  end
+
+  def TEST_RR_ZERODEST(testnum, inst, val1, val2)
+    TEST_CASE(testnum, x0, 0) do
+      li x1, MASK_XLEN(val1)
+      li x2, MASK_XLEN(val2)
+      self.send :"#{inst}", x0, x1, x2
+    end
+  end
+
   # TODO: Implement the macros here
 
   ##################################################################################################

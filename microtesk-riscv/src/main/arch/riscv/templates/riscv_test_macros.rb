@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 # THIS FILE IS BASED ON THE FOLLOWING RISC-V TEST SUITE HEADER:
-# https://github.com/riscv/riscv-test-env/blob/master/p/riscv_test.h
+# https://github.com/riscv/riscv-tests/blob/master/isa/macros/scalar/test_macros.h
 # WHICH IS DISTRIBUTED UNDER THE FOLLOWING LICENSE:
 #
 # Copyright (c) 2012-2015, The Regents of the University of California (Regents).

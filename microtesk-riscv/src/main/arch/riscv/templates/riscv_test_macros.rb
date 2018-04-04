@@ -45,6 +45,72 @@
 
 module RiscvTestMacros
 
+  ##################################################################################################
+  # Helper macros
+  ##################################################################################################
+
+  #define MASK_XLEN(x) ((x) & ((1 << (__riscv_xlen - 1) << 1) - 1))
+
+  #define TEST_CASE( testnum, testreg, correctval, code... ) \
+  #test_ ## testnum: \
+  #    code; \
+  #    li  x29, MASK_XLEN(correctval); \
+  #    li  TESTNUM, testnum; \
+  #    bne testreg, x29, fail;
+
+  # We use a macro hack to simplify code generation for various numbers
+  # of bubble cycles.
+
+  def TEST_INSERT_NOPS(n)
+    n.times do
+      nop
+    end
+  end
+
+  def TEST_INSERT_NOPS_0
+    TEST_INSERT_NOPS(0)
+  end
+
+  def TEST_INSERT_NOPS_1
+    TEST_INSERT_NOPS(1)
+  end
+
+  def TEST_INSERT_NOPS_2
+    TEST_INSERT_NOPS(2)
+  end
+
+  def TEST_INSERT_NOPS_3
+    TEST_INSERT_NOPS(3)
+  end
+
+  def TEST_INSERT_NOPS_4
+    TEST_INSERT_NOPS(4)
+  end
+
+  def TEST_INSERT_NOPS_5
+    TEST_INSERT_NOPS(5)
+  end
+
+  def TEST_INSERT_NOPS_6
+    TEST_INSERT_NOPS(6)
+  end
+
+  def TEST_INSERT_NOPS_7
+    TEST_INSERT_NOPS(7)
+  end
+
+  def TEST_INSERT_NOPS_8
+    TEST_INSERT_NOPS(8)
+  end
+
+  def TEST_INSERT_NOPS_9
+    TEST_INSERT_NOPS(9)
+  end
+
+  def TEST_INSERT_NOPS_10
+    TEST_INSERT_NOPS(10)
+  end
+
   # TODO: Implement the macros here
 
 end

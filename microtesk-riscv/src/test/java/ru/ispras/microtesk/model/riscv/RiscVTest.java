@@ -550,7 +550,7 @@ public class RiscVTest extends TemplateTest {
 
       final int exitCode = timeout > 0 ? 0 : process.waitFor();
 
-      if (!returnCodes.contains(exitCode) && !isEmpty(errorLog)) {
+      if (!returnCodes.contains(exitCode) || !isEmpty(errorLog)) {
 
         if (canFailOnCurrentPhase()) {
 
@@ -564,7 +564,7 @@ public class RiscVTest extends TemplateTest {
 
         Assert.fail(
             String.format(
-                "Process has been finished with %d error code: %s;%s%s Error log is:%s %s",
+                "Process has returned %d: %s;%s%s Error log is:%s %s",
                 exitCode,
                 Arrays.toString(cmdArray),
                 System.lineSeparator(),

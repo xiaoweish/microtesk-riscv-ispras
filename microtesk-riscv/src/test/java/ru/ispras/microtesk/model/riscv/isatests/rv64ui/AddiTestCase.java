@@ -23,7 +23,7 @@ import ru.ispras.microtesk.test.Statistics;
 public class AddiTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("addi.rb");
+    final Statistics statistics = run("isa_tests/rv64ui/addi.rb");
     Assert.assertNotNull(statistics);
   }
 }

@@ -235,7 +235,7 @@ class RISCVBaseTemplate < Template
     org 0x1000
     newline
 
-global_label :__start
+global_label :_start
     nop
     #j :test
     nop

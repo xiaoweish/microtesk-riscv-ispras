@@ -300,6 +300,150 @@ label 1
     end
   end
 
+  def TEST_LD_DEST_BYPASS(testnum, nop_cycles, inst, result, offset, base)
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    li x4, 0
+label 1
+    la x1, base
+    self.send :"#{inst}", x30, x1, offset
+    TEST_INSERT_NOPS(nop_cycles)
+    addi x6, x30, 0
+    li x29, result
+    bne x6, x29, :fail
+    addi x4, x4, 1
+    li x5, 2
+    bne x4, x5, label_b(1)
+  end
+
+  def TEST_LD_SRC1_BYPASS( testnum, nop_cycles, inst, result, offset, base)
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    li x4, 0
+label 1
+    la x1, base
+    TEST_INSERT_NOPS(nop_cycles)
+    self.send :"#{inst}", x30, x1, offset
+    li x29, result
+    bne x30, x29, :fail
+    addi x4, x4, 1
+    li x5, 2
+    bne x4, x5, label_b(1)
+  end
+
+  def TEST_ST_SRC12_BYPASS(
+    testnum,
+    src1_nops,
+    src2_nops,
+    load_inst,
+    store_inst,
+    result,
+    offset,
+    base
+    )
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    li x4, 0
+label 1
+    li x1, result
+    TEST_INSERT_NOPS(src1_nops)
+    la x2, base
+    TEST_INSERT_NOPS(src2_nops)
+    self.send :"#{store_inst}", x1, x2, offset
+    self.send :"#{load_inst}", x30, x2, offset
+    li x29, result
+    bne x30, x29, :fail
+    addi x4, x4, 1
+    li x5, 2
+    bne x4, x5, label_b(1)
+  end
+
+  def TEST_ST_SRC21_BYPASS(
+    testnum,
+    src1_nops,
+    src2_nops,
+    load_inst,
+    store_inst,
+    result,
+    offset,
+    base
+    )
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    li x4, 0
+label 1
+    la x2, base
+    TEST_INSERT_NOPS(src1_nops)
+    li x1, result
+    TEST_INSERT_NOPS(src2_nops)
+    self.send :"#{store_inst}", x1, x2, offset
+    self.send :"#{load_inst}", x30, x2, offset
+    li x29, result
+    bne x30, x29, :fail
+    addi x4, x4, 1
+    li x5, 2
+    bne x4, x5, label_b(1)
+  end
+
+  def TEST_BR2_OP_TAKEN(testnum, inst, val1, val2)
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    li x1, val1
+    li x2, val2
+    self.send :"#{inst}", x1, x2, label_f(2)
+    bne x0, TESTNUM(), :fail
+label 1
+    bne x0, TESTNUM(), label_f(3)
+label 2
+    self.send :"#{inst}", x1, x2, label_b(1)
+    bne x0, TESTNUM(), :fail
+label 3
+  end
+
+  def TEST_BR2_OP_NOTTAKEN(testnum, inst, val1, val2)
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    li x1, val1
+    li x2, val2
+    self.send :"#{inst}", x1, x2, label_f(1)
+    bne x0, TESTNUM(), label_f(2)
+label 1
+    bne x0, TESTNUM(), :fail
+label 2
+    self.send :"#{inst}", x1, x2, label_b(1)
+label 3
+  end
+
+  def TEST_BR2_SRC12_BYPASS(testnum, src1_nops, src2_nops, inst, val1, val2)
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    li x4, 0
+label 1
+    li x1, val1
+    TEST_INSERT_NOPS(src1_nops)
+    li x2, val2
+    TEST_INSERT_NOPS(src2_nops)
+    self.send :"#{inst}", x1, x2, :fail
+    addi x4, x4, 1
+    li x5, 2
+    bne x4, x5, label_b(1)
+  end
+
+  def TEST_BR2_SRC21_BYPASS(testnum, src1_nops, src2_nops, inst, val1, val2)
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    li x4, 0
+label 1
+    li x2, val2
+    TEST_INSERT_NOPS(src1_nops)
+    li x1, val1
+    TEST_INSERT_NOPS(src2_nops)
+    self.send :"#{inst}", x1, x2, :fail
+    addi x4, x4, 1
+    li x5, 2
+    bne x4, x5, label_b(1)
+  end
+
   # TODO: Implement the macros here
 
   ##################################################################################################

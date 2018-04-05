@@ -487,6 +487,7 @@ label 2
   def TEST_PASSFAIL
     bne x0, TESTNUM(), :pass
 label :fail
+    trace 'Error: Self-check failed!'
     RVTEST_FAIL()
 label :pass
     RVTEST_PASS()

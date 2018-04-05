@@ -444,6 +444,40 @@ label 1
     bne x4, x5, label_b(1)
   end
 
+  ##################################################################################################
+  # Test jump instructions
+  ##################################################################################################
+
+  def TEST_JR_SRC1_BYPASS(testnum, nop_cycles, inst)
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    li x4, 0
+label 1
+    la x6, label_f(2)
+    TEST_INSERT_NOPS(nop_cycles)
+    self.send :"#{inst}", x6
+    bne x0, TESTNUM(), :fail
+label 2
+    addi x4, x4, 1
+    li x5, 2
+    bne x4, x5, label_b(1)
+  end
+
+  def TEST_JALR_SRC1_BYPASS(testnum, nop_cycles, inst)
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    li x4, 0
+label 1
+    la x6, label_f(2)
+    TEST_INSERT_NOPS(nop_cycles)
+    self.send :"#{inst}", x19, x6, 0
+    bne x0, TESTNUM(), :fail
+label 2
+    addi x4, x4, 1
+    li x5, 2
+    bne x4, x5, label_b(1)
+  end
+
   # TODO: Implement the macros here
 
   ##################################################################################################

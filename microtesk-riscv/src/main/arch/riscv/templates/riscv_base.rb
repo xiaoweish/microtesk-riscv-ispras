@@ -138,12 +138,11 @@ class RISCVBaseTemplate < Template
     exception_handler {
       entry_point(:org => 0x380, :exception => ['IntegerOverflow', 'SystemCall', 'Breakpoint',
                   'Invalid Operation']) {
-        trace 'Exception handler (EPC = 0x%x)', location('CPR', 14 * 8)
-    #TODO:
-        #mfc0 ra, c0_epc
-        #addiu ra, ra, 4
-        #jr ra
+        trace 'Exception handler (UEPC = 0x%x)', location('CSR', 0x041)
         nop
+        csrr ra, risc_uepc
+        addi ra, ra, 4
+        ret
       }
     }
 
@@ -344,6 +343,10 @@ label :error
 
   def risc_time
     TIME()
+  end
+
+  def risc_uepc
+    UEPC()
   end
 
   ##################################################################################################

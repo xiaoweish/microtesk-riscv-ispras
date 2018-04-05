@@ -296,6 +296,16 @@ pseudo op tail(symbol : PSEUDO_OFFSET)
     instruction(jalr(X(0), X(6), BRANCH_IMM(tmp_word<11..0>))).action;
   }
 
+// Return from subroutine
+//@rev(RV32I)
+pseudo op ret()
+  init   = {}
+  syntax = format("ret")
+  image  = format("%s", jalr(X(0), X(1), BRANCH_IMM(0)).image)
+  action = {
+    instruction(jalr(X(0), X(1), BRANCH_IMM(0))).action;
+  }
+
 //==================================================================================================
 
 #endif

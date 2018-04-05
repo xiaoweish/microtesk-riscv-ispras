@@ -18,11 +18,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import ru.ispras.microtesk.model.riscv.RiscVTest;
+import ru.ispras.microtesk.options.Option;
 import ru.ispras.microtesk.test.Statistics;
 
 public final class BoundaryTestCase extends RiscVTest {
   @Test
   public void test() {
+    setCommandLineOption(Option.VERBOSE);
+    setCommandLineOption(Option.DEBUG);
+
     final Statistics statistics = run("boundary_autogentemplate.rb");
     Assert.assertNotNull(statistics);
   }

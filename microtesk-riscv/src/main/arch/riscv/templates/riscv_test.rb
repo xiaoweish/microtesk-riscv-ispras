@@ -213,10 +213,10 @@ label :other_exception
     # some unhandlable exception occurred
 
 label 1
-    ori TESTNUM, TESTNUM, 1337
+    ori TESTNUM(), TESTNUM(), 1337
 
 label :write_tohost
-    sw TESTNUM, tohost, t5 # TODO: tohost = ?
+    sw TESTNUM(), tohost, t5 # TODO: tohost = ?
     j :write_tohost
 
 label :reset_vector
@@ -224,7 +224,7 @@ label :reset_vector
     INIT_SATP
     INIT_PMP
     DELEGATE_NO_TRAPS
-    li TESTNUM, 0
+    li TESTNUM(), 0
     la t0, :trap_vector
     csrw mtvec, t0
     CHECK_XLEN
@@ -267,7 +267,7 @@ label 1
 
   def RVTEST_PASS
     fence
-    li TESTNUM, 1
+    li TESTNUM(), 1
     ecall
   end
 
@@ -278,9 +278,9 @@ label 1
   def RVTEST_FAIL
     fence
 label 1
-    beqz TESTNUM, label_b(1)
-    sll TESTNUM, TESTNUM, 1
-    Or TESTNUM, TESTNUM, 1
+    beqz TESTNUM(), label_b(1)
+    sll TESTNUM(), TESTNUM(), 1
+    Or TESTNUM(), TESTNUM(), 1
     ecall
   end
 

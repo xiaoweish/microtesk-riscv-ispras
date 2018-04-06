@@ -140,15 +140,16 @@ op auipc(rd: X, imm: card(20))
   }
 
 /*
-  JAL: Jump and Link (UJ-type)
+  JAL: Jump and Link (J-type)
 
   Format: jal rd, imm
 
-  The jump and link (JAL) instruction uses the UJ-type format, where the J-immediate
+  The jump and link (JAL) instruction uses the J-type format, where the J-immediate
   encodes a signed offset in multiples of 2 bytes. The offset is sign-extended and added
   to the pc to form the jump target address. Jumps can therefore target a +/- 1MiB range.
   JAL stores the address of the instruction following the jump (pc+4) into register rd.
-  The standard software calling convention uses x1 as the return address register.
+  The standard software calling convention uses x1 as the return address register
+  and x5 as an alternate link register.
 
   The JAL instruction can generate a misaligned instruction fetch exception if the target
   address is not aligned to a four-byte boundary.

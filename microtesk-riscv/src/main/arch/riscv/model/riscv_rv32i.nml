@@ -156,13 +156,15 @@ op auipc(rd: X, imm: card(20))
 var jump_imm20[card(20)]
 
 mode JUMP_IMM(imm: int(20)) = imm
-  init = {}
+  init = {
+    jump_imm20 = imm;
+  }
   syntax = format("0x%X", imm)
   image = format("%s", imm)
 
 label mode JUMP_LABEL_M2(target: WORD, current: WORD) = target<20..1> - current<20..1>
   init = {
-    jump_imm20 = target<20..1>;
+    jump_imm20 = target<20..1> - current<20..1>;
   }
   syntax = ""
   image = format("%s", target<20..1> - current<20..1>)

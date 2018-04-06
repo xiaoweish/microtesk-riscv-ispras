@@ -268,7 +268,8 @@ label 1
   def RVTEST_PASS
     fence
     li TESTNUM(), 1
-    ecall
+    comment 'TODO:'
+    comment 'ecall'
   end
 
   def TESTNUM
@@ -281,7 +282,8 @@ label 1
     beqz TESTNUM(), label_b(1)
     sll TESTNUM(), TESTNUM(), 1
     Or TESTNUM(), TESTNUM(), 1
-    ecall
+    comment 'TODO:'
+    comment 'ecall'
   end
 
   ##################################################################################################

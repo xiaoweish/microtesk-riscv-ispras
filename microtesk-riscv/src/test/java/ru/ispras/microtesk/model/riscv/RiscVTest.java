@@ -562,7 +562,7 @@ public class RiscVTest extends TemplateTest {
 
         final byte [] errLogBytes = Files.readAllBytes(Paths.get(errorLog.getPath()));
         final String errString = new String(errLogBytes, Charset.defaultCharset());
-        final String terminationRegEx = "^.+: terminating on signal \\d+ from pid \\d+ \\(.+\\)";
+        final String terminationRegEx = "^.+: terminating on signal \\d+ from pid \\d+ \\(.+\\).*";
 
         if (!errString.matches(terminationRegEx)) {
           Assert.fail(

@@ -562,7 +562,7 @@ public class RiscVTest extends TemplateTest {
 
         final byte [] errLogBytes = Files.readAllBytes(Paths.get(errorLog.getPath()));
         final String errString = new String(errLogBytes, Charset.defaultCharset());
-        final String qRegEx = "^qemu-system-riscv64: terminating on signal \\d+ from pid \\d+.*$";
+        final String qRegEx = "qemu-system-riscv64: terminating on signal \\d+ from pid \\d+";
 
         if (!errString.matches(qRegEx)) {
           Assert.fail(

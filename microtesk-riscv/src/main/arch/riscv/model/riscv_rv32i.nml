@@ -156,13 +156,15 @@ op auipc(rd: X, imm: card(20))
 var jump_imm20[card(20)]
 
 mode JUMP_IMM(imm: int(20)) = imm
-  init = {}
+  init = {
+    jump_imm20 = imm;
+  }
   syntax = format("0x%X", imm)
   image = format("%s", imm)
 
 label mode JUMP_LABEL_M2(target: WORD, current: WORD) = target<20..1> - current<20..1>
   init = {
-    jump_imm20 = target<20..1>;
+    jump_imm20 = target<20..1> - current<20..1>;
   }
   syntax = ""
   image = format("%s", target<20..1> - current<20..1>)
@@ -196,13 +198,15 @@ var jump_imm12[card(12)]
 
 label mode BRANCH_LABEL(target: WORD, current: WORD) = target<11..0> - current<11..0>
   init = {
-    jump_imm12 = target<11..0>;
+    jump_imm12 = target<11..0> - current<11..0>;
   }
   syntax = ""
   image = format("%s", target<11..0> - current<11..0>)
 
 mode BRANCH_IMM(imm: card(12)) = imm
-  init = {}
+  init = {
+    jump_imm12 = imm;
+  }
   syntax = format("0x%X", imm)
   image = format("%s", imm)
 
@@ -232,7 +236,7 @@ op jalr(rd: X, rs1: X, imm: BRANCH_OFFSET)
 */
 label mode BRANCH_LABEL_M2(target: WORD, current: WORD) = target<12..1> - current<12..1>
   init = {
-    jump_imm12 = target<12..1>;
+    jump_imm12 = target<12..1> - current<12..1>;
   }
   syntax = ""
   image = format("%s", target<12..1> - current<12..1>)

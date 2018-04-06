@@ -562,15 +562,14 @@ public class RiscVTest extends TemplateTest {
 
         final byte [] errLogBytes = Files.readAllBytes(Paths.get(errorLog.getPath()));
         final String errString = new String(errLogBytes, Charset.defaultCharset());
-        final String terminationRegEx = "^.+: terminating on signal \\d+ from pid \\d+ \\(.+\\).*";
+        final String qRegEx = "^qemu-system-riscv64: terminating on signal \\d+ from pid \\d+.*$";
 
-        if (!errString.matches(terminationRegEx)) {
+        if (!errString.matches(qRegEx)) {
           Assert.fail(
               String.format(
-                  "Process has returned %d: %s;%s%sError log is:%s%s",
+                  "Process has returned %d: %s;%s%sError log is:%s",
                   exitCode,
                   Arrays.toString(cmdArray),
-                  System.lineSeparator(),
                   System.lineSeparator(),
                   System.lineSeparator(),
                   errString));
@@ -579,6 +578,9 @@ public class RiscVTest extends TemplateTest {
 
       if (timeout == 0) {
         process.destroy();
+      }
+      if (!errorLog.delete()) {
+        Assert.fail("Can't delete error log file: " + errorLog.getAbsolutePath());
       }
     } catch (final IOException | InterruptedException e) {
       e.printStackTrace();

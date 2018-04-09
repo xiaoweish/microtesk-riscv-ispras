@@ -18,11 +18,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import ru.ispras.microtesk.model.riscv.RiscVTest;
+import ru.ispras.microtesk.options.Option;
 import ru.ispras.microtesk.test.Statistics;
 
 public class OrTestCase extends RiscVTest {
   @Test
   public void test() {
+    setCommandLineOption(Option.VERBOSE);
+
     final Statistics statistics = run("isa_tests/rv64ui/or.rb");
     Assert.assertNotNull(statistics);
   }

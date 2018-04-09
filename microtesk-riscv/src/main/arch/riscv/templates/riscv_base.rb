@@ -53,48 +53,44 @@ class RISCVBaseTemplate < Template
   # Revisions
   ##################################################################################################
 
-  def rev_id
-    get_option_value('rev-id')
-  end
-
   def rv64full
-    rev_id == 'RV64FULL'
+    is_rev('RV64FULL')
   end
 
   def rv64i
-    rev_id == 'RV64I' or rv64full
+    is_rev('RV64I')
   end
 
   def rv32m
-    rev_id == 'RV32M' or rv64full
+    is_rev('RV32M')
   end
 
   def rv64m
-    rev_id == 'RV64M' or rv64full
+    is_rev('RV64M')
   end
 
   def rv32a
-    rev_id == 'RV32A' or rv64full
+    is_rev('RV32A')
   end
 
   def rv64a
-    rev_id == 'RV64A' or rv64full
+    is_rev('RV64A')
   end
 
   def rv32f
-    rev_id == 'RV32F' or rv64full
+    is_rev('RV32F')
   end
 
   def rv64f
-    rev_id == 'RV64F' or rv64full
+    is_rev('RV64F')
   end
 
   def rv32d
-    rev_id == 'RV32D' or rv64full
+    is_rev('RV32D')
   end
 
   def rv64d
-    rev_id == 'RV64D' or rv64full
+    is_rev('RV64D')
   end
 
   ##################################################################################################

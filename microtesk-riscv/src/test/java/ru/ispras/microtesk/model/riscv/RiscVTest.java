@@ -113,7 +113,7 @@ public class RiscVTest extends TemplateTest {
   /**
    * RISC-V Linux GNU toolchain components common prefix.
    */
-  private static final String TCHAIN_PREFIX = "riscv64-unknown-linux-gnu-";
+  private static final String TCHAIN_PREFIX = "riscv64-unknown-linux-gnu";
 
   /* QEMU for RISC-V parameters. */
 
@@ -137,7 +137,19 @@ public class RiscVTest extends TemplateTest {
    */
   private static final int QEMU_TIMEOUT_MILLIS = 1000;
 
-    /* Trace utils parameters. */
+  /* Spike parameters. */
+
+  /**
+   * Spike binary name.
+   */
+  private static final String SPIKE_BIN = "spike";
+
+  /**
+   * Timeout for Spike execution (in milliseconds).
+   */
+  private static final int SPIKE_TIMEOUT_MILLIS = 5000;
+
+  /* Trace utils parameters. */
 
   /**
    * Trace utils binary name.
@@ -157,8 +169,7 @@ public class RiscVTest extends TemplateTest {
   /**
    * Trace utils main binary file.
    */
-  private static final File TRACER =
-      new File(String.format("%s%s%s",TRACE_PATH, File.separator, TRACE_BIN));
+  private static final File TRACER = new File(String.format("%s/%s",TRACE_PATH, TRACE_BIN));
 
   /**
    * Tracer matching window size (in ticks).
@@ -277,7 +288,7 @@ public class RiscVTest extends TemplateTest {
     if (TCHAIN_PATH == null || TCHAIN_PATH.isEmpty()) {
       Logger.warning(
           String.format("To compile test programs you should set '%s' environment variable"
-              + " to toolchain 'bin' dir.", RISCV_TCHAIN_PATH));
+              + " to toolchain dir.", RISCV_TCHAIN_PATH));
       return;
     }
 
@@ -331,10 +342,10 @@ public class RiscVTest extends TemplateTest {
       return;
     }
 
-    final File qemu = new File(String.format("%s%s%s", QEMU_PATH, File.separator, QEMU_BIN));
+    final File qemu = new File(String.format("%s/%s", QEMU_PATH, QEMU_BIN));
     checkExecutable(qemu);
 
-    Logger.message("Start simulation ...");
+    Logger.message("Start simulation on QEMU ...");
     setPhase(TestPhase.EMULATION);
     final String qemuLog = insertExt(image.getAbsolutePath(), "-qemu.log");
 
@@ -352,7 +363,7 @@ public class RiscVTest extends TemplateTest {
         qemuLog,
         "-kernel",
         image.getAbsolutePath()};
-    runCommand(qemu, QEMU_TIMEOUT_MILLIS, qemuArgs);
+    runCommand(qemu, QEMU_TIMEOUT_MILLIS, true, qemuArgs);
 
     final File qemuLogFile = new File(qemuLog);
     if (!qemuLogFile.exists() || qemuLogFile.isDirectory()) {
@@ -361,6 +372,30 @@ public class RiscVTest extends TemplateTest {
     }
 
     Logger.message("done.");
+
+    Logger.message("Start simulation on Spike ...");
+
+    final File spike = new File(String.format("%s/bin/%s", TCHAIN_PATH, SPIKE_BIN));
+    checkExecutable(qemu);
+
+    final String spikeLog = insertExt(image.getAbsolutePath(), "-spike.log");
+
+    final String[] shellSpikeArgs = new String[] {
+        "-c", String.format("%s -l --isa=rv64gc %s %s 2>%%1 | tee %s",
+        spike,
+        getPkPath(),
+        image.getAbsolutePath(),
+        spikeLog)};
+
+    runCommand(SHELL, SPIKE_TIMEOUT_MILLIS, false, shellSpikeArgs);
+    final File spikeLogFile = new File(spikeLog);
+    if (!spikeLogFile.exists() || spikeLogFile.isDirectory()) {
+      Assert.fail(
+          String.format("Can't find Spike trace file: %s", spikeLogFile.getAbsolutePath()));
+    }
+
+    Logger.message("done.");
+
 
     Logger.message("Check traces ...");
     setPhase(TestPhase.CHECK_TRACES);
@@ -388,16 +423,20 @@ public class RiscVTest extends TemplateTest {
     diffReturnValues.add(0);
     diffReturnValues.add(1); // to mask "files are not equal" situation
 
-    runCommand(SHELL, diffReturnValues, args);
+    runCommand(SHELL, false, diffReturnValues, args);
 
     Logger.message("done.");
   }
 
+  private static String getPkPath() {
+
+    return String.format("%s/%s/bin/pk", TCHAIN_PATH, TCHAIN_PREFIX);
+  }
+
   private static String compareResultFileName(final File first, final File second) {
     return String.format(
-        "%s%s%s-vs-%s.txt",
+        "%s/%s-vs-%s.txt",
         FileUtils.getFileDir(first.getAbsolutePath()),
-        File.separator,
         FileUtils.getShortFileNameNoExt(first.getName()),
         FileUtils.getShortFileNameNoExt(second.getName()));
   }
@@ -414,14 +453,18 @@ public class RiscVTest extends TemplateTest {
     /* asm -> obj */
     runCommand(
         asm,
+        true,
         program.getAbsolutePath(),
+        "-march=rv64g",
         "-o",
         getOutOption(getNameNoExt(program), "o"));
 
     for (final File file : auxFiles) {
       runCommand(
           asm,
+          true,
           file.getAbsolutePath(),
+          "-march=rv64g",
           "-o",
           getOutOption(getNameNoExt(file), "o"));
     }
@@ -442,7 +485,7 @@ public class RiscVTest extends TemplateTest {
 
     linkerArgs.add("-o");
     linkerArgs.add(getOutOption(getNameNoExt(program), "elf"));
-    runCommand(linker, linkerArgs.toArray(new String[linkerArgs.size()]));
+    runCommand(linker, true, linkerArgs.toArray(new String[linkerArgs.size()]));
 
     final File elfImage = new File(getElf(program));
 
@@ -508,25 +551,31 @@ public class RiscVTest extends TemplateTest {
         ext);
   }
 
-  private void runCommand(final File cmd, final String ... args) {
-    runCommand(cmd, 0, Collections.singletonList(0), args);
-  }
-
-  private void runCommand(final File cmd, final long timeout, final String ... args) {
-    runCommand(cmd, timeout, Collections.singletonList(0), args);
-  }
-
-  private void runCommand(
-      final File cmd,
-      final Collection<Integer> returnValues,
-      final String ... args) {
-
-    runCommand(cmd, 0, returnValues, args);
+  private void runCommand(final File cmd, final boolean redirectErr, final String ... args) {
+    runCommand(cmd, 0, redirectErr, Collections.singletonList(0), args);
   }
 
   private void runCommand(
       final File cmd,
       final long timeout,
+      final boolean redirectErr,
+      final String ... args) {
+    runCommand(cmd, timeout, redirectErr, Collections.singletonList(0), args);
+  }
+
+  private void runCommand(
+      final File cmd,
+      final boolean redirectErr,
+      final Collection<Integer> returnValues,
+      final String ... args) {
+
+    runCommand(cmd, 0, redirectErr, returnValues, args);
+  }
+
+  private void runCommand(
+      final File cmd,
+      final long timeout,
+      final boolean redirectError,
       final Collection<Integer> returnCodes,
       final String ... args) {
 
@@ -538,8 +587,10 @@ public class RiscVTest extends TemplateTest {
 
     try {
       final ProcessBuilder builder = new ProcessBuilder(cmdArray);
-      final File errorLog = new File(getTestDirPath() + File.separator + "error-log.txt");
-      builder.redirectError(errorLog);
+      final File errorLog = new File(getTestDirPath() + "/error-log.txt");
+      if (redirectError) {
+        builder.redirectError(errorLog);
+      }
       final Process process = builder.start();
 
       if (timeout > 0) {
@@ -580,7 +631,7 @@ public class RiscVTest extends TemplateTest {
       if (timeout == 0) {
         process.destroy();
       }
-      if (!errorLog.delete()) {
+      if (errorLog.exists() && !errorLog.delete()) {
         Assert.fail("Can't delete error log file: " + errorLog.getAbsolutePath());
       }
     } catch (final IOException | InterruptedException e) {
@@ -603,7 +654,7 @@ public class RiscVTest extends TemplateTest {
       final String fileNamePrefix,
       final String ext) {
 
-    return String.format("%s%s%s.%s", getTestDirPath(), File.separator, fileNamePrefix, ext);
+    return String.format("%s/%s.%s", getTestDirPath(), fileNamePrefix, ext);
   }
 
   private static String getNameNoExt(final File file) {
@@ -612,8 +663,7 @@ public class RiscVTest extends TemplateTest {
 
   private static File getToolchainBinary(final String suffix) {
 
-    final String fullPath =
-        String.format("%s%s%s%s", TCHAIN_PATH, File.separator, TCHAIN_PREFIX, suffix);
+    final String fullPath = String.format("%s/bin/%s-%s", TCHAIN_PATH, TCHAIN_PREFIX, suffix);
     final File binary = new File(fullPath);
 
     checkExecutable(binary);
@@ -630,6 +680,10 @@ public class RiscVTest extends TemplateTest {
   }
 
   private static boolean isEmpty(final File file) {
+
+    if (!file.exists()) {
+      return true;
+    }
     try {
       final BufferedReader reader =
           new BufferedReader(

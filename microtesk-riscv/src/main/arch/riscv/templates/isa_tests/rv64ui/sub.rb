@@ -111,7 +111,7 @@ class SubTemplate < RISCVBaseTemplate
 
     TEST_PASSFAIL()
 
-    # RVTEST_CODE_END()
+    RVTEST_CODE_END()
 
     #.data
     # RVTEST_DATA_BEGIN()

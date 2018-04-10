@@ -199,22 +199,14 @@ pseudo op li(rd : X, symbol : XWORD)
   syntax = format("li %s, 0x%X", rd.syntax, symbol)
   image  = format("%s",
 #ifdef RV64I
-  if symbol<63..31> == 0 || symbol<63..31> == -1 then
-    li32(rd, symbol<31..0>).image
-  else
     li64(rd, symbol).image
-  endif
 #else
     li32(rd, symbol).image
 #endif
   )
   action = {
 #ifdef RV64I
-    if symbol<63..31> == 0 || symbol<63..31> == -1 then
-      li32(rd, symbol<31..0>).action;
-    else
-      li64(rd, symbol).action;
-    endif;
+    li64(rd, symbol).action;
 #else
     li32(rd, symbol).action;
 #endif

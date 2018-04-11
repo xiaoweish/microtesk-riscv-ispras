@@ -1,0 +1,458 @@
+/*
+ * Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+#ifndef RISCV_RV32I_SYS_INCLUDED
+#define RISCV_RV32I_SYS_INCLUDED
+
+//==================================================================================================
+// Control and status registers (CSRs)
+//==================================================================================================
+
+reg CSR[0xfff, XWORD]
+
+var csr_index[card(12)]
+
+// User Trap Setup
+// User status register
+mode USTATUS() = CSR[0x000]
+  init = { csr_index = 0x000; }
+  syntax = format("ustatus")
+  image = format("%12s", csr_index)
+
+// User interrupt-enable register
+mode UIE() = CSR[0x004]
+  init = { csr_index = 0x004; }
+  syntax = format("uie")
+  image = format("%12s", csr_index)
+
+// User trap handler base address
+mode UTVEC() = CSR[0x005]
+  init = { csr_index = 0x005; }
+  syntax = format("utvec")
+  image = format("%12s", csr_index)
+
+// User Trap Handling
+// Scratch register for user trap handlers
+mode USCRATCH() = CSR[0x040]
+  init = { csr_index = 0x040; }
+  syntax = format("uscratch")
+  image = format("%12s", csr_index)
+
+// User exception program counter
+mode UEPC() = CSR[0x041]
+  init = { csr_index = 0x041; }
+  syntax = format("uepc")
+  image = format("%12s", csr_index)
+
+// User trap cause
+mode UCAUSE() = CSR[0x042]
+  init = { csr_index = 0x042; }
+  syntax = format("ucause")
+  image = format("%12s", csr_index)
+
+// User bad address or instruction
+mode UTVAL() = CSR[0x043]
+  init = { csr_index = 0x043; }
+  syntax = format("utval")
+  image = format("%12s", csr_index)
+
+// User interrupt pending
+mode UIP() = CSR[0x044]
+  init = { csr_index = 0x044; }
+  syntax = format("uip")
+  image = format("%12s", csr_index)
+
+// User Floating-Point CSRs
+// Floating-Point Accrued Exceptions
+mode FFLAGS() = CSR[0x001]
+  init = { csr_index = 0x001; }
+  syntax = format("fflags")
+  image = format("%12s", csr_index)
+
+// Floating-Point Dynamic Rounding Mode
+mode FRM() = CSR[0x002]
+  init = { csr_index = 0x002; }
+  syntax = format("frm")
+  image = format("%12s", csr_index)
+
+// Floating-Point Control and Status Register (frm + fflags)
+mode FCSR() = CSR[0x003]
+  init = { csr_index = 0x003; }
+  syntax = format("fcsr")
+  image = format("%12s", csr_index)
+
+// User Counter/Timers
+// Cycle counter for RDCYCLE instruction
+mode CYCLE() = CSR[0xC00]
+  init = { csr_index = 0xC00; }
+  syntax = format("cycle")
+  image = format("%12s", csr_index)
+
+// Timer for RDTIME instruction
+mode TIME() = CSR[0xC01]
+  init = { csr_index = 0xC01; }
+  syntax = format("time")
+  image = format("%12s", csr_index)
+
+// Instructions-retired counter for RDINSTRET instruction
+mode INSTRET() = CSR[0xC02]
+  init = { csr_index = 0xC02; }
+  syntax = format("instret")
+  image = format("%12s", csr_index)
+
+mode CSR_MODE = USTATUS
+              | UIE
+              | UTVEC
+              | USCRATCH
+              | UEPC
+              | UCAUSE
+              | UTVAL
+              | UIP
+              | FFLAGS
+              | FRM
+              | FCSR
+              | CYCLE
+              | TIME
+              | INSTRET
+
+//==================================================================================================
+// System instructions
+//==================================================================================================
+
+/*
+   Instructions (number: 10):
+     ECALL
+     EBREAK
+     FENCE
+     FENCE.I
+     CSRRW
+     CSRRS
+     CSRRC
+     CSRRWI
+     CSRRSI
+     CSRRCI
+*/
+
+/* The ECALL instruction is used to make a request to the supporting execution environment. */
+op ecall()
+  syntax = format("ecall")
+  image  = format("%12s00000%3s00000%7s", "000000000000", "000", "1110011")
+  action = {
+    // TODO
+  }
+
+/* The EBREAK instruction is used by debuggers to cause control to be transferred back to
+   a debugging environment. */
+op ebreak()
+  syntax = format("ebreak")
+  image  = format("%12s00000%3s00000%7s", "000000000001", "000", "1110011")
+  action = {
+    // TODO
+  }
+
+op fence()//(pred: card(4), succ: card(4))
+  // syntax = format("fence 0x%x, 0x%x", pred, succ) TODO:
+  syntax = format("fence")
+  image  = format("%4s%4s%4s00000%3s00000%7s", "0000", "0000", "0000", "000", "0001111")
+  action = {
+    // TODO
+  }
+
+op fencei()
+  syntax = format("fence.i")
+  image  = format("%12s00000%3s00000%7s", "000000000000", "001", "0001111")
+  action = {
+    // TODO
+  }
+
+/* CSRRW (Atomic Read/Write CSR) */
+op csrrw(rd: X, csr: CSR_MODE, rs1: X)
+  syntax = format("csrrw %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
+  image  = format("%12s%5s001%5s1110011", csr.image, rs1.image, rd.image)
+  action = {
+    if rd.i != 0 then
+      rd = zero_extend(XWORD, csr);
+    endif;
+    csr = rs1;
+  }
+
+/* CSRRS (Atomic Read and Set Bits in CSR) */
+op csrrs(rd: X, csr: CSR_MODE, rs1: X)
+  syntax = format("csrrs %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
+  image  = format("%12s%5s010%5s1110011", csr.image, rs1.image, rd.image)
+  action = {
+    if rs1.i != 0 then
+      csr = csr | rs1;
+    endif;
+    rd = zero_extend(XWORD, csr);
+  }
+
+/* CSRRC (Atomic Read and Clear Bits in CSR) */
+op csrrc(rd: X, csr: CSR_MODE, rs1: X)
+  syntax = format("csrrc %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
+  image  = format("%12s%5s011%5s1110011", csr.image, rs1.image, rd.image)
+  action = {
+    if rs1.i != 0 then
+      csr = csr & ~rs1;
+    endif;
+    rd = zero_extend(XWORD, csr);
+  }
+
+/* The CSRRWI, CSRRSI, and CSRRCI variants are similar to CSRRW, CSRRS, and CSRRC re-
+  spectively, except they update the CSR using an XLEN-bit value obtained by zero-extending a 5-bit
+  unsigned immediate (uimm[4:0]) */
+op csrrwi(rd: X, csr: CSR_MODE, imm: card(5))
+  syntax = format("csrrwi %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
+  image  = format("%12s%5s101%5s1110011", csr.image, imm, rd.image)
+  action = {
+    if rd.i != 0 then
+      rd = zero_extend(XWORD, csr);
+    endif;
+    csr = zero_extend(XWORD, imm);
+  }
+
+op csrrsi(rd: X, csr: CSR_MODE, imm: card(5))
+  syntax = format("csrrsi %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
+  image  = format("%12s%5s110%5s1110011", csr.image, imm, rd.image)
+  action = {
+    if imm != 0 then
+      csr = csr | zero_extend(XWORD, imm);
+    endif;
+    rd = zero_extend(XWORD, csr);
+  }
+
+op csrrci(rd: X, csr: CSR_MODE, imm: card(5))
+  syntax = format("csrrci %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
+  image  = format("%12s%5s111%5s1110011", csr.image, imm, rd.image)
+  action = {
+    if imm != 0 then
+      csr = csr & ~zero_extend(XWORD, imm);
+    endif;
+    rd = zero_extend(XWORD, csr);
+  }
+
+//==================================================================================================
+// Pseudoinstructions
+//==================================================================================================
+
+// Write CSR
+pseudo op csrw(csr: CSR_MODE, rs1: X)
+  syntax = format("csrw %s, %s", csr.syntax, rs1.syntax)
+  image  = format("%32s", csrrw(X(0), csr, rs1).image)
+  action = {
+    csrrw(X(0), csr, rs1).action;
+  }
+
+// Read CSR
+pseudo op csrr(rd: X, csr: CSR_MODE)
+  syntax = format("csrr %s, %s", rd.syntax, csr.syntax)
+  image  = format("%32s", csrrs(rd, csr, X(0)).image)
+  action = {
+    csrrs(rd, csr, X(0)).action;
+  }
+
+// Set bits in CSR
+pseudo op csrs(csr: CSR_MODE, rs1: X)
+  syntax = format("csrs %s, %s", csr.syntax, rs1.syntax)
+  image  = format("%32s", csrrs(X(0), csr, rs1).image)
+  action = {
+    csrrs(X(0), csr, rs1).action;
+  }
+
+// Clear bits in CSR
+pseudo op csrc(csr: CSR_MODE, rs1: X)
+  syntax = format("csrc %s, %s", csr.syntax, rs1.syntax)
+  image  = format("%32s", csrrc(X(0), csr, rs1).image)
+  action = {
+    csrrc(X(0), csr, rs1).action;
+  }
+
+// Write CSR, immediate
+pseudo op csrwi(csr: CSR_MODE, imm: card(5))
+  syntax = format("csrwi %s, 0x%x", csr.syntax, imm)
+  image  = format("%32s", csrrwi(X(0), csr, imm).image)
+  action = {
+    csrrwi(X(0), csr, imm).action;
+  }
+
+// Set bits in CSR, immediate
+pseudo op csrsi(csr: CSR_MODE, imm: card(5))
+  syntax = format("csrsi %s, 0x%x", csr.syntax, imm)
+  image  = format("%32s", csrrsi(X(0), csr, imm).image)
+  action = {
+    csrrsi(X(0), csr, imm).action;
+  }
+
+// Clear bits in CSR, immediate
+pseudo op csrci(csr: CSR_MODE, imm: card(5))
+  syntax = format("csrci %s, 0x%x", csr.syntax, imm)
+  image  = format("%32s", csrrci(X(0), csr, imm).image)
+  action = {
+    csrrci(X(0), csr, imm).action;
+  }
+
+// Read FP control/status register
+pseudo op frcsr(rd: X)
+  syntax = format("frcsr %s", rd.syntax)
+  image  = format("%32s", csrrs(rd, FCSR(), X(0)).image)
+  action = {
+    csrrs(rd, FCSR(), X(0)).action;
+  }
+
+// Swap FP control/status register
+pseudo op fscsr(rd: X, rs: X)
+  syntax = format("fscsr %s, %s", rd.syntax, rs.syntax)
+  image  = format("%32s", csrrw(rd, FCSR(), rs).image)
+  action = {
+    csrrw(rd, FCSR(), rs).action;
+  }
+
+// Write FP control/status register
+pseudo op fscsr2(rs: X)
+  syntax = format("fscsr %s", rs.syntax)
+  image  = format("%32s", csrrw(X(0), FCSR(), rs).image)
+  action = {
+    csrrw(X(0), FCSR(), rs).action;
+  }
+
+// Read FP rounding mode
+pseudo op frrm(rd: X)
+  syntax = format("frrm %s", rd.syntax)
+  image  = format("%32s", csrrs(rd, FRM(), X(0)).image)
+  action = {
+    csrrs(rd, FRM(), X(0)).action;
+  }
+
+// Swap FP rounding mode
+pseudo op fsrm(rd: X, rs: X)
+  syntax = format("fsrm %s, %s", rd.syntax, rs.syntax)
+  image  = format("%32s", csrrw(rd, FRM(), rs).image)
+  action = {
+    csrrw(rd, FRM(), rs).action;
+  }
+
+// Write FP rounding mode
+pseudo op fsrm2(rs: X)
+  syntax = format("fsrm %s", rs.syntax)
+  image  = format("%32s", csrrw(X(0), FRM(), rs).image)
+  action = {
+    csrrw(X(0), FRM(), rs).action;
+  }
+
+// Swap FP rounding mode, immediate
+pseudo op fsrmi(rd: X, imm: card(5))
+  syntax = format("fsrmi %s, 0x%x", rd.syntax, imm)
+  image  = format("%32s", csrrwi(rd, FRM(), imm).image)
+  action = {
+    csrrwi(rd, FRM(), imm).action;
+  }
+
+// Write FP rounding mode, immediate
+pseudo op fsrmi2(imm: card(5))
+  syntax = format("fsrmi 0x%x", imm)
+  image  = format("%32s", csrrwi(X(0), FRM(), imm).image)
+  action = {
+    csrrwi(X(0), FRM(), imm).action;
+  }
+
+// Read FP exception flags
+pseudo op frflags(rd: X)
+  syntax = format("frflags %s", rd.syntax)
+  image  = format("%32s", csrrs(rd, FFLAGS(), X(0)).image)
+  action = {
+    csrrs(rd, FFLAGS(), X(0)).action;
+  }
+
+// Swap FP exception flags
+pseudo op fsflags(rd: X, rs: X)
+  syntax = format("fsflags %s, %s", rd.syntax, rs.syntax)
+  image  = format("%32s", csrrw(rd, FFLAGS(), rs).image)
+  action = {
+    csrrw(rd, FFLAGS(), rs).action;
+  }
+
+// Write FP exception flags
+pseudo op fsflags2(rs: X)
+  syntax = format("fsflags %s", rs.syntax)
+  image  = format("%32s", csrrw(X(0), FFLAGS(), rs).image)
+  action = {
+    csrrw(X(0), FFLAGS(), rs).action;
+  }
+
+// Swap FP exception flags, immediate
+pseudo op fsflagsi(rd: X, imm: card(5))
+  syntax = format("fsflagsi %s, 0x%x", rd.syntax, imm)
+  image  = format("%32s", csrrwi(rd, FFLAGS(), imm).image)
+  action = {
+    csrrwi(rd, FFLAGS(), imm).action;
+  }
+
+// Write FP exception flags, immediate
+pseudo op fsflagsi2(imm: card(5))
+  syntax = format("fsflagsi 0x%x", imm)
+  image  = format("%32s", csrrwi(X(0), FFLAGS(), imm).image)
+  action = {
+    csrrwi(X(0), FFLAGS(), imm).action;
+  }
+
+/*
+rdinstret[h] rd csrrs rd, instret[h], x0 Read instructions-retired counter
+rdcycle[h] rd csrrs rd, cycle[h], x0 Read cycle counter
+rdtime[h] rd csrrs rd, time[h], x0 Read real-time clock
+*/
+
+//==================================================================================================
+// Instruction Groups
+//==================================================================================================
+
+// 10 instructions
+op rv32i_system = csrrw
+                | csrrs
+                | csrrc
+                | csrrwi
+                | csrrsi
+                | csrrci
+                | ecall
+                | ebreak
+                | fence
+                | fencei
+
+// 20 instructions
+op rv32i_pseudo_system = csrw
+                       | csrr
+                       | csrs
+                       | csrc
+                       | csrwi
+                       | csrsi
+                       | csrci
+                       | frcsr
+                       | fscsr
+                       | fscsr2
+                       | frrm
+                       | fsrm
+                       | fsrm2
+                       | fsrmi
+                       | fsrmi2
+                       | frflags
+                       | fsflags
+                       | fsflags2
+                       | fsflagsi
+                       | fsflagsi2
+
+op rv32i_sys = rv32i_system
+             | rv32i_pseudo_system
+
+#endif

@@ -102,7 +102,9 @@ mode FCSR() = CSR[0x003]
   syntax = format("fcsr")
   image = format("%12s", csr_index)
 
+//==================================================================================================
 // User Counter/Timers
+
 // Cycle counter for RDCYCLE instruction
 mode CYCLE() = CSR[0xC00]
   init = { csr_index = 0xC00; }

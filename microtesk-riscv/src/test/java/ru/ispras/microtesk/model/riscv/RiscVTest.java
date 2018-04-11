@@ -147,7 +147,7 @@ public class RiscVTest extends TemplateTest {
   /**
    * Timeout for Spike execution (in milliseconds).
    */
-  private static final int SPIKE_TIMEOUT_MILLIS = 5000;
+  private static final int SPIKE_TIMEOUT_MILLIS = 1000;
 
   /* Trace utils parameters. */
 

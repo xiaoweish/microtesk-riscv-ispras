@@ -21,11 +21,15 @@
 // Control and status registers (CSRs)
 //==================================================================================================
 
-reg CSR[0xfff, XWORD]
+// 2 ** 12 (4096) registers
+reg CSR[1 << 12, XWORD]
 
+// Index of the currently accessed register
 var csr_index[card(12)]
 
+//==================================================================================================
 // User Trap Setup
+
 // User status register
 mode USTATUS() = CSR[0x000]
   init = { csr_index = 0x000; }
@@ -44,7 +48,9 @@ mode UTVEC() = CSR[0x005]
   syntax = format("utvec")
   image = format("%12s", csr_index)
 
+//==================================================================================================
 // User Trap Handling
+
 // Scratch register for user trap handlers
 mode USCRATCH() = CSR[0x040]
   init = { csr_index = 0x040; }
@@ -75,7 +81,9 @@ mode UIP() = CSR[0x044]
   syntax = format("uip")
   image = format("%12s", csr_index)
 
+//==================================================================================================
 // User Floating-Point CSRs
+
 // Floating-Point Accrued Exceptions
 mode FFLAGS() = CSR[0x001]
   init = { csr_index = 0x001; }
@@ -418,7 +426,6 @@ rdtime[h] rd csrrs rd, time[h], x0 Read real-time clock
 // Instruction Groups
 //==================================================================================================
 
-// 10 instructions
 op rv32i_system = csrrw
                 | csrrs
                 | csrrc
@@ -430,7 +437,6 @@ op rv32i_system = csrrw
                 | fence
                 | fencei
 
-// 20 instructions
 op rv32i_pseudo_system = csrw
                        | csrr
                        | csrs
@@ -452,7 +458,7 @@ op rv32i_pseudo_system = csrw
                        | fsflagsi
                        | fsflagsi2
 
-op rv32i_sys = rv32i_system
-             | rv32i_pseudo_system
+op rv32i_sys = rv32i_system // 10
+             | rv32i_pseudo_system // 20
 
 #endif

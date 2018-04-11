@@ -381,7 +381,7 @@ public class RiscVTest extends TemplateTest {
     final String spikeLog = insertExt(image.getAbsolutePath(), "-spike.log");
 
     final String[] shellSpikeArgs = new String[] {
-        "-c", String.format("%s -l --isa=rv64gc %s %s 2>%%1 | tee %s",
+        "-c", String.format("%s -l --isa=rv64gc %s %s &>%s",
         spike,
         getPkPath(),
         image.getAbsolutePath(),

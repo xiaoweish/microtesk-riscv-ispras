@@ -1,0 +1,142 @@
+/*
+ * Copyright 2018 ISP RAS (http://www.ispras.ru)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package ru.ispras.microtesk;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The {@link NmlCodeGenForSysRegs} is a utility class to generate nML code
+ * for addressing mode that provide access to system registers.
+ *
+ * @author <a href="mailto:andrewt@ispras.ru">Andrei Tatarnikov</a>
+ */
+public final class NmlCodeGenForSysRegs {
+  public static void main(final String[] args) {
+    /*
+    section("Supervisor Trap Setup")
+        .add(0x100, "sstatus", "Supervisor status register")
+        .add(0x102, "sedeleg", "Supervisor exception delegation register")
+        .add(0x103, "sideleg", "Supervisor interrupt delegation register")
+        .add(0x104, "sie", "Supervisor interrupt-enable register")
+        .add(0x105, "stvec", "Supervisor trap handler base address")
+        .add(0x106, "scounteren", "Supervisor counter enable")
+        .print();
+    */
+
+    /*
+    section("Supervisor Trap Handling")
+        .add(0x140, "sscratch", "Scratch register for supervisor trap handlers")
+        .add(0x141, "sepc", "Supervisor exception program counter")
+        .add(0x142, "scause", "Supervisor trap cause")
+        .add(0x143, "stval", "Supervisor bad address or instruction")
+        .add(0x144, "sip", "Supervisor interrupt pending")
+        .print();
+    */
+
+    /*
+    section("Supervisor Protection and Translation")
+        .add(0x180, "satp", "Supervisor address translation and protection")
+        .print();
+    */
+
+    /*
+    section("Machine Trap Setup")
+        .add(0x300, "mstatus", "Machine status register")
+        .add(0x301, "misa", "ISA and extensions")
+        .add(0x302, "medeleg", "Machine exception delegation register")
+        .add(0x303, "mideleg", "Machine interrupt delegation register")
+        .add(0x304, "mie", "Machine interrupt-enable register")
+        .add(0x305, "mtvec", "Machine trap-handler base address")
+        .add(0x306, "mcounteren", "Machine counter enable")
+        .print();
+    */
+
+    section("Machine Trap Handling")
+        .add(0x340, "mscratch", "Scratch register for machine trap handlers")
+        .add(0x341, "mepc", "Machine exception program counter")
+        .add(0x342, "mcause", "Machine trap cause")
+        .add(0x343, "mtval", "Machine bad address or instruction")
+        .add(0x344, "mip", "Machine interrupt pending")
+        .print();
+  }
+
+  private static Printer section(final String title) {
+    return new Printer(title);
+  }
+
+  private static final class Printer {
+    private final class Item {
+      public final int index;
+      public final String name;
+      public final String comment;
+
+      public Item(final int index, final String name, final String comment) {
+        this.index = index;
+        this.name = name;
+        this.comment = comment;
+      }
+    }
+
+    private final String title;
+    private final List<Item> items;
+
+    public Printer(final String title) {
+      this.title = title;
+      this.items = new ArrayList<>();
+    }
+
+    public Printer add(final int index, final String name, final String comment) {
+      this.items.add(new Item(index, name, comment));
+      return this;
+    }
+
+    public void print() {
+      printHeader(title);
+      for (final Item item : items) {
+        printItem(item);
+      }
+
+      System.out.println();
+      System.out.println("// " + title);
+      for (final Item item : items) {
+        System.out.print("              ");
+        System.out.print("| ");
+        System.out.print(item.name.toUpperCase());
+        System.out.println();
+      }
+    }
+
+    private static void printHeader(final String title) {
+      System.out.print("//");
+      for (int i = 0; i < 98; i++) {
+        System.out.print("=");
+      }
+      System.out.println();
+
+      System.out.println("// " + title);
+      System.out.println();
+    }
+
+    private static void printItem(final Item item) {
+      System.out.println("// " + item.comment);
+      System.out.printf("mode %s() = CSR[0x%03X]%n", item.name.toUpperCase(), item.index);
+      System.out.printf("  init = { csr_index = 0x%03X; }%n", item. index);
+      System.out.printf("  syntax = format(\"%s\")%n", item.name);
+      System.out.println("  image = format(\"%12s\", csr_index)");
+      System.out.println();
+    }
+  }
+}

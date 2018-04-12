@@ -123,20 +123,75 @@ mode INSTRET() = CSR[0xC02]
   syntax = format("instret")
   image = format("%12s", csr_index)
 
-mode CSR_MODE = USTATUS
+//==================================================================================================
+// Supervisor Trap Setup
+
+// Supervisor status register
+mode SSTATUS() = CSR[0x100]
+  init = { csr_index = 0x100; }
+  syntax = format("sstatus")
+  image = format("%12s", csr_index)
+
+// Supervisor exception delegation register
+mode SEDELEG() = CSR[0x102]
+  init = { csr_index = 0x102; }
+  syntax = format("sedeleg")
+  image = format("%12s", csr_index)
+
+// Supervisor interrupt delegation register
+mode SIDELEG() = CSR[0x103]
+  init = { csr_index = 0x103; }
+  syntax = format("sideleg")
+  image = format("%12s", csr_index)
+
+// Supervisor interrupt-enable register
+mode SIE() = CSR[0x104]
+  init = { csr_index = 0x104; }
+  syntax = format("sie")
+  image = format("%12s", csr_index)
+
+// Supervisor trap handler base address
+mode STVEC() = CSR[0x105]
+  init = { csr_index = 0x105; }
+  syntax = format("stvec")
+  image = format("%12s", csr_index)
+
+// Supervisor counter enable
+mode SCOUNTEREN() = CSR[0x106]
+  init = { csr_index = 0x106; }
+  syntax = format("scounteren")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
+// Addressing mode group for CSR registers
+//==================================================================================================
+
+mode CSR_MODE =
+// User Trap Setup
+                USTATUS
               | UIE
               | UTVEC
+// User Trap Handling
               | USCRATCH
               | UEPC
               | UCAUSE
               | UTVAL
               | UIP
+// User Floating-Point CSRs
               | FFLAGS
               | FRM
               | FCSR
+// User Counter/Timers
               | CYCLE
               | TIME
               | INSTRET
+// Supervisor Trap Setup
+              | SSTATUS
+              | SEDELEG
+              | SIDELEG
+              | SIE
+              | STVEC
+              | SCOUNTEREN
 
 //==================================================================================================
 // System instructions

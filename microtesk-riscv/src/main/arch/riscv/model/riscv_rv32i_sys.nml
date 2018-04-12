@@ -163,6 +163,126 @@ mode SCOUNTEREN() = CSR[0x106]
   image = format("%12s", csr_index)
 
 //==================================================================================================
+// Supervisor Trap Handling
+
+// Scratch register for supervisor trap handlers
+mode SSCRATCH() = CSR[0x140]
+  init = { csr_index = 0x140; }
+  syntax = format("sscratch")
+  image = format("%12s", csr_index)
+
+// Supervisor exception program counter
+mode SEPC() = CSR[0x141]
+  init = { csr_index = 0x141; }
+  syntax = format("sepc")
+  image = format("%12s", csr_index)
+
+// Supervisor trap cause
+mode SCAUSE() = CSR[0x142]
+  init = { csr_index = 0x142; }
+  syntax = format("scause")
+  image = format("%12s", csr_index)
+
+// Supervisor bad address or instruction
+mode STVAL() = CSR[0x143]
+  init = { csr_index = 0x143; }
+  syntax = format("stval")
+  image = format("%12s", csr_index)
+
+// Supervisor interrupt pending
+mode SIP() = CSR[0x144]
+  init = { csr_index = 0x144; }
+  syntax = format("sip")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
+// Supervisor Protection and Translation
+
+// Supervisor address translation and protection
+mode SATP() = CSR[0x180]
+  init = { csr_index = 0x180; }
+  syntax = format("satp")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
+// Machine Trap Setup
+
+// Machine status register
+mode MSTATUS() = CSR[0x300]
+  init = { csr_index = 0x300; }
+  syntax = format("mstatus")
+  image = format("%12s", csr_index)
+
+// ISA and extensions
+mode MISA() = CSR[0x301]
+  init = { csr_index = 0x301; }
+  syntax = format("misa")
+  image = format("%12s", csr_index)
+
+// Machine exception delegation register
+mode MEDELEG() = CSR[0x302]
+  init = { csr_index = 0x302; }
+  syntax = format("medeleg")
+  image = format("%12s", csr_index)
+
+// Machine interrupt delegation register
+mode MIDELEG() = CSR[0x303]
+  init = { csr_index = 0x303; }
+  syntax = format("mideleg")
+  image = format("%12s", csr_index)
+
+// Machine interrupt-enable register
+mode MIE() = CSR[0x304]
+  init = { csr_index = 0x304; }
+  syntax = format("mie")
+  image = format("%12s", csr_index)
+
+// Machine trap-handler base address
+mode MTVEC() = CSR[0x305]
+  init = { csr_index = 0x305; }
+  syntax = format("mtvec")
+  image = format("%12s", csr_index)
+
+// Machine counter enable
+mode MCOUNTEREN() = CSR[0x306]
+  init = { csr_index = 0x306; }
+  syntax = format("mcounteren")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
+// Machine Trap Handling
+
+// Scratch register for machine trap handlers
+mode MSCRATCH() = CSR[0x340]
+  init = { csr_index = 0x340; }
+  syntax = format("mscratch")
+  image = format("%12s", csr_index)
+
+// Machine exception program counter
+mode MEPC() = CSR[0x341]
+  init = { csr_index = 0x341; }
+  syntax = format("mepc")
+  image = format("%12s", csr_index)
+
+// Machine trap cause
+mode MCAUSE() = CSR[0x342]
+  init = { csr_index = 0x342; }
+  syntax = format("mcause")
+  image = format("%12s", csr_index)
+
+// Machine bad address or instruction
+mode MTVAL() = CSR[0x343]
+  init = { csr_index = 0x343; }
+  syntax = format("mtval")
+  image = format("%12s", csr_index)
+
+// Machine interrupt pending
+mode MIP() = CSR[0x344]
+  init = { csr_index = 0x344; }
+  syntax = format("mip")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
 // Addressing mode group for CSR registers
 //==================================================================================================
 
@@ -192,6 +312,28 @@ mode CSR_MODE =
               | SIE
               | STVEC
               | SCOUNTEREN
+// Supervisor Trap Handling
+              | SSCRATCH
+              | SEPC
+              | SCAUSE
+              | STVAL
+              | SIP
+// Supervisor Protection and Translation
+              | SATP
+// Machine Trap Setup
+              | MSTATUS
+              | MISA
+              | MEDELEG
+              | MIDELEG
+              | MIE
+              | MTVEC
+              | MCOUNTEREN
+// Machine Trap Handling
+              | MSCRATCH
+              | MEPC
+              | MCAUSE
+              | MTVAL
+              | MIP
 
 //==================================================================================================
 // System instructions

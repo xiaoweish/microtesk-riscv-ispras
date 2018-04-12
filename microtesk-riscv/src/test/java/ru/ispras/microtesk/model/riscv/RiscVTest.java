@@ -147,7 +147,7 @@ public class RiscVTest extends TemplateTest {
   /**
    * Timeout for Spike execution (in milliseconds).
    */
-  private static final int SPIKE_TIMEOUT_MILLIS = 5000;
+  private static final int SPIKE_TIMEOUT_MILLIS = 1000;
 
   /* Trace utils parameters. */
 
@@ -381,7 +381,7 @@ public class RiscVTest extends TemplateTest {
     final String spikeLog = insertExt(image.getAbsolutePath(), "-spike.log");
 
     final String[] shellSpikeArgs = new String[] {
-        "-c", String.format("%s -l --isa=rv64gc %s %s 2>%%1 | tee %s",
+        "-c", String.format("%s -l --isa=rv64gc %s %s &>%s",
         spike,
         getPkPath(),
         image.getAbsolutePath(),

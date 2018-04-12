@@ -25,18 +25,20 @@ import java.util.List;
  */
 public final class NmlCodeGenForSysRegs {
   public static void main(final String[] args) {
+    /*
     section("User Counter/Timers")
       .add(0xC00, "cycle", "Cycle counter for RDCYCLE instruction")
       .add(0xC01, "time", "Timer for RDTIME instruction")
       .add(0xC02, "instret", "Instructions-retired counter for RDINSTRET instruction")
-      .add(0xC03, "hpmcounter%d","Performance-monitoring counter", 3, 31)
+      //.add(0xC03, "hpmcounter%d","Performance-monitoring counter", 3, 31)
 
       .add(0xC80, "cycleh", "Upper 32 bits of cycle, RV32I only")
       .add(0xC81, "timeh", "Upper 32 bits of time, RV32I only")
       .add(0xC82, "instreth", "Upper 32 bits of instret, RV32I only")
-      .add(0xC83, "hpmcounter%dh","Upper 32 bits of hpmcounter%d, RV32I only", 3, 31)
+      //.add(0xC83, "hpmcounter%dh","Upper 32 bits of hpmcounter%d, RV32I only", 3, 31)
 
       .print();
+    /*
 
     /*
     section("Supervisor Trap Setup")
@@ -95,6 +97,17 @@ public final class NmlCodeGenForSysRegs {
         .add(0x344, "mip", "Machine interrupt pending")
         .print();
     */
+
+    section("Machine Counter/Timers")
+        .add(0xB00, "mcycle", "Machine cycle counter")
+        .add(0xB02, "minstret", "Machine instructions-retired counter")
+        //.add(0xB03, "mhpmcounter%d","Machine performance-monitoring counter", 3, 31)
+
+        .add(0xB80, "mcycleh", "Upper 32 bits of mcycle, RV32I only")
+        .add(0xB82, "minstreth", "Upper 32 bits of minstret, RV32I only")
+        //.add(0xB83, "mhpmcounter%dh","Upper 32 bits of mhpmcounter%d, RV32I only", 3, 31)
+
+        .print();
   }
 
   private static Printer section(final String title) {

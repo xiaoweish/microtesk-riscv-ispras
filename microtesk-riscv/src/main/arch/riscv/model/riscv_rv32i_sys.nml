@@ -205,6 +205,33 @@ mode SATP() = CSR[0x180]
   image = format("%12s", csr_index)
 
 //==================================================================================================
+// Machine Information Registers
+
+// Vendor ID
+mode MVENDORID() = CSR[0xF11]
+  init = { csr_index = 0xF11; }
+  syntax = format("mvendorid")
+  image = format("%12s", csr_index)
+
+// Architecture ID
+mode MARCHID() = CSR[0xF12]
+  init = { csr_index = 0xF12; }
+  syntax = format("marchid")
+  image = format("%12s", csr_index)
+
+// Implementation ID
+mode MIMPID() = CSR[0xF13]
+  init = { csr_index = 0xF13; }
+  syntax = format("mimpid")
+  image = format("%12s", csr_index)
+
+// Hardware thread ID
+mode MHARTID() = CSR[0xF14]
+  init = { csr_index = 0xF14; }
+  syntax = format("mhartid")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
 // Machine Trap Setup
 
 // Machine status register
@@ -320,6 +347,11 @@ mode CSR_MODE =
               | SIP
 // Supervisor Protection and Translation
               | SATP
+// Machine Information Registers
+              | MVENDORID
+              | MARCHID
+              | MIMPID
+              | MHARTID
 // Machine Trap Setup
               | MSTATUS
               | MISA

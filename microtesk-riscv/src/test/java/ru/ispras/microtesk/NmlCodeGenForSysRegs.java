@@ -52,6 +52,13 @@ public final class NmlCodeGenForSysRegs {
         .print();
     */
 
+    section("Machine Information Registers")
+        .add(0xF11, "mvendorid", "Vendor ID")
+        .add(0xF12, "marchid", "Architecture ID")
+        .add(0xF13, "mimpid", "Implementation ID")
+        .add(0xF14, "mhartid", "Hardware thread ID")
+        .print();
+
     /*
     section("Machine Trap Setup")
         .add(0x300, "mstatus", "Machine status register")
@@ -64,6 +71,7 @@ public final class NmlCodeGenForSysRegs {
         .print();
     */
 
+    /*
     section("Machine Trap Handling")
         .add(0x340, "mscratch", "Scratch register for machine trap handlers")
         .add(0x341, "mepc", "Machine exception program counter")
@@ -71,6 +79,7 @@ public final class NmlCodeGenForSysRegs {
         .add(0x343, "mtval", "Machine bad address or instruction")
         .add(0x344, "mip", "Machine interrupt pending")
         .print();
+    */
   }
 
   private static Printer section(final String title) {

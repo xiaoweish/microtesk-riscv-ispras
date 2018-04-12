@@ -25,6 +25,19 @@ import java.util.List;
  */
 public final class NmlCodeGenForSysRegs {
   public static void main(final String[] args) {
+    section("User Counter/Timers")
+      .add(0xC00, "cycle", "Cycle counter for RDCYCLE instruction")
+      .add(0xC01, "time", "Timer for RDTIME instruction")
+      .add(0xC02, "instret", "Instructions-retired counter for RDINSTRET instruction")
+      .add(0xC03, "hpmcounter%d","Performance-monitoring counter", 3, 31)
+
+      .add(0xC80, "cycleh", "Upper 32 bits of cycle, RV32I only")
+      .add(0xC81, "timeh", "Upper 32 bits of time, RV32I only")
+      .add(0xC82, "instreth", "Upper 32 bits of instret, RV32I only")
+      .add(0xC83, "hpmcounter%dh","Upper 32 bits of hpmcounter%d, RV32I only", 3, 31)
+
+      .print();
+
     /*
     section("Supervisor Trap Setup")
         .add(0x100, "sstatus", "Supervisor status register")
@@ -52,12 +65,14 @@ public final class NmlCodeGenForSysRegs {
         .print();
     */
 
+    /*
     section("Machine Information Registers")
         .add(0xF11, "mvendorid", "Vendor ID")
         .add(0xF12, "marchid", "Architecture ID")
         .add(0xF13, "mimpid", "Implementation ID")
         .add(0xF14, "mhartid", "Hardware thread ID")
         .print();
+    */
 
     /*
     section("Machine Trap Setup")
@@ -107,8 +122,23 @@ public final class NmlCodeGenForSysRegs {
       this.items = new ArrayList<>();
     }
 
-    public Printer add(final int index, final String name, final String comment) {
+    public Printer add(
+        final int index,
+        final String name,
+        final String comment) {
       this.items.add(new Item(index, name, comment));
+      return this;
+    }
+
+    public Printer add(
+        final int index,
+        final String name,
+        final String comment,
+        final int start, final int end) {
+      int currentIndex = index;
+      for (int number = start; number <= end; ++number) {
+        add(currentIndex++, String.format(name, number), String.format(comment, number));
+      }
       return this;
     }
 

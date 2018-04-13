@@ -98,6 +98,7 @@ public final class NmlCodeGenForSysRegs {
         .print();
     */
 
+    /*
     section("Machine Counter/Timers")
         .add(0xB00, "mcycle", "Machine cycle counter")
         .add(0xB02, "minstret", "Machine instructions-retired counter")
@@ -107,6 +108,22 @@ public final class NmlCodeGenForSysRegs {
         .add(0xB82, "minstreth", "Upper 32 bits of minstret, RV32I only")
         //.add(0xB83, "mhpmcounter%dh","Upper 32 bits of mhpmcounter%d, RV32I only", 3, 31)
 
+        .print();
+    */
+
+    /*
+    section("Debug/Trace Registers (shared with Debug Mode)")
+        .add(0x7A0, "tselect", "Debug/Trace trigger register select")
+        .add(0x7A1, "tdata1", "First Debug/Trace trigger data register")
+        .add(0x7A2, "tdata2", "Second Debug/Trace trigger data register")
+        .add(0x7A3, "tdata3", "Third Debug/Trace trigger data register")
+        .print();
+    */
+
+    section("Debug Mode Registers")
+        .add(0x7B0, "dcsr", "Debug control and status register")
+        .add(0x7B1, "dpc", "Debug PC")
+        .add(0x7B2, "dscratch", "Debug scratch register")
         .print();
   }
 

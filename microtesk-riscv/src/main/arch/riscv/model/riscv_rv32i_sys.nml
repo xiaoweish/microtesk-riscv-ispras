@@ -355,6 +355,54 @@ mode MINSTRETH() = CSR[0xB82]
   image = format("%12s", csr_index)
 
 //==================================================================================================
+// Debug/Trace Registers (shared with Debug Mode)
+
+// Debug/Trace trigger register select
+mode TSELECT() = CSR[0x7A0]
+  init = { csr_index = 0x7A0; }
+  syntax = format("tselect")
+  image = format("%12s", csr_index)
+
+// First Debug/Trace trigger data register
+mode TDATA1() = CSR[0x7A1]
+  init = { csr_index = 0x7A1; }
+  syntax = format("tdata1")
+  image = format("%12s", csr_index)
+
+// Second Debug/Trace trigger data register
+mode TDATA2() = CSR[0x7A2]
+  init = { csr_index = 0x7A2; }
+  syntax = format("tdata2")
+  image = format("%12s", csr_index)
+
+// Third Debug/Trace trigger data register
+mode TDATA3() = CSR[0x7A3]
+  init = { csr_index = 0x7A3; }
+  syntax = format("tdata3")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
+// Debug Mode Registers
+
+// Debug control and status register
+mode DCSR() = CSR[0x7B0]
+  init = { csr_index = 0x7B0; }
+  syntax = format("dcsr")
+  image = format("%12s", csr_index)
+
+// Debug PC
+mode DPC() = CSR[0x7B1]
+  init = { csr_index = 0x7B1; }
+  syntax = format("dpc")
+  image = format("%12s", csr_index)
+
+// Debug scratch register
+mode DSCRATCH() = CSR[0x7B2]
+  init = { csr_index = 0x7B2; }
+  syntax = format("dscratch")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
 // Addressing mode group for CSR registers
 //==================================================================================================
 
@@ -419,6 +467,15 @@ mode CSR_MODE =
               | MINSTRET
               | MCYCLEH
               | MINSTRETH
+// Debug/Trace Registers (shared with Debug Mode)
+              | TSELECT
+              | TDATA1
+              | TDATA2
+              | TDATA3
+// Debug Mode Registers
+              | DCSR
+              | DPC
+              | DSCRATCH
 
 //==================================================================================================
 // System instructions

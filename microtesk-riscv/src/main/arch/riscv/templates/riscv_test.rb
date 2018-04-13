@@ -295,21 +295,21 @@ label 1
   end
 
   def RVTEST_DATA_BEGIN
+    EXTRA_DATA()
+
+    # .pushsection .tohost,"aw",@progbits # TODO: Need support for this directive
+    #
+    #  align 6
+    #  global_label :tohost
+    #  dword 0
+    #
+    #  align 6
+    #  global_label :fromhost
+    #  dword 0
+
+    # .popsection # TODO: Need support for this directive
+
     data {
-      EXTRA_DATA
-
-      # .pushsection .tohost,"aw",@progbits # TODO: Need support for this directive
-
-      align 6
-      global_label :tohost
-      dword 0
-
-      align 6
-      global_label :fromhost
-      dword 0
-
-      # .popsection # TODO: Need support for this directive
-
       align 4
       global_label :begin_signature
     }

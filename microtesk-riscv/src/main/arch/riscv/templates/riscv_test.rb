@@ -241,11 +241,14 @@ label :reset_vector
     csrw medeleg, t0
     csrr t1, medeleg
     bne t0, t1, :other_exception
+
 label 1
     csrwi mstatus, 0
     text "init" # TODO: check this
-    EXTRA_INIT
-    EXTRA_INIT_TIMER
+
+    EXTRA_INIT()
+    EXTRA_INIT_TIMER()
+
     la t0, label_f(1)
     csrw mepc, t0
     csrr a0, mhartid

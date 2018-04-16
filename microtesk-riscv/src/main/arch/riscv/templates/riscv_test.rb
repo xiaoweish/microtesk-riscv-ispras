@@ -204,19 +204,19 @@ label 1
 #     beqz t5, label_f(1)
 #     jr t5
 #
-#     # was it an interrupt or an exception?
-# label 1
-#     csrr t5, mcause
-#     bgez t5, :handle_exception
-#
-#     INTERRUPT_HANDLER
-# label :handle_exception
-#     # we don't know how to handle whatever the exception was
-# label :other_exception
-#     # some unhandlable exception occurred
-#
-# label 1
-#     ori TESTNUM(), TESTNUM(), 1337
+    # was it an interrupt or an exception?
+label 1
+    csrr t5, mcause
+    bgez t5, :handle_exception
+
+    INTERRUPT_HANDLER()
+label :handle_exception
+    # we don't know how to handle whatever the exception was
+label :other_exception
+    # some unhandlable exception occurred
+
+label 1
+    ori TESTNUM(), TESTNUM(), 1337
 #
 # label :write_tohost
 #     sw TESTNUM(), tohost, t5 # TODO: tohost = ?

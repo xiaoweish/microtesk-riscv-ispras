@@ -487,6 +487,9 @@ mode CSR_MODE =
      EBREAK
      FENCE
      FENCE.I
+     MRET
+     SRET
+     URET
      CSRRW
      CSRRS
      CSRRC
@@ -525,6 +528,48 @@ op fencei()
   image  = format("%12s00000%3s00000%7s", "000000000000", "001", "0001111")
   action = {
     // TODO
+  }
+
+/*
+  Trap-Return Instructions (I-type)
+
+  Format: mret
+          sret
+          uret
+
+  Instructions to return from trap are encoded under the PRIV minor opcode.
+  To return after handling a trap, there are separate trap return instructions per privilege level:
+  MRET, SRET, and URET. MRET is always provided, while SRET must be provided if supervisor
+  mode is supported. URET is only provided if user-mode traps are supported. An x RET instruction
+  can be executed in privilege mode x or higher, where executing a lower-privilege x RET instruction
+  will pop the relevant lower-privilege interrupt enable and privilege mode stack. In addition to
+  manipulating the privilege stack, xRET sets the pc to the value stored in the x epc register.
+*/
+internal op xret(pc : CSR_MODE)
+  action = {
+    // TODO: check privileges and pop the privilege stack.
+    PC = pc;
+  }
+
+op mret()
+  syntax = format("mret")
+  image  = format("00110000001000000000000001110011")
+  action = {
+    xret(MEPC()).action;
+  }
+
+op sret()
+  syntax = format("sret")
+  image  = format("00010000001000000000000001110011")
+  action = {
+    xret(SEPC()).action;
+  }
+
+op uret()
+  syntax = format("uret")
+  image  = format("00000000001000000000000001110011")
+  action = {
+    xret(UEPC()).action;
   }
 
 /* CSRRW (Atomic Read/Write CSR) */
@@ -767,16 +812,19 @@ rdtime[h] rd csrrs rd, time[h], x0 Read real-time clock
 // Instruction Groups
 //==================================================================================================
 
-op rv32i_system = csrrw
+op rv32i_system = ecall
+                | ebreak
+                | fence
+                | fencei
+                | mret
+                | sret
+                | uret
+                | csrrw
                 | csrrs
                 | csrrc
                 | csrrwi
                 | csrrsi
                 | csrrci
-                | ecall
-                | ebreak
-                | fence
-                | fencei
 
 op rv32i_pseudo_system = csrw
                        | csrr

@@ -184,11 +184,11 @@ label 1
 # global_label :_start
     # reset vector
     j :reset_vector
-#
-#     align 2
-# label :trap_vector
-#     # test whether the test came from pass/fail
-#     csrr t5, mcause
+
+    align 2
+label :trap_vector
+    # test whether the test came from pass/fail
+    csrr t5, mcause
 #
 #     li t6, CAUSE_USER_ECALL
 #     beq t5, t6, :write_tohost
@@ -229,8 +229,8 @@ label :reset_vector
     INIT_PMP()
     DELEGATE_NO_TRAPS()
 
-#     li TESTNUM(), 0
-#     la t0, :trap_vector
+    li TESTNUM(), 0
+    la t0, :trap_vector
 #     csrw mtvec, t0
 #     CHECK_XLEN
 #     # if an stvec_handler is defined, delegate exceptions to it

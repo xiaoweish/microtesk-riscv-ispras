@@ -17,12 +17,10 @@
 require ENV['TEMPLATE']
 
 # RISC-V macros used to organize tests
-require_relative 'riscv_encoding'
 require_relative 'riscv_test'
 require_relative 'riscv_test_macros'
 
 class RISCVBaseTemplate < Template
-  include RiscvEncoding
   include RiscvTest
   include RiscvTestMacros
 

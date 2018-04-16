@@ -43,7 +43,10 @@
 # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #
 
+require_relative 'riscv_encoding'
+
 module RiscvTest
+  include RiscvEncoding
 
   ##################################################################################################
   # Begin Macro
@@ -119,7 +122,7 @@ label 1
   def INIT_SATP
     la t0, label_f(1)
     csrw mtvec, t0
-    csrwi sptbr, 0
+    csrwi satp, 0
     align 2
 label 1
   end
@@ -179,8 +182,8 @@ label 1
 #     # .weak mtvec_handler; # TODO
 #
 # global_label :_start
-#     # reset vector
-#     j :reset_vector
+    # reset vector
+    j :reset_vector
 #
 #     align 2
 # label :trap_vector
@@ -219,11 +222,13 @@ label 1
 #     sw TESTNUM(), tohost, t5 # TODO: tohost = ?
 #     j :write_tohost
 #
-# label :reset_vector
-#     RISCV_MULTICORE_DISABLE
-#     INIT_SATP
-#     INIT_PMP
-#     DELEGATE_NO_TRAPS
+label :reset_vector
+
+    RISCV_MULTICORE_DISABLE()
+    INIT_SATP()
+    INIT_PMP()
+    DELEGATE_NO_TRAPS()
+
 #     li TESTNUM(), 0
 #     la t0, :trap_vector
 #     csrw mtvec, t0

@@ -490,6 +490,7 @@ mode CSR_MODE =
      MRET
      SRET
      URET
+     WFI
      CSRRW
      CSRRS
      CSRRC
@@ -531,7 +532,7 @@ op fencei()
   }
 
 /*
-  Trap-Return Instructions (I-type)
+  Trap-Return Instructions
 
   Format: mret
           sret
@@ -570,6 +571,24 @@ op uret()
   image  = format("00000000001000000000000001110011")
   action = {
     xret(UEPC()).action;
+  }
+
+/*
+  Wait for Interrupt
+
+  Format: wfi
+
+  The Wait for Interrupt instruction (WFI) provides a hint to the implementation that the current
+  hart can be stalled until an interrupt might need servicing. Execution of the WFI instruction
+  can also be used to inform the hardware platform that suitable interrupts should preferentially
+  be routed to this hart. WFI is available in all of the supported S and M privilege modes, and
+  optionally available to U-mode for implementations that support U-mode interrupts.
+*/
+op wfi()
+  syntax = format("wfi")
+  image  = format("00010000010100000000000001110011")
+  action = {
+    // TODO
   }
 
 /* CSRRW (Atomic Read/Write CSR) */
@@ -819,6 +838,7 @@ op rv32i_system = ecall
                 | mret
                 | sret
                 | uret
+                | wfi
                 | csrrw
                 | csrrs
                 | csrrc

@@ -98,6 +98,15 @@ public final class NmlCodeGenForSysRegs {
         .print();
     */
 
+
+    section("Machine Protection and Translation")
+        .add(0x3A0, "pmpcfg0", "Physical memory protection configuration")
+        .add(0x3A1, "pmpcfg1", "Physical memory protection configuration, RV32 only")
+        .add(0x3A2, "pmpcfg2", "Physical memory protection configuration")
+        .add(0x3A3, "pmpcfg3", "Physical memory protection configuration, RV32 only")
+        .add(0x3B0, "pmpaddr%d", "Physical memory protection address register", 0, 15)
+        .print();
+
     /*
     section("Machine Counter/Timers")
         .add(0xB00, "mcycle", "Machine cycle counter")
@@ -120,11 +129,13 @@ public final class NmlCodeGenForSysRegs {
         .print();
     */
 
+    /*
     section("Debug Mode Registers")
         .add(0x7B0, "dcsr", "Debug control and status register")
         .add(0x7B1, "dpc", "Debug PC")
         .add(0x7B2, "dscratch", "Debug scratch register")
         .print();
+    */
   }
 
   private static Printer section(final String title) {

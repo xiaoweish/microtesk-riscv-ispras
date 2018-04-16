@@ -545,7 +545,7 @@ op fencei()
   will pop the relevant lower-privilege interrupt enable and privilege mode stack. In addition to
   manipulating the privilege stack, xRET sets the pc to the value stored in the x epc register.
 */
-internal op xret(pc : CSR_MODE)
+internal op xret(pc: CSR_MODE)
   action = {
     // TODO: check privileges and pop the privilege stack.
     PC = pc;

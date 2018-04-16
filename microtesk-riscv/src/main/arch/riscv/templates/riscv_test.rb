@@ -173,74 +173,74 @@ label 1
   end
 
   def RVTEST_CODE_BEGIN
-    # .section .text.init; # TODO
-    align  6
-    # .weak stvec_handler; # TODO
-    # .weak mtvec_handler; # TODO
-
-global_label :_start
-    # reset vector
-    j :reset_vector
-
-    align 2
-label :trap_vector
-    # test whether the test came from pass/fail
-    csrr t5, mcause
-
-    li t6, CAUSE_USER_ECALL
-    beq t5, t6, :write_tohost
-
-    li t6, CAUSE_SUPERVISOR_ECALL
-    beq t5, t6, :write_tohost
-
-    li t6, CAUSE_MACHINE_ECALL
-    beq t5, t6, :write_tohost
-
-    # if an mtvec_handler is defined, jump to it
-    la t5, :mtvec_handler
-    beqz t5, label_f(1)
-    jr t5
-
-    # was it an interrupt or an exception?
-label 1
-    csrr t5, mcause
-    bgez t5, :handle_exception
-
-    INTERRUPT_HANDLER
-label :handle_exception
-    # we don't know how to handle whatever the exception was
-label :other_exception
-    # some unhandlable exception occurred
-
-label 1
-    ori TESTNUM(), TESTNUM(), 1337
-
-label :write_tohost
-    sw TESTNUM(), tohost, t5 # TODO: tohost = ?
-    j :write_tohost
-
-label :reset_vector
-    RISCV_MULTICORE_DISABLE
-    INIT_SATP
-    INIT_PMP
-    DELEGATE_NO_TRAPS
-    li TESTNUM(), 0
-    la t0, :trap_vector
-    csrw mtvec, t0
-    CHECK_XLEN
-    # if an stvec_handler is defined, delegate exceptions to it
-    la t0, :stvec_handler
-    beqz t0, label_f(1)
-    csrw stvec, t0
-    li t0, (1 << CAUSE_LOAD_PAGE_FAULT)  |
-           (1 << CAUSE_STORE_PAGE_FAULT) |
-           (1 << CAUSE_FETCH_PAGE_FAULT) |
-           (1 << CAUSE_MISALIGNED_FETCH) |
-           (1 << CAUSE_USER_ECALL)       |
-           (1 << CAUSE_BREAKPOINT)
-    csrw medeleg, t0
-    csrr t1, medeleg
-    bne t0, t1, :other_exception
+#     # .section .text.init; # TODO
+#     align  6
+#     # .weak stvec_handler; # TODO
+#     # .weak mtvec_handler; # TODO
+#
+# global_label :_start
+#     # reset vector
+#     j :reset_vector
+#
+#     align 2
+# label :trap_vector
+#     # test whether the test came from pass/fail
+#     csrr t5, mcause
+#
+#     li t6, CAUSE_USER_ECALL
+#     beq t5, t6, :write_tohost
+#
+#     li t6, CAUSE_SUPERVISOR_ECALL
+#     beq t5, t6, :write_tohost
+#
+#     li t6, CAUSE_MACHINE_ECALL
+#     beq t5, t6, :write_tohost
+#
+#     # if an mtvec_handler is defined, jump to it
+#     la t5, :mtvec_handler
+#     beqz t5, label_f(1)
+#     jr t5
+#
+#     # was it an interrupt or an exception?
+# label 1
+#     csrr t5, mcause
+#     bgez t5, :handle_exception
+#
+#     INTERRUPT_HANDLER
+# label :handle_exception
+#     # we don't know how to handle whatever the exception was
+# label :other_exception
+#     # some unhandlable exception occurred
+#
+# label 1
+#     ori TESTNUM(), TESTNUM(), 1337
+#
+# label :write_tohost
+#     sw TESTNUM(), tohost, t5 # TODO: tohost = ?
+#     j :write_tohost
+#
+# label :reset_vector
+#     RISCV_MULTICORE_DISABLE
+#     INIT_SATP
+#     INIT_PMP
+#     DELEGATE_NO_TRAPS
+#     li TESTNUM(), 0
+#     la t0, :trap_vector
+#     csrw mtvec, t0
+#     CHECK_XLEN
+#     # if an stvec_handler is defined, delegate exceptions to it
+#     la t0, :stvec_handler
+#     beqz t0, label_f(1)
+#     csrw stvec, t0
+#     li t0, (1 << CAUSE_LOAD_PAGE_FAULT)  |
+#            (1 << CAUSE_STORE_PAGE_FAULT) |
+#            (1 << CAUSE_FETCH_PAGE_FAULT) |
+#            (1 << CAUSE_MISALIGNED_FETCH) |
+#            (1 << CAUSE_USER_ECALL)       |
+#            (1 << CAUSE_BREAKPOINT)
+#     csrw medeleg, t0
+#     csrr t1, medeleg
+#     bne t0, t1, :other_exception
 
 label 1
     csrwi mstatus, 0

@@ -53,7 +53,7 @@ class SrlTemplate < RISCVBaseTemplate
 
   def run
     RVTEST_RV64U()
-    # RVTEST_CODE_BEGIN()
+    RVTEST_CODE_BEGIN()
 
     #-------------------------------------------------------------
     # Arithmetic tests

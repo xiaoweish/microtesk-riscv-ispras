@@ -49,7 +49,7 @@ class SltiTemplate < RISCVBaseTemplate
 
   def run
     RVTEST_RV64U()
-    # RVTEST_CODE_BEGIN()
+    RVTEST_CODE_BEGIN()
 
     TEST_IMM_OP( 2,  'slti', 0, 0x0000000000000000, 0x000 )
     TEST_IMM_OP( 3,  'slti', 0, 0x0000000000000001, 0x001 )

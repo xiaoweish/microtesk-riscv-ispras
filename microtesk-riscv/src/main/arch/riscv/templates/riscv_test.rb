@@ -237,15 +237,15 @@ label :reset_vector
 #     la t0, :stvec_handler
 #     beqz t0, label_f(1)
 #     csrw stvec, t0
-#     li t0, (1 << CAUSE_LOAD_PAGE_FAULT)  |
-#            (1 << CAUSE_STORE_PAGE_FAULT) |
-#            (1 << CAUSE_FETCH_PAGE_FAULT) |
-#            (1 << CAUSE_MISALIGNED_FETCH) |
-#            (1 << CAUSE_USER_ECALL)       |
-#            (1 << CAUSE_BREAKPOINT)
-#     csrw medeleg, t0
-#     csrr t1, medeleg
-#     bne t0, t1, :other_exception
+    li t0, (1 << CAUSE_LOAD_PAGE_FAULT)  |
+           (1 << CAUSE_STORE_PAGE_FAULT) |
+           (1 << CAUSE_FETCH_PAGE_FAULT) |
+           (1 << CAUSE_MISALIGNED_FETCH) |
+           (1 << CAUSE_USER_ECALL)       |
+           (1 << CAUSE_BREAKPOINT)
+    csrw medeleg, t0
+    csrr t1, medeleg
+    bne t0, t1, :other_exception
 
 label 1
     csrwi mstatus, 0

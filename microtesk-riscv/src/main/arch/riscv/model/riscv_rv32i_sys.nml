@@ -328,6 +328,129 @@ mode MIP() = CSR[0x344]
   image = format("%12s", csr_index)
 
 //==================================================================================================
+// Machine Protection and Translation
+
+// Physical memory protection configuration
+mode PMPCFG0() = CSR[0x3A0]
+  init = { csr_index = 0x3A0; }
+  syntax = format("pmpcfg0")
+  image = format("%12s", csr_index)
+
+// Physical memory protection configuration, RV32 only
+mode PMPCFG1() = CSR[0x3A1]
+  init = { csr_index = 0x3A1; }
+  syntax = format("pmpcfg1")
+  image = format("%12s", csr_index)
+
+// Physical memory protection configuration
+mode PMPCFG2() = CSR[0x3A2]
+  init = { csr_index = 0x3A2; }
+  syntax = format("pmpcfg2")
+  image = format("%12s", csr_index)
+
+// Physical memory protection configuration, RV32 only
+mode PMPCFG3() = CSR[0x3A3]
+  init = { csr_index = 0x3A3; }
+  syntax = format("pmpcfg3")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR0() = CSR[0x3B0]
+  init = { csr_index = 0x3B0; }
+  syntax = format("pmpaddr0")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR1() = CSR[0x3B1]
+  init = { csr_index = 0x3B1; }
+  syntax = format("pmpaddr1")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR2() = CSR[0x3B2]
+  init = { csr_index = 0x3B2; }
+  syntax = format("pmpaddr2")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR3() = CSR[0x3B3]
+  init = { csr_index = 0x3B3; }
+  syntax = format("pmpaddr3")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR4() = CSR[0x3B4]
+  init = { csr_index = 0x3B4; }
+  syntax = format("pmpaddr4")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR5() = CSR[0x3B5]
+  init = { csr_index = 0x3B5; }
+  syntax = format("pmpaddr5")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR6() = CSR[0x3B6]
+  init = { csr_index = 0x3B6; }
+  syntax = format("pmpaddr6")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR7() = CSR[0x3B7]
+  init = { csr_index = 0x3B7; }
+  syntax = format("pmpaddr7")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR8() = CSR[0x3B8]
+  init = { csr_index = 0x3B8; }
+  syntax = format("pmpaddr8")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR9() = CSR[0x3B9]
+  init = { csr_index = 0x3B9; }
+  syntax = format("pmpaddr9")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR10() = CSR[0x3BA]
+  init = { csr_index = 0x3BA; }
+  syntax = format("pmpaddr10")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR11() = CSR[0x3BB]
+  init = { csr_index = 0x3BB; }
+  syntax = format("pmpaddr11")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR12() = CSR[0x3BC]
+  init = { csr_index = 0x3BC; }
+  syntax = format("pmpaddr12")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR13() = CSR[0x3BD]
+  init = { csr_index = 0x3BD; }
+  syntax = format("pmpaddr13")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR14() = CSR[0x3BE]
+  init = { csr_index = 0x3BE; }
+  syntax = format("pmpaddr14")
+  image = format("%12s", csr_index)
+
+// Physical memory protection address register
+mode PMPADDR15() = CSR[0x3BF]
+  init = { csr_index = 0x3BF; }
+  syntax = format("pmpaddr15")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
 // Machine Counter/Timers
 
 // Machine cycle counter
@@ -462,6 +585,27 @@ mode CSR_MODE =
               | MCAUSE
               | MTVAL
               | MIP
+// Machine Protection and Translation
+              | PMPCFG0
+              | PMPCFG1
+              | PMPCFG2
+              | PMPCFG3
+              | PMPADDR0
+              | PMPADDR1
+              | PMPADDR2
+              | PMPADDR3
+              | PMPADDR4
+              | PMPADDR5
+              | PMPADDR6
+              | PMPADDR7
+              | PMPADDR8
+              | PMPADDR9
+              | PMPADDR10
+              | PMPADDR11
+              | PMPADDR12
+              | PMPADDR13
+              | PMPADDR14
+              | PMPADDR15
 // Machine Counter/Timers
               | MCYCLE
               | MINSTRET

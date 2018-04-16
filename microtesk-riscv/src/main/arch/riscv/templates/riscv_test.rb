@@ -103,7 +103,7 @@ module RiscvTest
     slli a0, a0, 31
     if rv64i then bgez a0, label_f(1)
              else bltz a0, label_f(1) end
-    RVTEST_PASS
+    RVTEST_PASS()
 label 1
   end
 
@@ -231,8 +231,8 @@ label :reset_vector
 
     li TESTNUM(), 0
     la t0, :trap_vector
-#     csrw mtvec, t0
-#     CHECK_XLEN
+    csrw mtvec, t0
+    CHECK_XLEN()
 #     # if an stvec_handler is defined, delegate exceptions to it
 #     la t0, :stvec_handler
 #     beqz t0, label_f(1)

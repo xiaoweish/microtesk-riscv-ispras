@@ -249,7 +249,7 @@ label :reset_vector
 
 label 1
     csrwi mstatus, 0
-    text "init" # TODO: check this
+    text "init"
 
     EXTRA_INIT()
     EXTRA_INIT_TIMER()

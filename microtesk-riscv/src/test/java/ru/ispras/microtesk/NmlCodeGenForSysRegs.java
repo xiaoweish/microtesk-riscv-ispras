@@ -25,7 +25,7 @@ import java.util.List;
  */
 public final class NmlCodeGenForSysRegs {
   public static void main(final String[] args) {
-
+    /*
     section("User Counter/Timers")
       .add(0xC00, "cycle", "Cycle counter for RDCYCLE instruction")
       .add(0xC01, "time", "Timer for RDTIME instruction")
@@ -38,6 +38,7 @@ public final class NmlCodeGenForSysRegs {
       .add(0xC83, "hpmcounter%dh","Upper 32 bits of hpmcounter%d, RV32I only", 3, 31)
 
       .print();
+    */
 
     /*
     section("Supervisor Trap Setup")
@@ -107,18 +108,16 @@ public final class NmlCodeGenForSysRegs {
         .print();
     */
 
-    /*
     section("Machine Counter/Timers")
         .add(0xB00, "mcycle", "Machine cycle counter")
         .add(0xB02, "minstret", "Machine instructions-retired counter")
-        //.add(0xB03, "mhpmcounter%d","Machine performance-monitoring counter", 3, 31)
+        .add(0xB03, "mhpmcounter%d","Machine performance-monitoring counter", 3, 31)
 
         .add(0xB80, "mcycleh", "Upper 32 bits of mcycle, RV32I only")
         .add(0xB82, "minstreth", "Upper 32 bits of minstret, RV32I only")
-        //.add(0xB83, "mhpmcounter%dh","Upper 32 bits of mhpmcounter%d, RV32I only", 3, 31)
+        .add(0xB83, "mhpmcounter%dh","Upper 32 bits of mhpmcounter%d, RV32I only", 3, 31)
 
         .print();
-    */
 
     /*
     section("Debug/Trace Registers (shared with Debug Mode)")

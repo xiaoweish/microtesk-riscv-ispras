@@ -813,6 +813,180 @@ mode MINSTRET() = CSR[0xB02]
   syntax = format("minstret")
   image = format("%12s", csr_index)
 
+// Machine performance-monitoring counter
+mode MHPMCOUNTER3() = CSR[0xB03]
+  init = { csr_index = 0xB03; }
+  syntax = format("mhpmcounter3")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER4() = CSR[0xB04]
+  init = { csr_index = 0xB04; }
+  syntax = format("mhpmcounter4")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER5() = CSR[0xB05]
+  init = { csr_index = 0xB05; }
+  syntax = format("mhpmcounter5")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER6() = CSR[0xB06]
+  init = { csr_index = 0xB06; }
+  syntax = format("mhpmcounter6")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER7() = CSR[0xB07]
+  init = { csr_index = 0xB07; }
+  syntax = format("mhpmcounter7")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER8() = CSR[0xB08]
+  init = { csr_index = 0xB08; }
+  syntax = format("mhpmcounter8")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER9() = CSR[0xB09]
+  init = { csr_index = 0xB09; }
+  syntax = format("mhpmcounter9")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER10() = CSR[0xB0A]
+  init = { csr_index = 0xB0A; }
+  syntax = format("mhpmcounter10")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER11() = CSR[0xB0B]
+  init = { csr_index = 0xB0B; }
+  syntax = format("mhpmcounter11")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER12() = CSR[0xB0C]
+  init = { csr_index = 0xB0C; }
+  syntax = format("mhpmcounter12")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER13() = CSR[0xB0D]
+  init = { csr_index = 0xB0D; }
+  syntax = format("mhpmcounter13")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER14() = CSR[0xB0E]
+  init = { csr_index = 0xB0E; }
+  syntax = format("mhpmcounter14")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER15() = CSR[0xB0F]
+  init = { csr_index = 0xB0F; }
+  syntax = format("mhpmcounter15")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER16() = CSR[0xB10]
+  init = { csr_index = 0xB10; }
+  syntax = format("mhpmcounter16")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER17() = CSR[0xB11]
+  init = { csr_index = 0xB11; }
+  syntax = format("mhpmcounter17")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER18() = CSR[0xB12]
+  init = { csr_index = 0xB12; }
+  syntax = format("mhpmcounter18")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER19() = CSR[0xB13]
+  init = { csr_index = 0xB13; }
+  syntax = format("mhpmcounter19")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER20() = CSR[0xB14]
+  init = { csr_index = 0xB14; }
+  syntax = format("mhpmcounter20")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER21() = CSR[0xB15]
+  init = { csr_index = 0xB15; }
+  syntax = format("mhpmcounter21")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER22() = CSR[0xB16]
+  init = { csr_index = 0xB16; }
+  syntax = format("mhpmcounter22")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER23() = CSR[0xB17]
+  init = { csr_index = 0xB17; }
+  syntax = format("mhpmcounter23")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER24() = CSR[0xB18]
+  init = { csr_index = 0xB18; }
+  syntax = format("mhpmcounter24")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER25() = CSR[0xB19]
+  init = { csr_index = 0xB19; }
+  syntax = format("mhpmcounter25")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER26() = CSR[0xB1A]
+  init = { csr_index = 0xB1A; }
+  syntax = format("mhpmcounter26")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER27() = CSR[0xB1B]
+  init = { csr_index = 0xB1B; }
+  syntax = format("mhpmcounter27")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER28() = CSR[0xB1C]
+  init = { csr_index = 0xB1C; }
+  syntax = format("mhpmcounter28")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER29() = CSR[0xB1D]
+  init = { csr_index = 0xB1D; }
+  syntax = format("mhpmcounter29")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER30() = CSR[0xB1E]
+  init = { csr_index = 0xB1E; }
+  syntax = format("mhpmcounter30")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring counter
+mode MHPMCOUNTER31() = CSR[0xB1F]
+  init = { csr_index = 0xB1F; }
+  syntax = format("mhpmcounter31")
+  image = format("%12s", csr_index)
+
 // Upper 32 bits of mcycle, RV32I only
 mode MCYCLEH() = CSR[0xB80]
   init = { csr_index = 0xB80; }
@@ -823,6 +997,180 @@ mode MCYCLEH() = CSR[0xB80]
 mode MINSTRETH() = CSR[0xB82]
   init = { csr_index = 0xB82; }
   syntax = format("minstreth")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter3, RV32I only
+mode MHPMCOUNTER3H() = CSR[0xB83]
+  init = { csr_index = 0xB83; }
+  syntax = format("mhpmcounter3h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter4, RV32I only
+mode MHPMCOUNTER4H() = CSR[0xB84]
+  init = { csr_index = 0xB84; }
+  syntax = format("mhpmcounter4h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter5, RV32I only
+mode MHPMCOUNTER5H() = CSR[0xB85]
+  init = { csr_index = 0xB85; }
+  syntax = format("mhpmcounter5h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter6, RV32I only
+mode MHPMCOUNTER6H() = CSR[0xB86]
+  init = { csr_index = 0xB86; }
+  syntax = format("mhpmcounter6h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter7, RV32I only
+mode MHPMCOUNTER7H() = CSR[0xB87]
+  init = { csr_index = 0xB87; }
+  syntax = format("mhpmcounter7h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter8, RV32I only
+mode MHPMCOUNTER8H() = CSR[0xB88]
+  init = { csr_index = 0xB88; }
+  syntax = format("mhpmcounter8h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter9, RV32I only
+mode MHPMCOUNTER9H() = CSR[0xB89]
+  init = { csr_index = 0xB89; }
+  syntax = format("mhpmcounter9h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter10, RV32I only
+mode MHPMCOUNTER10H() = CSR[0xB8A]
+  init = { csr_index = 0xB8A; }
+  syntax = format("mhpmcounter10h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter11, RV32I only
+mode MHPMCOUNTER11H() = CSR[0xB8B]
+  init = { csr_index = 0xB8B; }
+  syntax = format("mhpmcounter11h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter12, RV32I only
+mode MHPMCOUNTER12H() = CSR[0xB8C]
+  init = { csr_index = 0xB8C; }
+  syntax = format("mhpmcounter12h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter13, RV32I only
+mode MHPMCOUNTER13H() = CSR[0xB8D]
+  init = { csr_index = 0xB8D; }
+  syntax = format("mhpmcounter13h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter14, RV32I only
+mode MHPMCOUNTER14H() = CSR[0xB8E]
+  init = { csr_index = 0xB8E; }
+  syntax = format("mhpmcounter14h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter15, RV32I only
+mode MHPMCOUNTER15H() = CSR[0xB8F]
+  init = { csr_index = 0xB8F; }
+  syntax = format("mhpmcounter15h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter16, RV32I only
+mode MHPMCOUNTER16H() = CSR[0xB90]
+  init = { csr_index = 0xB90; }
+  syntax = format("mhpmcounter16h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter17, RV32I only
+mode MHPMCOUNTER17H() = CSR[0xB91]
+  init = { csr_index = 0xB91; }
+  syntax = format("mhpmcounter17h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter18, RV32I only
+mode MHPMCOUNTER18H() = CSR[0xB92]
+  init = { csr_index = 0xB92; }
+  syntax = format("mhpmcounter18h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter19, RV32I only
+mode MHPMCOUNTER19H() = CSR[0xB93]
+  init = { csr_index = 0xB93; }
+  syntax = format("mhpmcounter19h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter20, RV32I only
+mode MHPMCOUNTER20H() = CSR[0xB94]
+  init = { csr_index = 0xB94; }
+  syntax = format("mhpmcounter20h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter21, RV32I only
+mode MHPMCOUNTER21H() = CSR[0xB95]
+  init = { csr_index = 0xB95; }
+  syntax = format("mhpmcounter21h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter22, RV32I only
+mode MHPMCOUNTER22H() = CSR[0xB96]
+  init = { csr_index = 0xB96; }
+  syntax = format("mhpmcounter22h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter23, RV32I only
+mode MHPMCOUNTER23H() = CSR[0xB97]
+  init = { csr_index = 0xB97; }
+  syntax = format("mhpmcounter23h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter24, RV32I only
+mode MHPMCOUNTER24H() = CSR[0xB98]
+  init = { csr_index = 0xB98; }
+  syntax = format("mhpmcounter24h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter25, RV32I only
+mode MHPMCOUNTER25H() = CSR[0xB99]
+  init = { csr_index = 0xB99; }
+  syntax = format("mhpmcounter25h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter26, RV32I only
+mode MHPMCOUNTER26H() = CSR[0xB9A]
+  init = { csr_index = 0xB9A; }
+  syntax = format("mhpmcounter26h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter27, RV32I only
+mode MHPMCOUNTER27H() = CSR[0xB9B]
+  init = { csr_index = 0xB9B; }
+  syntax = format("mhpmcounter27h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter28, RV32I only
+mode MHPMCOUNTER28H() = CSR[0xB9C]
+  init = { csr_index = 0xB9C; }
+  syntax = format("mhpmcounter28h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter29, RV32I only
+mode MHPMCOUNTER29H() = CSR[0xB9D]
+  init = { csr_index = 0xB9D; }
+  syntax = format("mhpmcounter29h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter30, RV32I only
+mode MHPMCOUNTER30H() = CSR[0xB9E]
+  init = { csr_index = 0xB9E; }
+  syntax = format("mhpmcounter30h")
+  image = format("%12s", csr_index)
+
+// Upper 32 bits of mhpmcounter31, RV32I only
+mode MHPMCOUNTER31H() = CSR[0xB9F]
+  init = { csr_index = 0xB9F; }
+  syntax = format("mhpmcounter31h")
   image = format("%12s", csr_index)
 
 //==================================================================================================
@@ -1015,8 +1363,66 @@ mode CSR_MODE =
 // Machine Counter/Timers
               | MCYCLE
               | MINSTRET
+              | MHPMCOUNTER3
+              | MHPMCOUNTER4
+              | MHPMCOUNTER5
+              | MHPMCOUNTER6
+              | MHPMCOUNTER7
+              | MHPMCOUNTER8
+              | MHPMCOUNTER9
+              | MHPMCOUNTER10
+              | MHPMCOUNTER11
+              | MHPMCOUNTER12
+              | MHPMCOUNTER13
+              | MHPMCOUNTER14
+              | MHPMCOUNTER15
+              | MHPMCOUNTER16
+              | MHPMCOUNTER17
+              | MHPMCOUNTER18
+              | MHPMCOUNTER19
+              | MHPMCOUNTER20
+              | MHPMCOUNTER21
+              | MHPMCOUNTER22
+              | MHPMCOUNTER23
+              | MHPMCOUNTER24
+              | MHPMCOUNTER25
+              | MHPMCOUNTER26
+              | MHPMCOUNTER27
+              | MHPMCOUNTER28
+              | MHPMCOUNTER29
+              | MHPMCOUNTER30
+              | MHPMCOUNTER31
               | MCYCLEH
               | MINSTRETH
+              | MHPMCOUNTER3H
+              | MHPMCOUNTER4H
+              | MHPMCOUNTER5H
+              | MHPMCOUNTER6H
+              | MHPMCOUNTER7H
+              | MHPMCOUNTER8H
+              | MHPMCOUNTER9H
+              | MHPMCOUNTER10H
+              | MHPMCOUNTER11H
+              | MHPMCOUNTER12H
+              | MHPMCOUNTER13H
+              | MHPMCOUNTER14H
+              | MHPMCOUNTER15H
+              | MHPMCOUNTER16H
+              | MHPMCOUNTER17H
+              | MHPMCOUNTER18H
+              | MHPMCOUNTER19H
+              | MHPMCOUNTER20H
+              | MHPMCOUNTER21H
+              | MHPMCOUNTER22H
+              | MHPMCOUNTER23H
+              | MHPMCOUNTER24H
+              | MHPMCOUNTER25H
+              | MHPMCOUNTER26H
+              | MHPMCOUNTER27H
+              | MHPMCOUNTER28H
+              | MHPMCOUNTER29H
+              | MHPMCOUNTER30H
+              | MHPMCOUNTER31H
 // Debug/Trace Registers (shared with Debug Mode)
               | TSELECT
               | TDATA1

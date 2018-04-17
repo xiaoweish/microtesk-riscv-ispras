@@ -219,7 +219,7 @@ label 1
     ori TESTNUM(), TESTNUM(), 1337
 
 label :write_tohost
-    sw_global TESTNUM(), :tohost, t5
+#     sw_global TESTNUM(), :tohost, t5
     j :write_tohost
 
 label :reset_vector

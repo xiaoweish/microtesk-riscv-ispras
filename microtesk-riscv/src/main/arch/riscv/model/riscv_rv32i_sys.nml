@@ -1174,6 +1174,183 @@ mode MHPMCOUNTER31H() = CSR[0xB9F]
   image = format("%12s", csr_index)
 
 //==================================================================================================
+// Machine Counter Setup
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT3() = CSR[0x323]
+  init = { csr_index = 0x323; }
+  syntax = format("mhpmevent3")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT4() = CSR[0x324]
+  init = { csr_index = 0x324; }
+  syntax = format("mhpmevent4")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT5() = CSR[0x325]
+  init = { csr_index = 0x325; }
+  syntax = format("mhpmevent5")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT6() = CSR[0x326]
+  init = { csr_index = 0x326; }
+  syntax = format("mhpmevent6")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT7() = CSR[0x327]
+  init = { csr_index = 0x327; }
+  syntax = format("mhpmevent7")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT8() = CSR[0x328]
+  init = { csr_index = 0x328; }
+  syntax = format("mhpmevent8")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT9() = CSR[0x329]
+  init = { csr_index = 0x329; }
+  syntax = format("mhpmevent9")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT10() = CSR[0x32A]
+  init = { csr_index = 0x32A; }
+  syntax = format("mhpmevent10")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT11() = CSR[0x32B]
+  init = { csr_index = 0x32B; }
+  syntax = format("mhpmevent11")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT12() = CSR[0x32C]
+  init = { csr_index = 0x32C; }
+  syntax = format("mhpmevent12")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT13() = CSR[0x32D]
+  init = { csr_index = 0x32D; }
+  syntax = format("mhpmevent13")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT14() = CSR[0x32E]
+  init = { csr_index = 0x32E; }
+  syntax = format("mhpmevent14")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT15() = CSR[0x32F]
+  init = { csr_index = 0x32F; }
+  syntax = format("mhpmevent15")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT16() = CSR[0x330]
+  init = { csr_index = 0x330; }
+  syntax = format("mhpmevent16")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT17() = CSR[0x331]
+  init = { csr_index = 0x331; }
+  syntax = format("mhpmevent17")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT18() = CSR[0x332]
+  init = { csr_index = 0x332; }
+  syntax = format("mhpmevent18")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT19() = CSR[0x333]
+  init = { csr_index = 0x333; }
+  syntax = format("mhpmevent19")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT20() = CSR[0x334]
+  init = { csr_index = 0x334; }
+  syntax = format("mhpmevent20")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT21() = CSR[0x335]
+  init = { csr_index = 0x335; }
+  syntax = format("mhpmevent21")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT22() = CSR[0x336]
+  init = { csr_index = 0x336; }
+  syntax = format("mhpmevent22")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT23() = CSR[0x337]
+  init = { csr_index = 0x337; }
+  syntax = format("mhpmevent23")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT24() = CSR[0x338]
+  init = { csr_index = 0x338; }
+  syntax = format("mhpmevent24")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT25() = CSR[0x339]
+  init = { csr_index = 0x339; }
+  syntax = format("mhpmevent25")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT26() = CSR[0x33A]
+  init = { csr_index = 0x33A; }
+  syntax = format("mhpmevent26")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT27() = CSR[0x33B]
+  init = { csr_index = 0x33B; }
+  syntax = format("mhpmevent27")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT28() = CSR[0x33C]
+  init = { csr_index = 0x33C; }
+  syntax = format("mhpmevent28")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT29() = CSR[0x33D]
+  init = { csr_index = 0x33D; }
+  syntax = format("mhpmevent29")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT30() = CSR[0x33E]
+  init = { csr_index = 0x33E; }
+  syntax = format("mhpmevent30")
+  image = format("%12s", csr_index)
+
+// Machine performance-monitoring event selector
+mode MHPMEVENT31() = CSR[0x33F]
+  init = { csr_index = 0x33F; }
+  syntax = format("mhpmevent31")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
 // Debug/Trace Registers (shared with Debug Mode)
 
 // Debug/Trace trigger register select
@@ -1423,6 +1600,36 @@ mode CSR_MODE =
               | MHPMCOUNTER29H
               | MHPMCOUNTER30H
               | MHPMCOUNTER31H
+// Machine Counter Setup
+              | MHPMEVENT3
+              | MHPMEVENT4
+              | MHPMEVENT5
+              | MHPMEVENT6
+              | MHPMEVENT7
+              | MHPMEVENT8
+              | MHPMEVENT9
+              | MHPMEVENT10
+              | MHPMEVENT11
+              | MHPMEVENT12
+              | MHPMEVENT13
+              | MHPMEVENT14
+              | MHPMEVENT15
+              | MHPMEVENT16
+              | MHPMEVENT17
+              | MHPMEVENT18
+              | MHPMEVENT19
+              | MHPMEVENT20
+              | MHPMEVENT21
+              | MHPMEVENT22
+              | MHPMEVENT23
+              | MHPMEVENT24
+              | MHPMEVENT25
+              | MHPMEVENT26
+              | MHPMEVENT27
+              | MHPMEVENT28
+              | MHPMEVENT29
+              | MHPMEVENT30
+              | MHPMEVENT31
 // Debug/Trace Registers (shared with Debug Mode)
               | TSELECT
               | TDATA1

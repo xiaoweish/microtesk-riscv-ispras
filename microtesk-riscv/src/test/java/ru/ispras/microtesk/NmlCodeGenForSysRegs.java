@@ -108,6 +108,7 @@ public final class NmlCodeGenForSysRegs {
         .print();
     */
 
+    /*
     section("Machine Counter/Timers")
         .add(0xB00, "mcycle", "Machine cycle counter")
         .add(0xB02, "minstret", "Machine instructions-retired counter")
@@ -117,6 +118,11 @@ public final class NmlCodeGenForSysRegs {
         .add(0xB82, "minstreth", "Upper 32 bits of minstret, RV32I only")
         .add(0xB83, "mhpmcounter%dh","Upper 32 bits of mhpmcounter%d, RV32I only", 3, 31)
 
+        .print();
+    */
+
+    section("Machine Counter Setup")
+        .add(0x323, "mhpmevent%d", "Machine performance-monitoring event selector", 3, 31)
         .print();
 
     /*

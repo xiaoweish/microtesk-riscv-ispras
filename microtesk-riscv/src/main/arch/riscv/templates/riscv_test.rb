@@ -189,16 +189,16 @@ label 1
 label :trap_vector
     # test whether the test came from pass/fail
     csrr t5, mcause
-#
-#     li t6, CAUSE_USER_ECALL
-#     beq t5, t6, :write_tohost
-#
-#     li t6, CAUSE_SUPERVISOR_ECALL
-#     beq t5, t6, :write_tohost
-#
-#     li t6, CAUSE_MACHINE_ECALL
-#     beq t5, t6, :write_tohost
-#
+
+    li t6, CAUSE_USER_ECALL
+    beq t5, t6, :write_tohost
+
+    li t6, CAUSE_SUPERVISOR_ECALL
+    beq t5, t6, :write_tohost
+
+    li t6, CAUSE_MACHINE_ECALL
+    beq t5, t6, :write_tohost
+
 #     # if an mtvec_handler is defined, jump to it
 #     la t5, :mtvec_handler
 #     beqz t5, label_f(1)
@@ -217,11 +217,11 @@ label :other_exception
 
 label 1
     ori TESTNUM(), TESTNUM(), 1337
-#
-# label :write_tohost
-#     sw TESTNUM(), tohost, t5 # TODO: tohost = ?
-#     j :write_tohost
-#
+
+label :write_tohost
+    sw_global TESTNUM(), :tohost, t5
+    j :write_tohost
+
 label :reset_vector
 
     RISCV_MULTICORE_DISABLE()
@@ -306,14 +306,15 @@ label 1
     EXTRA_DATA()
 
     # .pushsection .tohost,"aw",@progbits # TODO: Need support for this directive
-    #
-    #  align 6
-    #  global_label :tohost
-    #  dword 0
-    #
-    #  align 6
-    #  global_label :fromhost
-    #  dword 0
+    data {
+      align 6
+      global_label :tohost
+      dword 0
+
+      align 6
+      global_label :fromhost
+      dword 0
+    }
 
     # .popsection # TODO: Need support for this directive
 

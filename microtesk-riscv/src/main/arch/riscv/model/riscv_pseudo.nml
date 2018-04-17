@@ -112,7 +112,7 @@ pseudo op ld_global(rd : X, symbol : PSEUDO_OFFSET)
 @rev(RV32I)
 pseudo op sb_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
   init   = { symbol.init; }
-  syntax = format("sb %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  syntax = format("sb %s, %s, %s", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sb(rd, rt, jump_imm32<11..0>).image)
   action = {
@@ -124,7 +124,7 @@ pseudo op sb_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 @rev(RV32I)
 pseudo op sh_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
   init   = { symbol.init; }
-  syntax = format("sh %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  syntax = format("sh %s, %s, %s", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sh(rd, rt, jump_imm32<11..0>).image)
   action = {
@@ -136,7 +136,7 @@ pseudo op sh_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 @rev(RV32I)
 pseudo op sw_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
   init   = { symbol.init; }
-  syntax = format("sw %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  syntax = format("sw %s, %s, %s", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sw(rd, rt, jump_imm32<11..0>).image)
   action = {
@@ -148,7 +148,7 @@ pseudo op sw_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 @rev(RV64I)
 pseudo op sd_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
   init   = { symbol.init; }
-  syntax = format("sd %s, %s(%s)", rd.syntax, symbol.syntax, rt.syntax)
+  syntax = format("sd %s, %s, %s", rd.syntax, symbol.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, jump_imm32<31..12>).image,
                           sd(rd, rt, jump_imm32<11..0>).image)
   action = {

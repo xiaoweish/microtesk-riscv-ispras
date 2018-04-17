@@ -25,20 +25,19 @@ import java.util.List;
  */
 public final class NmlCodeGenForSysRegs {
   public static void main(final String[] args) {
-    /*
+
     section("User Counter/Timers")
       .add(0xC00, "cycle", "Cycle counter for RDCYCLE instruction")
       .add(0xC01, "time", "Timer for RDTIME instruction")
       .add(0xC02, "instret", "Instructions-retired counter for RDINSTRET instruction")
-      //.add(0xC03, "hpmcounter%d","Performance-monitoring counter", 3, 31)
+      .add(0xC03, "hpmcounter%d","Performance-monitoring counter", 3, 31)
 
       .add(0xC80, "cycleh", "Upper 32 bits of cycle, RV32I only")
       .add(0xC81, "timeh", "Upper 32 bits of time, RV32I only")
       .add(0xC82, "instreth", "Upper 32 bits of instret, RV32I only")
-      //.add(0xC83, "hpmcounter%dh","Upper 32 bits of hpmcounter%d, RV32I only", 3, 31)
+      .add(0xC83, "hpmcounter%dh","Upper 32 bits of hpmcounter%d, RV32I only", 3, 31)
 
       .print();
-    /*
 
     /*
     section("Supervisor Trap Setup")
@@ -98,7 +97,7 @@ public final class NmlCodeGenForSysRegs {
         .print();
     */
 
-
+    /*
     section("Machine Protection and Translation")
         .add(0x3A0, "pmpcfg0", "Physical memory protection configuration")
         .add(0x3A1, "pmpcfg1", "Physical memory protection configuration, RV32 only")
@@ -106,6 +105,7 @@ public final class NmlCodeGenForSysRegs {
         .add(0x3A3, "pmpcfg3", "Physical memory protection configuration, RV32 only")
         .add(0x3B0, "pmpaddr%d", "Physical memory protection address register", 0, 15)
         .print();
+    */
 
     /*
     section("Machine Counter/Timers")

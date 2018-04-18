@@ -226,11 +226,11 @@ class RISCVBaseTemplate < Template
 
     ################################################################################################
     org 0x1000
-    prologue
+    pre_rvtest
   end
 
   # Prologue can be overridden in user templates
-  def prologue
+  def pre_rvtest
     RVTEST_RV64U()
     RVTEST_CODE_BEGIN()
   end

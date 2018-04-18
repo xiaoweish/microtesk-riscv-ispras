@@ -47,7 +47,7 @@ require_relative '../../riscv_base'
 
 class BeqTemplate < RISCVBaseTemplate
 
-  def prologue
+  def pre_rvtest
     RVTEST_RV64U()
     RVTEST_CODE_BEGIN()
   end

@@ -23,11 +23,6 @@ require_relative 'riscv_base'
 #
 class InstructionRV64F < RISCVBaseTemplate
 
-  def prologue
-    RVTEST_RV64U()
-    RVTEST_CODE_BEGIN()
-  end
-
   def run
     trace "Run RV64F instruction:"
     nop

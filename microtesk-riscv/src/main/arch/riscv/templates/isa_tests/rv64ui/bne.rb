@@ -90,7 +90,7 @@ class BneTemplate < RISCVBaseTemplate
     # Test delay slot instructions not executed nor bypassed
     #-------------------------------------------------------------
 
-    TEST_CASE( 21, x1, 3 )
+    TEST_CASE( 21, x1, 3 ) do
       li  x1, 1
       bne x1, x0, label_f(1)
       addi x1, x1, 1

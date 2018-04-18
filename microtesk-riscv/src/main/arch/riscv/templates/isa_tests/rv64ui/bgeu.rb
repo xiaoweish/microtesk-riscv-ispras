@@ -93,7 +93,7 @@ class BgeuTemplate < RISCVBaseTemplate
     # Test delay slot instructions not executed nor bypassed
     #-------------------------------------------------------------
 
-    TEST_CASE( 24, x1, 3 )
+    TEST_CASE( 24, x1, 3 ) do
       li  x1, 1
       bgeu x1, x0, label_f(1)
       addi x1, x1, 1

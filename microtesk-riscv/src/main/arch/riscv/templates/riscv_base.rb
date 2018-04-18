@@ -231,19 +231,8 @@ class RISCVBaseTemplate < Template
 
 global_label :_start
     nop
-    #j :test
     nop
     newline
-
-label :test
-    #mfc0 t8, c0_config0
-    #lui  t9, 0xffff
-    #ori  t9, t9, 0xfff8
-    #AND  t8, t8, t9
-
-    #mtc0 t8, c0_config0
-    nop
-    nop
   end
 
   ##################################################################################################

@@ -178,9 +178,9 @@ label 1
   def RVTEST_CODE_BEGIN
 #     # .section .text.init; # TODO
 #     align  6
-#     # .weak stvec_handler; # TODO
-#     # .weak mtvec_handler; # TODO
-#
+    weak :stvec_handler
+    weak :mtvec_handler
+
 # global_label :_start
     # reset vector
     j :reset_vector
@@ -203,7 +203,7 @@ label :trap_vector
 #     la t5, :mtvec_handler
 #     beqz t5, label_f(1)
 #     jr t5
-#
+
     # was it an interrupt or an exception?
 label 1
     csrr t5, mcause
@@ -233,10 +233,12 @@ label :reset_vector
     la t0, :trap_vector
     csrw mtvec, t0
     CHECK_XLEN()
+
 #     # if an stvec_handler is defined, delegate exceptions to it
 #     la t0, :stvec_handler
 #     beqz t0, label_f(1)
 #     csrw stvec, t0
+
     li t0, (1 << CAUSE_LOAD_PAGE_FAULT)  |
            (1 << CAUSE_STORE_PAGE_FAULT) |
            (1 << CAUSE_FETCH_PAGE_FAULT) |
@@ -305,18 +307,17 @@ label 1
   def RVTEST_DATA_BEGIN
     EXTRA_DATA()
 
-    # .pushsection .tohost,"aw",@progbits # TODO: Need support for this directive
-    data {
-      align 6
-      global_label :tohost
-      dword 0
-
-      align 6
-      global_label :fromhost
-      dword 0
-    }
-
-    # .popsection # TODO: Need support for this directive
+#     # .pushsection .tohost,"aw",@progbits # TODO: Need support for this directive
+#     data {
+#       align 6
+#       global_label :tohost
+#       dword 0
+#
+#       align 6
+#       global_label :fromhost
+#       dword 0
+#     }
+#     # .popsection # TODO: Need support for this directive
 
     data {
       align 4

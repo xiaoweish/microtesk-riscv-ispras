@@ -47,14 +47,16 @@ require_relative '../../riscv_base'
 
 class SrlTemplate < RISCVBaseTemplate
 
+  def prologue
+    RVTEST_RV64U()
+    RVTEST_CODE_BEGIN()
+  end
+
   def TEST_SRL(n, v, a)
     TEST_RR_OP(n, 'srl', ((v) & ((1 << (__riscv_xlen-1) << 1) - 1)) >> (a), v, a)
   end
 
   def run
-    RVTEST_RV64U()
-    RVTEST_CODE_BEGIN()
-
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------

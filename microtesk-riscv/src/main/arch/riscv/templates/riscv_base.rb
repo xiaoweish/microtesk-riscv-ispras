@@ -225,10 +225,12 @@ class RISCVBaseTemplate < Template
     }
 
     ################################################################################################
-
     org 0x1000
-    newline
+    prologue
+  end
 
+  # Prologue to be overridden in user templates
+  def prologue
 global_label :_start
     nop
     nop

@@ -177,11 +177,11 @@ label 1
 
   def RVTEST_CODE_BEGIN
 #     # .section .text.init; # TODO
-#     align  6
+    align  6
     weak :stvec_handler
     weak :mtvec_handler
 
-# global_label :_start
+global_label :_start
     # reset vector
     j :reset_vector
 

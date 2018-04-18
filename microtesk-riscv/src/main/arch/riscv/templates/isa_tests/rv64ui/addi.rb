@@ -47,10 +47,12 @@ require_relative '../../riscv_base'
 
 class AddiTemplate < RISCVBaseTemplate
 
-  def run
+  def prologue
     RVTEST_RV64U()
     RVTEST_CODE_BEGIN()
+  end
 
+  def run
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------

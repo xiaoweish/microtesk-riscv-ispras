@@ -36,7 +36,7 @@ class InstructionRV32I < RISCVBaseTemplate
     auipc t4, :jal_label
     trace "t4 = %x", gpr_observer(29)
     nop
-    jal t5, 4
+    # jal t5, 4
     nop
     j :j_label
     nop
@@ -120,10 +120,10 @@ class InstructionRV32I < RISCVBaseTemplate
 
     trace "System instructions:"
 
-    fence
-    fencei
-    ecall
-    ebreak
+    # fence
+    # fencei
+    # ecall
+    # ebreak
 
     csrrw t0, time, t1
     csrrs t0, time, t1

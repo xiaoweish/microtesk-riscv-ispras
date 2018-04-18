@@ -23,6 +23,11 @@ require_relative 'riscv_base'
 #
 class InstructionRV32I < RISCVBaseTemplate
 
+  def prologue
+    RVTEST_RV64U()
+    RVTEST_CODE_BEGIN()
+  end
+
   def run
     trace "RV32I instructions:"
 

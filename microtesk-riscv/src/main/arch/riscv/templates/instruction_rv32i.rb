@@ -1,5 +1,5 @@
 #
-# Copyright 2017 ISP RAS (http://www.ispras.ru)
+# Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ require_relative 'riscv_base'
 #
 # This small tests for RV32I instructions.
 #
-
 class InstructionRV32I < RISCVBaseTemplate
 
   def run
@@ -126,13 +125,13 @@ class InstructionRV32I < RISCVBaseTemplate
     ecall
     ebreak
 
-    csrrw t0, risc_time, t1
-    csrrs t0, risc_time, t1
-    csrrc t0, risc_time, t1
+    csrrw t0, time, t1
+    csrrs t0, time, t1
+    csrrc t0, time, t1
 
-    csrrwi t0, risc_time, 0x1
-    csrrsi t0, risc_time, 0x2
-    csrrci t0, risc_time, 0x3
+    csrrwi t0, time, 0x1
+    csrrsi t0, time, 0x2
+    csrrci t0, time, 0x3
 
     trace "Pseudo instructions:"
     csrw time, t0

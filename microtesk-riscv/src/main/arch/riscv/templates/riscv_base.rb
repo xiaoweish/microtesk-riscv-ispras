@@ -139,7 +139,7 @@ class RISCVBaseTemplate < Template
                                  'Invalid Operation']) {
         trace 'Exception handler (UEPC = 0x%x)', location('CSR', 0x041)
         nop
-        csrr ra, risc_uepc
+        csrr ra, uepc
         addi ra, ra, 4
         ret
       }
@@ -337,18 +337,6 @@ label :error
   def ft29(&contents) FR(29, &contents) end
   def ft30(&contents) FR(30, &contents) end
   def ft31(&contents) FR(31, &contents) end
-
-  ##################################################################################################
-  # Shortcuts for system registers
-  ##################################################################################################
-
-  def risc_time
-    TIME()
-  end
-
-  def risc_uepc
-    UEPC()
-  end
 
   ##################################################################################################
   # Shortcut methods to access memory resources in debug messages.

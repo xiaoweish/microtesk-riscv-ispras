@@ -199,10 +199,10 @@ label :trap_vector
     li t6, CAUSE_MACHINE_ECALL
     beq t5, t6, :write_tohost
 
-#     # if an mtvec_handler is defined, jump to it
-#     la t5, :mtvec_handler
-#     beqz t5, label_f(1)
-#     jr t5
+    # if an mtvec_handler is defined, jump to it
+    la t5, :mtvec_handler
+    beqz t5, label_f(1)
+    jr t5
 
     # was it an interrupt or an exception?
 label 1
@@ -234,10 +234,10 @@ label :reset_vector
     csrw mtvec, t0
     CHECK_XLEN()
 
-#     # if an stvec_handler is defined, delegate exceptions to it
-#     la t0, :stvec_handler
-#     beqz t0, label_f(1)
-#     csrw stvec, t0
+    # if an stvec_handler is defined, delegate exceptions to it
+    la t0, :stvec_handler
+    beqz t0, label_f(1)
+    csrw stvec, t0
 
     li t0, (1 << CAUSE_LOAD_PAGE_FAULT)  |
            (1 << CAUSE_STORE_PAGE_FAULT) |

@@ -229,12 +229,10 @@ class RISCVBaseTemplate < Template
     prologue
   end
 
-  # Prologue to be overridden in user templates
+  # Prologue can be overridden in user templates
   def prologue
-global_label :_start
-    nop
-    nop
-    newline
+    RVTEST_RV64U()
+    RVTEST_CODE_BEGIN()
   end
 
   ##################################################################################################

@@ -424,7 +424,9 @@ task generateRiscvTemplates(type: JavaExec) {
           '-gt',
           'riscv',
           '-btn',
-          'RISCVBaseTemplate'
+          'RISCVBaseTemplate',
+          '-ii',
+          'ecall:ebreak:fence:fencei:mret:sret:uret:wfi'
   ]
 }
 

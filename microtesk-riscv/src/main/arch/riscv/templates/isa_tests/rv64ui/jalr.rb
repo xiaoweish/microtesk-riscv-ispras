@@ -88,7 +88,8 @@ label :target_2
     TEST_CASE( 7, t0, 4 ) do
       li  t0, 1
       la  t1, label_f(1)
-      jr  t1, -4
+      # In original code was: jr  t1, -4
+      jalr zero, t1, -4
       addi t0, t0, 1
       addi t0, t0, 1
       addi t0, t0, 1

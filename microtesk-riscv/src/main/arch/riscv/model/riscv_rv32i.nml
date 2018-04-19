@@ -198,7 +198,7 @@ mode BRANCH_IMM(imm: card(12)) = imm
   init = {
     jump_imm12 = imm;
   }
-  syntax = format("0x%X", imm)
+  syntax = format("%s", print_imm12(imm).syntax)
   image = format("%s", imm)
 
 mode BRANCH_OFFSET = BRANCH_LABEL | BRANCH_IMM

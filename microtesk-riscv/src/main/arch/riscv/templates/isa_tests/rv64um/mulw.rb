@@ -43,7 +43,7 @@
 # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #
 require_relative '../../riscv_base'
-class DivTemplate < RISCVBaseTemplate
+class MulwTemplate < RISCVBaseTemplate
   def pre_rvtest
     RVTEST_RV64U()
     RVTEST_CODE_BEGIN()

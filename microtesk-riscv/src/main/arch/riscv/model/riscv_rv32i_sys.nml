@@ -1985,10 +1985,58 @@ pseudo op fsflagsi2(imm: card(5))
   }
 
 /*
-rdinstret[h] rd csrrs rd, instret[h], x0 Read instructions-retired counter
-rdcycle[h] rd csrrs rd, cycle[h], x0 Read cycle counter
-rdtime[h] rd csrrs rd, time[h], x0 Read real-time clock
+ Read instructions-retired counter
+ rdinstret[h] rd -> csrrs rd, instret[h], x0
 */
+pseudo op rdinstret(rd: X)
+  syntax = format("rdinstret %s", rd.syntax)
+  image  = format("%s", csrrs(rd, INSTRET(), X(0)).image)
+  action = {
+    csrrs(rd, INSTRET(), X(0)).action;
+  }
+
+pseudo op rdinstreth(rd: X)
+  syntax = format("rdinstreth %s", rd.syntax)
+  image  = format("%s", csrrs(rd, INSTRETH(), X(0)).image)
+  action = {
+    csrrs(rd, INSTRETH(), X(0)).action;
+  }
+
+/*
+ Read cycle counter
+ rdcycle[h] rd -> csrrs rd, cycle[h], x0
+*/
+pseudo op rdcycle(rd: X)
+  syntax = format("rdcycle %s", rd.syntax)
+  image  = format("%s", csrrs(rd, CYCLE(), X(0)).image)
+  action = {
+    csrrs(rd, CYCLE(), X(0)).action;
+  }
+
+pseudo op rdcycleh(rd: X)
+  syntax = format("rdcycleh %s", rd.syntax)
+  image  = format("%s", csrrs(rd, CYCLEH(), X(0)).image)
+  action = {
+    csrrs(rd, CYCLEH(), X(0)).action;
+  }
+
+/*
+ Read real-time clock
+ rdtime[h] rd -> csrrs rd, time[h], x0
+*/
+pseudo op rdtime(rd: X)
+  syntax = format("rdtime %s", rd.syntax)
+  image  = format("%s", csrrs(rd, TIME(), X(0)).image)
+  action = {
+    csrrs(rd, TIME(), X(0)).action;
+  }
+
+pseudo op rdtimeh(rd: X)
+  syntax = format("rdtimeh %s", rd.syntax)
+  image  = format("%s", csrrs(rd, TIMEH(), X(0)).image)
+  action = {
+    csrrs(rd, TIMEH(), X(0)).action;
+  }
 
 //==================================================================================================
 // Instruction Groups
@@ -2029,8 +2077,14 @@ op rv32i_pseudo_system = csrw
                        | fsflags2
                        | fsflagsi
                        | fsflagsi2
+                       | rdinstret
+                       | rdinstreth
+                       | rdcycle
+                       | rdcycleh
+                       | rdtime
+                       | rdtimeh
 
 op rv32i_sys = rv32i_system // 10
-             | rv32i_pseudo_system // 20
+             | rv32i_pseudo_system // 26
 
 #endif

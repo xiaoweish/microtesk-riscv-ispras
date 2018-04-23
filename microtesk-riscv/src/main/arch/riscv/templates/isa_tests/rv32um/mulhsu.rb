@@ -48,7 +48,7 @@ require_relative '../../riscv_base'
 class MulhsuTemplate < RISCVBaseTemplate
 
   def pre_rvtest
-    RVTEST_RV64U()
+    RVTEST_RV32U()
     RVTEST_CODE_BEGIN()
   end
 

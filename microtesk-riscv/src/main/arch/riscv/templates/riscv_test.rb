@@ -59,7 +59,7 @@ module RiscvTest
 
   def RVTEST_RV64UF
     text '.macro init'
-    RVTEST_FP_ENABLE
+    RVTEST_FP_ENABLE()
     text '.endm'
   end
 
@@ -70,31 +70,31 @@ module RiscvTest
 
   def RVTEST_RV32UF
     text '.macro init'
-    RVTEST_FP_ENABLE
+    RVTEST_FP_ENABLE()
     text '.endm'
    end
 
   def RVTEST_RV64M
     text '.macro init'
-    RVTEST_ENABLE_MACHINE
+    RVTEST_ENABLE_MACHINE()
     text '.endm'
   end
 
   def RVTEST_RV64S
     text '.macro init'
-    RVTEST_ENABLE_SUPERVISOR
+    RVTEST_ENABLE_SUPERVISOR()
     text '.endm'
   end
 
   def RVTEST_RV32M
     text '.macro init'
-    RVTEST_ENABLE_MACHINE
+    RVTEST_ENABLE_MACHINE()
     text '.endm'
   end
 
   def RVTEST_RV32S
     text '.macro init'
-    RVTEST_ENABLE_SUPERVISOR
+    RVTEST_ENABLE_SUPERVISOR()
     text '.endm'
   end
 
@@ -220,6 +220,7 @@ label 1
 
 label :write_tohost
 #     sw_global TESTNUM(), :tohost, t5
+    nop # TODO: remove after sw_global is enabled.
     j :write_tohost
 
 label :reset_vector

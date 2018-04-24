@@ -74,7 +74,7 @@ class LdTemplate < RISCVBaseTemplate
     TEST_CASE( 10, x5, 0x00ff00ff00ff00ff ) do 
       la  x1, :tdat 
       addi x1, x1, -32 
-      ld x5, 32(x1) 
+      ld x5, x1, 32 
     end
 
     # Test with unaligned base
@@ -82,7 +82,7 @@ class LdTemplate < RISCVBaseTemplate
     TEST_CASE( 11, x5, 0xff00ff00ff00ff00 ) do 
       la  x1, :tdat 
       addi x1, x1, -3 
-      ld x5, 11(x1) 
+      ld x5, x1, 11
     end
 
     #-------------------------------------------------------------
@@ -103,13 +103,13 @@ class LdTemplate < RISCVBaseTemplate
 
     TEST_CASE( 18, x2, 2 ) do 
       la  x5, :tdat 
-      ld  x2, 0(x5) 
+      ld  x2, x5, 0
       li  x2, 2 
     end
 
     TEST_CASE( 19, x2, 2 ) do 
       la  x5, :tdat 
-      ld  x2, 0(x5) 
+      ld  x2, x5, 0
       nop 
       li  x2, 2 
     end

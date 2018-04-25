@@ -68,7 +68,7 @@ class AccessTemplate < RISCVBaseTemplate
     li t1, CAUSE_FETCH_ACCESS
     la t3, label_f(1)
     li t2, 0
-    jalr t2, t0
+    jalr t2, t0, 0  # Had two arguments in original test.
 label 1
 
     # A load to an illegal address should not commit.
@@ -76,7 +76,7 @@ label 1
     li t1, CAUSE_LOAD_ACCESS
     la t3, label_f(1)
     mv t2, t3
-    lb t2, (t0)
+    lb t2, (t0), 0 # Had two arguments in original test.
     j :fail
 label 1
 

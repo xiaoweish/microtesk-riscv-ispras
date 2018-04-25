@@ -65,7 +65,7 @@ class AccessTemplate < RISCVBaseTemplate
     # after the pc is set to rs1, an access exception should be raised.
 
     li TESTNUM(), 2
-    li t1, CAUSE_FETCH_ACCESS()
+    li t1, CAUSE_FETCH_ACCESS
     la t3, label_f(1)
     li t2, 0
     jalr t2, t0
@@ -73,7 +73,7 @@ label 1
 
     # A load to an illegal address should not commit.
     li TESTNUM(), 3
-    li t1, CAUSE_LOAD_ACCESS()
+    li t1, CAUSE_LOAD_ACCESS
     la t3, label_f(1)
     mv t2, t3
     lb t2, (t0)

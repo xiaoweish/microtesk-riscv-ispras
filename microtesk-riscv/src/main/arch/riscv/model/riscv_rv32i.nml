@@ -819,9 +819,9 @@ pseudo op mv(rd: X, rs: X)
 */
 pseudo op not(rd: X, rs: X)
   syntax = format("not %s, %s", rd.syntax, rs.syntax)
-  image  = format("%s", xori(rs, rd, -1).image)
+  image  = format("%s", xori(rd, rs, -1).image)
   action = {
-    xori(rs, rd, -1).action;
+    xori(rd, rs, -1).action;
   }
 
 /*

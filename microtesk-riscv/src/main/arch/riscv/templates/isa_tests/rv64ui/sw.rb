@@ -116,25 +116,25 @@ class SwTemplate < RISCVBaseTemplate
     data {
 label :tdat
 label :tdat1
-      dword 0xdeadbeefdeadbeef
+      word 0xdeadbeef
 label :tdat2
-      dword 0xdeadbeefdeadbeef
+      word 0xdeadbeef
 label :tdat3
-      dword 0xdeadbeefdeadbeef
+      word 0xdeadbeef
 label :tdat4
-      dword 0xdeadbeefdeadbeef
+      word 0xdeadbeef
 label :tdat5
-      dword 0xdeadbeefdeadbeef
+      word 0xdeadbeef
 label :tdat6
-      dword 0xdeadbeefdeadbeef
+      word 0xdeadbeef
 label :tdat7
-      dword 0xdeadbeefdeadbeef
+      word 0xdeadbeef
 label :tdat8
-      dword 0xdeadbeefdeadbeef
+      word 0xdeadbeef
 label :tdat9
-      dword 0xdeadbeefdeadbeef
+      word 0xdeadbeef
 label :tdat10
-      dword 0xdeadbeefdeadbeef
+      word 0xdeadbeef
     }
 
     RVTEST_DATA_END()

@@ -70,11 +70,55 @@ label :"test_#{@testnum}"
     # 32-bit values
     ################################################################################################
 
-    # li t0, 0x0000_0000_FFFF_FFFF
-    # li t0, 0x0000_0000_7FFF_FFFF
-    # li t0, 0x0000_0000_8FFF_FFFF
-    # li t0, 0x0000_0000_7FFF_F7FF
-    # li t0, 0x0000_0000_8FFF_F8FF
+    LI_TEST_CASE( 0x0000_0000_FFFF_FFFF ) do
+      ori  t1, zero, 0xFF
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+    end
+
+    LI_TEST_CASE( 0x0000_0000_7FFF_FFFF ) do
+      ori  t1, zero, 0x7F
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+    end
+
+    LI_TEST_CASE( 0x0000_0000_8FFF_FFFF ) do
+      ori  t1, zero, 0x8F
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+    end
+
+    LI_TEST_CASE( 0x0000_0000_7FFF_F7FF ) do
+      ori  t1, zero, 0x7F
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+      slli t1, t1, 8
+      ori  t1, t1, 0xF7
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+    end
+
+    LI_TEST_CASE( 0x0000_0000_8FFF_F8FF ) do
+      ori  t1, zero, 0x8F
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+      slli t1, t1, 8
+      ori  t1, t1, 0xF8
+      slli t1, t1, 8
+      ori  t1, t1, 0xFF
+    end
 
     ################################################################################################
     # 64-bit values

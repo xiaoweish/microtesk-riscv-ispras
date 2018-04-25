@@ -212,7 +212,10 @@ public class RiscVTest extends TemplateTest {
   @Override
   public Statistics run(final String file) {
     setProgramPrefix(file);
-    final Path testDirPath = Paths.get(TEST_PATH, getProgramPrefix());
+
+    final String fileDir = FileUtils.getFileDir(file);
+    final Path testDirPath = null != fileDir ? Paths.get(TEST_PATH, fileDir, getProgramPrefix())
+                                             : Paths.get(TEST_PATH, getProgramPrefix());
     setTestDirPath(testDirPath);
 
     setCommandLineOption(Option.TRACER_LOG);

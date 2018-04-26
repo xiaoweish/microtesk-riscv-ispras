@@ -45,7 +45,7 @@
 
 require_relative '../rv64ui/jal'
 
-class JelRv32Template < JelTemplate
+class JalRv32Template < JalTemplate
 
   def pre_rvtest
     RVTEST_RV32U()

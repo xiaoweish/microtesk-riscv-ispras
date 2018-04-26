@@ -211,6 +211,8 @@ pseudo op li(rd : X, symbol : XWORD)
 #ifdef RV64I
     if symbol<63..11> == 0 || symbol<63..11> == -1 then
       addi(rd, X(0), symbol<11..0>).image
+    elif symbol<63..31> == 0 && symbol<11> == 0 || symbol<63..31> == -1 then
+      li32(rd, symbol<31..0>).image
     else
       li64(rd, symbol).image
     endif
@@ -222,6 +224,8 @@ pseudo op li(rd : X, symbol : XWORD)
 #ifdef RV64I
     if symbol<63..11> == 0 || symbol<63..11> == -1 then
       instruction(addi(rd, X(0), symbol<11..0>)).action;
+    elif symbol<63..31> == 0 && symbol<11> == 0 || symbol<63..31> == -1 then
+      li32(rd, symbol<31..0>).action;
     else
       li64(rd, symbol).action;
     endif;

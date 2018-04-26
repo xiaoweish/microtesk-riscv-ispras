@@ -58,7 +58,7 @@ class Amoadd_wTemplate < RISCVBaseTemplate
       li a1, 0xfffffffffffff800 
       la a3, :amo_operand 
       sw a0, a3, 0 
-      amoadd_w	a4, a1, a3
+      amoadd_w a4, a1, a3
     end
 
     TEST_CASE(3, a5, 0xffffffff7ffff800 ) do

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 # THIS FILE IS BASED ON THE FOLLOWING RISC-V TEST SUITE SOURCE FILE:
-# https://github.com/riscv/riscv-tests/blob/master/isa/rv32ui/jel.S
+# https://github.com/riscv/riscv-tests/blob/master/isa/rv32ui/jal.S
 # WHICH IS DISTRIBUTED UNDER THE FOLLOWING LICENSE:
 #
 # Copyright (c) 2012-2015, The Regents of the University of California (Regents).
@@ -43,7 +43,7 @@
 # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #
 
-require_relative '../rv64ui/jel'
+require_relative '../rv64ui/jal'
 
 class JelRv32Template < JelTemplate
 

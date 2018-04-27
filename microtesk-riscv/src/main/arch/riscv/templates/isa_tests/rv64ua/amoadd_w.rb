@@ -54,24 +54,24 @@ class Amoadd_wTemplate < RISCVBaseTemplate
 
   def run
     TEST_CASE( 2, a4, 0xffffffff80000000 ) do
-      li a0, 0xffffffff80000000 
-      li a1, 0xfffffffffffff800 
-      la a3, :amo_operand 
-      sw a0, a3, 0 
+      li a0, 0xffffffff80000000
+      li a1, 0xfffffffffffff800
+      la a3, :amo_operand
+      sw a0, a3, 0
       amoadd_w a4, a1, a3
     end
 
-    TEST_CASE( 3, a5, 0xffffffff7ffff800 ) do
-      lw a5, a3, 0  
+    TEST_CASE( 3, a5, 0x000000007ffff800 ) do
+      lw a5, a3, 0
     end
 
     # try again after a cache miss
     TEST_CASE( 4, a4, 0x000000007ffff800 ) do
       li  a1, 0xffffffff80000000
-      amoadd_w a4, a1, a3 
+      amoadd_w a4, a1, a3
     end
 
-    TEST_CASE( 5, a5, 0xffffffff7ffff800 ) do
+    TEST_CASE( 5, a5, 0xfffffffffffff800 ) do
       lw a5, a3, 0
     end
 

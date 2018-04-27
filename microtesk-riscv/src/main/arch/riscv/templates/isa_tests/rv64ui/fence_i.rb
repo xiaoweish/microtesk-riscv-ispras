@@ -55,12 +55,12 @@ class Fence_iTemplate < RISCVBaseTemplate
   def run
     li a3, 111
     lh_global a0, :insn
-    lh a1, insn+2 # TODO
+    lh_global2 a1, :insn, +2
 
     # test I$ hit
     align 6
     sh_global a0, label_f(1), t0
-    sh a1, 1f+2, t0 # TODO
+    sh_global2 a1, label_f(1), +2, t0
     fence_i
 
 label 1
@@ -69,12 +69,12 @@ label 1
 
     # test prefetcher hit
     li a4, 100
-label 1:
+label 1
     addi a4, a4, -1
     bnez a4, label_b(1)
 
     sh_global a0, label_f(1), t0
-    sh a1, 1f+2, t0 # TODO
+    sh_global2 a1, label_f(1), +2, t0
     fence_i
 
     align 6
@@ -82,7 +82,7 @@ label 1
     addi a3, a3, 555
     TEST_CASE( 3, a3, 777 ) do nop end
 
-    RVTEST_PASS()
+    TEST_PASSFAIL()
 
     RVTEST_CODE_END()
 
@@ -92,7 +92,9 @@ label 1
 
     data {
 label :insn
-      addi a3, a3, 333
+      # Originally: addi a3, a3, 333
+      # TODO: Need to support instructions in data sections.
+      word 0x0de68693
     }
 
     RVTEST_DATA_END()

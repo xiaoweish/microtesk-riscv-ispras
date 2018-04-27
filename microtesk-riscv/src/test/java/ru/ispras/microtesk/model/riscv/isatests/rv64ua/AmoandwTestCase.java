@@ -21,12 +21,12 @@ import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.options.Option;
 import ru.ispras.microtesk.test.Statistics;
 
-public class Amoand_dTestCase extends RiscVTest {
+public class AmoandwTestCase extends RiscVTest {
   @Test
   public void test() {
     setCommandLineOption(Option.VERBOSE);
 
-    final Statistics statistics = run("isa_tests/rv64ua/amoand_d.rb");
+    final Statistics statistics = run("isa_tests/rv64ua/amoand_w.rb");
     Assert.assertNotNull(statistics);
   }
 }

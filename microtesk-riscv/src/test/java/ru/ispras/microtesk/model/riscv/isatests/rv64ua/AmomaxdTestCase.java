@@ -21,7 +21,7 @@ import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.options.Option;
 import ru.ispras.microtesk.test.Statistics;
 
-public class Amomax_dTestCase extends RiscVTest {
+public class AmomaxdTestCase extends RiscVTest {
   @Test
   public void test() {
     setCommandLineOption(Option.VERBOSE);

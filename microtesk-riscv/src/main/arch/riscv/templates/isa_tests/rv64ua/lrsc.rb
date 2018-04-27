@@ -47,6 +47,8 @@ require_relative '../../riscv_base'
 
 class LrscTemplate < RISCVBaseTemplate
 
+  LOG_ITERATIONS = 10
+
   def pre_rvtest
     RVTEST_RV64U()
     RVTEST_CODE_BEGIN()
@@ -82,8 +84,6 @@ label 1
       sc_w a4, a1, (a0)
     end
 
-    LOG_ITERATIONS = 10
-
     # have each core add its coreid+1 to foo 1024 times
     la a0, :foo
     li a1, 1<<LOG_ITERATIONS
@@ -91,7 +91,7 @@ label 1
 label 1
     lr_w a4, (a0)
     add a4, a4, a2
-    sc_ww a4, a4, (a0)
+    sc_w a4, a4, (a0)
     bnez a4, label_b(1)
     add a1, a1, -1
     bnez a1, label_b(1)
@@ -107,7 +107,7 @@ label 1
 
     # expected result is 512*ncores*(ncores+1)
     TEST_CASE( 4, a0, 0 ) do
-      lw a0, :foo, 0 # Originally lw a0, foo
+      lw_global a0, :foo # Originally lw a0, foo
       slli a1, a3, LOG_ITERATIONS-1
 label 1
       sub a0, a0, a1

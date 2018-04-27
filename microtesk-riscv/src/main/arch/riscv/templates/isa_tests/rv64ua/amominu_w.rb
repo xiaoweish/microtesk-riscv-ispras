@@ -61,6 +61,7 @@ class Amominu_wTemplate < RISCVBaseTemplate
       amominu_w a4, a1, a3
     end
 
+    TEST_CASE( 3, a5, 0xffffffff80000000 ) do
     TEST_CASE( 3, a5, 0xfffffffffffff800 ) do
       lw a5, a3, 0  
     end

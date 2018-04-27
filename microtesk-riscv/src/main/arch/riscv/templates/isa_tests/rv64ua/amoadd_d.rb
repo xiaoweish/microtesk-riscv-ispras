@@ -54,11 +54,11 @@ class Amoadd_dTemplate < RISCVBaseTemplate
 
   def run
     TEST_CASE(2, a4, 0xffffffff80000000 ) do
-      li a0, 0xffffffff80000000 
-      li a1, 0xfffffffffffff800 
+      li a0, 0xffffffff80000000
+      li a1, 0xfffffffffffff800
       la a3, :amo_operand 
       sd a0, a3, 0 
-      amoadd_d	a4, a1, a3
+      amoadd_d a4, a1, a3
     end
 
     TEST_CASE(3, a5, 0xffffffff7ffff800 ) do

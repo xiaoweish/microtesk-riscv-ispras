@@ -48,9 +48,9 @@ require_relative '../../riscv_base'
 class Amoadd_wTemplate < RISCVBaseTemplate
 
   def pre_rvtest
-      RVTEST_RV64U()
-      RVTEST_CODE_BEGIN()
-    end
+    RVTEST_RV64U()
+    RVTEST_CODE_BEGIN()
+  end
 
   def run
     TEST_CASE(2, a4, 0xffffffff80000000 ) do
@@ -58,7 +58,7 @@ class Amoadd_wTemplate < RISCVBaseTemplate
       li a1, 0xfffffffffffff800 
       la a3, :amo_operand 
       sw a0, a3, 0 
-      amoadd_w	a4, a1, a3
+      amoadd_w a4, a1, a3
     end
 
     TEST_CASE(3, a5, 0xffffffff7ffff800 ) do
@@ -79,7 +79,6 @@ class Amoadd_wTemplate < RISCVBaseTemplate
 
     RVTEST_CODE_END()
 
-  
     RVTEST_DATA_BEGIN()
 
     TEST_DATA()
@@ -87,8 +86,8 @@ class Amoadd_wTemplate < RISCVBaseTemplate
     RVTEST_DATA_END()
 
     data {
-text ".bss"
-align 3
+      text ".bss"
+      align 3
 label :amo_operand
       dword 0
     }

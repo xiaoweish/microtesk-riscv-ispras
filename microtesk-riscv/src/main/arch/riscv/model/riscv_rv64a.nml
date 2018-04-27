@@ -40,7 +40,7 @@ op lr_d(rd: X, rs1: X)
   syntax = format("lr.d %s, (%s)", rd.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00010", "0", "0", "00000", rs1.image, "011", rd.image)
   action = {
-    load_data(MEM_DWORD, coerce(XWORD, rs1)).action; // return load_value
+    load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
   }
 
@@ -49,7 +49,7 @@ op sc_d(rd: X, rs2: X, rs1: X)
   syntax = format("sc.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00011", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    store_data(MEM_DWORD, coerce(XWORD, rs1), coerce(DWORD, rs2)).action;
+    store_data(MEM_DWORD, rs1, coerce(DWORD, rs2)).action;
     rd = 0; // TODO: SC writes zero to rd on success or a nonzero code on failure.
   }
 
@@ -57,56 +57,56 @@ op amoswap_d(rd: X, rs2: X, rs1: X)
   syntax = format("amoswap.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00001", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    load_data(MEM_DWORD, coerce(XWORD, rs1)).action; // return load_value
+    load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
-    store_data(MEM_DWORD, coerce(XWORD, rs1), coerce(DWORD, rs2)).action;
+    store_data(MEM_DWORD, rs1, coerce(DWORD, rs2)).action;
   }
 
 op amoadd_d(rd: X, rs2: X, rs1: X)
   syntax = format("amoadd.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00000", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    load_data(MEM_DWORD, coerce(XWORD, rs1)).action; // return load_value
+    load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
     tmp_dword = rd + rs2;
-    store_data(MEM_DWORD, coerce(XWORD, rs1), coerce(DWORD, tmp_dword)).action;
+    store_data(MEM_DWORD, rs1, coerce(DWORD, tmp_dword)).action;
   }
 
 op amoand_d(rd: X, rs2: X, rs1: X)
   syntax = format("amoand.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "01100", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    load_data(MEM_DWORD, coerce(XWORD, rs1)).action; // return load_value
+    load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
     tmp_dword = rd & rs2;
-    store_data(MEM_DWORD, coerce(XWORD, rs1), coerce(DWORD, tmp_dword)).action;
+    store_data(MEM_DWORD, rs1, coerce(DWORD, tmp_dword)).action;
   }
 
 op amoor_d(rd: X, rs2: X, rs1: X)
   syntax = format("amoor.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "01000", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    load_data(MEM_DWORD, coerce(XWORD, rs1)).action; // return load_value
+    load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
     tmp_dword = rd | rs2;
-    store_data(MEM_DWORD, coerce(XWORD, rs1), coerce(DWORD, tmp_dword)).action;
+    store_data(MEM_DWORD, rs1, coerce(DWORD, tmp_dword)).action;
   }
 
 op amoxor_d(rd: X, rs2: X, rs1: X)
   syntax = format("amoxor.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00100", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    load_data(MEM_DWORD, coerce(XWORD, rs1)).action; // return load_value
+    load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
     tmp_dword = rd | rs2;
-    store_data(MEM_DWORD, coerce(XWORD, rs1), coerce(DWORD, tmp_dword)).action;
+    store_data(MEM_DWORD, rs1, coerce(DWORD, tmp_dword)).action;
   }
 
 op amomin_d(rd: X, rs2: X, rs1: X)
   syntax = format("amomin.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "10000", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    load_data(MEM_DWORD, coerce(XWORD, rs1)).action; // return load_value
+    load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
     tmp_long1 = coerce(LONG, rd);
     tmp_long2 = coerce(LONG, rs2);
@@ -115,14 +115,14 @@ op amomin_d(rd: X, rs2: X, rs1: X)
     else
       tmp_dword = rs2;
     endif;
-    store_data(MEM_DWORD, coerce(XWORD, rs1), coerce(DWORD, tmp_dword)).action;
+    store_data(MEM_DWORD, rs1, coerce(DWORD, tmp_dword)).action;
   }
 
 op amomax_d(rd: X, rs2: X, rs1: X)
   syntax = format("amomax.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "10100", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    load_data(MEM_DWORD, coerce(XWORD, rs1)).action; // return load_value
+    load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
     tmp_long1 = coerce(LONG, rd);
     tmp_long2 = coerce(LONG, rs2);
@@ -131,28 +131,28 @@ op amomax_d(rd: X, rs2: X, rs1: X)
     else
       tmp_dword = rs2;
     endif;
-    store_data(MEM_DWORD, coerce(XWORD, rs1), coerce(DWORD, tmp_dword)).action;
+    store_data(MEM_DWORD, rs1, coerce(DWORD, tmp_dword)).action;
   }
 
 op amominu_d(rd: X, rs2: X, rs1: X)
   syntax = format("amominu.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "11000", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    load_data(MEM_DWORD, coerce(XWORD, rs1)).action; // return load_value
+    load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
     if rd < rs2 then
       tmp_dword = rd;
     else
       tmp_dword = rs2;
     endif;
-    store_data(MEM_DWORD, coerce(XWORD, rs1), coerce(DWORD, tmp_dword)).action;
+    store_data(MEM_DWORD, rs1, coerce(DWORD, tmp_dword)).action;
   }
 
 op amomaxu_d(rd: X, rs2: X, rs1: X)
   syntax = format("amomaxu.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "11100", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    load_data(MEM_DWORD, coerce(XWORD, rs1)).action; // return load_value
+    load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
     tmp_long1 = coerce(LONG, rd);
     tmp_long2 = coerce(LONG, rs2);
@@ -161,7 +161,7 @@ op amomaxu_d(rd: X, rs2: X, rs1: X)
     else
       tmp_dword = rs2;
     endif;
-    store_data(MEM_DWORD, coerce(XWORD, rs1), coerce(DWORD, tmp_dword)).action;
+    store_data(MEM_DWORD, rs1, coerce(DWORD, tmp_dword)).action;
   }
 
 //==================================================================================================

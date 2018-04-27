@@ -356,7 +356,7 @@ internal op load_data(op_type: card(4), address: XWORD)
     check_aligned(op_type, address).action;
     if tmp_bit != 1 then
       if op_type == MEM_DWORD then
-        load_value<63..0> = MEM[address >> 2 + 1]::MEM[address >> 2];
+        load_value<63..0> = MEM[(address >> 2) + 1]::MEM[address >> 2];
       elif op_type == MEM_WORD then
         load_value = 0;
         load_value<31..0> = MEM[address >> 2];
@@ -370,7 +370,7 @@ internal op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
     check_aligned(op_type, address).action;
     if tmp_bit != 1 then
       if op_type == MEM_DWORD then
-        MEM[address >> 2 + 1]::MEM[address >> 2] = store_value;
+        MEM[(address >> 2) + 1]::MEM[address >> 2] = store_value;
       elif op_type == MEM_WORD then
         MEM[address >> 2] = store_value<31..0>;
       endif;

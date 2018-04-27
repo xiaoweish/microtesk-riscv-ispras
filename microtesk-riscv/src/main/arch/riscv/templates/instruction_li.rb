@@ -33,9 +33,37 @@ class InstructionLiTemplate < RISCVBaseTemplate
 label :"test_#{@testnum}"
     li TESTNUM(), @testnum
     li t0, value
-    self.instance_eval &code
+
+    if code != nil
+      self.instance_eval &code
+    else
+      PREPARE_REGISTER( t1, value )
+    end
+
     bne t0, t1, :fail
     @testnum = @testnum + 1
+  end
+
+  def PREPARE_REGISTER( reg, val )
+    shift = 56
+    started = false
+
+    while shift >= 0
+      byte_val = (val >> shift) & 0xFF
+
+      if started
+        ori reg, reg, byte_val if byte_val != 0
+      elsif byte_val != 0
+        ori reg, zero, byte_val
+        started = true
+      end
+
+      if started && shift > 0
+        slli reg, reg, 8
+      end
+
+      shift = shift - 8
+    end
   end
 
   def run
@@ -60,7 +88,6 @@ label :"test_#{@testnum}"
       slli t1, t1, 8
     end
 
-
     LI_TEST_CASE( 0x800 ) do
       ori t1, zero, 1
       slli t1, t1, 11
@@ -70,58 +97,53 @@ label :"test_#{@testnum}"
     # 32-bit values
     ################################################################################################
 
-    LI_TEST_CASE( 0x0000_0000_FFFF_FFFF ) do
-      ori  t1, zero, 0xFF
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-    end
-
-    LI_TEST_CASE( 0x0000_0000_7FFF_FFFF ) do
-      ori  t1, zero, 0x7F
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-    end
-
-    LI_TEST_CASE( 0x0000_0000_8FFF_FFFF ) do
-      ori  t1, zero, 0x8F
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-    end
-
-    LI_TEST_CASE( 0x0000_0000_7FFF_F7FF ) do
-      ori  t1, zero, 0x7F
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-      slli t1, t1, 8
-      ori  t1, t1, 0xF7
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-    end
-
-    LI_TEST_CASE( 0x0000_0000_8FFF_F8FF ) do
-      ori  t1, zero, 0x8F
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-      slli t1, t1, 8
-      ori  t1, t1, 0xF8
-      slli t1, t1, 8
-      ori  t1, t1, 0xFF
-    end
+    [
+      0x0000_0000_FFFF_FFFF,
+      0x0000_0000_7FFF_FFFF,
+      0x0000_0000_8FFF_FFFF,
+      0x0000_0000_7FFF_F7FF,
+      0x0000_0000_7FFF_F8FF,
+      0x0000_0000_8FFF_F8FF,
+      0x0000_0000_8FFF_F7FF,
+      0x0000_0000_DEAD_BEEF
+    ].each {
+      |val| LI_TEST_CASE( val )
+    }
 
     ################################################################################################
     # 64-bit values
+    ################################################################################################
+
+    LI_TEST_CASE( 0xFFFF_FFFF_FFFF_FFFF ) do
+      Not t1, zero
+    end
+
+    [
+      0x7FFF_FFFF_7FFF_FFFF,
+      0x7FFF_FFFF_8FFF_FFFF,
+      0x7FFF_FFFF_7FFF_F7FF,
+      0x7FFF_FFFF_8FFF_F8FF,
+
+      0x8FFF_FFFF_7FFF_FFFF,
+      0x8FFF_FFFF_8FFF_FFFF,
+      0x8FFF_FFFF_7FFF_F7FF,
+      0x8FFF_FFFF_8FFF_F8FF,
+
+      0x7FFF_F7FF_7FFF_FFFF,
+      0x7FFF_F7FF_8FFF_FFFF,
+      0x7FFF_F7FF_7FFF_F7FF,
+      0x7FFF_F7FF_8FFF_F8FF,
+
+      0x8FFF_F8FF_7FFF_FFFF,
+      0x8FFF_F8FF_8FFF_FFFF,
+      0x8FFF_F8FF_7FFF_F7FF,
+      0x8FFF_F8FF_8FFF_F7FF,
+
+      0xDEAD_BEEF_BABE_CAFE
+     ].each {
+       |val| LI_TEST_CASE( val )
+     }
+
     ################################################################################################
 
     TEST_PASSFAIL()

@@ -58,26 +58,26 @@ class LuiTemplate < RISCVBaseTemplate
     #-------------------------------------------------------------
 
     TEST_CASE( 2, x1, 0x0000000000000000 ) do
-       lui x1, 0x00000
+      lui x1, 0x00000
     end
 
     TEST_CASE( 3, x1, 0xfffffffffffff800 ) do
-       lui x1, 0xfffff
-       sra x1, x1, 1
+      lui x1, 0xfffff
+      srai x1, x1, 1 # Originally was: sra x1, x1, 1
     end
 
     TEST_CASE( 4, x1, 0x00000000000007ff ) do
-       lui x1, 0x7ffff
-       sra x1, x1, 20
+      lui x1, 0x7ffff
+      srai x1, x1, 20 # Originally was: sra x1, x1, 20
     end
 
     TEST_CASE( 5, x1, 0xfffffffffffff800 ) do
-       lui x1, 0x80000
-       sra x1, x1, 20
+      lui x1, 0x80000
+      srai x1, x1, 20 # Originally was: sra x1, x1, 20
     end
 
     TEST_CASE( 6, x0, 0 ) do
-       lui x0, 0x80000
+      lui x0, 0x80000
     end
 
     TEST_PASSFAIL()

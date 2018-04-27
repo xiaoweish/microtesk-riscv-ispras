@@ -6,27 +6,23 @@
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless requared by applicable law or agreed to in writing, software distributed under the License
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
-package ru.ispras.microtesk.model.riscv.isatests.rv64ua;
+package ru.ispras.microtesk.model.riscv;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import ru.ispras.microtesk.model.riscv.RiscVTest;
-import ru.ispras.microtesk.options.Option;
 import ru.ispras.microtesk.test.Statistics;
 
-public class Amoadd_wTestCase extends RiscVTest {
+public class NumericLabelsRandomTestCase extends RiscVTest {
   @Test
   public void test() {
-    setCommandLineOption(Option.VERBOSE);
-
-    final Statistics statistics = run("isa_tests/rv64ua/amoadd_w.rb");
+    final Statistics statistics = run("numeric_labels_random.rb");
     Assert.assertNotNull(statistics);
   }
 }

@@ -37,12 +37,15 @@ label 1
         beqz t0, label_f(1)
         beqz t1, label_f(1)
         beqz t2, label_f(1)
+
+        check_numeric_labels()
         j :finish
         newline
       }
 
       sequence {
 label 2
+        check_numeric_labels()
         j label_b(1)
 label 1
         bnez t0, label_b(2)
@@ -55,6 +58,7 @@ label 1
 
       sequence {
 label 2
+        check_numeric_labels()
         j label_b(1)
 label 1
         bnez t1, label_b(2)
@@ -67,6 +71,7 @@ label 1
 
       sequence {
 label 2
+        check_numeric_labels()
         j label_b(1)
 label 1
         bnez t2, label_b(2)
@@ -79,16 +84,26 @@ label 1
 
       epilogue {
 label 2
+        check_numeric_labels()
         j label_b(1)
 label 1
         bnez t0, label_b(2)
         bnez t1, label_b(2)
         bnez t2, label_b(2)
+label :error
+        trace("Error: Numeric labels are assigned incorrect addresses.")
+        nop
 label :finish
         nop
         newline
       }
     }.run 5
+  end
+
+  def check_numeric_labels()
+    la s0, label_f(1)
+    la s1, label_b(1)
+    blt s0, s1, :error
   end
 
 end

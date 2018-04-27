@@ -42,8 +42,10 @@ label 1
       }
 
       sequence {
+label 2
+        j label_b(1)
 label 1
-        bnez t0, label_b(1)
+        bnez t0, label_b(2)
         addi t0, t0, 1
         j label_f(1)
         nop
@@ -52,8 +54,10 @@ label 1
       }
 
       sequence {
+label 2
+        j label_b(1)
 label 1
-        bnez t1, label_b(1)
+        bnez t1, label_b(2)
         addi t1, t1, 1
         j label_f(1)
         nop
@@ -62,8 +66,10 @@ label 1
       }
 
       sequence {
+label 2
+        j label_b(1)
 label 1
-        bnez t2, label_b(1)
+        bnez t2, label_b(2)
         addi t2, t2, 1
         j label_f(1)
         nop
@@ -72,12 +78,12 @@ label 1
       }
 
       epilogue {
-label :repeat
+label 2
         j label_b(1)
 label 1
-        bnez t0, :repeat
-        bnez t1, :repeat
-        bnez t2, :repeat
+        bnez t0, label_b(2)
+        bnez t1, label_b(2)
+        bnez t2, label_b(2)
 label :finish
         nop
         newline

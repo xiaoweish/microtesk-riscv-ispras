@@ -64,7 +64,7 @@ label 1
     bgeu a2, a3, label_b(1)
 
 label 1
-    lw a1, (a0), 0 #Originally lw a1, (a0)
+    lw a1, (a0), 0 # Originally lw a1, (a0)
     bltu a1, a3, label_b(1)
 
     # make sure that sc without a reservation fails.

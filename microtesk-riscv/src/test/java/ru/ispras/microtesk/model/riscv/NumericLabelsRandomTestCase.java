@@ -17,11 +17,14 @@ package ru.ispras.microtesk.model.riscv;
 import org.junit.Assert;
 import org.junit.Test;
 
+import ru.ispras.microtesk.options.Option;
 import ru.ispras.microtesk.test.Statistics;
 
 public class NumericLabelsRandomTestCase extends RiscVTest {
   @Test
   public void test() {
+    setCommandLineOption(Option.VERBOSE);
+
     final Statistics statistics = run("numeric_labels_random.rb");
     Assert.assertNotNull(statistics);
   }

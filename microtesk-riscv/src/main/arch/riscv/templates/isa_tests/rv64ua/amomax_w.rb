@@ -62,7 +62,7 @@ class Amomax_wTemplate < RISCVBaseTemplate
     end
 
     TEST_CASE( 3, a5, 0xfffffffffffff800 ) do
-      ld a5, a3, 0  
+      lw a5, a3, 0
     end
 
     TEST_CASE( 4, a4, 0 ) do
@@ -72,7 +72,7 @@ class Amomax_wTemplate < RISCVBaseTemplate
     end
 
     TEST_CASE( 5, a5, 1 ) do
-       lw a5, a3, 0
+      lw a5, a3, 0
     end
 
     TEST_PASSFAIL()

@@ -61,8 +61,8 @@ class Amomin_wTemplate < RISCVBaseTemplate
       amomin_w a4, a1, a3
     end
 
-    TEST_CASE( 3, a5, 0xfffffffffffff800 ) do
-      lw a5, a3, 0  
+    TEST_CASE( 3, a5, 0xffffffff80000000 ) do
+      lw a5, a3, 0
     end
 
     TEST_CASE( 4, a4, 0 ) do
@@ -72,7 +72,7 @@ class Amomin_wTemplate < RISCVBaseTemplate
     end
 
     TEST_CASE( 5, a5, 0xffffffffffffffff ) do
-       lw a5, a3, 0
+      lw a5, a3, 0
     end
 
     TEST_PASSFAIL()

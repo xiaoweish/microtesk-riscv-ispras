@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 # THIS FILE IS BASED ON THE FOLLOWING RISC-V TEST SUITE SOURCE FILE:
-# https://github.com/riscv/riscv-tests/blob/master/isa/rv64ui/simple.S
+# https://github.com/riscv/riscv-tests/blob/master/isa/rv64ui/fence_i.S
 # WHICH IS DISTRIBUTED UNDER THE FOLLOWING LICENSE:
 #
 # Copyright (c) 2012-2015, The Regents of the University of California (Regents).
@@ -45,7 +45,7 @@
 
 require_relative '../../riscv_base'
 
-class SimpleTemplate < RISCVBaseTemplate
+class Fence_iTemplate < RISCVBaseTemplate
 
   def pre_rvtest
     RVTEST_RV64U()
@@ -53,6 +53,35 @@ class SimpleTemplate < RISCVBaseTemplate
   end
 
   def run
+    li a3, 111
+    lh_global a0, :insn
+    lh a1, insn+2 # TODO
+
+    # test I$ hit
+    align 6
+    sh a0, 1f, t0 # TODO
+    sh a1, 1f+2, t0 # TODO
+    fence_i
+
+label 1
+    addi a3, a3, 222
+    TEST_CASE( 2, a3, 444 ) do nop end
+
+    # test prefetcher hit
+    li a4, 100
+label 1:
+    addi a4, a4, -1
+    bnez a4, label_b(1)
+
+    sh a0, 1f, t0 # TODO
+    sh a1, 1f+2, t0 # TODO
+    fence_i
+
+    align 6
+label 1
+    addi a3, a3, 555
+    TEST_CASE( 3, a3, 777 ) do nop end
+
     RVTEST_PASS()
 
     RVTEST_CODE_END()

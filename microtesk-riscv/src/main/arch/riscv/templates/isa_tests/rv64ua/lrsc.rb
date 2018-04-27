@@ -54,7 +54,7 @@ class LrscTemplate < RISCVBaseTemplate
 
   def run
     # get a unique core id
-    la a0, coreid
+    la a0, :coreid
     li a1, 1
     amoadd_w a2, a1, (a0)
 
@@ -64,19 +64,19 @@ label 1
     bgeu a2, a3, label_b(1)
 
 label 1
-    lw a1, (a0)
+    lw a1, (a0), 0 #Originally lw a1, (a0)
     bltu a1, a3, label_b(1)
 
     # make sure that sc without a reservation fails.
     TEST_CASE( 2, a4, 1 ) do
-      la a0, foo
+      la a0, :foo
       sc_w a4, x0, (a0)
     end
 
     # make sure that sc with the wrong reservation fails.
     # TODO is this actually mandatory behavior?
     TEST_CASE( 3, a4, 1) do
-      la a0, foo
+      la a0, :foo
       add a1, a0, 1024
       lr_w a1, (a1)
       sc_w a4, a1, (a0)
@@ -85,7 +85,7 @@ label 1
     #define LOG_ITERATIONS 10
 
     # have each core add its coreid+1 to foo 1024 times
-    la a0, foo
+    la a0, :foo
     li a1, 1<<LOG_ITERATIONS
     addi a2, a2, 1
 label 1
@@ -97,19 +97,18 @@ label 1
     bnez a1, label_b(1)
 
     # wait for all cores to finish
-    la a0, barrier
+    la a0, :barrier
     li a1, 1
     amoadd_w x0, a1, (a0)
 label 1
-    lw a1, (a0)
+    lw a1, (a0), 0 # Originally lw a1, (a0)
     blt a1, a3, label_b(1)
     fence
 
     # expected result is 512*ncores*(ncores+1)
     TEST_CASE( 4, a0, 0 ) do
-      lw a0, foo
+      lw a0, :foo, 0 # Originally lw a0, foo
       slli a1, a3, LOG_ITERATIONS-1
-    end
 label 1
       sub a0, a0, a1
       addi a3, a3, -1

@@ -1699,7 +1699,7 @@ op fence()//(pred: card(4), succ: card(4))
     // TODO
   }
 
-op fencei()
+op fence_i()
   syntax = format("fence.i")
   image  = format("%12s00000%3s00000%7s", "000000000000", "001", "0001111")
   action = {
@@ -2063,7 +2063,7 @@ pseudo op rdtimeh(rd: X)
 op rv32i_system = ecall
                 | ebreak
                 | fence
-                | fencei
+                | fence_i
                 | mret
                 | sret
                 | uret

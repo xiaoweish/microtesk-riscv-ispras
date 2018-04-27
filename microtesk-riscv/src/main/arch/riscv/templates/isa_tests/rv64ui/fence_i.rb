@@ -90,6 +90,11 @@ label 1
 
     TEST_DATA()
 
+    data {
+label :insn
+      addi a3, a3, 333
+    }
+
     RVTEST_DATA_END()
   end
 

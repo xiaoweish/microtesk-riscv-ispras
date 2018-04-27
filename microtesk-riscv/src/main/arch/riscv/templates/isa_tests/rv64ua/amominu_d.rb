@@ -61,7 +61,7 @@ class Amominu_dTemplate < RISCVBaseTemplate
       amominu_d a4, a1, a3
     end
 
-    TEST_CASE( 3, a5, 0xfffffffffffff800 ) do
+    TEST_CASE( 3, a5, 0xffffffff80000000 ) do
       ld a5, a3, 0  
     end
 
@@ -72,7 +72,7 @@ class Amominu_dTemplate < RISCVBaseTemplate
     end
 
     TEST_CASE( 5, a5, 0 ) do
-       ld a5, a3, 0
+      ld a5, a3, 0
     end
 
     TEST_PASSFAIL()

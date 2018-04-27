@@ -59,7 +59,7 @@ class Fence_iTemplate < RISCVBaseTemplate
 
     # test I$ hit
     align 6
-    sh a0, 1f, t0 # TODO
+    sh_global a0, label_f(1), t0
     sh a1, 1f+2, t0 # TODO
     fence_i
 
@@ -73,7 +73,7 @@ label 1:
     addi a4, a4, -1
     bnez a4, label_b(1)
 
-    sh a0, 1f, t0 # TODO
+    sh_global a0, label_f(1), t0
     sh a1, 1f+2, t0 # TODO
     fence_i
 

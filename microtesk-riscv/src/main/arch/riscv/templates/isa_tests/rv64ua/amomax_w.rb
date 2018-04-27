@@ -48,30 +48,30 @@ require_relative '../../riscv_base'
 class Amomax_wTemplate < RISCVBaseTemplate
 
   def pre_rvtest
-      RVTEST_RV64U()
-      RVTEST_CODE_BEGIN()
-    end
+    RVTEST_RV64U()
+    RVTEST_CODE_BEGIN()
+  end
 
   def run
-    TEST_CASE(2, a4, 0xffffffff80000000 ) do
+    TEST_CASE( 2, a4, 0xffffffff80000000 ) do
       li a0, 0xffffffff80000000 
       li a1, 0xfffffffffffff800 
       la a3, :amo_operand 
       sw a0, a3, 0 
-      amomax_w	a4, a1, a3
+      amomax_w a4, a1, a3
     end
 
-    TEST_CASE(3, a5, 0xfffffffffffff800 ) do
+    TEST_CASE( 3, a5, 0xfffffffffffff800 ) do
       ld a5, a3, 0  
     end
 
-    TEST_CASE(4, a4, 0 ) do 
+    TEST_CASE( 4, a4, 0 ) do
       li a1, 1
       sw x0, a3, 0
-      amomax_w	a4, a1, a3 
+      amomax_w a4, a1, a3
     end
 
-    TEST_CASE(5, a5, 1 ) do
+    TEST_CASE( 5, a5, 1 ) do
        lw a5, a3, 0
     end
 
@@ -87,8 +87,8 @@ class Amomax_wTemplate < RISCVBaseTemplate
     RVTEST_DATA_END()
 
     data {
-text ".bss"
-align 3
+      text ".bss"
+      align 3
 label :amo_operand
       dword 0
     }

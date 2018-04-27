@@ -48,9 +48,9 @@ require_relative '../../riscv_base'
 class LrscTemplate < RISCVBaseTemplate
 
   def pre_rvtest
-      RVTEST_RV64U()
-      RVTEST_CODE_BEGIN()
-    end
+    RVTEST_RV64U()
+    RVTEST_CODE_BEGIN()
+  end
 
   def run
     # get a unique core id
@@ -82,7 +82,7 @@ label 1
       sc_w a4, a1, (a0)
     end
 
-    #define LOG_ITERATIONS 10
+    LOG_ITERATIONS = 10
 
     # have each core add its coreid+1 to foo 1024 times
     la a0, :foo

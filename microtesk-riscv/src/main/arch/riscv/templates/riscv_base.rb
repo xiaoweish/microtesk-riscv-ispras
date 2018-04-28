@@ -113,12 +113,28 @@ class RISCVBaseTemplate < Template
     }
 
     #
+    # Defines .text.init section.
+    #
+    # pa: base physical address (used for memory allocation).
+    # va: base virtual address (used for encoding instructions that refer to labels).
+    #
+    section(:name => '.text.init', :pa => 0x80000000, :va => 0x80000000, :args => '') {}
+
+    #
+    # Defines .tohost section.
+    #
+    # pa: base physical address (used for memory allocation).
+    # va: base virtual address (used for encoding instructions that refer to labels).
+    #
+    section(:name => '.tohost', :pa => 0x80001000, :va => 0x80001000, :args => '') {}
+
+    #
     # Defines .text section.
     #
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section_text(:pa => 0x0, :va => 0x0) {}
+    section_text(:pa => 0x80002000, :va => 0x80002000) {}
 
     #
     # Defines .data section.
@@ -126,7 +142,7 @@ class RISCVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section_data(:pa => 0x0008_0000, :va => 0x0008_0000) {}
+    section_data(:pa => 0x80100000, :va => 0x80100000) {}
 
     #
     # Simple exception handler. Continues execution from the next instruction.

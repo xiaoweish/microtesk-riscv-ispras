@@ -41,6 +41,9 @@ class RISCVBaseTemplate < Template
     # Sets the token used in separator lines printed into test programs
     set_option_value 'separator-token', "="
 
+    # Changes the name of the .text section to .text.init
+    set_option_value 'text-section-keyword', '.text.init'
+
     # Defines alias methods for X registers
     (0..31).each do |i|
       define_method "x#{i}" do |&contents| X(i, &contents) end
@@ -118,7 +121,7 @@ class RISCVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section(:name => '.text.init', :pa => 0x80000000, :va => 0x80000000, :args => '') {}
+    section_text(:pa => 0x80000000, :va => 0x80000000) {}
 
     #
     # Defines .tohost section.
@@ -134,7 +137,7 @@ class RISCVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section_text(:pa => 0x80002000, :va => 0x80002000) {}
+    section(:name => '.text', :pa => 0x80002000, :va => 0x80002000, :args => '') {}
 
     #
     # Defines .data section.
@@ -143,23 +146,6 @@ class RISCVBaseTemplate < Template
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
     section_data(:pa => 0x80100000, :va => 0x80100000) {}
-
-    #
-    # Simple exception handler. Continues execution from the next instruction.
-    #
-    exception_handler {
-      entry_point(:org => 0x380,
-                  :exception => ['IntegerOverflow',
-                                 'SystemCall',
-                                 'Breakpoint',
-                                 'Invalid Operation']) {
-        trace 'Exception handler (UEPC = 0x%x)', location('CSR', 0x041)
-        nop
-        csrr ra, uepc
-        addi ra, ra, 4
-        ret
-      }
-    }
 
     ################################################################################################
 
@@ -241,7 +227,7 @@ class RISCVBaseTemplate < Template
     }
 
     ################################################################################################
-    org 0x1000
+
     pre_rvtest
   end
 

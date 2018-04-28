@@ -2,13 +2,18 @@
 <settings>
   <!-- Standard (architecture-dependent) settings' sections -->
   <memory>
-    <region type="text" name="code" start="0000_0000" end="001f_ffff" mode="--x---"/>
-
-    <region type="data" name="lo" start="0000_0000" end="0fff_ffff" mode="rw----">
-    </region>
-
-    <region type="data" name="hi" start="5020_0000" end="5fff_ffff" mode="rw----">
-    </region>
+    <region type  = "text"
+            name  = "code"
+            start = "0000_0000_8000_0000"
+            end   = "0000_0000_ffff_ffff"
+            mode  = "--x---"
+    />
+    <region type  = "data"
+            name  = "data"
+            start = "0000_0000_8000_0000"
+            end   = "0000_0000_ffff_ffff"
+            mode  = "rw----"
+    />
   </memory>
 
   <allocation>

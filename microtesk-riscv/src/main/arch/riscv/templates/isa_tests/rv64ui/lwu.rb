@@ -114,8 +114,6 @@ class LwuTemplate < RISCVBaseTemplate
       li  x2, 2 
     end
 
-    TEST_PASSFAIL()
-    RVTEST_CODE_END()
     RVTEST_DATA_BEGIN()
     TEST_DATA()
 
@@ -132,6 +130,11 @@ label :tdat4
     }
 
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

@@ -112,8 +112,6 @@ class ShTemplate < RISCVBaseTemplate
     la a1, :tdat
     sh a0, a1, 6
 
-    TEST_PASSFAIL()
-    RVTEST_CODE_END()
     RVTEST_DATA_BEGIN()
     TEST_DATA()
 
@@ -142,6 +140,11 @@ label :tdat10
     }
 
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

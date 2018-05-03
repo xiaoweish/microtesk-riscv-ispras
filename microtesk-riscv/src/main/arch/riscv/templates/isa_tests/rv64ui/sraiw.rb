@@ -99,13 +99,14 @@ class SraiwTemplate < RISCVBaseTemplate
     TEST_IMM_OP( 26, 'sraiw', 0x0000000000000000, 0x00e0000000000000, 28)
     TEST_IMM_OP( 27, 'sraiw', 0xffffffffff000000, 0x00000000f0000000, 4)
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-
     RVTEST_DATA_BEGIN()
     TEST_DATA()
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

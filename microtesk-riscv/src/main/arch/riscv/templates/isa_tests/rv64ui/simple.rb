@@ -53,15 +53,16 @@ class SimpleTemplate < RISCVBaseTemplate
   end
 
   def run
-    RVTEST_PASS()
-
-    RVTEST_CODE_END()
-
     RVTEST_DATA_BEGIN()
 
     TEST_DATA()
 
     RVTEST_DATA_END()
+  end
+
+  def post
+    RVTEST_PASS()
+    RVTEST_CODE_END()
   end
 
 end

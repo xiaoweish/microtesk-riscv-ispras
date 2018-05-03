@@ -108,8 +108,6 @@ class SwTemplate < RISCVBaseTemplate
     TEST_ST_SRC21_BYPASS( 22, 1, 1, 'lw', 'sw', 0x22330011, 16, :tdat )
     TEST_ST_SRC21_BYPASS( 23, 2, 0, 'lw', 'sw', 0x12233001, 20, :tdat )
 
-    TEST_PASSFAIL()
-    RVTEST_CODE_END()
     RVTEST_DATA_BEGIN()
     TEST_DATA()
 
@@ -138,6 +136,11 @@ label :tdat10
     }
 
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

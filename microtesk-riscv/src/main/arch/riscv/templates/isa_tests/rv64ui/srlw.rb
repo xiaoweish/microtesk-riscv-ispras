@@ -118,13 +118,14 @@ class SrlwTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC12( 42, 'srlw', 0 )
     TEST_RR_ZERODEST( 43, 'srlw', 1024, 2048 )
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-
     RVTEST_DATA_BEGIN()
     TEST_DATA()
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

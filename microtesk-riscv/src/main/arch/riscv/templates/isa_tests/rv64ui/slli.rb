@@ -102,13 +102,14 @@ class SlliTemplate < RISCVBaseTemplate
     TEST_IMM_ZEROSRC1( 24, 'slli', 0, 31 )
     TEST_IMM_ZERODEST( 25, 'slli', 33, 20 )
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-
     RVTEST_DATA_BEGIN()
     TEST_DATA()
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

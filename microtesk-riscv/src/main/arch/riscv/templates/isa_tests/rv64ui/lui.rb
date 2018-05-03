@@ -80,15 +80,16 @@ class LuiTemplate < RISCVBaseTemplate
       lui x0, 0x80000
     end
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-
     RVTEST_DATA_BEGIN()
 
     TEST_DATA()
 
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

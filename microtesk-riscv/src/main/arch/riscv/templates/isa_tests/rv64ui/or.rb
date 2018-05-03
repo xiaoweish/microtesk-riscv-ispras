@@ -97,13 +97,14 @@ class OrTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC12( 26, 'or', 0 )
     TEST_RR_ZERODEST( 27, 'or', 0x11111111, 0x22222222 )
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-
     RVTEST_DATA_BEGIN()
     TEST_DATA()
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

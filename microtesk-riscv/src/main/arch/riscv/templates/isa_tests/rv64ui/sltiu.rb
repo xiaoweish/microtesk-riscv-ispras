@@ -98,13 +98,14 @@ class SltiuTemplate < RISCVBaseTemplate
     TEST_IMM_ZEROSRC1( 24, 'sltiu', 1, 0xfff )
     TEST_IMM_ZERODEST( 25, 'sltiu', 0x00ff00ff, 0xfff )
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-
     RVTEST_DATA_BEGIN()
     TEST_DATA()
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

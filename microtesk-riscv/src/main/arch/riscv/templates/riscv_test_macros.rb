@@ -50,7 +50,7 @@ module RiscvTestMacros
   ##################################################################################################
 
   def __riscv_xlen
-    if rv64i then 64 else 32 end
+    if is_rev('RV64I') then 64 else 32 end
   end
 
   def MASK_XLEN(x)

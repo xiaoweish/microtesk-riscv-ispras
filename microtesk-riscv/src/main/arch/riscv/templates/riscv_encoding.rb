@@ -224,19 +224,19 @@ module RiscvEncoding
   end
 
   def MSTATUS_SD
-    if rv64i then MSTATUS64_SD else MSTATUS32_SD end
+    if is_rev('RV64I') then MSTATUS64_SD else MSTATUS32_SD end
   end
 
   def SSTATUS_SD
-    if rv64i then SSTATUS64_SD else SSTATUS32_SD end
+    if is_rev('RV64I') then SSTATUS64_SD else SSTATUS32_SD end
   end
 
   def RISCV_PGLEVEL_BITS
-    if rv64i then 9 else 10 end
+    if is_rev('RV64I') then 9 else 10 end
   end
 
   def SATP_MODE
-    if rv64i then SATP64_MODE else SATP32_MODE end
+    if is_rev('RV64I') then SATP64_MODE else SATP32_MODE end
   end
 
   RISCV_PGSHIFT = 12

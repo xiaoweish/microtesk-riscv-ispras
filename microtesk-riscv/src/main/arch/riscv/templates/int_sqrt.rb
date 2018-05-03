@@ -28,7 +28,7 @@ class IntSqrtTemplate < RISCVBaseTemplate
 
   def run
     addi s0, zero, rand(0, 1023)
-    trace "\nInput parameter value: x8(s0) = %d\n", gpr(8)
+    trace "\nInput parameter value: x8(s0) = %d\n", XREG(8)
 
     add  t0, zero, s0
     addi t1, zero, 1
@@ -38,7 +38,7 @@ class IntSqrtTemplate < RISCVBaseTemplate
 
     label :cycle
     trace "\nCurrent register values: x5(t0) = %d, x6(t1) = %d, x7(t2) = %d\n",
-      gpr(5), gpr(6), gpr(7)
+      XREG(5), XREG(6), XREG(7)
 
     slt t4, zero, t0
     beq t4, zero, :done
@@ -53,7 +53,7 @@ class IntSqrtTemplate < RISCVBaseTemplate
     j :cycle
 
     label :done
-    trace "\nInteger square root of %d: %d", gpr(8), gpr(7)
+    trace "\nInteger square root of %d: %d", XREG(8), XREG(7)
   end
 
 end

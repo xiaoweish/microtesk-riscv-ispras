@@ -27,7 +27,7 @@ class InstructionRV64M < RISCVBaseTemplate
     trace "Run 64M instruction:"
     nop
 
-    if rv64m == true then
+    if is_rev('RV64M') then
       mulw t0, t1, t2
       divw t0, t1, t2
       divuw t0, t1, t2

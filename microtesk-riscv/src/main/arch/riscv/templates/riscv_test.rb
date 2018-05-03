@@ -101,8 +101,8 @@ module RiscvTest
   def CHECK_XLEN
     li a0, 1
     slli a0, a0, 31
-    if rv64i then bgez a0, label_f(1)
-             else bltz a0, label_f(1) end
+    if is_rev('RV64I') then bgez a0, label_f(1)
+                       else bltz a0, label_f(1) end
     RVTEST_PASS()
 label 1
   end

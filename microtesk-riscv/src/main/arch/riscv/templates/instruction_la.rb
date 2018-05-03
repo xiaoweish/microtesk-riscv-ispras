@@ -44,7 +44,7 @@ class InstructionLaTemplate < RISCVBaseTemplate
     prepare s0, address
 
     trace "get_address_of(:data) = 0x#{address.to_s(16)}"
-    trace "s0 = 0x%x", gpr(8)
+    trace "s0 = 0x%x", XREG(8)
 
     j :"label_#{1}"
     nop
@@ -58,7 +58,7 @@ class InstructionLaTemplate < RISCVBaseTemplate
       nop
 
       la s1, :data
-      trace "s1 = 0x%x", gpr(9)
+      trace "s1 = 0x%x", XREG(9)
 
       beq s0, s1, :"label_#{index+1}"
       nop
@@ -71,7 +71,7 @@ class InstructionLaTemplate < RISCVBaseTemplate
     j :finish
 
     label :report_error
-    trace "Error: s0(0x%x) != s1(0x%x)", gpr(8), gpr(9)
+    trace "Error: s0(0x%x) != s1(0x%x)", XREG(8), XREG(9)
     nop
 
     label :finish

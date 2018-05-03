@@ -27,7 +27,7 @@ class InstructionRV32M < RISCVBaseTemplate
     trace "Run RV32M instruction:"
     nop
 
-    if rv32m == true then
+    if is_rev('RV32M') then
       mul t0, t1, t2
       mulh t0, t1, t2
       mulhsu t0, t1, t2

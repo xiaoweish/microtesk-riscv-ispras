@@ -27,7 +27,7 @@ class InstructionRV32D < RISCVBaseTemplate
     trace "Run RV32D instruction:"
     nop
 
-    if rv32d == true then
+    if is_rev('RV32D') then
       auipc s0, 0x80
       srli s0, s0, 12
       slli s0, s0, 12
@@ -77,10 +77,10 @@ class InstructionRV32D < RISCVBaseTemplate
       fcvt_d_w ft0, t0
       fcvt_d_w ft1, t1
       fadd_d ft2, ft1, ft0
-      trace "t2: x7 = %x", gpr(7)
+      trace "t2: x7 = %x", XREG(7)
       fcvt_w_d t2, ft2
       trace "ft2 = %x", fpr(2)
-      trace "t2: x7 = %x", gpr(7)
+      trace "t2: x7 = %x", XREG(7)
 
       #fsw_global
       #flw_global

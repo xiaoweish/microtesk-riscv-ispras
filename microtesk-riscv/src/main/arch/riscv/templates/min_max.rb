@@ -66,7 +66,7 @@ class MinMaxTemplate < RISCVBaseTemplate
     j :cycle
 
     label :done
-    trace "\nmin(r16)=0x%x, max(r17)=0x%x", gpr(8), gpr(9)
+    trace "\nmin(r16)=0x%x, max(r17)=0x%x", XREG(8), XREG(9)
   end
 
 end

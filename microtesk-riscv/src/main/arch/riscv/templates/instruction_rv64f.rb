@@ -27,7 +27,7 @@ class InstructionRV64F < RISCVBaseTemplate
     trace "Run RV64F instruction:"
     nop
 
-    if rv64f == true then
+    if is_rev('RV64F') then
       fcvt_l_s t0, ft0
       fcvt_lu_s t0, ft0
       fcvt_s_l ft0, t0

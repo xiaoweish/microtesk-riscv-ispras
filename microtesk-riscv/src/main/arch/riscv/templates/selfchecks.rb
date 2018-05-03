@@ -38,7 +38,7 @@ class SelfChecksTemplate < RISCVBaseTemplate
 
       add t3, t1, t2
       trace "\n$t3($28) = $t1($6) + $t2($7) -> %d = %d + %d",
-            gpr(28), gpr(6), gpr(7)
+            XREG(28), XREG(6), XREG(7)
     }.run
   end
 

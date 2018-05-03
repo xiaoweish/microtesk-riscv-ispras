@@ -51,50 +51,6 @@ class RISCVBaseTemplate < Template
   end
 
   ##################################################################################################
-  # Revisions
-  ##################################################################################################
-
-  def rv64full
-    is_rev('RV64FULL')
-  end
-
-  def rv64i
-    is_rev('RV64I')
-  end
-
-  def rv32m
-    is_rev('RV32M')
-  end
-
-  def rv64m
-    is_rev('RV64M')
-  end
-
-  def rv32a
-    is_rev('RV32A')
-  end
-
-  def rv64a
-    is_rev('RV64A')
-  end
-
-  def rv32f
-    is_rev('RV32F')
-  end
-
-  def rv64f
-    is_rev('RV64F')
-  end
-
-  def rv32d
-    is_rev('RV32D')
-  end
-
-  def rv64d
-    is_rev('RV64D')
-  end
-
-  ##################################################################################################
   # Prologue
   ##################################################################################################
 
@@ -181,14 +137,11 @@ class RISCVBaseTemplate < Template
 
     preparator(:target => 'FR') {
       #TODO: t5
-      if rv64f == true then
-        prepare(t5, value(0, 63))
-
+      if is_rev('RV64F') then
+        prepare t5, value(0, 63)
         fcvt_s_l target, t5
-      end
-      if rv64f == false then
-        prepare(t5, value(0, 31))
-
+      else
+        prepare t5, value(0, 31)
         fcvt_s_w target, t5
       end
     }

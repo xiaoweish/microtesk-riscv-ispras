@@ -27,7 +27,7 @@ class InstructionRV64A < RISCVBaseTemplate
     trace "Run RV64A instruction:"
     nop
 
-    if rv64a == true then
+    if is_rev('RV64A') then
       auipc s0, 0x80
       srli s0, s0, 12
       slli s0, s0, 12

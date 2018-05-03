@@ -224,7 +224,7 @@ class RISCVBaseTemplate < Template
     # more convenient to test the target against the zero register.
     #
     comparator(:target => 'X', :mask => ["0000_0000", "0000_0000_0000_0000"]) {
-      bne zero, target, :error
+      bne zero, target, :fail
     }
 
     ################################################################################################
@@ -242,17 +242,13 @@ class RISCVBaseTemplate < Template
   # Epilogue
   ##################################################################################################
 
+  # Epilgue can be overridden in user templates
   def post
-label :success
-    j :terminate
-    newline
-
-label :error
-    nop
-    newline
-
-label :terminate
-    wfi
+    j :pass
+label :fail
+    RVTEST_FAIL()
+label :pass
+    RVTEST_PASS()
   end
 
   ##################################################################################################

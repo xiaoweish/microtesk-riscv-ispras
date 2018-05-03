@@ -287,6 +287,7 @@ label 1
   end
 
   def RVTEST_FAIL
+    trace 'Error: Test failed (self check did not pass)!'
     fence
 label 1
     beqz TESTNUM(), label_b(1)

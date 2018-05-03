@@ -105,16 +105,15 @@ class MulTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 27, 'mul', 0, 32 )
     TEST_RR_ZEROSRC12( 28, 'mul', 0 )
     TEST_RR_ZERODEST( 29, 'mul', 33, 34 )
-  
-    TEST_PASSFAIL()
-  
-    RVTEST_CODE_END()
-  
+
     RVTEST_DATA_BEGIN()
-  
     TEST_DATA()
-  
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

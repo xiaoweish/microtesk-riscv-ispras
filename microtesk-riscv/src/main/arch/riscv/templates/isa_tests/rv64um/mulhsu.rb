@@ -42,7 +42,9 @@
 # HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #
+
 require_relative '../../riscv_base'
+
 class MulhsuTemplate < RISCVBaseTemplate
   def pre_rvtest
     RVTEST_RV64U()
@@ -97,16 +99,14 @@ class MulhsuTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC12( 28, 'mulhsu', 0 )
     TEST_RR_ZERODEST( 29, 'mulhsu', 33<<32, 34<<32 )
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-
     RVTEST_DATA_BEGIN()
-
     TEST_DATA()
+    RVTEST_DATA_END()
+  end
 
-    RVTEST_DATA_END() 
-
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

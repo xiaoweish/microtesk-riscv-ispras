@@ -69,13 +69,14 @@ class DivwTemplate < RISCVBaseTemplate
     TEST_RR_OP( 9, 'divw', -1,      1, 0 )
     TEST_RR_OP(10, 'divw', -1,      0, 0 )
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-
     RVTEST_DATA_BEGIN()
     TEST_DATA()
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

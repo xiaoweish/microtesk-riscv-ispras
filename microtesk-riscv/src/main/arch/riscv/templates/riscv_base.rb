@@ -244,17 +244,14 @@ class RISCVBaseTemplate < Template
 
   def post
 label :success
-    #TODO:
+    j :finish
     newline
 
 label :error
-    #TODO:
+    nop
     newline
 
-    6.times {
-      nop
-    }
-
+label :finish
     wfi
   end
 

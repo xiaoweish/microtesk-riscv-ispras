@@ -48,9 +48,9 @@ require_relative '../../riscv_base'
 class Amoxor_dTemplate < RISCVBaseTemplate
 
   def pre_rvtest
-      RVTEST_RV64U()
-      RVTEST_CODE_BEGIN()
-    end
+    RVTEST_RV64U()
+    RVTEST_CODE_BEGIN()
+  end
 
   def run
     TEST_CASE( 2, a4, 0xffffffff80000000 ) do
@@ -61,17 +61,17 @@ class Amoxor_dTemplate < RISCVBaseTemplate
       amoxor_d a4, a1, a3
     end
 
-    TEST_CASE(3, a5, 0x000000007ffff800 ) do
+    TEST_CASE( 3, a5, 0x000000007ffff800 ) do
       ld a5, a3, 0  
     end
 
     # try again after a cache miss
-    TEST_CASE(4, a4, 0x000000007ffff800 ) do
+    TEST_CASE( 4, a4, 0x000000007ffff800 ) do
       li  a1, 1
       amoxor_d a4, a1, a3
     end
 
-    TEST_CASE(5, a5, 0x000000007ffff801 ) do
+    TEST_CASE( 5, a5, 0x000000007ffff801 ) do
       ld a5, a3, 0
     end
 
@@ -81,14 +81,12 @@ class Amoxor_dTemplate < RISCVBaseTemplate
 
   
     RVTEST_DATA_BEGIN()
-
     TEST_DATA()
-
     RVTEST_DATA_END()
 
     data {
-text ".bss"
-align 3
+      text ".bss"
+      align 3
 label :amo_operand
       dword 0
     }

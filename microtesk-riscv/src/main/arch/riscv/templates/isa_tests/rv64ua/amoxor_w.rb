@@ -81,9 +81,7 @@ class Amoxor_wTemplate < RISCVBaseTemplate
 
   
     RVTEST_DATA_BEGIN()
-
     TEST_DATA()
-
     RVTEST_DATA_END()
 
     data {

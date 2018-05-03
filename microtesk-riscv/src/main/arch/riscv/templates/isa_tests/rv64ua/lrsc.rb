@@ -115,12 +115,7 @@ label 1
       bgez a3, label_b(1)
     end
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-  
     RVTEST_DATA_BEGIN()
-
     TEST_DATA()
 
     data {
@@ -136,6 +131,11 @@ label :fooTest3
     }
 
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

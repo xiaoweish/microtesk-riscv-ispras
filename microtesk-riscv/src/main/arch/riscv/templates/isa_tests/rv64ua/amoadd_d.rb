@@ -74,15 +74,8 @@ class Amoadd_dTemplate < RISCVBaseTemplate
       ld a5, a3, 0
     end
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-
-  
     RVTEST_DATA_BEGIN()
-
     TEST_DATA()
-
     RVTEST_DATA_END()
 
     data {
@@ -91,6 +84,11 @@ class Amoadd_dTemplate < RISCVBaseTemplate
 label :amo_operand
       dword 0
     }
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

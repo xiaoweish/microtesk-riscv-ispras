@@ -109,13 +109,14 @@ class MulhsuTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC12( 28, 'mulhsu', 0 )
     TEST_RR_ZERODEST( 29, 'mulhsu', 33<<20, 34<<20 )
 
-    TEST_PASSFAIL()
-
-    RVTEST_CODE_END()
-
     RVTEST_DATA_BEGIN()
     TEST_DATA()
     RVTEST_DATA_END()
+  end
+
+  def post
+    TEST_PASSFAIL()
+    RVTEST_CODE_END()
   end
 
 end

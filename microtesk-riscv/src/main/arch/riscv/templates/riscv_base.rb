@@ -328,24 +328,6 @@ label :finish
   def ft31(&contents) FR(31, &contents) end
 
   ##################################################################################################
-  # Shortcut methods to access memory resources in debug messages.
-  ##################################################################################################
-
-  def gpr_observer(index)
-    location('XREG', index)
-  end
-
-  def mem_observer(index)
-    location('MEM', index)
-  end
-
-  def fpr_observer(index)
-    if rv32f == true then
-      location('FPR', index)
-    end
-  end
-
-  ##################################################################################################
   # Utility method for printing data stored in memory using labels.
   ##################################################################################################
 
@@ -366,7 +348,7 @@ label :finish
 
     trace "\nData values:"
     count.times {
-      trace "%016x (MEM[0x%x]): 0x%08x", addr, index, mem_observer(index)
+      trace "%016x (MEM[0x%x]): 0x%08x", addr, index, MEM(index)
       index = index + 1
       addr = addr + 4
     }

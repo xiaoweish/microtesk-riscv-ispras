@@ -29,10 +29,10 @@ class InstructionRV64I < RISCVBaseTemplate
 
     if rv64i == true then
       lwu t0, t1, 0x0
-      trace "t0 = %x", gpr_observer(5)
+      trace "t0 = %x", gpr(5)
 
       auipc s0, 0x80
-      trace "s0 = %x", gpr_observer(8)
+      trace "s0 = %x", gpr(8)
       srli s0, s0, 12
       slli s0, s0, 12
       srai t0, s0, 12

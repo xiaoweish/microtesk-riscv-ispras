@@ -35,14 +35,14 @@ class IntDivideTemplate < RISCVBaseTemplate
     addi s1, zero, divisor
 
     trace "\nInput parameter values: dividend x8(s0) = %d, divisor x9(s1) = %d\n",
-      gpr_observer(8), gpr_observer(9)
+      gpr(8), gpr(9)
 
     add t0, zero, zero
     add t1, zero, s0
 
     label :cycle
     trace "\nCurrent register values: x5(t0) = %d, x6(t1) = %d, x7(t2) = %d\n",
-      gpr_observer(5), gpr_observer(6), gpr_observer(7)
+      gpr(5), gpr(6), gpr(7)
 
     sub t2, t1, s1
     slt t3, t2, zero
@@ -56,7 +56,7 @@ class IntDivideTemplate < RISCVBaseTemplate
 
     label :done
     trace "\nResult: quotient x5(t0) = %d, remainder x6(t1) = %d\n",
-      gpr_observer(5), gpr_observer(6)
+      gpr(5), gpr(6)
   end
 
 end

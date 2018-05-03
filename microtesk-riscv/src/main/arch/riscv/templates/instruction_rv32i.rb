@@ -27,14 +27,14 @@ class InstructionRV32I < RISCVBaseTemplate
     trace "RV32I instructions:"
 
     la s1, :jal_label
-    trace "s1 = %x", gpr_observer(9)
+    trace "s1 = %x", gpr(9)
 
     nop
 
     lui t3, 8
-    trace "t3 = %x", gpr_observer(28)
+    trace "t3 = %x", gpr(28)
     auipc t4, :jal_label
-    trace "t4 = %x", gpr_observer(29)
+    trace "t4 = %x", gpr(29)
     nop
     # jal t5, 4
     nop
@@ -51,7 +51,7 @@ class InstructionRV32I < RISCVBaseTemplate
     lui s0, 0x1
     addi s0, s0, :jalr_label
 
-    trace "s0 = %x", gpr_observer(8)
+    trace "s0 = %x", gpr(8)
     jalr t0, s0, 0
     nop
     label :jalr_label
@@ -110,13 +110,13 @@ class InstructionRV32I < RISCVBaseTemplate
     AND t0, t1, t2
 
     addi t0, t1, 15
-    trace "(addi): x5 = %x", gpr_observer(5)
+    trace "(addi): x5 = %x", gpr(5)
     addi t1, t2, 7
-    trace "(addi): x6 = %x", gpr_observer(6)
+    trace "(addi): x6 = %x", gpr(6)
     add t2, t1, t0
-    trace "(add): x7 = %x", gpr_observer(7)
+    trace "(add): x7 = %x", gpr(7)
     sub t2, t1, t0
-    trace "(sub): x7 = %x", gpr_observer(7)
+    trace "(sub): x7 = %x", gpr(7)
 
     trace "System instructions:"
 

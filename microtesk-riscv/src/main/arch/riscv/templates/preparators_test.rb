@@ -22,17 +22,17 @@ class PreparatorsTest < RISCVBaseTemplate
     nop
 
     prepare t1, -1
-    trace "prepare -1 in t1 = %x", gpr_observer(6)
+    trace "prepare -1 in t1 = %x", gpr(6)
     nop
 
     prepare t1, -2
-    trace "prepare -2 in t1 = %x", gpr_observer(6)
+    trace "prepare -2 in t1 = %x", gpr(6)
 
     prepare t2, 0xFF120000
-    trace "prepare in t2 = %x", gpr_observer(7)
+    trace "prepare in t2 = %x", gpr(7)
 
     add t1, t0, t0
-    trace "(add): t1 = %x", gpr_observer(6)
+    trace "(add): t1 = %x", gpr(6)
   end
 
 end

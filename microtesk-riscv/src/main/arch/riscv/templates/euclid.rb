@@ -40,7 +40,7 @@ class EuclidTemplate < RISCVBaseTemplate
     addi t2, zero, val2
 
     label :cycle
-    trace "\nCurrent values: $t1($6)=%d, $t2($7)=%d\n", gpr_observer(6), gpr_observer(7)
+    trace "\nCurrent values: $t1($6)=%d, $t2($7)=%d\n", gpr(6), gpr(7)
     beq t1, t2, :done
 
     slt t0, t1, t2
@@ -56,7 +56,7 @@ class EuclidTemplate < RISCVBaseTemplate
     label :done
     add t3, t1, zero
 
-    trace "\nResult stored in $t3($28): %d", gpr_observer(28)
+    trace "\nResult stored in $t3($28): %d", gpr(28)
   end
 
 end

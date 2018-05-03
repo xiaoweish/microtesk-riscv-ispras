@@ -57,10 +57,10 @@ class BubbleSortHWordTemplate < RISCVBaseTemplate
     trace_data :data, :end
 
     la s0, :data
-    trace "s0 = %x", gpr_observer(8)
+    trace "s0 = %x", gpr(8)
 
     la s1, :end
-    trace "s0 = %x", gpr_observer(9)
+    trace "s0 = %x", gpr(9)
 
     addi a0, zero, 2
 

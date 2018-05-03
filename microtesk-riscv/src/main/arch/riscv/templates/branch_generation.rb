@@ -32,7 +32,6 @@ class BranchGenerationTemplate < RISCVBaseTemplate
     super
 
     data {
-      org 0x00010000
       align 8
       # Arrays to store test data for branch instructions.
       label :branch_data_0

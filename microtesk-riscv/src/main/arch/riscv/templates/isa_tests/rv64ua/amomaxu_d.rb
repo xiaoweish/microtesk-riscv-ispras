@@ -72,7 +72,7 @@ class Amomaxu_dTemplate < RISCVBaseTemplate
     end
 
     TEST_CASE( 5, a5, 0xffffffffffffffff ) do
-       ld a5, a3, 0
+      ld a5, a3, 0
     end
 
     TEST_PASSFAIL()

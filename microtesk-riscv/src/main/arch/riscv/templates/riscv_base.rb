@@ -104,7 +104,7 @@ class RISCVBaseTemplate < Template
     #
     # Information on data types to be used in data sections.
     #
-    data_config(:text => '.data', :target => 'MEM') {
+    data_config(:target => 'MEM') {
       define_type :id => :byte,  :text => '.byte',  :type => type('card', 8)
       define_type :id => :half,  :text => '.half',  :type => type('card', 16)
       define_type :id => :word,  :text => '.word',  :type => type('card', 32)

@@ -111,6 +111,7 @@ class RISCVBaseTemplate < Template
       define_type :id => :dword, :text => '.dword', :type => type('card', 64)
 
       define_space        :id => :space,  :text => '.space',  :fill_with => 0
+      define_space        :id => :skip,   :text => '.skip',   :fill_with => 0
       define_ascii_string :id => :ascii,  :text => '.ascii',  :zero_term => false
       define_ascii_string :id => :asciiz, :text => '.asciiz', :zero_term => true
     }

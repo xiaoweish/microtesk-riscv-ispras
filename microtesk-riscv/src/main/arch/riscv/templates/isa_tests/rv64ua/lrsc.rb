@@ -79,7 +79,7 @@ label 1
     # TODO is this actually mandatory behavior?
     TEST_CASE( 3, a4, 1) do
       la a0, :foo
-      add a1, a0, 1024
+      la a1, :fooTest3
       lr_w a1, (a1)
       sc_w a4, a1, (a0)
     end
@@ -130,7 +130,11 @@ label :barrier
       word 0
 label :foo
       word 0
+      skip 1024
+label :fooTest3
+      word 0
     }
+
     RVTEST_DATA_END()
   end
 

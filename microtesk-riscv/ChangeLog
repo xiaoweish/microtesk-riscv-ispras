@@ -3,11 +3,13 @@
 ================================================================================
 
 --------------------------------------------------------------------------------
- 2017/11/23 - 2017/MM/DD
+ 2017/11/23 - 2018/MM/DD
 --------------------------------------------------------------------------------
 
- 20XX/XX/XX MicroTESK RISC-V X.X.X
+ 2018/05/05 MicroTESK RISC-V 0.0.3
+
  - Tests: Test suite uses QEMU for RISC-V 0.2.1
+ - Tests: Test suite uses Spike (RISC-V ISA Simulator)
  - Tests: Trace Matcher 0.1.8 is applied
 
  2017/12/06 MicroTESK RISC-V 0.0.2
@@ -16,6 +18,7 @@
  - Test Templates: 5 new test templates
 
  2017/11/23 MicroTESK RISC-V 0.0.1
+
  - Specifications: Instruction set of RISC-V: RV32I, RV64I,
                                               RV32M, RV64M,
                                               RV32A, RV64A,

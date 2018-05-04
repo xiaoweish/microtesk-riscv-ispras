@@ -10,11 +10,12 @@
 
  - Specifications: System registers and system instructions
  - Specifications: Bug fixes and improvements
- - Test templates: Automatically generated test templates
- - Test templates: BPU test templates that use the Branch engine
- - Test templates: Libraries to describe initialization/finalization code
- - Test templates: Updated linker settings
- - Test templates: Test templates to validate user-level instructions
+ - Test Templates: Automatically generated test templates
+ - Test Templates: BPU test templates that use the Branch engine
+ - Test Templates: Libraries to describe initialization/finalization code
+ - Test Templates: Updated linker settings
+ - Test Templates: Test templates to validate user-level instruction
+ - Test Templates: More demo test templates
  - Tool Functions: Support for global labels, numeric labels, and weak symbols
  - Tool Functions: Test data iterator functionality
  - Tool Functions: Support for automated generation of test templates

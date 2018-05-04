@@ -161,7 +161,7 @@ class RISCVBaseTemplate < Template
     #
     comparator(:target => 'X') {
       prepare ra, value
-      bne ra, target, :error
+      bne ra, target, :fail
     }
 
     #

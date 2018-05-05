@@ -42,12 +42,15 @@
 # HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #
+
 require_relative '../../riscv_base'
+
 class WfiTemplate < RISCVBaseTemplate
+
   def pre_rvtest
-      RVTEST_RV64M()
-      RVTEST_CODE_BEGIN()
-    end
+    RVTEST_RV64M()
+    RVTEST_CODE_BEGIN()
+  end
 
   def run 
     # Make sure wfi doesn't halt the hart, even if interrupts are disabled
@@ -57,16 +60,16 @@ class WfiTemplate < RISCVBaseTemplate
     wfi
 
     RVTEST_PASS()
-
     TEST_PASSFAIL()
-
     RVTEST_CODE_END()
 
     RVTEST_DATA_BEGIN()
-
     TEST_DATA()
-
     RVTEST_DATA_END()
+  end
+
+  def post
+    # Empty
   end
 
 end

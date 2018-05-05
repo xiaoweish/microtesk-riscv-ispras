@@ -48,26 +48,26 @@ require_relative '../../riscv_base'
 class McsrTemplate < RISCVBaseTemplate
 
   def pre_rvtest
-      RVTEST_RV64M()
-      RVTEST_CODE_BEGIN()
-    end
+    RVTEST_RV64M()
+    RVTEST_CODE_BEGIN()
+  end
 
   def run
-      # Check that mcpuid reports the correct XLEN
+    # Check that mcpuid reports the correct XLEN
     if __riscv_xlen == 64
-      TEST_CASE(2, a0, 0x2 ) do
+      TEST_CASE( 2, a0, 0x2 ) do
         csrr a0, misa
         srl a0, a0, 62
       end
     else
-      TEST_CASE(2, a0, 0x1 ) do
+      TEST_CASE( 2, a0, 0x1 ) do
         csrr a0, misa
         srl a0, a0, 30
       end
     end
 
     # Check that mhartid reports 0
-    TEST_CASE(3, a0, 0x0 ) do
+    TEST_CASE( 3, a0, 0x0 ) do
       csrr a0, mhartid
     end
 
@@ -82,15 +82,15 @@ class McsrTemplate < RISCVBaseTemplate
     csrs mepc, t0
 
     TEST_PASSFAIL()
-
     RVTEST_CODE_END()
 
-  
     RVTEST_DATA_BEGIN()
-
     TEST_DATA()
-
     RVTEST_DATA_END()
+  end
+
+  def post
+    # Empty
   end
 
 end

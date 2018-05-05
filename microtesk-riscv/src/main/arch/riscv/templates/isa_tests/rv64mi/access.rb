@@ -48,9 +48,9 @@ require_relative '../../riscv_base'
 class AccessTemplate < RISCVBaseTemplate
 
   def pre_rvtest
-      RVTEST_RV64M()
-      RVTEST_CODE_BEGIN()
-    end
+    RVTEST_RV64M()
+    RVTEST_CODE_BEGIN()
+  end
 
   def run
     align 2
@@ -105,11 +105,12 @@ label 2
 
   
     RVTEST_DATA_BEGIN()
-
     TEST_DATA()
-
     RVTEST_DATA_END()
+  end
 
+  def post
+    # Empty
   end
 
 end

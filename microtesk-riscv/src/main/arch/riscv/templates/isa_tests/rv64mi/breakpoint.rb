@@ -175,7 +175,6 @@ label 2
 
   
     RVTEST_DATA_BEGIN()
-
     TEST_DATA()
 
     data {
@@ -186,6 +185,10 @@ label :data2
     }
 
     RVTEST_DATA_END()
+  end
+
+  def post
+    # Empty
   end
 
 end

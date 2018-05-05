@@ -8,6 +8,17 @@
 
  2018/05/05 MicroTESK RISC-V 0.0.3
 
+ - Specifications: System registers and system instructions
+ - Specifications: Bug fixes and improvements
+ - Test Templates: Automatically generated test templates
+ - Test Templates: BPU test templates that use the Branch engine
+ - Test Templates: Libraries to describe initialization/finalization code
+ - Test Templates: Updated linker settings
+ - Test Templates: Test templates to validate user-level instruction
+ - Test Templates: More demo test templates
+ - Tool Functions: Support for global labels, numeric labels, and weak symbols
+ - Tool Functions: Test data iterator functionality
+ - Tool Functions: Support for automated generation of test templates
  - Tests: Test suite uses QEMU for RISC-V 0.2.1
  - Tests: Test suite uses Spike (RISC-V ISA Simulator)
  - Tests: Trace Matcher 0.1.8 is applied

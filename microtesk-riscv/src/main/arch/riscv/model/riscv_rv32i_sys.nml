@@ -21,9 +21,6 @@
 // Privilege Levels
 //==================================================================================================
 
-// Data type for privilege mode
-type PRIV_MODE = card(2)
-
 // User/Application (level 0)
 let U_MODE = 0b00
 

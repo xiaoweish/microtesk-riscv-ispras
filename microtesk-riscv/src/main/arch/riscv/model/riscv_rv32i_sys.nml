@@ -37,6 +37,18 @@ let M_MODE = 0b11
 // Control and status registers (CSRs)
 //==================================================================================================
 
+// This structure describes fields of the CSR address.
+struct CSR_ADDRESS (
+  // csr[11:10] indicate whether the CSR is read/write (00, 01, or 10) or read-only (11)
+  read: card(2),
+  // csr[9:8] encode the lowest privilege level that can access the CSR
+  priv: card(2),
+  // csr[7:6] indicate whether the CSR is standard (00, 01, or 10) or non-standard (11)
+  std:  card(2),
+  // The rest of the address
+  tag:  card(6)
+)
+
 // 2 ** 12 (4096) registers
 reg CSR[1 << 12, XWORD]
 

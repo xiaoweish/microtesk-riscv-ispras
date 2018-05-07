@@ -37,7 +37,7 @@ let M_MODE = 0b11
 // Control and status registers (CSRs)
 //==================================================================================================
 
-// This structure describes fields of the CSR address.
+// This structure describes fields of the CSR address
 struct CSR_ADDRESS (
   // csr[11:10] indicate whether the CSR is read/write (00, 01, or 10) or read-only (11)
   read: card(2),

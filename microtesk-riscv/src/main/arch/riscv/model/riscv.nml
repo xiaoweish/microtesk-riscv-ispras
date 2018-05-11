@@ -61,14 +61,12 @@ type  LONG = int(64)
 // Floating Point Types
 #ifdef RV32F
   type FLOAT32  = float(23, 8)
+  type FLOATREG = FLOAT32
 #endif
+
 #ifdef RV64F
   type FLOAT64  = float(52, 11)
-#endif
-#ifdef RV64F
   type FLOATREG = FLOAT64
-#else
-  type FLOATREG = FLOAT32
 #endif
 
 //==================================================================================================
@@ -211,6 +209,7 @@ var tmp_long2 [LONG]
   var temp_fps2 [FLOAT32]
   var temp_fps3 [FLOAT32]
 #endif
+
 #ifdef RV64F
   var temp_fpd  [FLOAT64]
   var temp_fpd2 [FLOAT64]
@@ -319,9 +318,11 @@ op <name>(rd: X, imm: card(20))
 //==================================================================================================
 // General functions
 //==================================================================================================
+
 #ifdef RV32A
   #define LOAD_STORE_MEM
 #endif
+
 #ifdef RV32F
   #define LOAD_STORE_MEM
   #define ROUNDING_MODE_ON
@@ -405,30 +406,37 @@ pseudo op print_imm12(imm: card(12))
 #include "riscv_rv32i_sys.nml"
 
 #ifdef RV32M
-    #include "riscv_rv32m.nml"
+  #include "riscv_rv32m.nml"
 #endif
+
 #ifdef RV32A
-    #include "riscv_rv32a.nml"
+  #include "riscv_rv32a.nml"
 #endif
+
 #ifdef RV32F
-    #include "riscv_rv32f.nml"
+  #include "riscv_rv32f.nml"
 #endif
 
 #ifdef RV64I
   #include "riscv_rv64i.nml"
 #endif
+
 #ifdef RV64M
   #include "riscv_rv64m.nml"
 #endif
+
 #ifdef RV64A
   #include "riscv_rv64a.nml"
 #endif
+
 #ifdef RV64F
   #include "riscv_rv64f.nml"
 #endif
+
 #ifdef RV32D
   #include "riscv_rv32d.nml"
 #endif
+
 #ifdef RV64D
   #include "riscv_rv64d.nml"
 #endif

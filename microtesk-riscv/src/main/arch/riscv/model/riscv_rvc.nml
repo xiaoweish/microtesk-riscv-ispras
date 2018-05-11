@@ -131,6 +131,14 @@ op <name>(rs1: X, imm: card(6))
     // TODO
   }
 
+CI-type:
+op <name>(rs1: X, imm: card(6))
+  syntax = format("<name> %s, %s", rs1.syntax, imm)
+  image  = format("<func3>%1s%3s%5s<opcode>", imm<5>, rs1.i<2..0>, imm<4..0>)
+  action = {
+    // TODO
+  }
+
 CJ-type:
 op <name>(target: card(11))
   syntax = format("<name> %s", target)
@@ -419,6 +427,38 @@ op c_bnez(rs1: X, offset: card(9))
     // TODO:
   }
 
+/*
+C.SLLI is a CI-format instruction that performs a logical left shift of the value in register rd then
+writes the result to rd. The shift amount is encoded in the shamt field, where shamt[5] must be
+zero for RV32C. For RV32C and RV64C, the shift amount must be non-zero. For RV128C, a shift
+amount of zero is used to encode a shift of 64. C.SLLI expands into slli rd, rd, shamt[5:0],
+except for RV128C with shamt=0, which expands to slli rd, rd, 64.
+*/
+op c_slli(rd: X, shamt: card(6))
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rd.i<2..0> == 0b000, "c.slli: rd =/= 0");
+             #ifdef RV32C
+               assert(shamt<5> != 0b0, "c.slli(RV32C): shamt<5> != 0");
+               assert(shamt == 0b0, "c.slli(RV32C): shamt == 0");
+             #endif
+             #ifdef RV64C
+               assert(shamt == 0b0, "c.slli(RV64C): shamt == 0");
+             #endif
+           }
+  syntax = format("c.slli %s, %s", rd.syntax, shamt)
+  image  = format("000%1s%3s%5s10", shamt<5>, rd.i<2..0>, shamt<4..0>)
+  action = {
+    #ifdef RV128C
+      if shamt == 0 then
+        slli(rd, rd, 64).action;
+      else
+        slli(rd, rd, shamt).action;
+      endif;
+    #else
+       slli(rd, rd, shamt).action;
+    #endif
+  }
+
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
@@ -440,6 +480,7 @@ op rvc =             c_lwsp
        | @rev(RV32C) c_jal
        |             c_beqz
        |             c_bnez
+       |             c_slli
 
 //==================================================================================================
 // The End

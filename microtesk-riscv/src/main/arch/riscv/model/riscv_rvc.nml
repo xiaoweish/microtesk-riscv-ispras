@@ -23,6 +23,14 @@
   #include "riscv_rv64i.nml"
 #endif
 
+#ifdef RV32D
+  #include "riscv_rv32d.nml"
+#endif
+
+#ifdef RV32F
+  #include "riscv_rv32f.nml"
+#endif
+
 //==================================================================================================
 // C Standard Extension for Compressed Instructions
 //==================================================================================================
@@ -542,7 +550,7 @@ op c_flwsp(rd: FR, offset: card(6))
   syntax = format("c.flwsp %s, %d", rd.syntax, offset)
   image  = format("011%1s%3s%3s%2s10", offset<3>, rd.i<2..0>, offset<2..0>, offset<5..4>)
   action = {
-    flw(rd, zero_extend(card(12), offset) << 2, X(2)).action;
+    flw(rd, X(2), zero_extend(card(12), offset) << 2).action;
   }
 
 /*
@@ -557,7 +565,7 @@ op c_fldsp(rd: FR, offset: card(6))
   syntax = format("c.fldsp %s, %d", rd.syntax, offset)
   image  = format("001%1s%3s%2s%3s10", offset<2>, rd.i<2..0>, offset<1..0>, offset<5..3>)
   action = {
-    fld(rd, zero_extend(card(12), offset) << 3, X(2)).action;
+    fld(rd, X(2), zero_extend(card(12), offset) << 3).action;
   }
 
 /*
@@ -612,7 +620,7 @@ op c_fswsp(rs2: FR, offset: card(6))
   syntax = format("c.fswsp %s, %d", rs2.syntax, offset)
   image  = format("111%4s%2s%5s10", offset<3..0>, offset<5..4>, rs2.image)
   action = {
-    fsw(rs2, zero_extend(card(12), offset) << 2, X(2)).action;
+    fsw(rs2, X(2), zero_extend(card(12), offset) << 2).action;
   }
 
 /*
@@ -626,7 +634,7 @@ op c_fsdsp(rs2: FR, offset: card(6))
   syntax = format("c.fsdsp %s, %d", rs2.syntax, offset)
   image  = format("101%3s%3s%5s10", offset<2..0>, offset<5..3>, rs2.image)
   action = {
-    fsd(rs2, zero_extend(card(12), offset) << 3, X(2)).action;
+    fsd(rs2, X(2), zero_extend(card(12), offset) << 3).action;
   }
 
 //==================================================================================================

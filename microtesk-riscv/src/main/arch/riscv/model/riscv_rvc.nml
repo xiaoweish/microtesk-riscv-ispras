@@ -144,6 +144,7 @@ op <name>(rs1: X, imm: card(6))
   It expands to lw rd, offset[7:2](x2).
 */
 op c_lwsp(rd: X, offset: card(6))
+  init   = {}
   syntax = format("c.lwsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("010%s%s%s%s10", offset<3>, rd.image, offset<2..0>, offset<5..4>)
   action = {
@@ -161,6 +162,7 @@ op c_lwsp(rd: X, offset: card(6))
 */
 @rev(RV64C)
 op c_ldsp(rd: X, offset: card(6))
+  init   = {}
   syntax = format("c.ldsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("011%s%s%s%s10", offset<2>, rd.image, offset<1..0>, offset<5..3>)
   action = {
@@ -176,6 +178,7 @@ op c_ldsp(rd: X, offset: card(6))
   It expands to sw rs2, offset[7:2](x2).
 */
 op c_swsp(rs2: X, offset: card(6))
+  init   = {}
   syntax = format("c.swsp %s, %d(%s)", rs2.syntax, offset, X(2).syntax)
   image  = format("110%s%s%s10", offset<3..0>, offset<5..4> , rs2.image)
   action = {
@@ -192,6 +195,7 @@ op c_swsp(rs2: X, offset: card(6))
   It expands to sd rs2, offset[8:3](x2).
 */
 op c_sdsp(rs2: X, offset: card(6))
+  init   = {}
   syntax = format("c.sdsp %s, %d(%s)", rs2.syntax, offset, X(2).syntax)
   image  = format("111%s%s%s10", offset<2..0>, offset<5..3> , rs2.image)
   action = {
@@ -206,8 +210,8 @@ op c_sdsp(rs2: X, offset: card(6))
   by adding the zero-extended offset, scaled by 4, to the base address in register rs1'.
   It expands to lw rd', offset[6:2](rs1').
 */
-// FIXME: Registers X' (3-bit index) are required.
 op c_lw(rd: X, rs1: X, offset: card(5))
+  init   = { assert(rd.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
   syntax = format("c.lw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
   image  = format("010%s%s%s%s%s00", offset<3..1>, rd.i<2..0>, offset<0>, offset<4>, rs1.i<2..0>)
   action = {
@@ -223,15 +227,14 @@ op c_lw(rd: X, rs1: X, offset: card(5))
   to the base address in register rs1'.
   It expands to ld rd', offset[7:3](rs1').
 */
-// FIXME: Registers X' (3-bit index) are required.
 @rev(RV64C)
 op c_ld(rd: X, rs1: X, offset: card(5))
+  init   = { assert(rd.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
   syntax = format("c.ld %s, %d(%s)", rd.syntax, offset, rs1.syntax)
   image  = format("011%s%s%s%s00", offset<2..0>, rd.i<2..0>, offset<4..3>, rs1.i<2..0>)
   action = {
     ld(rd, rs1, zero_extend(card(12), offset) << 3).action;
   }
-
 
 //==================================================================================================
 

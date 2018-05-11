@@ -10,6 +10,7 @@ TESTS = arithmetic\
         instruction_rv64f\
         instruction_rv32d\
         instruction_rv64d\
+        instruction_rv64c\
         bubble_sort_byte\
         bubble_sort_hword\
         bubble_sort_word\

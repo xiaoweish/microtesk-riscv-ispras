@@ -73,13 +73,13 @@
     C.SRAI (RV32 NSE, nzimm[5]=1)
     C.SRAI64 (RV128; RV32/64 HINT)
 
-    C.ANDI
-    C.SUB
-    C.XOR
-    C.OR
-    C.AND
-    C.SUBW (RV64/128; RV32 RES)
-    C.ADDW (RV64/128; RV32 RES)
+    C.ANDI +
+    C.SUB +
+    C.XOR +
+    C.OR +
+    C.AND +
+    C.SUBW (RV64/128; RV32 RES) +
+    C.ADDW (RV64/128; RV32 RES) +
     C.J
     C.BEQZ
     C.BNEZ
@@ -229,7 +229,7 @@ op c_lw(rd: X, rs1: X, offset: card(5))
 */
 @rev(RV64C)
 op c_ld(rd: X, rs1: X, offset: card(5))
-  init   = { assert(rd.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.ld %s, %d(%s)", rd.syntax, offset, rs1.syntax)
   image  = format("011%s%s%s%s00", offset<2..0>, rd.i<2..0>, offset<4..3>, rs1.i<2..0>)
   action = {
@@ -244,6 +244,7 @@ and the sign-extended 6-bit immediate, then writes the result to rd0. C.ANDI exp
 rd0, rd0, imm[5:0].
 */
 op c_andi(rd: X, imm: card(6))
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.andi %s, %s", rd.syntax, imm)
   image  = format("100%1s10%3s%5s01", imm<5>, rd.i<2..0>, imm<4..0>)
   action = {
@@ -255,6 +256,8 @@ C.ADD adds the values in registers rd and rs2 and writes the result to register 
 into add rd, rd, rs2.
 */
 op c_add(rd: X, rs2: X)
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.add %s, %s", rd.syntax, rs2.syntax)
   image  = format("100011%3s11%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
@@ -266,6 +269,8 @@ C.OR computes the bitwise OR of the values in registers rd0 and rs20, then write
 register rd0. C.OR expands into or rd0, rd0, rs20.
 */
 op c_or(rd: X, rs2: X)
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.or %s, %s", rd.syntax, rs2.syntax)
   image  = format("100011%3s10%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
@@ -277,6 +282,8 @@ C.XOR computes the bitwise XOR of the values in registers rd0 and rs20, then wri
 register rd0. C.XOR expands into xor rd0, rd0, rs20.
 */
 op c_xor(rd: X, rs2: X)
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.xor %s, %s", rd.syntax, rs2.syntax)
   image  = format("100011%3s01%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
@@ -288,8 +295,10 @@ C.SUB subtracts the value in register rs20 from the value in register rd0, then 
 register rd0. C.SUB expands into sub rd0, rd0, rs20.
 */
 op c_sub(rd: X, rs2: X)
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.sub %s, %s", rd.syntax, rs2.syntax)
-  image  = format("100111%3s00%3s01", rd.i<2..0>, rs2.i<2..0>)
+  image  = format("100011%3s00%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
     sub(rd, rd, rs2).action;
   }
@@ -299,12 +308,31 @@ C.ADDW is an RV64C/RV128C-only instruction that adds the values in registers rd0
 then sign-extends the lower 32 bits of the sum before writing the result to register rd0. C.ADDW
 expands into addw rd0, rd0, rs20.
 */
+@rev(RV64C)
+op c_addw(rd: X, rs2: X)
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  syntax = format("c.addw %s, %s", rd.syntax, rs2.syntax)
+  image  = format("100111%3s01%3s01", rd.i<2..0>, rs2.i<2..0>)
+  action = {
+    addw(rd, rd, rs2).action;
+  }
 
 /*
 C.SUBW is an RV64C/RV128C-only instruction that subtracts the value in register rs20 from the
-value in register rd0, then sign-extends the lower 32 bits of the dierence before writing the result
+value in register rd0, then sign-extends the lower 32 bits of the difference before writing the result
 to register rd0. C.SUBW expands into subw rd0, rd0, rs20.
 */
+@rev(RV64C)
+op c_subw(rd: X, rs2: X)
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  syntax = format("c.subw %s, %s", rd.syntax, rs2.syntax)
+  image  = format("100111%3s00%3s01", rd.i<2..0>, rs2.i<2..0>)
+  action = {
+    addw(rd, rd, rs2).action;
+  }
+
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
@@ -318,8 +346,10 @@ op rvc =             c_lwsp
        |             c_andi
        |             c_add
        |             c_or
-       |             c_add
-       |             c_add
+       |             c_xor
+       |             c_sub
+       | @rev(RV64C) c_addw
+       | @rev(RV64C) c_subw
 
 //==================================================================================================
 // The End

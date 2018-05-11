@@ -110,7 +110,15 @@
 CR-type:
 op <name>(rd: X/rs1: X, rs2: X)
   syntax = format("<name> %s, %s", rd.syntax/rs1.syntax, rs2.syntax)
-  image  = format("<func4>%s%s<opcode>", rs1.image/rd.image, rs2.image)
+  image  = format("<func4>%s%s<opcode>", rs1.i<2..0>/rd.i<2..0>, rs2.i<2..0>)
+  action = {
+    // TODO
+  }
+
+CS-type:
+op <name>(rs1: X, rs2: X)
+  syntax = format("<name> %s, %s", rs1.syntax, rs2.syntax)
+  image  = format("<func6>%3s<func>%3s<opcode>", rs1.i<2..0>, rs2.i<2..0>)
   action = {
     // TODO
   }
@@ -118,7 +126,7 @@ op <name>(rd: X/rs1: X, rs2: X)
 CB-type:
 op <name>(rs1: X, imm: card(6))
   syntax = format("<name> %s, %s", rs1.syntax, imm)
-  image  = format("<func3>%1s<func2>%3s%5s<opcode>", imm<5>, rs1.image, imm<4..0>)
+  image  = format("<func3>%1s<func2>%3s%5s<opcode>", imm<5>, rs1.i<2..0>, imm<4..0>)
   action = {
     // TODO
   }
@@ -239,6 +247,61 @@ op c_andi(rd: X, imm: card(6))
     andi(rd, rd, sign_extend(card(12), imm)).action;
   }
 
+/*
+C.ADD adds the values in registers rd and rs2 and writes the result to register rd. C.ADD expands
+into add rd, rd, rs2.
+*/
+op c_add(rd: X, rs2: X)
+  syntax = format("c.add %s, %s", rd.syntax, rs2.syntax)
+  image  = format("100011%3s11%3s01", rd.i<2..0>, rs2.i<2..0>)
+  action = {
+    and(rd, rd, rs2).action;
+  }
+
+/*
+C.OR computes the bitwise OR of the values in registers rd0 and rs20, then writes the result to
+register rd0. C.OR expands into or rd0, rd0, rs20.
+*/
+op c_or(rd: X, rs2: X)
+  syntax = format("c.or %s, %s", rd.syntax, rs2.syntax)
+  image  = format("100011%3s10%3s01", rd.i<2..0>, rs2.i<2..0>)
+  action = {
+    or(rd, rd, rs2).action;
+  }
+
+/*
+C.XOR computes the bitwise XOR of the values in registers rd0 and rs20, then writes the result to
+register rd0. C.XOR expands into xor rd0, rd0, rs20.
+*/
+op c_xor(rd: X, rs2: X)
+  syntax = format("c.xor %s, %s", rd.syntax, rs2.syntax)
+  image  = format("100011%3s01%3s01", rd.i<2..0>, rs2.i<2..0>)
+  action = {
+    xor(rd, rd, rs2).action;
+  }
+
+/*
+C.SUB subtracts the value in register rs20 from the value in register rd0, then writes the result to
+register rd0. C.SUB expands into sub rd0, rd0, rs20.
+*/
+op c_sub(rd: X, rs2: X)
+  syntax = format("c.sub %s, %s", rd.syntax, rs2.syntax)
+  image  = format("100111%3s00%3s01", rd.i<2..0>, rs2.i<2..0>)
+  action = {
+    sub(rd, rd, rs2).action;
+  }
+
+/*
+C.ADDW is an RV64C/RV128C-only instruction that adds the values in registers rd0 and rs20,
+then sign-extends the lower 32 bits of the sum before writing the result to register rd0. C.ADDW
+expands into addw rd0, rd0, rs20.
+*/
+
+/*
+C.SUBW is an RV64C/RV128C-only instruction that subtracts the value in register rs20 from the
+value in register rd0, then sign-extends the lower 32 bits of the dierence before writing the result
+to register rd0. C.SUBW expands into subw rd0, rd0, rs20.
+*/
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
@@ -249,6 +312,11 @@ op rvc =             c_lwsp
        | @rev(RV64C) c_sdsp
        |             c_lw
        | @rev(RV64C) c_ld
+       |             c_andi
+       |             c_add
+       |             c_or
+       |             c_add
+       |             c_add
 
 //==================================================================================================
 // The End

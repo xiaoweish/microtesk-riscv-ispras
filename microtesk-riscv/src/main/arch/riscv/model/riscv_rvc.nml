@@ -40,6 +40,12 @@
     C.SQ -
     C.FSW
     C.FSD
+
+    C.LW
+    C.LD
+    C.LQ -
+    C.FLW
+    C.FLD
 */
 
 //==================================================================================================
@@ -109,6 +115,40 @@ op c_sdsp(rs2: X, offset: card(6))
     sw(rs2, X(2), zero_extend(card(12), offset) << 3).action;
   }
 
+/*
+  C.LW
+  Format: c_lw, rs1, offset
+
+  C.LW loads a 32-bit value from memory into register rd'. It computes an effective address
+  by adding the zero-extended offset, scaled by 4, to the base address in register rs1'.
+  It expands to lw rd', offset[6:2](rs1').
+*/
+// FIXME: Registers X' (3-bit index) are required.
+op c_lw(rd: X, rs1: X, offset: card(5))
+  syntax = format("c.lw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
+  image  = format("010%s%s%s%s%s00", offset<3..1>, rd.i<2..0>, offset<0>, offset<4>, rs1.i<2..0>)
+  action = {
+    lw(rd, rs1, zero_extend(card(12), offset) << 2).action;
+  }
+
+/*
+  C.LD
+  Format: c_ld, rs1, offset
+
+  C.LD is an RV64C/RV128C-only instruction that loads a 64-bit value from memory into register rd'.
+  It computes an effective address by adding the zero-extended offset, scaled by 8,
+  to the base address in register rs1'.
+  It expands to ld rd', offset[7:3](rs1').
+*/
+// FIXME: Registers X' (3-bit index) are required.
+@rev(RV64C)
+op c_ld(rd: X, rs1: X, offset: card(5))
+  syntax = format("c.ld %s, %d(%s)", rd.syntax, offset, rs1.syntax)
+  image  = format("011%s%s%s%s00", offset<2..0>, rd.i<2..0>, offset<4..3>, rs1.i<2..0>)
+  action = {
+    ld(rd, rs1, zero_extend(card(12), offset) << 3).action;
+  }
+
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
@@ -117,6 +157,8 @@ op rvc =             c_lwsp
        | @rev(RV64C) c_ldsp
        |             c_swsp
        | @rev(RV64C) c_sdsp
+       |             c_lw
+       | @rev(RV64C) c_ld
 
 //==================================================================================================
 // The End

@@ -619,7 +619,7 @@ public class RiscVTest extends TemplateTest {
 
         final String qemuTerminateHeader = "qemu-system-riscv64: terminating on signal";
 
-        if (!errString.startsWith(qemuTerminateHeader)) {
+        if (!errString.startsWith(qemuTerminateHeader) && !returnCodes.contains(exitCode)) {
           Assert.fail(
               String.format(
                   "Process has returned %d: %s;%s%sError log is: %s",

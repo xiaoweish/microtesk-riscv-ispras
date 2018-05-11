@@ -49,7 +49,7 @@
 */
 
 /*
-  Instructions (number: 48):
+  Instructions (number: 49):
     C.ADDI4SPN (RES, nzimm=0)
     C.FLD (RV32/64)
     C.LQ (RV128)
@@ -63,7 +63,7 @@
     C.SD (RV64/128)
     C.NOP
     C.ADDI (HINT, nzimm=0)
-    C.JAL (RV32) -
+    C.JAL (RV32) +
     C.ADDIW (RV64/128; RES, rd=0)
     C.LI (HINT, rd=0)
     C.ADDI16SP (RES, nzimm=0)
@@ -91,10 +91,10 @@
     C.LWSP (RES, rd=0) +
     C.FLWSP (RV32) +
     C.LDSP (RV64/128; RES, rd=0) +
-    C.JR (RES, rs1=0)
+    C.JR (RES, rs1=0) +
     C.MV (HINT, rd=0)
     C.EBREAK
-    C.JALR
+    C.JALR +
     C.ADD (HINT, rd=0)
     C.FSDSP (RV32/64)
     C.SQSP (RV128)
@@ -357,21 +357,21 @@ C.J performs an unconditional control transfer. The offset is sign-extended and 
 form the jump target address. C.J can therefore target a +-2 KiB range. C.J expands to jal x0,
 offset[11:1].
 */
-var c_jump_imm12[card(12)]
+var c_jump_imm11[card(11)]
 
-mode C_JUMP_IMM(imm: int(12)) = imm
+mode C_JUMP_IMM(imm: int(11)) = imm
   init = {
-    c_jump_imm12 = imm;
+    c_jump_imm11 = imm;
   }
   syntax = format("0x%X", imm)
   image = format("%s", imm)
 
-label mode C_JUMP_LABEL(target: WORD, current: WORD) = target<11..0> - current<11..0>
+label mode C_JUMP_LABEL(target: WORD, current: WORD) = target<10..0> - current<10..0>
   init = {
-    c_jump_imm12 = target<11..0> - current<11..0>;
+    c_jump_imm11 = target<10..0> - current<10..0>;
   }
   syntax = ""
-  image = format("%s", target<11..0> - current<11..0>)
+  image = format("%s", target<10..0> - current<10..0>)
 
 mode C_JUMP_ADDR = C_JUMP_LABEL | C_JUMP_IMM
 
@@ -379,12 +379,11 @@ mode C_JUMP_ADDR = C_JUMP_LABEL | C_JUMP_IMM
 op c_j(target: C_JUMP_ADDR)
   init   = {}
   syntax = format("c.j %s", target.syntax)
-  image  = format("101%1s%1s%2s%1s%1s%1s%3s%1s01", c_jump_imm12<11>, c_jump_imm12<4>,
-                  c_jump_imm12<9..8>, c_jump_imm12<10>, c_jump_imm12<6>, c_jump_imm12<7>,
-                  c_jump_imm12<3..1>, c_jump_imm12<5>)
+  image  = format("101%1s%1s%2s%1s%1s%1s%3s%1s01", c_jump_imm11<10>, c_jump_imm11<3>,
+                  c_jump_imm11<8..7>, c_jump_imm11<9>, c_jump_imm11<5>, c_jump_imm11<6>,
+                  c_jump_imm11<2..0>, c_jump_imm11<4>)
   action = {
-    //jal(X(0), sign_extend(card(20), c_jump_imm12)).action;
-    // TODO;
+    jal(X(0), JUMP_IMM(sign_extend(int(20), c_jump_imm11) << 1)).action;
   }
 
 /*
@@ -395,12 +394,11 @@ expands to jal x1, offset[11:1].
 op c_jal(target: C_JUMP_ADDR)
   init   = {}
   syntax = format("c.jal %s", target.syntax)
-  image  = format("001%1s%1s%2s%1s%1s%1s%3s%1s01", c_jump_imm12<11>, c_jump_imm12<4>,
-                  c_jump_imm12<9..8>, c_jump_imm12<10>, c_jump_imm12<6>, c_jump_imm12<7>,
-                  c_jump_imm12<3..1>, c_jump_imm12<5>)
+  image  = format("001%1s%1s%2s%1s%1s%1s%3s%1s01", c_jump_imm11<10>, c_jump_imm11<3>,
+                  c_jump_imm11<8..7>, c_jump_imm11<9>, c_jump_imm11<5>, c_jump_imm11<6>,
+                  c_jump_imm11<2..0>, c_jump_imm11<4>)
   action = {
-    //jal(X(1), sign_extend(card(20), c_jump_imm12)).action;
-    // TODO;
+    jal(X(1), JUMP_IMM(sign_extend(int(20), c_jump_imm11) << 1)).action;
   }
 
 /*
@@ -408,26 +406,71 @@ C.BEQZ performs conditional control transfers. The offset is sign-extended and a
 form the branch target address. It can therefore target a +-256B range. C.BEQZ takes the branch
 if the value in register rs10 is zero. It expands to beq rs10, x0, offset[8:1].
 */
-op c_beqz(rs1: X, offset: card(9))
+var c_jump_imm8[card(8)]
+
+mode C_BRANCH_IMM(imm: card(8)) = imm
+  init = {
+    c_jump_imm8 = imm;
+  }
+  syntax = format("%d", coerce(int(8), imm))
+  image = format("%s", imm)
+
+label mode C_BRANCH_LABEL_M2(target: WORD, current: WORD) = target<7..0> - current<7..0>
+  init = {
+    c_jump_imm8 = target<7..0> - current<7..0>;
+  }
+  syntax = ""
+  image = format("%s", target<7..0> - current<7..0>)
+
+mode C_BRANCH_OFFSET_M2 = C_BRANCH_LABEL_M2 | C_BRANCH_IMM
+
+op c_beqz(rs1: X, offset: C_BRANCH_OFFSET_M2)
   init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
-  syntax = format("c.beqz %s, %s", rs1.syntax, offset)
-  image  = format("110%1s%2s%3s%2s%2s%1s01", offset<8>, offset<4..3>, rs1.i<2..0>, offset<7..6>, offset<2..1>, offset<5>)
+  syntax = format("c.beqz %s, %s", rs1.syntax, offset.syntax)
+  image  = format("110%1s%2s%3s%2s%2s%1s01", c_jump_imm8<7>, c_jump_imm8<3..2>, rs1.i<2..0>,
+                  c_jump_imm8<6..5>, c_jump_imm8<1..0>, c_jump_imm8<4>)
   action = {
-    //beq(rs1, X(0), sign_extend(card(20), offset)).action;
-    // TODO:
+    beq(rs1, X(0), BRANCH_IMM(sign_extend(card(12), offset) << 1)).action;
   }
 
 /*
 C.BNEZ is defined analogously, but it takes the branch if rs10 contains a nonzero value. It expands
 to bne rs10, x0, offset[8:1].
 */
-op c_bnez(rs1: X, offset: card(9))
+op c_bnez(rs1: X, offset: C_BRANCH_OFFSET_M2)
   init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
-  syntax = format("c.bnez %s, %s", rs1.syntax, offset)
-  image  = format("111%1s%2s%3s%2s%2s%1s01", offset<8>, offset<4..3>, rs1.i<2..0>, offset<7..6>, offset<2..1>, offset<5>)
+  syntax = format("c.bnez %s, %s", rs1.syntax, offset.syntax)
+  image  = format("111%1s%2s%3s%2s%2s%1s01", c_jump_imm8<7>, c_jump_imm8<3..2>, rs1.i<2..0>,
+                  c_jump_imm8<6..5>, c_jump_imm8<1..0>, c_jump_imm8<4>)
   action = {
-    //bne(rs1, X(0), sign_extend(card(20), offset)).action;
-    // TODO:
+    bne(rs1, X(0), BRANCH_IMM(sign_extend(card(12), offset) << 1)).action;
+  }
+
+/*
+C.JR (jump register) performs an unconditional control transfer to the address in register rs1. C.JR
+expands to jalr x0, rs1, 0.
+*/
+op c_jr(rs1: X)
+  init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs1.i<2..0> == 0b000, "c.jr: rs1 == 0");}
+  syntax = format("c.jr %s", rs1.syntax)
+  image  = format("1000%5s0000010", rs1.image)
+  action = {
+    jalr(X(0), rs1, BRANCH_IMM(0)).action;
+  }
+
+/*
+C.JALR (jump and link register) performs the same operation as C.JR, but additionally writes the
+address of the instruction following the jump (pc+2) to the link register, x1. C.JALR expands to
+jalr x1, rs1, 0.
+*/
+op c_jalr(rs1: X)
+  init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs1.i<2..0> == 0b000, "c.jalr: rs1 == 0");}
+  syntax = format("c.jalr %s", rs1.syntax)
+  image  = format("1001%5s0000010", rs1.image)
+  action = {
+    jalr(X(1), rs1, BRANCH_IMM(0)).action;
   }
 
 /*

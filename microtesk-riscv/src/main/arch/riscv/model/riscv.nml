@@ -96,6 +96,9 @@ reg XREG [32, XWORD]
 // Program Counter
 reg PC [XWORD]
 
+// Control and Status Registers (CSRs), Count = 4096 (2 ** 12)
+reg CSR[1 << 12, XWORD]
+
 // Memory Size
 let MEM_SIZE = XLEN - 2
 
@@ -482,10 +485,8 @@ op instruction(operation: Op)
 
 internal op exception()
 action = {
-  CSR[0x041] = PC;
-  //UEPC
-
-  PC = 0x380;
+  // TODO: Exceptions are temporary ignored
+  PC = PC + 4;
 }
 
 //==================================================================================================

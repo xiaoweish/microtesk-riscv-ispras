@@ -49,9 +49,6 @@ struct CSR_ADDRESS (
   tag:  card(6)
 )
 
-// 2 ** 12 (4096) registers
-reg CSR[1 << 12, XWORD]
-
 // Index of the currently accessed register
 var csr_index[card(12)]
 

@@ -603,13 +603,14 @@ public class RiscVTest extends TemplateTest {
       }
 
       final int exitCode = timeout > 0 ? 0 : process.waitFor();
+      process.destroy();
 
       if (!returnCodes.contains(exitCode) || !isEmpty(errorLog)) {
 
         if (canFailOnCurrentPhase()) {
 
-        /* It is planned for test to fail on this phase, finish with success.
-         * The finishing is treated as skipping of the rest of test execution phases. */
+          /* It is planned for test to fail on this phase, finish with success.
+           * The finishing is treated as skipping of the rest of test execution phases. */
           skipRestPhases(true);
           return;
         }
@@ -629,10 +630,6 @@ public class RiscVTest extends TemplateTest {
                   System.lineSeparator(),
                   errString));
         }
-      }
-
-      if (timeout == 0) {
-        process.destroy();
       }
       if (errorLog.exists() && !errorLog.delete()) {
         Assert.fail("Can't delete error log file: " + errorLog.getAbsolutePath());

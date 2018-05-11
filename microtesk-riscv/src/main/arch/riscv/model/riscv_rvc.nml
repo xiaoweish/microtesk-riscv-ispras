@@ -48,6 +48,81 @@
     C.FLD
 */
 
+/*
+  Instructions (number: 48):
+    C.ADDI4SPN (RES, nzimm=0)
+    C.FLD (RV32/64)
+    C.LQ (RV128)
+    C.LW
+    C.FLW (RV32)
+    C.LD (RV64/128)
+    C.FSD (RV32/64)
+    C.SQ (RV128)
+    C.SW
+    C.FSW (RV32)
+    C.SD (RV64/128)
+    C.NOP
+    C.ADDI (HINT, nzimm=0)
+    C.JAL (RV32)
+    C.ADDIW (RV64/128; RES, rd=0)
+    C.LI (HINT, rd=0)
+    C.ADDI16SP (RES, nzimm=0)
+    C.LUI (RES, nzimm=0; HINT, rd=0)
+    C.SRLI (RV32 NSE, nzimm[5]=1)
+    C.SRLI64 (RV128; RV32/64 HINT)
+    C.SRAI (RV32 NSE, nzimm[5]=1)
+    C.SRAI64 (RV128; RV32/64 HINT)
+
+    C.ANDI
+    C.SUB
+    C.XOR
+    C.OR
+    C.AND
+    C.SUBW (RV64/128; RV32 RES)
+    C.ADDW (RV64/128; RV32 RES)
+    C.J
+    C.BEQZ
+    C.BNEZ
+
+    C.SLLI (HINT, rd=0; RV32 NSE, nzimm[5]=1)
+    C.SLLI64 (RV128; RV32/64 HINT; HINT, rd=0)
+    C.FLDSP (RV32/64)
+    C.LQSP (RV128; RES, rd=0)C.LWSP (RES, rd=0)
+    C.FLWSP (RV32)
+    C.LDSP (RV64/128; RES, rd=0)
+    C.JR (RES, rs1=0)
+    C.MV (HINT, rd=0)
+    C.EBREAK
+    C.JALR
+    C.ADD (HINT, rd=0)
+    C.FSDSP (RV32/64)
+    C.SQSP (RV128)
+    C.SWSP
+    C.FSWSP (RV32)
+    C.SDSP (RV64/128)
+*/
+
+//==================================================================================================
+// Instruction Templates
+//==================================================================================================
+
+/*
+CR-type:
+op <name>(rd: X/rs1: X, rs2: X)
+  syntax = format("<name> %s, %s", rd.syntax/rs1.syntax, rs2.syntax)
+  image  = format("<func4>%s%s<opcode>", rs1.image/rd.image, rs2.image)
+  action = {
+    // TODO
+  }
+
+CB-type:
+op <name>(rs1: X, imm: card(6))
+  syntax = format("<name> %s, %s", rs1.syntax, imm)
+  image  = format("<func3>%1s<func2>%3s%5s<opcode>", imm<5>, rs1.image, imm<4..0>)
+  action = {
+    // TODO
+  }
+*/
 //==================================================================================================
 // Instructions
 //==================================================================================================
@@ -147,6 +222,21 @@ op c_ld(rd: X, rs1: X, offset: card(5))
   image  = format("011%s%s%s%s00", offset<2..0>, rd.i<2..0>, offset<4..3>, rs1.i<2..0>)
   action = {
     ld(rd, rs1, zero_extend(card(12), offset) << 3).action;
+  }
+
+
+//==================================================================================================
+
+/*
+C.ANDI is a CB-format instruction that computes the bitwise AND of of the value in register rd0
+and the sign-extended 6-bit immediate, then writes the result to rd0. C.ANDI expands to andi
+rd0, rd0, imm[5:0].
+*/
+op c_andi(rd: X, imm: card(6))
+  syntax = format("c.andi %s, %s", rd.syntax, imm)
+  image  = format("100%1s10%3s%5s01", imm<5>, rd.i<2..0>, imm<4..0>)
+  action = {
+    andi(rd, rd, sign_extend(card(12), imm)).action;
   }
 
 //==================================================================================================

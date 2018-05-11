@@ -63,7 +63,7 @@
     C.SD (RV64/128)
     C.NOP
     C.ADDI (HINT, nzimm=0)
-    C.JAL (RV32)
+    C.JAL (RV32) -
     C.ADDIW (RV64/128; RES, rd=0)
     C.LI (HINT, rd=0)
     C.ADDI16SP (RES, nzimm=0)
@@ -80,9 +80,9 @@
     C.AND +
     C.SUBW (RV64/128; RV32 RES) +
     C.ADDW (RV64/128; RV32 RES) +
-    C.J
-    C.BEQZ
-    C.BNEZ
+    C.J +
+    C.BEQZ +
+    C.BNEZ +
 
     C.SLLI (HINT, rd=0; RV32 NSE, nzimm[5]=1)
     C.SLLI64 (RV128; RV32/64 HINT; HINT, rd=0)
@@ -127,6 +127,14 @@ CB-type:
 op <name>(rs1: X, imm: card(6))
   syntax = format("<name> %s, %s", rs1.syntax, imm)
   image  = format("<func3>%1s<func2>%3s%5s<opcode>", imm<5>, rs1.i<2..0>, imm<4..0>)
+  action = {
+    // TODO
+  }
+
+CJ-type:
+op <name>(target: card(11))
+  syntax = format("<name> %s", target)
+  image  = format("<func3>%11s<opcode>", target)
   action = {
     // TODO
   }
@@ -333,6 +341,84 @@ op c_subw(rd: X, rs2: X)
     addw(rd, rd, rs2).action;
   }
 
+/*
+C.J performs an unconditional control transfer. The offset is sign-extended and added to the pc to
+form the jump target address. C.J can therefore target a +-2 KiB range. C.J expands to jal x0,
+offset[11:1].
+*/
+var c_jump_imm12[card(12)]
+
+mode C_JUMP_IMM(imm: int(12)) = imm
+  init = {
+    c_jump_imm12 = imm;
+  }
+  syntax = format("0x%X", imm)
+  image = format("%s", imm)
+
+label mode C_JUMP_LABEL(target: WORD, current: WORD) = target<11..0> - current<11..0>
+  init = {
+    c_jump_imm12 = target<11..0> - current<11..0>;
+  }
+  syntax = ""
+  image = format("%s", target<11..0> - current<11..0>)
+
+mode C_JUMP_ADDR = C_JUMP_LABEL | C_JUMP_IMM
+
+@rev(RV32C)
+op c_j(target: C_JUMP_ADDR)
+  init   = {}
+  syntax = format("c.j %s", target.syntax)
+  image  = format("101%1s%1s%2s%1s%1s%1s%3s%1s01", c_jump_imm12<11>, c_jump_imm12<4>,
+                  c_jump_imm12<9..8>, c_jump_imm12<10>, c_jump_imm12<6>, c_jump_imm12<7>,
+                  c_jump_imm12<3..1>, c_jump_imm12<5>)
+  action = {
+    //jal(X(0), sign_extend(card(20), c_jump_imm12)).action;
+    // TODO;
+  }
+
+/*
+C.JAL is an RV32C-only instruction that performs the same operation as C.J, but additionally
+writes the address of the instruction following the jump (pc+2) to the link register, x1. C.JAL
+expands to jal x1, offset[11:1].
+*/
+op c_jal(target: C_JUMP_ADDR)
+  init   = {}
+  syntax = format("c.jal %s", target.syntax)
+  image  = format("001%1s%1s%2s%1s%1s%1s%3s%1s01", c_jump_imm12<11>, c_jump_imm12<4>,
+                  c_jump_imm12<9..8>, c_jump_imm12<10>, c_jump_imm12<6>, c_jump_imm12<7>,
+                  c_jump_imm12<3..1>, c_jump_imm12<5>)
+  action = {
+    //jal(X(1), sign_extend(card(20), c_jump_imm12)).action;
+    // TODO;
+  }
+
+/*
+C.BEQZ performs conditional control transfers. The offset is sign-extended and added to the pc to
+form the branch target address. It can therefore target a +-256B range. C.BEQZ takes the branch
+if the value in register rs10 is zero. It expands to beq rs10, x0, offset[8:1].
+*/
+op c_beqz(rs1: X, offset: card(9))
+  init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  syntax = format("c.beqz %s, %s", rs1.syntax, offset)
+  image  = format("110%1s%2s%3s%2s%2s%1s01", offset<8>, offset<4..3>, rs1.i<2..0>, offset<7..6>, offset<2..1>, offset<5>)
+  action = {
+    //beq(rs1, X(0), sign_extend(card(20), offset)).action;
+    // TODO:
+  }
+
+/*
+C.BNEZ is defined analogously, but it takes the branch if rs10 contains a nonzero value. It expands
+to bne rs10, x0, offset[8:1].
+*/
+op c_bnez(rs1: X, offset: card(9))
+  init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  syntax = format("c.bnez %s, %s", rs1.syntax, offset)
+  image  = format("111%1s%2s%3s%2s%2s%1s01", offset<8>, offset<4..3>, rs1.i<2..0>, offset<7..6>, offset<2..1>, offset<5>)
+  action = {
+    //bne(rs1, X(0), sign_extend(card(20), offset)).action;
+    // TODO:
+  }
+
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
@@ -350,6 +436,10 @@ op rvc =             c_lwsp
        |             c_sub
        | @rev(RV64C) c_addw
        | @rev(RV64C) c_subw
+       |             c_j
+       | @rev(RV32C) c_jal
+       |             c_beqz
+       |             c_bnez
 
 //==================================================================================================
 // The End

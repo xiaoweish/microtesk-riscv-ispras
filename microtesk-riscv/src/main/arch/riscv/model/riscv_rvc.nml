@@ -92,14 +92,14 @@
     C.FLWSP (RV32) +
     C.LDSP (RV64/128; RES, rd=0) +
     C.JR (RES, rs1=0) +
-    C.MV (HINT, rd=0)
-    C.EBREAK
+    C.MV (HINT, rd=0) +
+    C.EBREAK +
     C.JALR +
-    C.ADD (HINT, rd=0)
-    C.FSDSP (RV32/64)
-    C.SQSP (RV128)
+    C.ADD (HINT, rd=0) +
+    C.FSDSP (RV32/64) +
+    C.SQSP (RV128) +
     C.SWSP +
-    C.FSWSP (RV32)
+    C.FSWSP (RV32) +
     C.SDSP (RV64/128) +
 */
 
@@ -179,9 +179,7 @@ op c_lwsp(rd: X, offset: card(6))
 */
 @rev(RV64C)
 op c_ldsp(rd: X, offset: card(6))
-  init   = { assert(rd.i<2..0> == 0b000, "c.ldsp: rd == 0");
-    // TODO: rd =/=0
-  }
+  init   = { assert(rd.i == 0, "c.ldsp: rd == 0");}
   syntax = format("c.ldsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("011%s%s%s%s10", offset<2>, rd.image, offset<1..0>, offset<5..3>)
   action = {
@@ -264,7 +262,7 @@ rd0, rd0, imm[5:0].
 */
 op c_andi(rd: X, imm: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
-  syntax = format("c.andi %s, %s", rd.syntax, imm)
+  syntax = format("c.andi %s, %d", rd.syntax, imm)
   image  = format("100%1s10%3s%5s01", imm<5>, rd.i<2..0>, imm<4..0>)
   action = {
     andi(rd, rd, sign_extend(card(12), imm)).action;
@@ -493,7 +491,7 @@ op c_slli(rd: X, shamt: card(6))
                #endif
              #endif
            }
-  syntax = format("c.slli %s, %s", rd.syntax, shamt)
+  syntax = format("c.slli %s, %d", rd.syntax, shamt)
   image  = format("000%1s%3s%5s10", shamt<5>, rd.i<2..0>, shamt<4..0>)
   action = {
     #ifdef RV128C
@@ -525,7 +523,7 @@ x2. It expands to lq rd, offset[9:4](x2).
 op c_lqsp(rd: X, offset: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
              assert(rd.i<2..0> == 0b000, "c.lqsp: rd == 0"); }
-  syntax = format("c.lqsp %s, %s", rd.syntax, offset)
+  syntax = format("c.lqsp %s, %d", rd.syntax, offset)
   image  = format("001%1s%3s%1s%4s10", offset<1>, rd.i<2..0>, offset<0>, offset<5..2>)
   action = {
     // lq(rd, zero_extend(card(12), offset) << 4, X(2)).action;
@@ -541,7 +539,7 @@ offset, scaled by 4, to the stack pointer, x2. It expands to flw rd, offset[7:2]
 op c_flwsp(rd: FR, offset: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
              assert(rd.i<2..0> == 0b000, "c.lqsp: rd == 0"); }
-  syntax = format("c.flwsp %s, %s", rd.syntax, offset)
+  syntax = format("c.flwsp %s, %d", rd.syntax, offset)
   image  = format("011%1s%3s%3s%2s10", offset<3>, rd.i<2..0>, offset<2..0>, offset<5..4>)
   action = {
     flw(rd, zero_extend(card(12), offset) << 2, X(2)).action;
@@ -556,10 +554,79 @@ offset[8:3](x2).
 @rev(RV32DC)
 op c_fldsp(rd: FR, offset: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
-  syntax = format("c.fldsp %s, %s", rd.syntax, offset)
+  syntax = format("c.fldsp %s, %d", rd.syntax, offset)
   image  = format("001%1s%3s%2s%3s10", offset<2>, rd.i<2..0>, offset<1..0>, offset<5..3>)
   action = {
-    flw(rd, zero_extend(card(12), offset) << 3, X(2)).action;
+    fld(rd, zero_extend(card(12), offset) << 3, X(2)).action;
+  }
+
+/*
+C.MV copies the value in register rs2 into register rd. C.MV expands into add rd, x0, rs2.
+*/
+op c_mv(rd: X, rs2: X)
+  init   = { assert(rd.i == 0, "c.mv: rd == 0");
+             assert(rs2.i == 0, "c.mv: rs2 == 0");}
+  syntax = format("c.mv %s, %s", rd.syntax, rs2.syntax)
+  image  = format("1000%5s%5s10", rd.image, rs2.image)
+  action = {
+    add(rd, X(0), rs2).action;
+  }
+
+/*
+Debuggers can use the C.EBREAK instruction, which expands to ebreak, to cause control to be
+transferred back to the debugging environment. C.EBREAK shares the opcode with the C.ADD
+instruction, but with rd and rs2 both zero, thus can also use the CR format.
+*/
+op c_ebreak()
+  init   = {}
+  syntax = format("c.ebreak")
+  image  = format("1001%5s%5s10", coerce(card(5), 0), coerce(card(5), 0))
+  action = {
+    //ebreak().action;
+    // TODO:
+  }
+
+/*
+C.SQSP is an RV128C-only instruction that stores a 128-bit value in register rs2 to memory. It
+computes an effective address by adding the zero-extended offset, scaled by 16, to the stack pointer,
+x2. It expands to sq rs2, offset[9:4](x2).
+*/
+@rev(RV128C)
+op c_sqsp(rs2: X, offset: card(6))
+  init   = {}
+  syntax = format("c.sqsp %s, %d", rs2.syntax, offset)
+  image  = format("101%2s%4s%5s10", offset<1..0>, offset<5..2>, rs2.image)
+  action = {
+    // sq(rs2, zero_extend(card(12), offset) << 4, X(2)).action;
+    // TODO: sq
+  }
+
+/*
+C.FSWSP is an RV32FC-only instruction that stores a single-precision 
+oating-point value in floating-point register rs2 to memory. It computes an effective address by adding the zero-extended
+offset, scaled by 4, to the stack pointer, x2. It expands to fsw rs2, offset[7:2](x2).
+*/
+@rev(RV32FC)
+op c_fswsp(rs2: FR, offset: card(6))
+  init   = {}
+  syntax = format("c.fswsp %s, %d", rs2.syntax, offset)
+  image  = format("111%4s%2s%5s10", offset<3..0>, offset<5..4>, rs2.image)
+  action = {
+    fsw(rs2, zero_extend(card(12), offset) << 2, X(2)).action;
+  }
+
+/*
+C.FSDSP is an RV32DC/RV64DC-only instruction that stores a double-precision floating-point
+value in floating-point register rs2 to memory. It computes an effective address by adding the zero-
+extended offset, scaled by 8, to the stack pointer, x2. It expands to fsd rs2, offset[8:3](x2).
+*/
+@rev(RV32DC)
+op c_fsdsp(rs2: FR, offset: card(6))
+  init   = {}
+  syntax = format("c.fsdsp %s, %d", rs2.syntax, offset)
+  image  = format("101%3s%3s%5s10", offset<2..0>, offset<5..3>, rs2.image)
+  action = {
+    fsd(rs2, zero_extend(card(12), offset) << 3, X(2)).action;
   }
 
 //==================================================================================================
@@ -588,6 +655,13 @@ op rvc =              c_lwsp
        | @rev(RV128C) c_lqsp
        | @rev(RV32FC) c_flwsp
        | @rev(RV32DC) c_fldsp
+       |              c_jr
+       |              c_jalr
+       |              c_mv
+       |              c_ebreak
+       | @rev(RV128C) c_sqsp
+       | @rev(RV32FC) c_fswsp
+       | @rev(RV32DC) c_fsdsp
 
 //==================================================================================================
 // The End

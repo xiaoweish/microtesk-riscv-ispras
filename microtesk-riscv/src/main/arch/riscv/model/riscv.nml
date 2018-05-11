@@ -59,15 +59,9 @@ type   INT = int(32)
 type  LONG = int(64)
 
 // Floating Point Types
-#ifdef RV32F
-  type FLOAT32  = float(23, 8)
-  type FLOATREG = FLOAT32
-#endif
-
-#ifdef RV64F
-  type FLOAT64  = float(52, 11)
-  type FLOATREG = FLOAT64
-#endif
+type  FLOAT32 = float(23, 8)
+type  FLOAT64 = float(52, 11)
+type FLOAT128 = float(112, 15)
 
 //==================================================================================================
 // Constants
@@ -84,10 +78,19 @@ let FP_FMT_Q = 0b11
 // General-Purpose Registers
 reg XREG [32, XWORD]
 
+// Floating-Point Registers
 #ifdef RV32F
-  // Floating Point general registers.
-  // TODOreg FPR [32, FLOATREG]
-  reg FPR [32, XWORD]
+  #ifdef RV128F
+    let FLEN = 128
+  #else
+    #ifdef RV64F
+      let FLEN = 64
+    #else
+      let FLEN = 32
+    #endif
+  #endif
+
+  reg FPR [32, card(FLEN)]
 #endif
 
 // Program Counter
@@ -486,6 +489,7 @@ action = {
 //==================================================================================================
 
 #include "riscv_pseudo.nml"
+#include "riscv_rvc.nml"
 
 //==================================================================================================
 // The End

@@ -1,0 +1,110 @@
+/*
+ * Copyright 2018 ISP RAS (http://www.ispras.ru)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+#ifndef RISCV_RVC_INCLUDED
+#define RISCV_RVC_INCLUDED
+
+#include "riscv_rv32i.nml"
+
+#ifdef RV64I
+  #include "riscv_rv64i.nml"
+#endif
+
+//==================================================================================================
+// C Standard Extension for Compressed Instructions
+//==================================================================================================
+
+/*
+  Instructions (number: ):
+    C.LW +
+    C.LD +
+    C.LQ -
+    C.FLW
+    C.FLD
+
+    C.SW
+    C.SD
+    C.SQ
+    C.FSW
+    C.FSD
+*/
+
+//==================================================================================================
+// Instruction Templates
+//==================================================================================================
+
+/*
+
+CI-type (Immediate):
+
+op c_<name>(rd: X, imm: card(6))
+  syntax = format("C.<name> %s, 0x%X", rd.syntax, imm)
+  image  = format("<func3>%s%s%s%s<opcode2>", imm<N>, rd.image, imm<J..K>, imm<X..Y>)
+  action = {
+    // TODO
+  }
+
+*/
+
+//==================================================================================================
+// Instructions
+//==================================================================================================
+
+/*
+  C.LWSP (Stack-Pointer-Based Load 32-bit Value)
+  Format: c_lwsp rd, offset
+
+  C.LWSP loads a 32-bit value from memory into register rd. It computes an effective
+  address by adding the zero-extended offset, scaled by 4, to the stack pointer, x2.
+  It expands to lw rd, offset[7:2](x2).
+*/
+op c_lwsp(rd: X, offset: card(6))
+  syntax = format("c.lwsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
+  image  = format("010%s%s%s%s10", offset<3>, rd.image, offset<2..0>, offset<5..4>)
+  action = {
+    lw(rd, X(2), zero_extend(card(12), offset) << 2).action;
+  }
+
+/*
+  C.LDSP (Stack-Pointer-Based Load 32-bit Value)
+  Format: c_ldsp rd, offset
+
+  C.LDSP is an RV64C/RV128C-only instruction that loads a 64-bit value from memory
+  into register rd. It computes its effective address by adding the zero-extended offset,
+  scaled by 8, to the stack pointer, x2.
+  It expands to ld rd, offset[8:3](x2).
+*/
+@rev(RV64C)
+op c_ldsp(rd: X, offset: card(6))
+  syntax = format("c.ldsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
+  image  = format("011%s%s%s%s10", offset<2>, rd.image, offset<1..0>, offset<5..3>)
+  action = {
+    ld(rd, X(2), zero_extend(card(12), offset) << 3).action;
+  }
+
+
+//==================================================================================================
+// Instruction Groups
+//==================================================================================================
+
+op rvc =             c_lwsp
+       | @rev(RV64C) c_ldsp
+
+//==================================================================================================
+// The End
+//==================================================================================================
+
+#endif

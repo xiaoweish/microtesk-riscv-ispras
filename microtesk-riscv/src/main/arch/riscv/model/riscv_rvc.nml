@@ -84,12 +84,13 @@
     C.BEQZ +
     C.BNEZ +
 
-    C.SLLI (HINT, rd=0; RV32 NSE, nzimm[5]=1)
-    C.SLLI64 (RV128; RV32/64 HINT; HINT, rd=0)
-    C.FLDSP (RV32/64)
-    C.LQSP (RV128; RES, rd=0)C.LWSP (RES, rd=0)
-    C.FLWSP (RV32)
-    C.LDSP (RV64/128; RES, rd=0)
+    C.SLLI (HINT, rd=0; RV32 NSE, nzimm[5]=1) +
+    C.SLLI64 (RV128; RV32/64 HINT; HINT, rd=0) +
+    C.FLDSP (RV32/64) +
+    C.LQSP (RV128; RES, rd=0) +
+    C.LWSP (RES, rd=0) +
+    C.FLWSP (RV32) +
+    C.LDSP (RV64/128; RES, rd=0) +
     C.JR (RES, rs1=0)
     C.MV (HINT, rd=0)
     C.EBREAK
@@ -97,9 +98,9 @@
     C.ADD (HINT, rd=0)
     C.FSDSP (RV32/64)
     C.SQSP (RV128)
-    C.SWSP
+    C.SWSP +
     C.FSWSP (RV32)
-    C.SDSP (RV64/128)
+    C.SDSP (RV64/128) +
 */
 
 //==================================================================================================
@@ -178,7 +179,9 @@ op c_lwsp(rd: X, offset: card(6))
 */
 @rev(RV64C)
 op c_ldsp(rd: X, offset: card(6))
-  init   = {}
+  init   = { assert(rd.i<2..0> == 0b000, "c.ldsp: rd == 0");
+    // TODO: rd =/=0
+  }
   syntax = format("c.ldsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("011%s%s%s%s10", offset<2>, rd.image, offset<1..0>, offset<5..3>)
   action = {
@@ -436,13 +439,15 @@ except for RV128C with shamt=0, which expands to slli rd, rd, 64.
 */
 op c_slli(rd: X, shamt: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rd.i<2..0> == 0b000, "c.slli: rd =/= 0");
-             #ifdef RV32C
-               assert(shamt<5> != 0b0, "c.slli(RV32C): shamt<5> != 0");
-               assert(shamt == 0b0, "c.slli(RV32C): shamt == 0");
-             #endif
-             #ifdef RV64C
-               assert(shamt == 0b0, "c.slli(RV64C): shamt == 0");
+             assert(rd.i<2..0> == 0b000, "c.slli: rd == 0");
+             #ifndef RV128C
+               #ifdef RV32C
+                 assert(shamt<5> != 0b0, "c.slli(RV32C): shamt<5> != 0");
+                 assert(shamt == 0b0, "c.slli(RV32C): shamt == 0");
+               #endif
+               #ifdef RV64C
+                 assert(shamt == 0b0, "c.slli(RV64C): shamt == 0");
+               #endif
              #endif
            }
   syntax = format("c.slli %s, %s", rd.syntax, shamt)
@@ -459,28 +464,87 @@ op c_slli(rd: X, shamt: card(6))
     #endif
   }
 
+@rev(RV128C)
+op c_slli64(rd: X)
+  init = {c_slli(rd, 0).init;}
+  syntax = format("c.slli64 %s", rd.syntax)
+  image = format("%s", c_slli(rd, 0).image)
+  action = {
+    c_slli(rd, 0).action;
+  }
+
+/*
+C.LQSP is an RV128C-only instruction that loads a 128-bit value from memory into register rd. It
+computes its effective address by adding the zero-extended offset, scaled by 16, to the stack pointer,
+x2. It expands to lq rd, offset[9:4](x2).
+*/
+@rev(RV128C)
+op c_lqsp(rd: X, offset: card(6))
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rd.i<2..0> == 0b000, "c.lqsp: rd == 0"); }
+  syntax = format("c.lqsp %s, %s", rd.syntax, offset)
+  image  = format("001%1s%3s%1s%4s10", offset<1>, rd.i<2..0>, offset<0>, offset<5..2>)
+  action = {
+    // lq(rd, zero_extend(card(12), offset) << 4, X(2)).action;
+    // TODO: lq
+  }
+
+/*
+C.FLWSP is an RV32FC-only instruction that loads a single-precision floating-point value from memory
+into floating-point register rd. It computes its effective address by adding the zero-extended
+offset, scaled by 4, to the stack pointer, x2. It expands to flw rd, offset[7:2](x2).
+*/
+@rev(RV32FC)
+op c_flwsp(rd: FR, offset: card(6))
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rd.i<2..0> == 0b000, "c.lqsp: rd == 0"); }
+  syntax = format("c.flwsp %s, %s", rd.syntax, offset)
+  image  = format("011%1s%3s%3s%2s10", offset<3>, rd.i<2..0>, offset<2..0>, offset<5..4>)
+  action = {
+    flw(rd, zero_extend(card(12), offset) << 2, X(2)).action;
+  }
+
+/*
+C.FLDSP is an RV32DC/RV64DC-only instruction that loads a double-precision floating-point
+value from memory into floating-point register rd. It computes its effective address by adding
+the zero-extended offset, scaled by 8, to the stack pointer, x2. It expands to fld rd,
+offset[8:3](x2).
+*/
+@rev(RV32DC)
+op c_fldsp(rd: FR, offset: card(6))
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  syntax = format("c.fldsp %s, %s", rd.syntax, offset)
+  image  = format("001%1s%3s%2s%3s10", offset<2>, rd.i<2..0>, offset<1..0>, offset<5..3>)
+  action = {
+    flw(rd, zero_extend(card(12), offset) << 3, X(2)).action;
+  }
+
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
 
-op rvc =             c_lwsp
-       | @rev(RV64C) c_ldsp
-       |             c_swsp
-       | @rev(RV64C) c_sdsp
-       |             c_lw
-       | @rev(RV64C) c_ld
-       |             c_andi
-       |             c_add
-       |             c_or
-       |             c_xor
-       |             c_sub
-       | @rev(RV64C) c_addw
-       | @rev(RV64C) c_subw
-       |             c_j
-       | @rev(RV32C) c_jal
-       |             c_beqz
-       |             c_bnez
-       |             c_slli
+op rvc =              c_lwsp
+       | @rev(RV64C)  c_ldsp
+       |              c_swsp
+       | @rev(RV64C)  c_sdsp
+       |              c_lw
+       | @rev(RV64C)  c_ld
+       |              c_andi
+       |              c_add
+       |              c_or
+       |              c_xor
+       |              c_sub
+       | @rev(RV64C)  c_addw
+       | @rev(RV64C)  c_subw
+       |              c_j
+       | @rev(RV32C)  c_jal
+       |              c_beqz
+       |              c_bnez
+       |              c_slli
+       | @rev(RV128C) c_slli64
+       | @rev(RV128C) c_lqsp
+       | @rev(RV32FC) c_flwsp
+       | @rev(RV32DC) c_fldsp
 
 //==================================================================================================
 // The End

@@ -35,6 +35,9 @@ class InstructionRVC < RISCVBaseTemplate
     c_addw s0, a0
     c_subw s0, a0
 
+    c_nop
+    c_nop
+
     nop
     nop
   end

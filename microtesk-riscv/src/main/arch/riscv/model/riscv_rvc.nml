@@ -36,40 +36,19 @@
 //==================================================================================================
 
 /*
-  Instructions (number: ):
-    C.LW +
-    C.LD +
-    C.LQ -
-    C.FLW
-    C.FLD
-
-    C.SW +
-    C.SD +
-    C.SQ -
-    C.FSW
-    C.FSD
-
-    C.LW
-    C.LD
-    C.LQ -
-    C.FLW
-    C.FLD
-*/
-
-/*
   Instructions (number: 49):
-    C.ADDI4SPN (RES, nzimm=0)
-    C.FLD (RV32/64)
-    C.LQ (RV128)
-    C.LW
-    C.FLW (RV32)
-    C.LD (RV64/128)
-    C.FSD (RV32/64)
-    C.SQ (RV128)
-    C.SW
-    C.FSW (RV32)
-    C.SD (RV64/128)
-    C.NOP
+    C.ADDI4SPN (RES, nzimm=0) +
+    C.FLD (RV32/64) +
+    C.LQ (RV128) +
+    C.LW +
+    C.FLW (RV32) +
+    C.LD (RV64/128) +
+    C.FSD (RV32/64) +
+    C.SQ (RV128) +
+    C.SW +
+    C.FSW (RV32) +
+    C.SD (RV64/128) +
+    C.NOP +
     C.ADDI (HINT, nzimm=0)
     C.JAL (RV32) +
     C.ADDIW (RV64/128; RES, rd=0)
@@ -458,7 +437,7 @@ expands to jalr x0, rs1, 0.
 */
 op c_jr(rs1: X)
   init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs1.i<2..0> == 0b000, "c.jr: rs1 == 0");}
+             assert(rs1.i<2..0> != 0b000, "c.jr: rs1 == 0");}
   syntax = format("c.jr %s", rs1.syntax)
   image  = format("1000%5s0000010", rs1.image)
   action = {
@@ -472,7 +451,7 @@ jalr x1, rs1, 0.
 */
 op c_jalr(rs1: X)
   init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs1.i<2..0> == 0b000, "c.jalr: rs1 == 0");}
+             assert(rs1.i<2..0> != 0b000, "c.jalr: rs1 == 0");}
   syntax = format("c.jalr %s", rs1.syntax)
   image  = format("1001%5s0000010", rs1.image)
   action = {
@@ -488,7 +467,7 @@ except for RV128C with shamt=0, which expands to slli rd, rd, 64.
 */
 op c_slli(rd: X, shamt: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rd.i<2..0> == 0b000, "c.slli: rd == 0");
+             assert(rd.i<2..0> != 0b000, "c.slli: rd == 0");
              #ifndef RV128C
                #ifdef RV32C
                  assert(shamt<5> != 0b0, "c.slli(RV32C): shamt<5> != 0");
@@ -530,7 +509,7 @@ x2. It expands to lq rd, offset[9:4](x2).
 @rev(RV128C)
 op c_lqsp(rd: X, offset: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rd.i<2..0> == 0b000, "c.lqsp: rd == 0"); }
+             assert(rd.i<2..0> != 0b000, "c.lqsp: rd == 0"); }
   syntax = format("c.lqsp %s, %d", rd.syntax, offset)
   image  = format("001%1s%3s%1s%4s10", offset<1>, rd.i<2..0>, offset<0>, offset<5..2>)
   action = {
@@ -546,7 +525,7 @@ offset, scaled by 4, to the stack pointer, x2. It expands to flw rd, offset[7:2]
 @rev(RV32FC)
 op c_flwsp(rd: FR, offset: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rd.i<2..0> == 0b000, "c.lqsp: rd == 0"); }
+             assert(rd.i<2..0> != 0b000, "c.lqsp: rd == 0"); }
   syntax = format("c.flwsp %s, %d", rd.syntax, offset)
   image  = format("011%1s%3s%3s%2s10", offset<3>, rd.i<2..0>, offset<2..0>, offset<5..4>)
   action = {
@@ -638,6 +617,191 @@ op c_fsdsp(rs2: FR, offset: card(6))
   }
 
 //==================================================================================================
+
+/*
+C.ADDI4SPN is a CIW-format RV32C/RV64C-only instruction that adds a zero-extended non-zero
+immediate, scaled by 4, to the stack pointer, x2, and writes the result to rd0. This instruction is
+used to generate pointers to stack-allocated variables, and expands to addi rd0, x2, nzuimm[9:2].
+*/
+op c_addi4spn(rd: X, offset: card(8))
+  init   = { assert(rd.i<4..3> != 0b01, "Only registers x8-x15 are allowed!");
+             assert(offset != 0, "c.addi4spn: nzuimm == 0"); }
+  syntax = format("c.addi4spn %s, %d(%s)", rd.syntax, offset, X(2).syntax)
+  image  = format("000%s%s%s%s%s00", offset<3..2>, offset<7..4>, offset<0>, offset<1>, rd.image)
+  action = {
+    addi(rd, X(2), zero_extend(card(12), offset) << 2).action;
+  }
+
+
+/*
+C.LQ is an RV128C-only instruction that loads a 128-bit value from memory into register rd0. It
+computes an effective address by adding the zero-extended offset, scaled by 16, to the base address
+in register rs10. It expands to lq rd0, offset[8:4](rs10).
+*/
+@rev(RV128C)
+op c_lq(rd: X, rs1: X, offset: card(5))
+  init   = { assert(rd.i<4..3> == 0b01, "Only registers f8-f15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  syntax = format("c.flw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
+  image  = format("001%s%s%s%s%s00", offset<1..0>, offset<4>, rs1.i<2..0>, offset<3..2>, rd.i<2..0>)
+  action = {
+    //lq(rd, rs1, zero_extend(card(12), offset) << 4).action;
+    // TODO: lq
+  }
+
+/*
+C.FLW is an RV32FC-only instruction that loads a single-precision floating-point value from memory
+into floating-point register rd0. It computes an effective address by adding the zero-extended
+offset, scaled by 4, to the base address in register rs10. It expands to flw rd0, offset[6:2](rs10).
+*/
+@rev(RV32FC)
+op c_flw(rd: FR, rs1: X, offset: card(5))
+  init   = { assert(rd.i<4..3> == 0b01, "Only registers f8-f15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  syntax = format("c.flw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
+  image  = format("011%s%s%s%s%s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rd.i<2..0>)
+  action = {
+    flw(rd, rs1, zero_extend(card(12), offset) << 2).action;
+  }
+
+/*
+C.FLD is an RV32DC/RV64DC-only instruction that loads a double-precision floating-point value
+from memory into floating-point register rd0. It computes an effective address by adding the
+zero-extended offset, scaled by 8, to the base address in register rs10. It expands to fld rd0,
+offset[7:3](rs10).
+*/
+@rev(RV32DC)
+op c_fld(rd: FR, rs1: X, offset: card(5))
+  init   = { assert(rd.i<4..3> == 0b01, "Only registers f8-f15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  syntax = format("c.fld %s, %d(%s)", rd.syntax, offset, rs1.syntax)
+  image  = format("001%s%s%s%s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rd.i<2..0>)
+  action = {
+    fld(rd, rs1, zero_extend(card(12), offset) << 3).action;
+  }
+
+/*
+C.SW stores a 32-bit value in register rs20 to memory. It computes an effective address by adding
+the zero-extended offset, scaled by 4, to the base address in register rs10. It expands to sw rs20,
+offset[6:2](rs10).
+*/
+op c_sw(rs2: X, rs1: X, offset: card(5))
+  init   = { assert(rs2.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  syntax = format("c.sw %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
+  image  = format("110%3s%3s%1s%1s%3s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rs2.i<2..0>)
+  action = {
+    sw(rs2, rs1, zero_extend(card(12), offset) << 2).action;
+  }
+
+/*
+C.SD is an RV64C/RV128C-only instruction that stores a 64-bit value in register rs20 to memory.
+It computes an effective address by adding the zero-extended offset, scaled by 8, to the base address
+in register rs10. It expands to sd rs20, offset[7:3](rs10).
+*/
+@rev(RV64C) 
+op c_sd(rs2: X, rs1: X, offset: card(5))
+  init   = { assert(rs2.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  syntax = format("c.sd %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
+  image  = format("111%3s%3s%2s%3s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rs2.i<2..0>)
+  action = {
+    sd(rs2, rs1, zero_extend(card(12), offset) << 3).action;
+  }
+
+/*
+C.SQ is an RV128C-only instruction that stores a 128-bit value in register rs20 to memory. It
+computes an effective address by adding the zero-extended offset, scaled by 16, to the base address
+in register rs10. It expands to sq rs20, offset[8:4](rs10).
+*/
+@rev(RV128C) 
+op c_sq(rs2: X, rs1: X, offset: card(5))
+  init   = { assert(rs2.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  syntax = format("c.sq %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
+  image  = format("101%2s%1s%3s%2s%3s00", offset<1..0>, offset<4>, rs1.i<2..0>, offset<3..2>, rs2.i<2..0>)
+  action = {
+    // sq(rs2, rs1, zero_extend(card(12), offset) << 4).action;
+    // TODO:
+  }
+
+/*
+C.FSW is an RV32FC-only instruction that stores a single-precision floating-point value in
+floating-point register rs20 to memory. It computes an effective address by adding the zero-extended
+offset, scaled by 4, to the base address in register rs10. It expands to fsw rs20, offset[6:2](rs10).
+*/
+@rev(RV32FC) 
+op c_fsw(rs2: FR, rs1: X, offset: card(5))
+  init   = { assert(rs2.i<4..3> == 0b01, "Only registers f8-f15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  syntax = format("c.fsw %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
+  image  = format("111%3s%3s%1s%1s%3s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rs2.i<2..0>)
+  action = {
+    fsw(rs2, rs1, zero_extend(card(12), offset) << 2).action;
+  }
+
+/*
+C.FSD is an RV32DC/RV64DC-only instruction that stores a double-precision floating-point value
+in floating-point register rs20 to memory. It computes an effctive address by adding the zero-
+extended offset, scaled by 8, to the base address in register rs10. It expands to fsd rs20,
+offset[7:3](rs10).
+*/
+@rev(RV32DC) 
+op c_fsd(rs2: FR, rs1: X, offset: card(5))
+  init   = { assert(rs2.i<4..3> == 0b01, "Only registers f8-f15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  syntax = format("c.fsd %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
+  image  = format("101%3s%3s%2s%3s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rs2.i<2..0>)
+  action = {
+    fsd(rs2, rs1, zero_extend(card(12), offset) << 3).action;
+  }
+
+/*
+C.NOP is a CI-format instruction that does not change any user-visible state, except for advancing
+the pc. C.NOP is encoded as c.addi x0, 0 and so expands to addi x0, x0, 0.
+*/
+op c_nop()
+  init   = {}
+  syntax = format("c.nop")
+  image  = format("0000%5s0000000", X(0).image)
+  action = {
+    addi(X(0), X(0), 0).action;
+  }
+
+/*
+C.ADDI adds the non-zero sign-extended 6-bit immediate to the value in register rd then writes
+the result to rd. C.ADDI expands into addi rd, rd, nzimm[5:0].
+*/
+op c_addi(rd: X, imm: card(6))
+  init   = { assert(rd.i != 0, "When rd = 0 in c.addi it's c.nop!");}
+  syntax = format("c.addi %s, %d", rd.syntax, imm)
+  image  = format("000%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
+  action = {
+    addi(rd, rd, sign_extend(card(12), imm)).action;
+  }
+
+/*
+C.ADDIW is an RV64C/RV128C-only instruction that performs the same computation but pro-
+duces a 32-bit result, then sign-extends result to 64 bits. C.ADDIW expands into addiw rd, rd,
+imm[5:0]. The immediate can be zero for C.ADDIW, where this corresponds to sext.w rd.
+*/
+@rev(RV64C)
+op c_addiw(rd: X, imm: card(6))
+  init   = { assert(rd.i != 0, "c.addiw: RES, rd=0");}
+  syntax = format("c.addiw %s, %d", rd.syntax, imm)
+  image  = format("001%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
+  action = {
+    addiw(rd, rd, sign_extend(card(12), imm)).action;
+  }
+
+/*
+C.ADDI16SP shares the opcode with C.LUI, but has a destination field of x2. C.ADDI16SP adds
+the non-zero sign-extended 6-bit immediate to the value in the stack pointer (sp=x2), where the
+immediate is scaled to represent multiples of 16 in the range (-512,496). C.ADDI16SP is used
+to adjust the stack pointer in procedure prologues and epilogues. It expands into addi x2, x2,
+nzimm[9:4].
+*/
+//==================================================================================================
 // Instruction Groups
 //==================================================================================================
 
@@ -670,6 +834,17 @@ op rvc =              c_lwsp
        | @rev(RV128C) c_sqsp
        | @rev(RV32FC) c_fswsp
        | @rev(RV32DC) c_fsdsp
+       |              c_addi4spn
+       | @rev(RV128C) c_lq
+       | @rev(RV32FC) c_flw
+       | @rev(RV32DC) c_fld
+       |              c_sw
+       | @rev(RV64C)  c_sd
+       | @rev(RV128C) c_sq
+       | @rev(RV32FC) c_fsw
+       | @rev(RV32DC) c_fsd
+       |              c_addi
+       | @rev(RV64C)  c_addiw
 
 //==================================================================================================
 // The End

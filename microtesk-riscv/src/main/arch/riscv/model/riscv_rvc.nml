@@ -49,16 +49,16 @@
     C.FSW (RV32) +
     C.SD (RV64/128) +
     C.NOP +
-    C.ADDI (HINT, nzimm=0)
+    C.ADDI (HINT, nzimm=0) +
     C.JAL (RV32) +
-    C.ADDIW (RV64/128; RES, rd=0)
-    C.LI (HINT, rd=0)
-    C.ADDI16SP (RES, nzimm=0)
-    C.LUI (RES, nzimm=0; HINT, rd=0)
-    C.SRLI (RV32 NSE, nzimm[5]=1)
-    C.SRLI64 (RV128; RV32/64 HINT)
-    C.SRAI (RV32 NSE, nzimm[5]=1)
-    C.SRAI64 (RV128; RV32/64 HINT)
+    C.ADDIW (RV64/128; RES, rd=0) +
+    C.LI (HINT, rd=0) +
+    C.ADDI16SP (RES, nzimm=0) +
+    C.LUI (RES, nzimm=0; HINT, rd=0) +
+    C.SRLI (RV32 NSE, nzimm[5]=1) +
+    C.SRLI64 (RV128; RV32/64 HINT) +
+    C.SRAI (RV32 NSE, nzimm[5]=1) +
+    C.SRAI64 (RV128; RV32/64 HINT) +
 
     C.ANDI +
     C.SUB +
@@ -466,20 +466,19 @@ amount of zero is used to encode a shift of 64. C.SLLI expands into slli rd, rd,
 except for RV128C with shamt=0, which expands to slli rd, rd, 64.
 */
 op c_slli(rd: X, shamt: card(6))
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rd.i<2..0> != 0b000, "c.slli: rd == 0");
+  init   = { assert(rd.i != 0, "c.slli: rd == 0");
              #ifndef RV128C
                #ifdef RV32C
-                 assert(shamt<5> != 0b0, "c.slli(RV32C): shamt<5> != 0");
-                 assert(shamt == 0b0, "c.slli(RV32C): shamt == 0");
+                 assert(shamt<5> == 0b0, "c.slli(RV32C): shamt<5> != 0");
+                 assert(shamt != 0b0, "c.slli(RV32C): shamt == 0");
                #endif
                #ifdef RV64C
-                 assert(shamt == 0b0, "c.slli(RV64C): shamt == 0");
+                 assert(shamt != 0b0, "c.slli(RV64C): shamt == 0");
                #endif
              #endif
            }
   syntax = format("c.slli %s, %d", rd.syntax, shamt)
-  image  = format("000%1s%3s%5s10", shamt<5>, rd.i<2..0>, shamt<4..0>)
+  image  = format("000%1s%5s%5s10", shamt<5>, rd.image, shamt<4..0>)
   action = {
     #ifdef RV128C
       if shamt == 0 then
@@ -801,6 +800,125 @@ immediate is scaled to represent multiples of 16 in the range (-512,496). C.ADDI
 to adjust the stack pointer in procedure prologues and epilogues. It expands into addi x2, x2,
 nzimm[9:4].
 */
+op c_addi16sp(imm: card(6))
+  init   = {}
+  syntax = format("c.addi16sp %d", imm)
+  image  = format("011%1s%5s%1s%1s%2s%1s01", imm<5>, X(2).image, imm<0>, imm<2>, imm<4..3>, imm<1>)
+  action = {
+    addiw(X(2), X(2), sign_extend(card(12), imm) << 4).action;
+  }
+
+/*
+C.LI loads the sign-extended 6-bit immediate, imm, into register rd. C.LI is only valid when rd6=x0.
+C.LI expands into addi rd, x0, imm[5:0].
+*/
+op c_li(rd: X, imm: card(6))
+  init   = { assert(rd.i != 0, "C.LI (HINT, rd=0)");}
+  syntax = format("c.li %s, %d", rd.syntax, imm)
+  image  = format("010%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
+  action = {
+    addi(rd, X(0), sign_extend(card(12), imm)).action;
+  }
+
+/*
+C.LUI loads the non-zero 6-bit immediate field into bits 17{12 of the destination register, clears
+the bottom 12 bits, and sign-extends bit 17 into all higher bits of the destination. C.LUI is only
+valid when rd6=fx0; x2g, and when the immediate is not equal to zero. C.LUI expands into lui
+rd, nzuimm[17:12].
+*/
+op c_lui(rd: X, imm: card(6))
+  init   = { assert(imm != 0, "C.LUI is valid when immediate is not equal to zero");
+             assert(rd.i != 0, "C.LUI is valid when rd =/= {x0, x2}");
+             assert(rd.i != 2, "C.LUI is valid when rd =/= {x0, x2}");}
+  syntax = format("c.lui %s, %d", rd.syntax, imm)
+  image  = format("011%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
+  action = {
+    lui(rd, sign_extend(card(20), imm) << 12).action;
+  }
+
+/*
+C.SRLI is a CB-format instruction that performs a logical right shift of the value in register rd0
+then writes the result to rd0. The shift amount is encoded in the shamt field, where shamt[5] must
+be zero for RV32C. For RV32C and RV64C, the shift amount must be non-zero. For RV128C, a
+shift amount of zero is used to encode a shift of 64. Furthermore, the shift amount is sign-extended
+for RV128C, and so the legal shift amounts are 1{31, 64, and 96{127. C.SRLI expands into srli
+rd0, rd0, shamt[5:0], except for RV128C with shamt=0, which expands to srli rd0, rd0, 64.
+*/
+
+op c_srli(rd: X, shamt: card(6))
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             #ifndef RV128C
+               #ifdef RV32C
+                 assert(shamt<5> == 0b0, "c.srli(RV32C): shamt<5> != 0");
+                 assert(shamt != 0, "c.srli(RV32C): shamt == 0");
+               #endif
+               #ifdef RV64C
+                 assert(shamt != 0, "c.srli(RV64C): shamt == 0");
+               #endif
+             #endif
+           }
+  syntax = format("c.srli %s, %d", rd.syntax, shamt)
+  image  = format("100%1s00%3s%5s01", shamt<5>, rd.i<2..0>, shamt<4..0>)
+  action = {
+    #ifdef RV128C
+      if shamt == 0 then
+        srli(rd, rd, 64).action;
+      else
+        srli(rd, rd, shamt).action;
+      endif;
+    #else
+       srli(rd, rd, shamt).action;
+    #endif
+  }
+
+@rev(RV128C)
+op c_srli64(rd: X)
+  init = {c_srli(rd, 0).init;}
+  syntax = format("c.srli64 %s", rd.syntax)
+  image = format("%s", c_srli(rd, 0).image)
+  action = {
+    c_srli(rd, 0).action;
+  }
+
+/*
+C.SRAI is defined analogously to C.SRLI, but instead performs an arithmetic right shift. C.SRAI
+expands to srai rd0, rd0, shamt[5:0].
+*/
+op c_srai(rd: X, shamt: card(6))
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             #ifndef RV128C
+               #ifdef RV32C
+                 assert(shamt<5> == 0b0, "c.srai(RV32C): shamt<5> != 0");
+                 assert(shamt != 0b0, "c.srai(RV32C): shamt == 0");
+               #endif
+               #ifdef RV64C
+                 assert(shamt != 0b0, "c.srai(RV64C): shamt == 0");
+               #endif
+             #endif
+           }
+  syntax = format("c.srai %s, %d", rd.syntax, shamt)
+  image  = format("100%1s01%3s%5s01", shamt<5>, rd.i<2..0>, shamt<4..0>)
+  action = {
+    #ifdef RV128C
+      if shamt == 0 then
+        srai(rd, rd, 64).action;
+      else
+        srai(rd, rd, shamt).action;
+      endif;
+    #else
+       srai(rd, rd, shamt).action;
+    #endif
+  }
+
+@rev(RV128C)
+op c_srai64(rd: X)
+  init = {c_srai(rd, 0).init;}
+  syntax = format("c.srai64 %s", rd.syntax)
+  image = format("%s", c_srai(rd, 0).image)
+  action = {
+    c_srai(rd, 0).action;
+  }
+
 //==================================================================================================
 // Instruction Groups
 //==================================================================================================
@@ -845,6 +963,13 @@ op rvc =              c_lwsp
        | @rev(RV32DC) c_fsd
        |              c_addi
        | @rev(RV64C)  c_addiw
+       |              c_addi16sp
+       |              c_li
+       |              c_lui
+       |              c_srli
+       | @rev(RV128C) c_srli64
+       |              c_srai
+       | @rev(RV128C) c_srai64
 
 //==================================================================================================
 // The End

@@ -59,7 +59,6 @@
     C.SRLI64 (RV128; RV32/64 HINT) +
     C.SRAI (RV32 NSE, nzimm[5]=1) +
     C.SRAI64 (RV128; RV32/64 HINT) +
-
     C.ANDI +
     C.SUB +
     C.XOR +
@@ -70,7 +69,6 @@
     C.J +
     C.BEQZ +
     C.BNEZ +
-
     C.SLLI (HINT, rd=0; RV32 NSE, nzimm[5]=1) +
     C.SLLI64 (RV128; RV32/64 HINT; HINT, rd=0) +
     C.FLDSP (RV32/64) +
@@ -366,7 +364,6 @@ shift amount of zero is used to encode a shift of 64. Furthermore, the shift amo
 for RV128C, and so the legal shift amounts are 1{31, 64, and 96{127. C.SRLI expands into srli
 rd0, rd0, shamt[5:0], except for RV128C with shamt=0, which expands to srli rd0, rd0, 64.
 */
-
 op c_srli(rd: X, shamt: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
              #ifndef RV128C
@@ -605,6 +602,19 @@ op c_sub(rd: X, rs2: X)
   image  = format("100011%3s00%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
     sub(rd, rd, rs2).action;
+  }
+
+/*
+C.AND computes the bitwise AND of the values in registers rd0 and rs20, then writes the result to
+register rd0. C.AND expands into and rd0, rd0, rs20.
+*/
+op c_and(rd: X, rs2: X)
+  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  syntax = format("c.and %s, %s", rd.syntax, rs2.syntax)
+  image  = format("100011%3s11%3s01", rd.i<2..0>, rs2.i<2..0>)
+  action = {
+    and(rd, rd, rs2).action;
   }
 
 /*
@@ -930,6 +940,7 @@ op rvc =              c_addi4spn
        | @rev(RV128C) c_sq
        | @rev(RV32FC) c_fsw
        | @rev(RV32DC) c_fsd
+       |              c_nop
        |              c_addi
        | @rev(RV64C)  c_addiw
        |              c_addi16sp
@@ -950,6 +961,7 @@ op rvc =              c_addi4spn
        |              c_or
        |              c_xor
        |              c_sub
+       |              c_and
        | @rev(RV64C)  c_addw
        | @rev(RV64C)  c_subw
        |              c_j

@@ -458,7 +458,7 @@ public class RiscVTest extends TemplateTest {
         asm,
         true,
         program.getAbsolutePath(),
-        "-march=rv64g",
+        "-march=rv64imafdc",
         "-o",
         getOutOption(getNameNoExt(program), "o"));
 
@@ -467,7 +467,7 @@ public class RiscVTest extends TemplateTest {
           asm,
           true,
           file.getAbsolutePath(),
-          "-march=rv64g",
+          "-march=rv64imafdc",
           "-o",
           getOutOption(getNameNoExt(file), "o"));
     }

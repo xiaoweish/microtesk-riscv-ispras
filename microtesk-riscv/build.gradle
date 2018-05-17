@@ -165,7 +165,7 @@ dependencies {
   testRuntime cvc4
   solvers z3
   solvers cvc4
-  qemu("qemu-riscv:qemu-riscv:${qemuVersion}:@tar.gz") { changing = true }
+  qemu("qemu4v:qemu4v:${qemuVersion}:@tar.gz") { changing = true }
   traceutils("traceutils:traceutils:${traceutilsVersion}:@tar.gz") { changing = true }
 
   compile("microtesk:microtesk:${coreVersion}:@tar.gz") { changing = true }
@@ -405,7 +405,7 @@ task copyModels(type: Copy) {
 copyModels.dependsOn jar
 
 task copyQemu(type: Copy) {
-  from tarTree(configurations.qemu.fileCollection { dep -> dep.name == 'qemu-riscv' }.singleFile)
+  from tarTree(configurations.qemu.fileCollection { dep -> dep.name == 'qemu4v' }.singleFile)
   into "${project.projectDir}/build/tools/qemu"
 }
 

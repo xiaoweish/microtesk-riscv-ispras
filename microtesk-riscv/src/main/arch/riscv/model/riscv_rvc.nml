@@ -146,7 +146,7 @@ used to generate pointers to stack-allocated variables, and expands to addi rd0,
 op c_addi4spn(rd: X, offset: card(8))
   init   = { assert(rd.i<4..3> == 0b01, "C.ADDI4SPN: Only registers x8-x15 are allowed!");
              assert(offset != 0, "c.addi4spn: nzuimm == 0"); }
-  syntax = format("c.addi4spn %s, %d(%s)", rd.syntax, offset, X(2).syntax)
+  syntax = format("c.addi4spn %s, %d", rd.syntax, offset)
   image  = format("000%2s%4s%1s%1s%3s00", offset<3..2>, offset<7..4>, offset<0>, offset<1>, rd.i<2..0>)
   action = {
     addi(rd, X(2), zero_extend(card(12), offset) << 2).action;
@@ -177,7 +177,7 @@ offset, scaled by 4, to the base address in register rs10. It expands to flw rd0
 op c_flw(rd: FR, rs1: X, offset: card(5))
   init   = { assert(rd.i<4..3> == 0b01, "C.FLW: Only registers f8-f15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "C.FLW: Only registers x8-x15 are allowed!");}
-  syntax = format("c.flw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
+  syntax = format("c.flw %s, %s, %d", rd.syntax, rs1.syntax, offset)
   image  = format("011%s%s%s%s%s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rd.i<2..0>)
   action = {
     flw(rd, rs1, zero_extend(card(12), offset) << 2).action;
@@ -253,7 +253,7 @@ offset, scaled by 4, to the base address in register rs10. It expands to fsw rs2
 op c_fsw(rs2: FR, rs1: X, offset: card(5))
   init   = { assert(rs2.i<4..3> == 0b01, "C.FSW: Only registers f8-f15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "C.FSW: Only registers x8-x15 are allowed!");}
-  syntax = format("c.fsw %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
+  syntax = format("c.fsw  %s, %s, %d", rs2.syntax, rs1.syntax, offset)
   image  = format("111%3s%3s%1s%1s%3s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rs2.i<2..0>)
   action = {
     fsw(rs2, rs1, zero_extend(card(12), offset) << 2).action;
@@ -321,8 +321,8 @@ to adjust the stack pointer in procedure prologues and epilogues. It expands int
 nzimm[9:4].
 */
 op c_addi16sp(imm: card(6))
-  init   = {}
-  syntax = format("c.addi16sp %d", imm)
+  init   = {assert(imm != 0, "C.ADDI16SP: (RES, nzimm=0)");}
+  syntax = format("c.addi16sp %s, %d", X(0).syntax, imm)
   image  = format("011%1s%5s%1s%1s%2s%1s01", imm<5>, X(2).image, imm<0>, imm<2>, imm<4..3>, imm<1>)
   action = {
     addiw(X(2), X(2), sign_extend(card(12), imm) << 4).action;

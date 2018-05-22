@@ -108,17 +108,15 @@ class InstructionRVC < RISCVBaseTemplate
 
     c_slli a0, _
 
-    c_flwsp fa0, :data
-
-    c_fldsp fa0, :data
+    la sp, :data
+    c_flwsp fa0, 4
+    c_fldsp fa0, 4
 
     c_mv a0, a0
-
     c_ebreak
 
-    c_fswsp fa1, :data
-
-    c_fsdsp fa1, :data
+    c_fswsp fa2, 4
+    c_fsdsp fa2, 4
 
     nop
     nop

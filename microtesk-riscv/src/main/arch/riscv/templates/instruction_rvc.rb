@@ -22,21 +22,103 @@ require_relative 'riscv_base'
 # This small tests for Compressed Instructions.
 #
 class InstructionRVC < RISCVBaseTemplate
+  def pre
+    super
+    data {
+      label :data
+      word rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
+      label :end_data
+      space 1
+    }
+  end
 
   def run
     trace "Compressed Instructions:"
 
-    c_andi a0, 7
-    c_andi a1, 5
-    c_add s0, a1
-    c_or s0, a0
-    c_xor s0, a1
-    c_sub s0, a0
-    c_addw s0, a0
-    c_subw s0, a0
+    c_addi4spn s1, 4
+
+    la a3, :data
+    c_flw fa2, a3, :data
+    c_fld fa2, a3, :data
+    c_fsw fa2, a3, :data
+    c_fsd fa2, a3, :data
+
+    c_sw a3, a3, :data
+    c_sd a3, a3, :data
 
     c_nop
-    c_nop
+    c_addi a0, 4
+    c_addiw a0, 8
+    c_addi16sp 4
+    c_li a0, 8
+    c_lui a0, 4
+    c_srli a0, 8
+    c_srai a0, 4
+
+    la sp, :data
+    c_lwsp a0, 0
+    c_ldsp a0, 0
+    c_swsp a3, 0
+    c_sdsp a3, 0
+
+    la a3, :data
+    c_lw a0, a3, :data
+    c_ld a0, a3, :data
+
+    c_andi a0, _
+    c_add a0, a0
+    c_or a0, a0
+    c_xor a0, a0
+    c_sub a0, a0
+    c_and a0, a0
+    c_addw a0, a0
+    c_subw a0, a0
+
+    c_j :c_j_label
+    nop
+    label :c_j_label
+    nop
+
+    c_jal :c_jal_label
+    nop
+    label :c_jal_label
+    nop
+
+    c_beqz a0, :c_beqz_label
+    nop
+    label :c_beqz_label
+    nop
+
+    c_bnez a0, :c_bnez_label
+    nop
+    label :c_bnez_label
+    nop
+
+    la gp, :c_jr_label
+    c_jr gp
+    nop
+    label :c_jr_label
+    nop
+
+    la gp, :c_jalr_label
+    c_jalr gp
+    nop
+    label :c_jalr_label
+    nop
+
+    c_slli a0, _
+
+    c_flwsp fa0, :data
+
+    c_fldsp fa0, :data
+
+    c_mv a0, a0
+
+    c_ebreak
+
+    c_fswsp fa1, :data
+
+    c_fsdsp fa1, :data
 
     nop
     nop

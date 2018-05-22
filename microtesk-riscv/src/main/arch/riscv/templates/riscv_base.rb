@@ -252,30 +252,30 @@ label :pass
   def  ft5(&contents) FR(5,  &contents) end
   def  ft6(&contents) FR(6,  &contents) end
   def  ft7(&contents) FR(7,  &contents) end
-  def  ft8(&contents) FR(8,  &contents) end
-  def  ft9(&contents) FR(9,  &contents) end
-  def ft10(&contents) FR(10, &contents) end
-  def ft11(&contents) FR(11, &contents) end
-  def ft12(&contents) FR(12, &contents) end
-  def ft13(&contents) FR(13, &contents) end
-  def ft14(&contents) FR(14, &contents) end
-  def ft15(&contents) FR(15, &contents) end
-  def ft16(&contents) FR(16, &contents) end
-  def ft17(&contents) FR(17, &contents) end
-  def ft18(&contents) FR(18, &contents) end
-  def ft19(&contents) FR(19, &contents) end
-  def ft20(&contents) FR(20, &contents) end
-  def ft21(&contents) FR(21, &contents) end
-  def ft22(&contents) FR(22, &contents) end
-  def ft23(&contents) FR(23, &contents) end
-  def ft24(&contents) FR(24, &contents) end
-  def ft25(&contents) FR(25, &contents) end
-  def ft26(&contents) FR(26, &contents) end
-  def ft27(&contents) FR(27, &contents) end
-  def ft28(&contents) FR(28, &contents) end
-  def ft29(&contents) FR(29, &contents) end
-  def ft30(&contents) FR(30, &contents) end
-  def ft31(&contents) FR(31, &contents) end
+  def  fs0(&contents) FR(8,  &contents) end
+  def  fs1(&contents) FR(9,  &contents) end
+  def  fa0(&contents) FR(10, &contents) end
+  def  fa1(&contents) FR(11, &contents) end
+  def  fa2(&contents) FR(12, &contents) end
+  def  fa3(&contents) FR(13, &contents) end
+  def  fa4(&contents) FR(14, &contents) end
+  def  fa5(&contents) FR(15, &contents) end
+  def  fa6(&contents) FR(16, &contents) end
+  def  fa7(&contents) FR(17, &contents) end
+  def  fs2(&contents) FR(18, &contents) end
+  def  fs3(&contents) FR(19, &contents) end
+  def  fs4(&contents) FR(20, &contents) end
+  def  fs5(&contents) FR(21, &contents) end
+  def  fs6(&contents) FR(22, &contents) end
+  def  fs7(&contents) FR(23, &contents) end
+  def  fs8(&contents) FR(24, &contents) end
+  def  fs9(&contents) FR(25, &contents) end
+  def fs10(&contents) FR(26, &contents) end
+  def fs11(&contents) FR(27, &contents) end
+  def  ft8(&contents) FR(28, &contents) end
+  def  ft9(&contents) FR(29, &contents) end
+  def ft10(&contents) FR(30, &contents) end
+  def ft11(&contents) FR(31, &contents) end
 
   ##################################################################################################
   # Utility method for printing data stored in memory using labels.

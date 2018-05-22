@@ -147,7 +147,7 @@ op c_addi4spn(rd: X, offset: card(8))
   init   = { assert(rd.i<4..3> != 0b01, "Only registers x8-x15 are allowed!");
              assert(offset != 0, "c.addi4spn: nzuimm == 0"); }
   syntax = format("c.addi4spn %s, %d(%s)", rd.syntax, offset, X(2).syntax)
-  image  = format("000%s%s%s%s%s00", offset<3..2>, offset<7..4>, offset<0>, offset<1>, rd.image)
+  image  = format("000%2s%4s%1s%1s%3s00", offset<3..2>, offset<7..4>, offset<0>, offset<1>, rd.i<2..0>)
   action = {
     addi(rd, X(2), zero_extend(card(12), offset) << 2).action;
   }
@@ -725,7 +725,7 @@ op c_beqz(rs1: X, offset: C_BRANCH_OFFSET_M2)
   image  = format("110%1s%2s%3s%2s%2s%1s01", c_jump_imm8<7>, c_jump_imm8<3..2>, rs1.i<2..0>,
                   c_jump_imm8<6..5>, c_jump_imm8<1..0>, c_jump_imm8<4>)
   action = {
-    beq(rs1, X(0), BRANCH_IMM(sign_extend(card(12), offset) << 1)).action;
+    beq(rs1, X(0), BRANCH_IMM(sign_extend(card(12), offset))).action;
   }
 
 /*
@@ -738,7 +738,7 @@ op c_bnez(rs1: X, offset: C_BRANCH_OFFSET_M2)
   image  = format("111%1s%2s%3s%2s%2s%1s01", c_jump_imm8<7>, c_jump_imm8<3..2>, rs1.i<2..0>,
                   c_jump_imm8<6..5>, c_jump_imm8<1..0>, c_jump_imm8<4>)
   action = {
-    bne(rs1, X(0), BRANCH_IMM(sign_extend(card(12), offset) << 1)).action;
+    bne(rs1, X(0), BRANCH_IMM(sign_extend(card(12), offset))).action;
   }
 
 /*
@@ -924,8 +924,6 @@ op c_fsdsp(rs2: FR, offset: card(6))
   action = {
     fsd(rs2, X(2), zero_extend(card(12), offset) << 3).action;
   }
-
-//==================================================================================================
 
 //==================================================================================================
 // Instruction Groups

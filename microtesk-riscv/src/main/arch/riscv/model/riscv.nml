@@ -485,7 +485,6 @@ op instruction16(operation: Op16)
   syntax = operation.syntax
   image  = operation.image
   action = {
-    XREG[0] = 0;
     prev_pc = PC;
 
     operation.action;

@@ -447,7 +447,7 @@ op c_srai64(rd: X)
   It expands to lw rd, offset[7:2](x2).
 */
 op c_lwsp(rd: X, offset: card(6))
-  init   = {}
+  init   = { assert(rd.i != 0, "C.LWSP: rd == 0");}
   syntax = format("c.lwsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("010%s%s%s%s10", offset<3>, rd.image, offset<2..0>, offset<5..4>)
   action = {
@@ -465,7 +465,7 @@ op c_lwsp(rd: X, offset: card(6))
 */
 @rev(RV64C)
 op c_ldsp(rd: X, offset: card(6))
-  init   = { assert(rd.i == 0, "c.ldsp: rd == 0");}
+  init   = { assert(rd.i != 0, "C.LDSP: rd == 0");}
   syntax = format("c.ldsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("011%s%s%s%s10", offset<2>, rd.image, offset<1..0>, offset<5..3>)
   action = {
@@ -720,7 +720,7 @@ label mode C_BRANCH_LABEL_M2(target: WORD, current: WORD) = target<7..0> - curre
 mode C_BRANCH_OFFSET_M2 = C_BRANCH_LABEL_M2 | C_BRANCH_IMM
 
 op c_beqz(rs1: X, offset: C_BRANCH_OFFSET_M2)
-  init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rs1.i<4..3> == 0b01, "C.BEQZ: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.beqz %s, %s", rs1.syntax, offset.syntax)
   image  = format("110%1s%2s%3s%2s%2s%1s01", c_jump_imm8<7>, c_jump_imm8<3..2>, rs1.i<2..0>,
                   c_jump_imm8<6..5>, c_jump_imm8<1..0>, c_jump_imm8<4>)
@@ -860,8 +860,8 @@ op c_fldsp(rd: FR, offset: card(6))
 C.MV copies the value in register rs2 into register rd. C.MV expands into add rd, x0, rs2.
 */
 op c_mv(rd: X, rs2: X)
-  init   = { assert(rd.i == 0, "c.mv: rd == 0");
-             assert(rs2.i == 0, "c.mv: rs2 == 0");}
+  init   = { assert(rd.i != 0, "c.mv: rd == 0");
+             assert(rs2.i != 0, "c.mv: rs2 == 0");}
   syntax = format("c.mv %s, %s", rd.syntax, rs2.syntax)
   image  = format("1000%5s%5s10", rd.image, rs2.image)
   action = {

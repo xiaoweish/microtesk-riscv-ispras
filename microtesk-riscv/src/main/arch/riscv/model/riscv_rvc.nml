@@ -144,7 +144,7 @@ immediate, scaled by 4, to the stack pointer, x2, and writes the result to rd0. 
 used to generate pointers to stack-allocated variables, and expands to addi rd0, x2, nzuimm[9:2].
 */
 op c_addi4spn(rd: X, offset: card(8))
-  init   = { assert(rd.i<4..3> != 0b01, "C.ADDI4SPN: Only registers x8-x15 are allowed!");
+  init   = { assert(rd.i<4..3> == 0b01, "C.ADDI4SPN: Only registers x8-x15 are allowed!");
              assert(offset != 0, "c.addi4spn: nzuimm == 0"); }
   syntax = format("c.addi4spn %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("000%2s%4s%1s%1s%3s00", offset<3..2>, offset<7..4>, offset<0>, offset<1>, rd.i<2..0>)
@@ -160,7 +160,7 @@ in register rs10. It expands to lq rd0, offset[8:4](rs10).
 @rev(RV128C)
 op c_lq(rd: X, rs1: X, offset: card(5))
   init   = { assert(rd.i<4..3> == 0b01, "C.LQ: Only registers f8-f15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+             assert(rs1.i<4..3> == 0b01, "C.LQ: Only registers x8-x15 are allowed!");}
   syntax = format("c.flw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
   image  = format("001%s%s%s%s%s00", offset<1..0>, offset<4>, rs1.i<2..0>, offset<3..2>, rd.i<2..0>)
   action = {
@@ -176,7 +176,7 @@ offset, scaled by 4, to the base address in register rs10. It expands to flw rd0
 @rev(RV32FC)
 op c_flw(rd: FR, rs1: X, offset: card(5))
   init   = { assert(rd.i<4..3> == 0b01, "C.FLW: Only registers f8-f15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+             assert(rs1.i<4..3> == 0b01, "C.FLW: Only registers x8-x15 are allowed!");}
   syntax = format("c.flw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
   image  = format("011%s%s%s%s%s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rd.i<2..0>)
   action = {
@@ -192,7 +192,7 @@ offset[7:3](rs10).
 @rev(RV32DC)
 op c_fld(rd: FR, rs1: X, offset: card(5))
   init   = { assert(rd.i<4..3> == 0b01, "C.FLD: Only registers f8-f15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+             assert(rs1.i<4..3> == 0b01, "C.FLD: Only registers x8-x15 are allowed!");}
   syntax = format("c.fld %s, %d(%s)", rd.syntax, offset, rs1.syntax)
   image  = format("001%s%s%s%s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rd.i<2..0>)
   action = {
@@ -206,7 +206,7 @@ offset[6:2](rs10).
 */
 op c_sw(rs2: X, rs1: X, offset: card(5))
   init   = { assert(rs2.i<4..3> == 0b01, "C.SW: Only registers x8-x15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+             assert(rs1.i<4..3> == 0b01, "C.SW: Only registers x8-x15 are allowed!");}
   syntax = format("c.sw %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
   image  = format("110%3s%3s%1s%1s%3s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rs2.i<2..0>)
   action = {
@@ -221,7 +221,7 @@ in register rs10. It expands to sd rs20, offset[7:3](rs10).
 @rev(RV64C)
 op c_sd(rs2: X, rs1: X, offset: card(5))
   init   = { assert(rs2.i<4..3> == 0b01, "C.SD: Only registers x8-x15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+             assert(rs1.i<4..3> == 0b01, "C.SD: Only registers x8-x15 are allowed!");}
   syntax = format("c.sd %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
   image  = format("111%3s%3s%2s%3s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rs2.i<2..0>)
   action = {
@@ -609,8 +609,8 @@ C.AND computes the bitwise AND of the values in registers rd0 and rs20, then wri
 register rd0. C.AND expands into and rd0, rd0, rs20.
 */
 op c_and(rd: X, rs2: X)
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i<4..3> == 0b01, "C.AND: 16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "C.AND: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.and %s, %s", rd.syntax, rs2.syntax)
   image  = format("100011%3s11%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
@@ -624,8 +624,8 @@ expands into addw rd0, rd0, rs20.
 */
 @rev(RV64C)
 op c_addw(rd: X, rs2: X)
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i<4..3> == 0b01, "C.ADDW: 16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "C.ADDW: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.addw %s, %s", rd.syntax, rs2.syntax)
   image  = format("100111%3s01%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
@@ -639,8 +639,8 @@ to register rd0. C.SUBW expands into subw rd0, rd0, rs20.
 */
 @rev(RV64C)
 op c_subw(rd: X, rs2: X)
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i<4..3> == 0b01, "C.SUBW: 16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "C.SUBW: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.subw %s, %s", rd.syntax, rs2.syntax)
   image  = format("100111%3s00%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
@@ -733,7 +733,7 @@ C.BNEZ is defined analogously, but it takes the branch if rs10 contains a nonzer
 to bne rs10, x0, offset[8:1].
 */
 op c_bnez(rs1: X, offset: C_BRANCH_OFFSET_M2)
-  init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rs1.i<4..3> == 0b01, "C.BNEZ: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.bnez %s, %s", rs1.syntax, offset.syntax)
   image  = format("111%1s%2s%3s%2s%2s%1s01", c_jump_imm8<7>, c_jump_imm8<3..2>, rs1.i<2..0>,
                   c_jump_imm8<6..5>, c_jump_imm8<1..0>, c_jump_imm8<4>)
@@ -746,7 +746,7 @@ C.JR (jump register) performs an unconditional control transfer to the address i
 expands to jalr x0, rs1, 0.
 */
 op c_jr(rs1: X)
-  init   = { assert(rs1.i<4..3> == 0b01, "C.JR 16-bit opcode: only registers x8-x15 are allowed!");
+  init   = { assert(rs1.i<4..3> == 0b01, "C.JR: 16-bit opcode: only registers x8-x15 are allowed!");
              assert(rs1.i<2..0> != 0b000, "c.jr: rs1 == 0");}
   syntax = format("c.jr %s", rs1.syntax)
   image  = format("1000%5s0000010", rs1.image)
@@ -760,7 +760,7 @@ address of the instruction following the jump (pc+2) to the link register, x1. C
 jalr x1, rs1, 0.
 */
 op c_jalr(rs1: X)
-  init   = { assert(rs1.i<4..3> == 0b01, "C.JALR 16-bit opcode: only registers x8-x15 are allowed!");
+  init   = { assert(rs1.i<4..3> == 0b01, "C.JALR: 16-bit opcode: only registers x8-x15 are allowed!");
              assert(rs1.i<2..0> != 0b000, "c.jalr: rs1 == 0");}
   syntax = format("c.jalr %s", rs1.syntax)
   image  = format("1001%5s0000010", rs1.image)
@@ -817,7 +817,7 @@ x2. It expands to lq rd, offset[9:4](x2).
 */
 @rev(RV128C)
 op c_lqsp(rd: X, offset: card(6))
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+  init   = { assert(rd.i<4..3> == 0b01, "C.LQSP: 16-bit opcode: only registers x8-x15 are allowed!");
              assert(rd.i<2..0> != 0b000, "c.lqsp: rd == 0"); }
   syntax = format("c.lqsp %s, %d", rd.syntax, offset)
   image  = format("001%1s%3s%1s%4s10", offset<1>, rd.i<2..0>, offset<0>, offset<5..2>)
@@ -833,7 +833,7 @@ offset, scaled by 4, to the stack pointer, x2. It expands to flw rd, offset[7:2]
 */
 @rev(RV32FC)
 op c_flwsp(rd: FR, offset: card(6))
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+  init   = { assert(rd.i<4..3> == 0b01, "C.FLWSP: 16-bit opcode: only registers x8-x15 are allowed!");
              assert(rd.i<2..0> != 0b000, "c.lqsp: rd == 0"); }
   syntax = format("c.flwsp %s, %d", rd.syntax, offset)
   image  = format("011%1s%3s%3s%2s10", offset<3>, rd.i<2..0>, offset<2..0>, offset<5..4>)
@@ -849,7 +849,7 @@ offset[8:3](x2).
 */
 @rev(RV32DC)
 op c_fldsp(rd: FR, offset: card(6))
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i<4..3> == 0b01, "C.FLDSP: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.fldsp %s, %d", rd.syntax, offset)
   image  = format("001%1s%3s%2s%3s10", offset<2>, rd.i<2..0>, offset<1..0>, offset<5..3>)
   action = {

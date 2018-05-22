@@ -94,14 +94,14 @@ class InstructionRVC < RISCVBaseTemplate
     label :c_bnez_label
     nop
 
-    la gp, :c_jr_label
-    c_jr gp
+    la a5, :c_jr_label
+    c_jr a5
     nop
     label :c_jr_label
     nop
 
-    la gp, :c_jalr_label
-    c_jalr gp
+    la a5, :c_jalr_label
+    c_jalr a5
     nop
     label :c_jalr_label
     nop

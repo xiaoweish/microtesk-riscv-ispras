@@ -144,7 +144,7 @@ immediate, scaled by 4, to the stack pointer, x2, and writes the result to rd0. 
 used to generate pointers to stack-allocated variables, and expands to addi rd0, x2, nzuimm[9:2].
 */
 op c_addi4spn(rd: X, offset: card(8))
-  init   = { assert(rd.i<4..3> != 0b01, "Only registers x8-x15 are allowed!");
+  init   = { assert(rd.i<4..3> != 0b01, "C.ADDI4SPN: Only registers x8-x15 are allowed!");
              assert(offset != 0, "c.addi4spn: nzuimm == 0"); }
   syntax = format("c.addi4spn %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("000%2s%4s%1s%1s%3s00", offset<3..2>, offset<7..4>, offset<0>, offset<1>, rd.i<2..0>)
@@ -159,7 +159,7 @@ in register rs10. It expands to lq rd0, offset[8:4](rs10).
 */
 @rev(RV128C)
 op c_lq(rd: X, rs1: X, offset: card(5))
-  init   = { assert(rd.i<4..3> == 0b01, "Only registers f8-f15 are allowed!");
+  init   = { assert(rd.i<4..3> == 0b01, "C.LQ: Only registers f8-f15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
   syntax = format("c.flw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
   image  = format("001%s%s%s%s%s00", offset<1..0>, offset<4>, rs1.i<2..0>, offset<3..2>, rd.i<2..0>)
@@ -175,7 +175,7 @@ offset, scaled by 4, to the base address in register rs10. It expands to flw rd0
 */
 @rev(RV32FC)
 op c_flw(rd: FR, rs1: X, offset: card(5))
-  init   = { assert(rd.i<4..3> == 0b01, "Only registers f8-f15 are allowed!");
+  init   = { assert(rd.i<4..3> == 0b01, "C.FLW: Only registers f8-f15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
   syntax = format("c.flw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
   image  = format("011%s%s%s%s%s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rd.i<2..0>)
@@ -191,7 +191,7 @@ offset[7:3](rs10).
 */
 @rev(RV32DC)
 op c_fld(rd: FR, rs1: X, offset: card(5))
-  init   = { assert(rd.i<4..3> == 0b01, "Only registers f8-f15 are allowed!");
+  init   = { assert(rd.i<4..3> == 0b01, "C.FLD: Only registers f8-f15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
   syntax = format("c.fld %s, %d(%s)", rd.syntax, offset, rs1.syntax)
   image  = format("001%s%s%s%s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rd.i<2..0>)
@@ -205,7 +205,7 @@ the zero-extended offset, scaled by 4, to the base address in register rs10. It 
 offset[6:2](rs10).
 */
 op c_sw(rs2: X, rs1: X, offset: card(5))
-  init   = { assert(rs2.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");
+  init   = { assert(rs2.i<4..3> == 0b01, "C.SW: Only registers x8-x15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
   syntax = format("c.sw %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
   image  = format("110%3s%3s%1s%1s%3s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rs2.i<2..0>)
@@ -220,7 +220,7 @@ in register rs10. It expands to sd rs20, offset[7:3](rs10).
 */
 @rev(RV64C)
 op c_sd(rs2: X, rs1: X, offset: card(5))
-  init   = { assert(rs2.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");
+  init   = { assert(rs2.i<4..3> == 0b01, "C.SD: Only registers x8-x15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
   syntax = format("c.sd %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
   image  = format("111%3s%3s%2s%3s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rs2.i<2..0>)
@@ -235,8 +235,8 @@ in register rs10. It expands to sq rs20, offset[8:4](rs10).
 */
 @rev(RV128C)
 op c_sq(rs2: X, rs1: X, offset: card(5))
-  init   = { assert(rs2.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  init   = { assert(rs2.i<4..3> == 0b01, "C.SQ: Only registers x8-x15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "C.SQ: Only registers x8-x15 are allowed!");}
   syntax = format("c.sq %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
   image  = format("101%2s%1s%3s%2s%3s00", offset<1..0>, offset<4>, rs1.i<2..0>, offset<3..2>, rs2.i<2..0>)
   action = {
@@ -251,8 +251,8 @@ offset, scaled by 4, to the base address in register rs10. It expands to fsw rs2
 */
 @rev(RV32FC)
 op c_fsw(rs2: FR, rs1: X, offset: card(5))
-  init   = { assert(rs2.i<4..3> == 0b01, "Only registers f8-f15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  init   = { assert(rs2.i<4..3> == 0b01, "C.FSW: Only registers f8-f15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "C.FSW: Only registers x8-x15 are allowed!");}
   syntax = format("c.fsw %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
   image  = format("111%3s%3s%1s%1s%3s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rs2.i<2..0>)
   action = {
@@ -267,8 +267,8 @@ offset[7:3](rs10).
 */
 @rev(RV32DC)
 op c_fsd(rs2: FR, rs1: X, offset: card(5))
-  init   = { assert(rs2.i<4..3> == 0b01, "Only registers f8-f15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+  init   = { assert(rs2.i<4..3> == 0b01, "C.FSD: Only registers f8-f15 are allowed!");
+             assert(rs1.i<4..3> == 0b01, "C.FSD: Only registers x8-x15 are allowed!");}
   syntax = format("c.fsd %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
   image  = format("101%3s%3s%2s%3s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rs2.i<2..0>)
   action = {
@@ -365,7 +365,7 @@ for RV128C, and so the legal shift amounts are 1{31, 64, and 96{127. C.SRLI expa
 rd0, rd0, shamt[5:0], except for RV128C with shamt=0, which expands to srli rd0, rd0, 64.
 */
 op c_srli(rd: X, shamt: card(6))
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+  init   = { assert(rd.i<4..3> == 0b01, "C.SRLI: 16-bit opcode: only registers x8-x15 are allowed!");
              #ifndef RV128C
                #ifdef RV32C
                  assert(shamt<5> == 0b0, "c.srli(RV32C): shamt<5> != 0");
@@ -404,7 +404,7 @@ C.SRAI is defined analogously to C.SRLI, but instead performs an arithmetic righ
 expands to srai rd0, rd0, shamt[5:0].
 */
 op c_srai(rd: X, shamt: card(6))
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+  init   = { assert(rd.i<4..3> == 0b01, "C.SRLI: 16-bit opcode: only registers x8-x15 are allowed!");
              #ifndef RV128C
                #ifdef RV32C
                  assert(shamt<5> == 0b0, "c.srai(RV32C): shamt<5> != 0");
@@ -545,7 +545,7 @@ and the sign-extended 6-bit immediate, then writes the result to rd0. C.ANDI exp
 rd0, rd0, imm[5:0].
 */
 op c_andi(rd: X, imm: card(6))
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i<4..3> == 0b01, "C.ANDI: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.andi %s, %d", rd.syntax, imm)
   image  = format("100%1s10%3s%5s01", imm<5>, rd.i<2..0>, imm<4..0>)
   action = {
@@ -557,8 +557,8 @@ C.ADD adds the values in registers rd and rs2 and writes the result to register 
 into add rd, rd, rs2.
 */
 op c_add(rd: X, rs2: X)
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i<4..3> == 0b01, "C.ADD: 16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "C.ADD: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.add %s, %s", rd.syntax, rs2.syntax)
   image  = format("100011%3s11%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
@@ -570,8 +570,8 @@ C.OR computes the bitwise OR of the values in registers rd0 and rs20, then write
 register rd0. C.OR expands into or rd0, rd0, rs20.
 */
 op c_or(rd: X, rs2: X)
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i<4..3> == 0b01, "C.OR: 16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "C.OR: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.or %s, %s", rd.syntax, rs2.syntax)
   image  = format("100011%3s10%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
@@ -583,8 +583,8 @@ C.XOR computes the bitwise XOR of the values in registers rd0 and rs20, then wri
 register rd0. C.XOR expands into xor rd0, rd0, rs20.
 */
 op c_xor(rd: X, rs2: X)
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i<4..3> == 0b01, "C.XOR: 16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "C.XOR: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.xor %s, %s", rd.syntax, rs2.syntax)
   image  = format("100011%3s01%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
@@ -596,8 +596,8 @@ C.SUB subtracts the value in register rs20 from the value in register rd0, then 
 register rd0. C.SUB expands into sub rd0, rd0, rs20.
 */
 op c_sub(rd: X, rs2: X)
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs2.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i<4..3> == 0b01, "C.SUB: 16-bit opcode: only registers x8-x15 are allowed!");
+             assert(rs2.i<4..3> == 0b01, "C.SUB: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.sub %s, %s", rd.syntax, rs2.syntax)
   image  = format("100011%3s00%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
@@ -746,7 +746,7 @@ C.JR (jump register) performs an unconditional control transfer to the address i
 expands to jalr x0, rs1, 0.
 */
 op c_jr(rs1: X)
-  init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+  init   = { assert(rs1.i<4..3> == 0b01, "C.JR 16-bit opcode: only registers x8-x15 are allowed!");
              assert(rs1.i<2..0> != 0b000, "c.jr: rs1 == 0");}
   syntax = format("c.jr %s", rs1.syntax)
   image  = format("1000%5s0000010", rs1.image)
@@ -760,7 +760,7 @@ address of the instruction following the jump (pc+2) to the link register, x1. C
 jalr x1, rs1, 0.
 */
 op c_jalr(rs1: X)
-  init   = { assert(rs1.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");
+  init   = { assert(rs1.i<4..3> == 0b01, "C.JALR 16-bit opcode: only registers x8-x15 are allowed!");
              assert(rs1.i<2..0> != 0b000, "c.jalr: rs1 == 0");}
   syntax = format("c.jalr %s", rs1.syntax)
   image  = format("1001%5s0000010", rs1.image)

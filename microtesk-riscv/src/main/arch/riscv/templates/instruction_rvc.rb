@@ -75,13 +75,15 @@ class InstructionRVC < RISCVBaseTemplate
     c_subw a0, a0
 
     c_j :c_j_label
-    nop
+    c_nop
     label :c_j_label
     nop
-
-    c_jal 8
     nop
+
+    c_jal 2
+    c_nop
     label :c_jal_label
+    nop
     nop
 
     c_beqz a0, :c_beqz_label

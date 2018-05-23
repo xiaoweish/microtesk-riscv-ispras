@@ -79,7 +79,7 @@ class InstructionRVC < RISCVBaseTemplate
     label :c_j_label
     nop
 
-    c_jal :c_jal_label
+    c_jal 8
     nop
     label :c_jal_label
     nop

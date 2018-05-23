@@ -38,9 +38,9 @@ class InstructionRVC < RISCVBaseTemplate
     c_addi4spn s1, 4
 
     la a3, :data
-    c_flw fa2, a3, :data
+    #c_flw fa2, a3, :data
     c_fld fa2, a3, :data
-    c_fsw fa2, a3, :data
+    #c_fsw fa2, a3, :data
     c_fsd fa2, a3, :data
 
     c_sw a3, a3, :data
@@ -49,7 +49,7 @@ class InstructionRVC < RISCVBaseTemplate
     c_nop
     c_addi a0, 4
     c_addiw a0, 8
-    c_addi16sp 4
+    #c_addi16sp 4
     c_li a0, 8
     c_lui a0, 4
     c_srli a0, 8
@@ -80,7 +80,7 @@ class InstructionRVC < RISCVBaseTemplate
     nop
     nop
 
-    c_jal 2
+    #c_jal 2
     c_nop
     label :c_jal_label
     nop
@@ -111,14 +111,14 @@ class InstructionRVC < RISCVBaseTemplate
     c_slli a0, _
 
     la sp, :data
-    c_flwsp fa0, 4
-    c_fldsp fa0, 4
+    #c_flwsp fa0, 4
+    #c_fldsp fa0, 4
 
     c_mv a0, a0
     c_ebreak
 
-    c_fswsp fa2, 4
-    c_fsdsp fa2, 4
+    #c_fswsp fa2, 4
+    #c_fsdsp fa2, 4
 
     nop
     nop

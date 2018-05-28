@@ -22,12 +22,23 @@ require_relative 'riscv_base'
 # This small tests for RV64I instructions.
 #
 class InstructionRV64I < RISCVBaseTemplate
+  def pre
+    super
+    data {
+      label :data
+      word rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
+      label :end_data
+      space 1
+    }
+  end
 
   def run
     trace "Run RV64I instruction:"
     nop
 
     if is_rev('RV64I') then
+      la t1, :data
+
       lwu t0, t1, 0x0
       trace "t0 = %x", XREG(5)
 

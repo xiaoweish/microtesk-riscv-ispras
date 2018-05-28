@@ -48,7 +48,8 @@ class InstructionRV32I < RISCVBaseTemplate
     nop
     label :jal_label
     nop
-    lui s0, 0x1
+    lui s0, 0x40000
+    slli s0, s0, 0x1
     addi s0, s0, :jalr_label
 
     trace "s0 = %x", XREG(8)

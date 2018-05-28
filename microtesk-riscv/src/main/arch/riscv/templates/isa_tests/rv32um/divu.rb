@@ -53,11 +53,16 @@ class DivuTemplate < RISCVBaseTemplate
   end
 
   def run
+    # Prevents test execution for irrelevant ISA versions
+    if __riscv_xlen != 32
+      j :pass
+      return
+    end
+
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
 
-  if __riscv_xlen == 32
     TEST_RR_OP( 2, 'divu',                   3,  20,   6 )
     TEST_RR_OP( 3, 'divu',           715827879, -20,   6 )
     TEST_RR_OP( 4, 'divu',                   0,  20,  -6 )
@@ -69,7 +74,6 @@ class DivuTemplate < RISCVBaseTemplate
     TEST_RR_OP( 8, 'divu', -1, -1<<31, 0 )
     TEST_RR_OP( 9, 'divu', -1,      1, 0 )
     TEST_RR_OP(10, 'divu', -1,      0, 0 )
-  end
 
     RVTEST_DATA_BEGIN()
     TEST_DATA()

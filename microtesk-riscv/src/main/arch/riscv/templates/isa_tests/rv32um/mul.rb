@@ -53,11 +53,16 @@ class MulTemplate < RISCVBaseTemplate
   end
 
   def run
+    # Prevents test execution for irrelevant ISA versions
+    if __riscv_xlen != 32
+      j :pass
+      return
+    end
+
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
 
-  if __riscv_xlen == 32
     TEST_RR_OP(32,  'mul', 0x00001200, 0x00007e00, 0xb6db6db7 )
     TEST_RR_OP(33,  'mul', 0x00001240, 0x00007fc0, 0xb6db6db7 )
 
@@ -112,7 +117,6 @@ class MulTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 27, 'mul', 0, 32 )
     TEST_RR_ZEROSRC12( 28, 'mul', 0 )
     TEST_RR_ZERODEST( 29, 'mul', 33, 34 )
-  end
 
     RVTEST_DATA_BEGIN()
     TEST_DATA()

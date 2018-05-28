@@ -57,6 +57,7 @@ class MulhsuTemplate < RISCVBaseTemplate
     # Arithmetic tests
     #-------------------------------------------------------------
 
+  if __riscv_xlen == 32
     TEST_RR_OP( 2,  'mulhsu', 0x00000000, 0x00000000, 0x00000000 )
     TEST_RR_OP( 3,  'mulhsu', 0x00000000, 0x00000001, 0x00000001 )
     TEST_RR_OP( 4,  'mulhsu', 0x00000000, 0x00000003, 0x00000007 )
@@ -108,6 +109,7 @@ class MulhsuTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 27, 'mulhsu', 0, 32<<26 )
     TEST_RR_ZEROSRC12( 28, 'mulhsu', 0 )
     TEST_RR_ZERODEST( 29, 'mulhsu', 33<<20, 34<<20 )
+  end
 
     RVTEST_DATA_BEGIN()
     TEST_DATA()

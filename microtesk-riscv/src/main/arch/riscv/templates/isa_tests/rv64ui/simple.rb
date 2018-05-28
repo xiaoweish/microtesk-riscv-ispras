@@ -54,9 +54,7 @@ class SimpleTemplate < RISCVBaseTemplate
 
   def run
     RVTEST_DATA_BEGIN()
-
     TEST_DATA()
-
     RVTEST_DATA_END()
   end
 

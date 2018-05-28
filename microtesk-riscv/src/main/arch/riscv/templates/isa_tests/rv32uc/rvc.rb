@@ -45,7 +45,7 @@
 
 require_relative '../rv64uc/rvc'
 
-class Rvc32Template < AddTemplate
+class Rvc32Template < RvcTemplate
 
   def pre_rvtest
     RVTEST_RV32U()

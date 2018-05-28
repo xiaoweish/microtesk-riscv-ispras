@@ -98,7 +98,7 @@ op amoxor_d(rd: X, rs2: X, rs1: X)
   action = {
     load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
-    tmp_dword = rd | rs2;
+    tmp_dword = rd ^ rs2;
     store_data(MEM_DWORD, rs1, coerce(DWORD, tmp_dword)).action;
   }
 

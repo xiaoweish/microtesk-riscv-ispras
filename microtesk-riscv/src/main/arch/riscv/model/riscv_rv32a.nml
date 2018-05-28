@@ -108,7 +108,7 @@ op amoxor_w(rd: X, rs2: X, rs1: X)
   action = {
     load_data(MEM_WORD, rs1).action; // return load_value
     rd = sign_extend(XWORD, load_value<31..0>);
-    tmp_word = rd<31..0> | rs2<31..0>;
+    tmp_word = rd<31..0> ^ rs2<31..0>;
     store_data(MEM_WORD, rs1, sign_extend(DWORD, tmp_word)).action;
   }
 

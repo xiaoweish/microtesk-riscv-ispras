@@ -91,9 +91,9 @@ label 1
     end
 
     li sp, 0x1234
-    RVC_TEST_CASE( 3, a0, 0x1234 + 1020 )      do c_addi4spn a0, sp, 1020 end
-    RVC_TEST_CASE( 4, sp, 0x1234 + 496 )       do c_addi16sp sp, 496 end
-    RVC_TEST_CASE( 5, sp, 0x1234 + 496 - 512 ) do c_addi16sp sp, -512 end
+    RVC_TEST_CASE( 3, a0, 0x1234 + 1020 )      do c_addi4spn a0, 1020 end
+    RVC_TEST_CASE( 4, sp, 0x1234 + 496 )       do c_addi16sp 496 end
+    RVC_TEST_CASE( 5, sp, 0x1234 + 496 - 512 ) do c_addi16sp -512 end
 
     la a1, :data
     RVC_TEST_CASE( 6, a2, 0xfffffffffedcba99 ) do

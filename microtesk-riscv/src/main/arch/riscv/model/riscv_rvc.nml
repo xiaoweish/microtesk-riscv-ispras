@@ -661,12 +661,12 @@ mode C_JUMP_IMM(imm: int(11)) = imm
   syntax = format("0x%X", imm)
   image = format("%s", imm)
 
-label mode C_JUMP_LABEL(target: WORD, current: WORD) = target<10..0> - current<10..0>
+label mode C_JUMP_LABEL(target: WORD, current: WORD) = target<11..1> - current<11..1>
   init = {
-    c_jump_imm11 = target<10..0> - current<10..0>;
+    c_jump_imm11 = target<11..1> - current<11..1>;
   }
   syntax = ""
-  image = format("%s", target<10..0> - current<10..0>)
+  image = format("%s", target<11..1> - current<11..1>)
 
 mode C_JUMP_ADDR = C_JUMP_LABEL | C_JUMP_IMM
 
@@ -678,7 +678,7 @@ op c_j(target: C_JUMP_ADDR)
                   c_jump_imm11<8..7>, c_jump_imm11<9>, c_jump_imm11<5>, c_jump_imm11<6>,
                   c_jump_imm11<2..0>, c_jump_imm11<4>)
   action = {
-    jal(X(0), JUMP_IMM(sign_extend(int(20), c_jump_imm11) << 1)).action;
+    jal(X(0), JUMP_IMM(sign_extend(int(20), c_jump_imm11))).action;
   }
 
 /*
@@ -710,12 +710,12 @@ mode C_BRANCH_IMM(imm: card(8)) = imm
   syntax = format("%d", coerce(int(8), imm))
   image = format("%s", imm)
 
-label mode C_BRANCH_LABEL_M2(target: WORD, current: WORD) = target<7..0> - current<7..0>
+label mode C_BRANCH_LABEL_M2(target: WORD, current: WORD) = target<8..1> - current<8..1>
   init = {
-    c_jump_imm8 = target<7..0> - current<7..0>;
+    c_jump_imm8 = target<8..1> - current<8..1>;
   }
   syntax = ""
-  image = format("%s", target<7..0> - current<7..0>)
+  image = format("%s", target<8..1> - current<8..1>)
 
 mode C_BRANCH_OFFSET_M2 = C_BRANCH_LABEL_M2 | C_BRANCH_IMM
 

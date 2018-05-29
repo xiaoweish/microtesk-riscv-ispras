@@ -108,6 +108,16 @@ let MEM_SIZE_IN_WORDS = 2 ** (MEM_SIZE)
 // Main Memory
 shared mem MEM [MEM_SIZE_IN_WORDS, WORD]
 
+// Register that stores reserved address used by instructions LR/SC from RV32A and RV64A.
+// TODO: This is a simplified specification that replicates how it is implemented in Spike.
+#ifdef RV32A
+  reg LOAD_RESERVATION[XWORD]
+#else
+  #ifdef RV64A
+    reg LOAD_RESERVATION[XWORD]
+  #endif
+#endif
+
 //==================================================================================================
 // Addressing Modes
 //==================================================================================================

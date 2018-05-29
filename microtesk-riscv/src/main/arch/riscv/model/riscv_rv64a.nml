@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,6 +40,8 @@ op lr_d(rd: X, rs1: X)
   syntax = format("lr.d %s, (%s)", rd.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00010", "0", "0", "00000", rs1.image, "011", rd.image)
   action = {
+    // TODO: This is a simplified specification that replicates how it is implemented in Spike.
+    LOAD_RESERVATION = rs1;
     load_data(MEM_DWORD, rs1).action; // return load_value
     rd = load_value;
   }
@@ -49,8 +51,13 @@ op sc_d(rd: X, rs2: X, rs1: X)
   syntax = format("sc.d %s, %s, (%s)", rd.syntax, rs2.syntax, rs1.syntax)
   image  = format("%5s%1s%1s%5s%5s%3s%5s0101111", "00011", "0", "0", rs2.image, rs1.image, "011", rd.image)
   action = {
-    store_data(MEM_DWORD, rs1, coerce(DWORD, rs2)).action;
-    rd = 0; // TODO: SC writes zero to rd on success or a nonzero code on failure.
+    // TODO: This is a simplified specification that replicates how it is implemented in Spike.
+    if rs1 == LOAD_RESERVATION then
+      store_data(MEM_DWORD, rs1, coerce(DWORD, rs2)).action;
+      rd = 0;
+    else
+      rd = 1;
+    endif;
   }
 
 op amoswap_d(rd: X, rs2: X, rs1: X)

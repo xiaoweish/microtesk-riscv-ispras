@@ -195,7 +195,7 @@ class RISCVBaseTemplate < Template
   # Epilogue
   ##################################################################################################
 
-  # Epilgue can be overridden in user templates
+  # Epilogue can be overridden in user templates
   def post
     j :pass
 label :fail

@@ -1,16 +1,5 @@
 TESTS = arithmetic\
         block\
-        instruction_rv32i\
-        instruction_rv64i\
-        instruction_rv32m\
-        instruction_rv64m\
-        instruction_rv32a\
-        instruction_rv64a\
-        instruction_rv32f\
-        instruction_rv64f\
-        instruction_rv32d\
-        instruction_rv64d\
-        instruction_rv64c\
         coverage\
         groups\
         preparators_test\

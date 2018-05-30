@@ -12,17 +12,18 @@
  * the License.
  */
 
-package ru.ispras.microtesk.model.riscv;
+package ru.ispras.microtesk.model.riscv.algorithm;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.test.Statistics;
 
-public class MinMaxTestCase extends RiscVTest {
+public class IntDivideTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("min_max.rb");
+    final Statistics statistics = run("algorithm/int_divide.rb");
     Assert.assertNotNull(statistics);
   }
 }

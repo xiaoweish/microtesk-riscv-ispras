@@ -12,17 +12,18 @@
  * the License.
  */
 
-package ru.ispras.microtesk.model.riscv;
+package ru.ispras.microtesk.model.riscv.algorithm;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.test.Statistics;
 
-public class BubbleSortByteTestCase extends RiscVTest {
+public class MinMaxTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("bubble_sort_byte.rb");
+    final Statistics statistics = run("algorithm/min_max.rb");
     Assert.assertNotNull(statistics);
   }
 }

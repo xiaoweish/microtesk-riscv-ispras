@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-require_relative 'riscv_base'
+require_relative '../riscv_base'
 
 #
 # Description:
@@ -39,15 +39,15 @@ require_relative 'riscv_base'
 #   until not swapped
 # end procedure
 #
-class BubbleSortByteTemplate < RISCVBaseTemplate
+class BubbleSortHWordTemplate < RISCVBaseTemplate
   def pre
     super
 
     data {
       label :data
-      byte rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
-      byte rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
-      byte rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
+      half rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
+      half rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
+      half rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)
       label :end
       space 1
     }
@@ -62,32 +62,31 @@ class BubbleSortByteTemplate < RISCVBaseTemplate
     la s1, :end
     trace "s0 = %x", XREG(9)
 
-    addi a0, zero, 1
+    addi a0, zero, 2
 
     ########################### Outer loop starts ##############################
     label :repeat
     Or t0, zero, zero
 
-    addi t1, s0, 1
+    addi t1, s0, 2
     ########################### Inner loop starts ##############################
     label :for
     beq t1, s1, :exit_for
-    sub t2, t1, a0 # a0 = 1;
+    sub t2, t1, a0 # a0 = 2;
 
-    lb t4, t1, 0
-    lb t5, t2, 0
+    lh t4, t1, 0
+    lh t5, t2, 0
 
     slt t6, t4, t5
     beq t6, zero, :next
 
     addi t0, zero, 0xf # t0 != 0
 
-    sb t4, t2, 0
-    sb t5, t1, 0
+    sh t4, t2, 0
+    sh t5, t1, 0
 
     label :next
-    addi t1, t1, 1
-
+    addi t1, t1, 2
     j :for
     ############################ Inner loop ends ###############################
     label :exit_for

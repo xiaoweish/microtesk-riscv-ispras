@@ -12,17 +12,18 @@
  * the License.
  */
 
-package ru.ispras.microtesk.model.riscv;
+package ru.ispras.microtesk.model.riscv.algorithm;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.test.Statistics;
 
-public class EuclidTestCase extends RiscVTest {
+public class IntSqrtTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("euclid.rb");
+    final Statistics statistics = run("algorithm/int_sqrt.rb");
     Assert.assertNotNull(statistics);
   }
 }

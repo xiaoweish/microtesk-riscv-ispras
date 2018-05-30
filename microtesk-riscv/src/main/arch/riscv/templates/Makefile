@@ -11,15 +11,8 @@ TESTS = arithmetic\
         instruction_rv32d\
         instruction_rv64d\
         instruction_rv64c\
-        bubble_sort_byte\
-        bubble_sort_hword\
-        bubble_sort_word\
         coverage\
-        euclid\
         groups\
-        int_divide\
-        int_sqrt\
-        min_max\
         preparators_test\
         random\
         register_allocation

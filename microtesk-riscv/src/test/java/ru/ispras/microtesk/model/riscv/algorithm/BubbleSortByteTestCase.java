@@ -12,17 +12,18 @@
  * the License.
  */
 
-package ru.ispras.microtesk.model.riscv;
+package ru.ispras.microtesk.model.riscv.algorithm;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.test.Statistics;
 
-public class IntDivideTestCase extends RiscVTest {
+public class BubbleSortByteTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("int_divide.rb");
+    final Statistics statistics = run("algorithm/bubble_sort_byte.rb");
     Assert.assertNotNull(statistics);
   }
 }

@@ -143,13 +143,14 @@ C.ADDI4SPN is a CIW-format RV32C/RV64C-only instruction that adds a zero-extende
 immediate, scaled by 4, to the stack pointer, x2, and writes the result to rd0. This instruction is
 used to generate pointers to stack-allocated variables, and expands to addi rd0, x2, nzuimm[9:2].
 */
-op c_addi4spn(rd: X, offset: card(8))
+op c_addi4spn(rd: X, nzuimm: card(10))
   init   = { assert(rd.i<4..3> == 0b01, "C.ADDI4SPN: Only registers x8-x15 are allowed!");
-             assert(offset != 0, "c.addi4spn: nzuimm == 0"); }
-  syntax = format("c.addi4spn %s, %s, %d", rd.syntax, X(2).syntax, offset)
-  image  = format("000%2s%4s%1s%1s%3s00", offset<3..2>, offset<7..4>, offset<0>, offset<1>, rd.i<2..0>)
+             assert(nzuimm != 0, "c.addi4spn: nzuimm == 0");
+             assert(nzuimm<1..0> == 0, "c.addi4spn: nzuimm<1..0> != 0"); }
+  syntax = format("c.addi4spn %s, %s, %d", rd.syntax, X(2).syntax, nzuimm)
+  image  = format("000%2s%4s%1s%1s%3s00", nzuimm<5..4>, nzuimm<9..6>, nzuimm<2>, nzuimm<3>, rd.i<2..0>)
   action = {
-    addi(rd, X(2), zero_extend(card(12), offset) << 2).action;
+    addi(rd, X(2), zero_extend(card(12), nzuimm<9..2>) << 2).action;
   }
 
 /*
@@ -320,12 +321,13 @@ immediate is scaled to represent multiples of 16 in the range (-512,496). C.ADDI
 to adjust the stack pointer in procedure prologues and epilogues. It expands into addi x2, x2,
 nzimm[9:4].
 */
-op c_addi16sp(imm: card(6))
-  init   = {assert(imm != 0, "C.ADDI16SP: (RES, nzimm=0)");}
-  syntax = format("c.addi16sp %s, %d", X(2).syntax, imm)
-  image  = format("011%1s%5s%1s%1s%2s%1s01", imm<5>, X(2).image, imm<0>, imm<2>, imm<4..3>, imm<1>)
+op c_addi16sp(nzimm: card(10))
+  init   = {assert(nzimm != 0, "C.ADDI16SP: (RES, nzimm=0)");
+            assert(nzimm<3..0> == 0, "C.ADDI16SP: nzimm<3..0> != 0");}
+  syntax = format("c.addi16sp %s, %d", X(2).syntax, nzimm)
+  image  = format("011%1s%5s%1s%1s%2s%1s01", nzimm<9>, X(2).image, nzimm<4>, nzimm<6>, nzimm<8..7>, nzimm<5>)
   action = {
-    addiw(X(2), X(2), sign_extend(card(12), imm) << 4).action;
+    addiw(X(2), X(2), sign_extend(card(12), nzimm<9..4>) << 4).action;
   }
 
 /*

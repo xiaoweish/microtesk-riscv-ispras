@@ -205,13 +205,14 @@ C.SW stores a 32-bit value in register rs20 to memory. It computes an effective 
 the zero-extended offset, scaled by 4, to the base address in register rs10. It expands to sw rs20,
 offset[6:2](rs10).
 */
-op c_sw(rs2: X, rs1: X, offset: card(5))
+op c_sw(rs2: X, rs1: X, offset: card(7))
   init   = { assert(rs2.i<4..3> == 0b01, "C.SW: Only registers x8-x15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "C.SW: Only registers x8-x15 are allowed!");}
+             assert(rs1.i<4..3> == 0b01, "C.SW: Only registers x8-x15 are allowed!");
+             assert(offset<1..0> == 0,   "C.SW: offset<1..0> != 0");}
   syntax = format("c.sw %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
-  image  = format("110%3s%3s%1s%1s%3s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rs2.i<2..0>)
+  image  = format("110%3s%3s%1s%1s%3s00", offset<5..3>, rs1.i<2..0>, offset<2>, offset<6>, rs2.i<2..0>)
   action = {
-    sw(rs2, rs1, zero_extend(card(12), offset) << 2).action;
+    sw(rs2, rs1, zero_extend(card(12), offset<6..2>) << 2).action;
   }
 
 /*
@@ -220,13 +221,14 @@ It computes an effective address by adding the zero-extended offset, scaled by 8
 in register rs10. It expands to sd rs20, offset[7:3](rs10).
 */
 @rev(RV64C)
-op c_sd(rs2: X, rs1: X, offset: card(5))
+op c_sd(rs2: X, rs1: X, offset: card(8))
   init   = { assert(rs2.i<4..3> == 0b01, "C.SD: Only registers x8-x15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "C.SD: Only registers x8-x15 are allowed!");}
+             assert(rs1.i<4..3> == 0b01, "C.SD: Only registers x8-x15 are allowed!");
+             assert(offset<2..0> == 0,   "C.SD: offset<2..0> != 0");}
   syntax = format("c.sd %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
-  image  = format("111%3s%3s%2s%3s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rs2.i<2..0>)
+  image  = format("111%3s%3s%2s%3s00", offset<5..3>, rs1.i<2..0>, offset<7..6>, rs2.i<2..0>)
   action = {
-    sd(rs2, rs1, zero_extend(card(12), offset) << 3).action;
+    sd(rs2, rs1, zero_extend(card(12), offset<7..3>) << 3).action;
   }
 
 /*
@@ -515,12 +517,13 @@ op c_sdsp(rs2: X, offset: card(6))
   by adding the zero-extended offset, scaled by 4, to the base address in register rs1'.
   It expands to lw rd', offset[6:2](rs1').
 */
-op c_lw(rd: X, rs1: X, offset: card(5))
-  init   = { assert(rd.i<4..3> == 0b01, "Only registers x8-x15 are allowed!");}
+op c_lw(rd: X, rs1: X, offset: card(7))
+  init   = { assert(rd.i<4..3> == 0b01, "C.LW: Only registers x8-x15 are allowed!");
+             assert(offset<1..0> == 0,  "C.LW: offset<1..0> != 0");}
   syntax = format("c.lw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
-  image  = format("010%s%s%s%s%s00", offset<3..1>, rs1.i<2..0>, offset<0>, offset<4>, rd.i<2..0>)
+  image  = format("010%s%s%s%s%s00", offset<5..3>, rs1.i<2..0>, offset<2>, offset<6>, rd.i<2..0>)
   action = {
-    lw(rd, rs1, zero_extend(card(12), offset) << 2).action;
+    lw(rd, rs1, zero_extend(card(12), offset<6..2>) << 2).action;
   }
 
 /*
@@ -533,12 +536,13 @@ op c_lw(rd: X, rs1: X, offset: card(5))
   It expands to ld rd', offset[7:3](rs1').
 */
 @rev(RV64C)
-op c_ld(rd: X, rs1: X, offset: card(5))
-  init   = { assert(rd.i<4..3> == 0b01, "16-bit opcode: only registers x8-x15 are allowed!");}
+op c_ld(rd: X, rs1: X, offset: card(8))
+  init   = { assert(rd.i<4..3> == 0b01, "C.LD: Only registers x8-x15 are allowed!");
+             assert(offset<2..0> == 0,  "C.LD: offset<2..0> != 0");}
   syntax = format("c.ld %s, %d(%s)", rd.syntax, offset, rs1.syntax)
-  image  = format("011%s%s%s%s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rd.i<2..0>)
+  image  = format("011%s%s%s%s00", offset<5..3>, rs1.i<2..0>, offset<7..6>, rd.i<2..0>)
   action = {
-    ld(rd, rs1, zero_extend(card(12), offset) << 3).action;
+    ld(rd, rs1, zero_extend(card(12), offset<7..3>) << 3).action;
   }
 
 /*

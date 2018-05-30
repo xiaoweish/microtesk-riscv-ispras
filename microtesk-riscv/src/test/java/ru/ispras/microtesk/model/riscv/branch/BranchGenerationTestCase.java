@@ -12,18 +12,21 @@
  * the License.
  */
 
-package ru.ispras.microtesk.model.riscv;
+package ru.ispras.microtesk.model.riscv.branch;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.test.Statistics;
 
-public class BranchGeneration1TestCase extends RiscVTest {
+public class BranchGenerationTestCase extends RiscVTest {
   @Test
   public void test() {
     // setCommandLineOption(Option.VERBOSE);
     // setCommandLineOption(Option.DEBUG);
-    final Statistics statistics = run("branch_generation1.rb");
+
+    final Statistics statistics = run("branch/branch_generation.rb");
     Assert.assertNotNull(statistics);
   }
 }

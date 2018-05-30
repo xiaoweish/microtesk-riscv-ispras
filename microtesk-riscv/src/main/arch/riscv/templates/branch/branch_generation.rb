@@ -14,14 +14,14 @@
 # limitations under the License.
 #
 
-require_relative 'riscv_base'
+require_relative '../riscv_base'
 
 #
 # Description:
 #
 # This test template demonstrates how to generate test cases with branch instructions.
 #
-class BranchGeneration2Template < RISCVBaseTemplate
+class BranchGenerationTemplate < RISCVBaseTemplate
 
   def initialize
     super
@@ -32,7 +32,6 @@ class BranchGeneration2Template < RISCVBaseTemplate
     super
 
     data {
-      org 0x00010000
       align 8
       # Arrays to store test data for branch instructions.
       label :branch_data_0
@@ -92,92 +91,72 @@ class BranchGeneration2Template < RISCVBaseTemplate
 
   def run
     # Stream  Label            Data  Addr  Size
-    stream   :branch_data_0,   s0,   s4,   128
-    stream   :branch_data_1,   s1,   s5,   128
-    stream   :branch_data_2,   s2,   s6,   128
-    stream   :branch_data_3,   s3,   s7,   128
+    stream   :branch_data_0,   s0,   s4,   256
+    stream   :branch_data_1,   s1,   s5,   256
+    stream   :branch_data_2,   s2,   s6,   256
+    stream   :branch_data_3,   s3,   s7,   256
+
+    # A branch structure is as follows:
+    #
+    #  0: NOP
+    #  1: if (BGEZ) then goto 0
+    #  2: NOP
+    #  3: if (BGTZ) then goto 2
+    #  4: NOP
+    #  5: if (BLEZ) then goto 4
+    #  6: NOP
+    #  7: if (BLTZ) then goto 10
+    #  8: NOP
+    #  9: goto 0
+    # 10: NOP
 
     # Parameter 'branch_exec_limit' bounds the number of executions of a single branch:
     #   the default value is 1.
     # Parameter 'trace_count_limit' bounds the number of execution traces to be created:
     #   the default value is -1 (no limitation).
-    block(
-       :combinator => 'diagonal',
-       :compositor => 'catenation',
-       :engines => {
-           :branch => {:branch_exec_limit => 3,
-                       :block_exec_limit => 3,
-                       :trace_count_limit => 10}
-       }) {
-      sequence {
-        label :labelA
-        pseudo '# Start Label'
-      }
+    sequence(
+        :engines => {
+            :branch => {:branch_exec_limit => 3,
+                        :block_exec_limit => 3,
+                        :trace_count_limit => -1}}) {
+      label :label0
+        nop  # A basic block should contain at least one instruction
+        bgez s0, :label0 do
+          situation('bgez-if-then', :engine => :branch, :stream => 'branch_data_0')
+        end
+        addi reg1=get_register, reg1, 1 # reg1 is a random unreserved register
 
-      block(:compositor => 'random', :permurator => 'random', :rearranger => 'expand') {
-        # Labels
-        iterate {
-          sequence {
-            label :label0
-              pseudo '# Basic Block 0'
-          }
+      label :label1
+        nop  # A basic block should not modify the registers used in the branches
+        bgtz s1, :label1 do
+          situation('bgtz-if-then', :engine => :branch, :stream => 'branch_data_1')
+        end
+        ori reg2=get_register, reg2, 2 # reg2 is a random unreserved register
 
-          sequence {
-            label :label1
-              pseudo '# Basic Block 1'
-          }
+      label :label2
+        nop
+        blez s2, :label2 do
+          situation('blez-if-then', :engine => :branch, :stream => 'branch_data_2')
+        end
+        addi reg3=get_register, reg3, 3 # reg3 is a random unreserved register
 
-          sequence {
-            label :label2
-              pseudo '# Basic Block 2'
-          }
+      label :label3
+        nop
+        bltz s3, :label5 do
+          situation('bltz-if-then', :engine => :branch, :stream => 'branch_data_3')
+        end
+        ori reg4=get_register, reg4, 4 # reg4 is a random unreserved register
 
-          sequence {}
-          sequence {}
-        }
+      label :label4
+        nop
+        j :label0 do
+          situation('j-goto', :engine => :branch)
+        end
+        addi reg5=get_register, reg5, 5 # reg5 is a random unreserved register
 
-        block(:combinator => 'diagonal') {
-          sequence {
-            nop
-          }
-
-          block(:combinator => 'diagonal') {
-            # Branches
-            iterate {
-              bgez s0, :label0 do
-                situation('bgez-if-then', :engine => :branch, :stream => 'branch_data_0')
-              end
-              bgtz s1, :label1 do
-                situation('bgtz-if-then', :engine => :branch, :stream => 'branch_data_1')
-              end
-              blez s2, :label2 do
-                situation('blez-if-then', :engine => :branch, :stream => 'branch_data_2')
-              end
-              bltz s3, :labelZ do
-                situation('bltz-if-then', :engine => :branch,:stream => 'branch_data_3')
-              end
-              j :labelA do
-                situation('j-goto', :engine => :branch)
-              end
-            }
-
-            # Injected Code placed in delay slot
-            iterate {
-              # The code must not modify registers s0-s7
-              addi reg1=get_register, reg1, 1
-              ori  reg2=get_register, reg2, 2
-              addi reg3=get_register, reg3, 3
-              ori  reg4=get_register, reg4, 4
-              addi reg5=get_register, reg5, 5
-            }
-          }
-        }
-      }
-
-      sequence {
-        label :labelZ
-        pseudo '# End Label'
-      }
-    }.run 10 # Try several random compositions
+      label :label5
+        nop
+    }.run
   end
+
 end

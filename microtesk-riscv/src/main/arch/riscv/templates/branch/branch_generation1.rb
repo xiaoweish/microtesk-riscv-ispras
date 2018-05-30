@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-require_relative 'riscv_base'
+require_relative '../riscv_base'
 
 #
 # Description:
@@ -162,4 +162,5 @@ class BranchGeneration1Template < RISCVBaseTemplate
         nop
     }.run
   end
+
 end

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-require_relative 'riscv_base'
+require_relative '../riscv_base'
 
 #
 # Description:
@@ -105,4 +105,5 @@ class BranchGeneration3Template < RISCVBaseTemplate
       }
     }.run 20 # Try several random compositions
   end
+
 end

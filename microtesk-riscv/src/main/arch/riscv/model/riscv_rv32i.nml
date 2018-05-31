@@ -150,7 +150,7 @@ mode JUMP_IMM(imm: int(20)) = imm
   init = {
     jump_imm20 = imm;
   }
-  syntax = format("0x%X", imm)
+  syntax = format("0x%x", imm)
   image = format("%s", imm)
 
 label mode JUMP_LABEL_M2(target: WORD, current: WORD) = target<20..1> - current<20..1>

@@ -35,7 +35,7 @@ mode PSEUDO_IMM(imm: card(32)) = imm
   init = {
     jump_imm32 = imm;
   }
-  syntax = format("0x%X", imm)
+  syntax = format("0x%x", imm)
   image = format("%s", imm)
 
 mode PSEUDO_OFFSET = PSEUDO_LABEL | PSEUDO_IMM
@@ -200,7 +200,7 @@ pseudo op sd_global(rd : X, symbol : PSEUDO_OFFSET, rt : X)
 // Load immediate
 @rev(RV32I)
 pseudo op li32(rd: X, symbol: WORD)
-  syntax = format("li %s, 0x%X", rd.syntax, symbol)
+  syntax = format("li %s, 0x%x", rd.syntax, symbol)
   image = format(
      "%s%s",
      lui(rd, symbol<31..12> + zero_extend(card(20), symbol<11>)).image,
@@ -213,7 +213,7 @@ pseudo op li32(rd: X, symbol: WORD)
 
 @rev(RV64I)
 pseudo op li64(rd: X, symbol: DWORD)
-  syntax = format("li %s, 0x%X", rd.syntax, symbol)
+  syntax = format("li %s, 0x%x", rd.syntax, symbol)
   image = format(
      "%s%s%s%s%s%s%s",
      li32(rd, symbol<63..32>).image,
@@ -236,7 +236,7 @@ pseudo op li64(rd: X, symbol: DWORD)
 
 @rev(RV32I)
 pseudo op li(rd : X, symbol : XWORD)
-  syntax = format("li %s, 0x%X", rd.syntax, symbol)
+  syntax = format("li %s, 0x%x", rd.syntax, symbol)
   image  = format("%s",
 #ifdef RV64I
     if symbol<63..11> == 0 || symbol<63..11> == -1 then

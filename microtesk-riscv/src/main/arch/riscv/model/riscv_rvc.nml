@@ -350,14 +350,16 @@ the bottom 12 bits, and sign-extends bit 17 into all higher bits of the destinat
 valid when rd6=fx0; x2g, and when the immediate is not equal to zero. C.LUI expands into lui
 rd, nzuimm[17:12].
 */
-op c_lui(rd: X, imm: card(6))
+op c_lui(rd: X, imm: card(20))
   init   = { assert(imm != 0, "C.LUI is valid when immediate is not equal to zero");
              assert(rd.i != 0, "C.LUI is valid when rd =/= {x0, x2}");
-             assert(rd.i != 2, "C.LUI is valid when rd =/= {x0, x2}");}
-  syntax = format("c.lui %s, %d", rd.syntax, imm)
+             assert(rd.i != 2, "C.LUI is valid when rd =/= {x0, x2}");
+             assert(imm<19..6> == sign_extend(card(14), imm<5>),
+                    "C.LUI requires imm to be 6-bit value sign-extended to 20 bits");}
+  syntax = format("c.lui %s, 0x%x", rd.syntax, imm)
   image  = format("011%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
   action = {
-    lui(rd, sign_extend(card(20), imm) << 12).action;
+    lui(rd, imm).action;
   }
 
 /*
@@ -664,7 +666,7 @@ mode C_JUMP_IMM(imm: int(11)) = imm
   init = {
     c_jump_imm11 = imm;
   }
-  syntax = format("0x%X", imm)
+  syntax = format("0x%x", imm)
   image = format("%s", imm)
 
 label mode C_JUMP_LABEL(target: WORD, current: WORD) = target<11..1> - current<11..1>

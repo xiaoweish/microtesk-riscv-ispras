@@ -452,12 +452,13 @@ op c_srai64(rd: X)
   address by adding the zero-extended offset, scaled by 4, to the stack pointer, x2.
   It expands to lw rd, offset[7:2](x2).
 */
-op c_lwsp(rd: X, offset: card(6))
-  init   = { assert(rd.i != 0, "C.LWSP: rd == 0");}
+op c_lwsp(rd: X, offset: card(8))
+  init   = { assert(rd.i != 0, "C.LWSP: rd == 0");
+             assert(offset<1..0> == 0, "C.LWSP: offset<1..0> != 0");}
   syntax = format("c.lwsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
-  image  = format("010%s%s%s%s10", offset<3>, rd.image, offset<2..0>, offset<5..4>)
+  image  = format("010%s%s%s%s10", offset<5>, rd.image, offset<4..2>, offset<7..6>)
   action = {
-    lw(rd, X(2), zero_extend(card(12), offset) << 2).action;
+    lw(rd, X(2), zero_extend(card(12), offset<7..2>) << 2).action;
   }
 
 /*
@@ -470,12 +471,13 @@ op c_lwsp(rd: X, offset: card(6))
   It expands to ld rd, offset[8:3](x2).
 */
 @rev(RV64C)
-op c_ldsp(rd: X, offset: card(6))
-  init   = { assert(rd.i != 0, "C.LDSP: rd == 0");}
+op c_ldsp(rd: X, offset: card(9))
+  init   = { assert(rd.i != 0, "C.LDSP: rd == 0");
+             assert(offset<2..0> == 0, "C.LDSP: offset<2..0> != 0");}
   syntax = format("c.ldsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
-  image  = format("011%s%s%s%s10", offset<2>, rd.image, offset<1..0>, offset<5..3>)
+  image  = format("011%s%s%s%s10", offset<5>, rd.image, offset<4..3>, offset<8..6>)
   action = {
-    ld(rd, X(2), zero_extend(card(12), offset) << 3).action;
+    ld(rd, X(2), zero_extend(card(12), offset<8..3>) << 3).action;
   }
 
 /*
@@ -486,12 +488,12 @@ op c_ldsp(rd: X, offset: card(6))
   adding the zero-extended offset, scaled by 4, to the stack pointer, x2.
   It expands to sw rs2, offset[7:2](x2).
 */
-op c_swsp(rs2: X, offset: card(6))
-  init   = {}
+op c_swsp(rs2: X, offset: card(8))
+  init   = { assert(offset<1..0> == 0, "C.SWSP: offset<1..0> != 0");}
   syntax = format("c.swsp %s, %d(%s)", rs2.syntax, offset, X(2).syntax)
-  image  = format("110%s%s%s10", offset<3..0>, offset<5..4> , rs2.image)
+  image  = format("110%s%s%s10", offset<5..2>, offset<7..6>, rs2.image)
   action = {
-    sw(rs2, X(2), zero_extend(card(12), offset) << 2).action;
+    sw(rs2, X(2), zero_extend(card(12), offset<7..2>) << 2).action;
   }
 
 /*
@@ -503,12 +505,12 @@ op c_swsp(rs2: X, offset: card(6))
   to the stack pointer, x2.
   It expands to sd rs2, offset[8:3](x2).
 */
-op c_sdsp(rs2: X, offset: card(6))
-  init   = {}
+op c_sdsp(rs2: X, offset: card(9))
+  init   = { assert(offset<2..0> == 0, "C.SDSP: offset<2..0> != 0");}
   syntax = format("c.sdsp %s, %d(%s)", rs2.syntax, offset, X(2).syntax)
-  image  = format("111%s%s%s10", offset<2..0>, offset<5..3> , rs2.image)
+  image  = format("111%s%s%s10", offset<5..3>, offset<8..6>, rs2.image)
   action = {
-    sw(rs2, X(2), zero_extend(card(12), offset) << 3).action;
+    sw(rs2, X(2), zero_extend(card(12), offset<8..3>) << 3).action;
   }
 
 /*
@@ -702,6 +704,8 @@ op c_jal(target: C_JUMP_ADDR)
                   c_jump_imm11<2..0>, c_jump_imm11<4>)
   action = {
     jal(X(1), JUMP_IMM(sign_extend(int(20), target))).action;
+    // TODO: This is a hack: jal adds 4 instead of 2. Need support for sizeOf(image).
+    XREG[1] = prev_pc + 2;
   }
 
 /*
@@ -774,6 +778,8 @@ op c_jalr(rs1: X)
   image  = format("1001%5s0000010", rs1.image)
   action = {
     jalr(X(1), rs1, BRANCH_IMM(0)).action;
+    // TODO: This is a hack: jal adds 4 instead of 2. Need support for sizeOf(image).
+    XREG[1] = prev_pc + 2;
   }
 
 /*

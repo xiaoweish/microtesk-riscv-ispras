@@ -652,7 +652,7 @@ op c_subw(rd: X, rs2: X)
   syntax = format("c.subw %s, %s", rd.syntax, rs2.syntax)
   image  = format("100111%3s00%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
-    addw(rd, rd, rs2).action;
+    subw(rd, rd, rs2).action;
   }
 
 /*

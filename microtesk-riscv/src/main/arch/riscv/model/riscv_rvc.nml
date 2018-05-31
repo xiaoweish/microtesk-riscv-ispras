@@ -572,7 +572,7 @@ op c_add(rd: X, rs2: X)
   syntax = format("c.add %s, %s", rd.syntax, rs2.syntax)
   image  = format("100011%3s11%3s01", rd.i<2..0>, rs2.i<2..0>)
   action = {
-    and(rd, rd, rs2).action;
+    add(rd, rd, rs2).action;
   }
 
 /*

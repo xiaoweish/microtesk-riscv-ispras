@@ -686,7 +686,7 @@ op c_j(target: C_JUMP_ADDR)
                   c_jump_imm11<8..7>, c_jump_imm11<9>, c_jump_imm11<5>, c_jump_imm11<6>,
                   c_jump_imm11<2..0>, c_jump_imm11<4>)
   action = {
-    jal(X(0), JUMP_IMM(sign_extend(int(20), c_jump_imm11))).action;
+    jal(X(0), JUMP_IMM(sign_extend(int(20), target))).action;
   }
 
 /*
@@ -701,7 +701,7 @@ op c_jal(target: C_JUMP_ADDR)
                   c_jump_imm11<8..7>, c_jump_imm11<9>, c_jump_imm11<5>, c_jump_imm11<6>,
                   c_jump_imm11<2..0>, c_jump_imm11<4>)
   action = {
-    jal(X(1), JUMP_IMM(sign_extend(int(20), c_jump_imm11) << 1)).action;
+    jal(X(1), JUMP_IMM(sign_extend(int(20), target))).action;
   }
 
 /*

@@ -294,7 +294,7 @@ op c_nop()
 C.ADDI adds the non-zero sign-extended 6-bit immediate to the value in register rd then writes
 the result to rd. C.ADDI expands into addi rd, rd, nzimm[5:0].
 */
-op c_addi(rd: X, imm: card(6))
+op c_addi(rd: X, imm: int(6))
   init   = { assert(rd.i != 0, "When rd = 0 in c.addi it's c.nop!");}
   syntax = format("c.addi %s, %d", rd.syntax, imm)
   image  = format("000%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
@@ -308,7 +308,7 @@ duces a 32-bit result, then sign-extends result to 64 bits. C.ADDIW expands into
 imm[5:0]. The immediate can be zero for C.ADDIW, where this corresponds to sext.w rd.
 */
 @rev(RV64C)
-op c_addiw(rd: X, imm: card(6))
+op c_addiw(rd: X, imm: int(6))
   init   = { assert(rd.i != 0, "c.addiw: RES, rd=0");}
   syntax = format("c.addiw %s, %d", rd.syntax, imm)
   image  = format("001%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
@@ -323,7 +323,7 @@ immediate is scaled to represent multiples of 16 in the range (-512,496). C.ADDI
 to adjust the stack pointer in procedure prologues and epilogues. It expands into addi x2, x2,
 nzimm[9:4].
 */
-op c_addi16sp(nzimm: card(10))
+op c_addi16sp(nzimm: int(10))
   init   = {assert(nzimm != 0, "C.ADDI16SP: (RES, nzimm=0)");
             assert(nzimm<3..0> == 0, "C.ADDI16SP: nzimm<3..0> != 0");}
   syntax = format("c.addi16sp %s, %d", X(2).syntax, nzimm)
@@ -336,7 +336,7 @@ op c_addi16sp(nzimm: card(10))
 C.LI loads the sign-extended 6-bit immediate, imm, into register rd. C.LI is only valid when rd6=x0.
 C.LI expands into addi rd, x0, imm[5:0].
 */
-op c_li(rd: X, imm: card(6))
+op c_li(rd: X, imm: int(6))
   init   = { assert(rd.i != 0, "C.LI (HINT, rd=0)");}
   syntax = format("c.li %s, %d", rd.syntax, imm)
   image  = format("010%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
@@ -554,7 +554,7 @@ C.ANDI is a CB-format instruction that computes the bitwise AND of of the value 
 and the sign-extended 6-bit immediate, then writes the result to rd0. C.ANDI expands to andi
 rd0, rd0, imm[5:0].
 */
-op c_andi(rd: X, imm: card(6))
+op c_andi(rd: X, imm: int(6))
   init   = { assert(rd.i<4..3> == 0b01, "C.ANDI: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.andi %s, %d", rd.syntax, imm)
   image  = format("100%1s10%3s%5s01", imm<5>, rd.i<2..0>, imm<4..0>)

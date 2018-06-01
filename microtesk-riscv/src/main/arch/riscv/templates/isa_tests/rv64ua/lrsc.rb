@@ -49,6 +49,13 @@ class LrscTemplate < RISCVBaseTemplate
 
   LOG_ITERATIONS = 10
 
+  def initialize
+    super
+
+    # Sets branch execution limit to 1025 (1<<LOG_ITERATIONS + 1)
+    set_option_value 'branch-exec-limit', 1025
+  end
+
   def pre_rvtest
     RVTEST_RV64U()
     RVTEST_CODE_BEGIN()
@@ -93,7 +100,7 @@ label 1
     add a4, a4, a2
     sc_w a4, a4, (a0)
     bnez a4, label_b(1)
-    add a1, a1, -1
+    addi a1, a1, -1
     bnez a1, label_b(1)
 
     # wait for all cores to finish

@@ -6,6 +6,15 @@
  2017/11/23 - 2018/MM/DD
 --------------------------------------------------------------------------------
 
+ 2018/06/01 MicroTESK RISC-V 0.0.4
+
+ - Specifications: Support for RV32C and RV64C
+ - Specifications: Bug fixes
+ - Test Templates: RISC-V validation tests rv32uc/rvc and rv64uc/rvc
+ - Test Templates: Test templates are split into groups being located
+   in separate folders
+ - Tests: Test suite uses QEMU4V 0.1.1
+
  2018/05/05 MicroTESK RISC-V 0.0.3
 
  - Specifications: System registers and system instructions
@@ -14,7 +23,7 @@
  - Test Templates: BPU test templates that use the Branch engine
  - Test Templates: Libraries to describe initialization/finalization code
  - Test Templates: Updated linker settings
- - Test Templates: Test templates to validate user-level instruction
+ - Test Templates: Test templates to validate user-level instructions
  - Test Templates: More demo test templates
  - Tool Functions: Support for global labels, numeric labels, and weak symbols
  - Tool Functions: Test data iterator functionality

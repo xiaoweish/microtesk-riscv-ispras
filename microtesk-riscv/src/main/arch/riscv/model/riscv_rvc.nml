@@ -567,10 +567,10 @@ C.ADD adds the values in registers rd and rs2 and writes the result to register 
 into add rd, rd, rs2.
 */
 op c_add(rd: X, rs2: X)
-  init   = { assert(rd.i<4..3> == 0b01, "C.ADD: 16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs2.i<4..3> == 0b01, "C.ADD: 16-bit opcode: only registers x8-x15 are allowed!");}
+  init   = { assert(rd.i != 0, "C.ADD: rd == 0");
+             assert(rs2.i != 0, "C.ADD: rs2 == 0");}
   syntax = format("c.add %s, %s", rd.syntax, rs2.syntax)
-  image  = format("100011%3s11%3s01", rd.i<2..0>, rs2.i<2..0>)
+  image  = format("1001%5s%5s10", rd.image, rs2.image)
   action = {
     add(rd, rd, rs2).action;
   }
@@ -872,8 +872,8 @@ op c_fldsp(rd: FR, offset: card(6))
 C.MV copies the value in register rs2 into register rd. C.MV expands into add rd, x0, rs2.
 */
 op c_mv(rd: X, rs2: X)
-  init   = { assert(rd.i != 0, "c.mv: rd == 0");
-             assert(rs2.i != 0, "c.mv: rs2 == 0");}
+  init   = { assert(rd.i != 0, "C.MV: rd == 0");
+             assert(rs2.i != 0, "C.MV: rs2 == 0");}
   syntax = format("c.mv %s, %s", rd.syntax, rs2.syntax)
   image  = format("1000%5s%5s10", rd.image, rs2.image)
   action = {

@@ -7,9 +7,3 @@ This folder contains test templates that were created by porting the RISC-V test
 (https://github.com/riscv/riscv-tests) into the MicroTESK template description language.
 They are used to validate RISC-V ISA specifications used by MicroTESK.
 Also, they can serve as a basis for creating more complex tests.  
-
-### Running Test Generation
-
-To generate test programs for the given test templates, simply run the following command:
-
-    make

@@ -758,8 +758,7 @@ C.JR (jump register) performs an unconditional control transfer to the address i
 expands to jalr x0, rs1, 0.
 */
 op c_jr(rs1: X)
-  init   = { assert(rs1.i<4..3> == 0b01, "C.JR: 16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs1.i<2..0> != 0b000, "c.jr: rs1 == 0");}
+  init   = { assert(rs1.i<2..0> != 0b000, "c.jr: rs1 == 0");}
   syntax = format("c.jr %s", rs1.syntax)
   image  = format("1000%5s0000010", rs1.image)
   action = {
@@ -772,8 +771,7 @@ address of the instruction following the jump (pc+2) to the link register, x1. C
 jalr x1, rs1, 0.
 */
 op c_jalr(rs1: X)
-  init   = { assert(rs1.i<4..3> == 0b01, "C.JALR: 16-bit opcode: only registers x8-x15 are allowed!");
-             assert(rs1.i<2..0> != 0b000, "c.jalr: rs1 == 0");}
+  init   = { assert(rs1.i<2..0> != 0b000, "c.jalr: rs1 == 0");}
   syntax = format("c.jalr %s", rs1.syntax)
   image  = format("1001%5s0000010", rs1.image)
   action = {

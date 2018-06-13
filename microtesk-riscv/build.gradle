@@ -421,12 +421,16 @@ task generateRiscvTemplates(type: JavaExec) {
   environment 'MICROTESK_HOME', "${project.projectDir}/build/target"
   main = mainClassName
   args = [
-          '-gt',
-          'riscv',
-          '-btn',
-          'RISCVBaseTemplate',
-          '-ii',
-          'ecall:ebreak:fence:fencei:mret:sret:uret:wfi'
+           '-gt',
+           'riscv',
+           '-btn',
+           'RISCVBaseTemplate',
+           '-btp',
+           '../riscv_base',
+           '-ii',
+           'ecall:ebreak:fence:fencei:mret:sret:uret:wfi',
+           '-od',
+           "${project.projectDir}/build/target/arch/riscv/templates/autogen/"
   ]
 }
 

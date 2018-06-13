@@ -26,19 +26,13 @@ module RiscvRand
 
   def self.bit_set_values
     array = []
-    (0..63).each { |n|
-      v = 1 << n
-      array << v
-    }
+    (0..63).each { |n| array << (1 << n) }
     array
   end
 
   def self.bit_clear_values
     array = []
-    (0..63).each { |n|
-      v = 1 << n
-      array << ~v
-    }
+    (0..63).each { |n| array << ~(1 << n) }
     array
   end
 

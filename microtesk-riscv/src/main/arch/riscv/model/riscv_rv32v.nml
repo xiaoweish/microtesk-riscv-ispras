@@ -1,0 +1,111 @@
+/*
+ * Copyright 2018 ISP RAS (http://www.ispras.ru)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+#ifndef RISCV_RV32V_INCLUDED
+#define RISCV_RV32V_INCLUDED
+
+//==================================================================================================
+// RV32V Standard Extension Instruction Set
+//==================================================================================================
+
+/*
+  Instructions (number: 56):
+    VADD
+    VSUB
+    VSL
+    VSR
+    VAND
+    VOR
+    VXOR
+    VSEQ
+    VSNE
+    VSLT
+    VSGE
+    VCLIP
+    VCVT
+    VMPOP
+    VMFIRST
+    VEXTRACT
+    VINSERT
+    VMERGE
+    VSELECT
+    VSLIDE
+    VDIV
+    VREM
+    VMUL
+    VMULH
+    VMIN
+    VMAX
+    VSGNJ
+    VSGNJN
+    VSGNJX
+    VSQRT
+    VCLASS
+    VPOPC
+    VADDI
+    VSLI
+    VSRI
+    VANDI
+    VORI
+    VXORI
+    VCLIPI
+    VMADD
+    VMSUB
+    VNMADD
+    VNMSUB
+    VLD
+    VLDS
+    VLDX
+    VST
+    VSTS
+    VSTX
+    VAMOSWAP
+    VAMOADD
+    VAMOAND
+    VAMOOR
+    VAMOXOR
+    VAMOMIN
+    VAMOMAX
+*/
+
+//==================================================================================================
+// Instructions
+//==================================================================================================
+// 32 vector registers
+reg VREG [32, XWORD]
+
+mode VR (i: card(5)) = VREG [i]
+  syntax = format("v%d", i)
+  image  = format("%5s", i)
+
+/*
+  vadd v0, v1 # Add elements
+*/
+
+op vadd(rd: VR, rd2: VR)
+  syntax = format("vadd %s, %s", rd.syntax, rd2.syntax)
+  image  = format("1000000%5s%5s100000001100111", rd2.image, rd.image) // TODO
+  action = {
+    // TODO:
+  }
+
+op rv32v = vadd
+
+//==================================================================================================
+// The End
+//==================================================================================================
+
+#endif

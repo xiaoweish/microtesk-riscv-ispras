@@ -23,7 +23,7 @@ import ru.ispras.microtesk.test.Statistics;
 public final class GroupTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("group_autogentemplate.rb");
+    final Statistics statistics = run("autogen/group_autogentemplate.rb");
     Assert.assertNotNull(statistics);
   }
 }

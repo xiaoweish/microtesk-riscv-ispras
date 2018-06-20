@@ -1,5 +1,6 @@
 TESTS = arithmetic\
-        block
+        block\
+        sequence
 
 all: $(TESTS)
 

@@ -183,12 +183,20 @@ class RISCVBaseTemplate < Template
     ################################################################################################
 
     pre_rvtest
+    pre_testdata
   end
 
   # Prologue can be overridden in user templates
   def pre_rvtest
     RVTEST_RV64U()
     RVTEST_CODE_BEGIN()
+  end
+
+  # Test data can be overridden in user templates
+  def pre_testdata
+    RVTEST_DATA_BEGIN()
+    TEST_DATA()
+    RVTEST_DATA_END()
   end
 
   ##################################################################################################

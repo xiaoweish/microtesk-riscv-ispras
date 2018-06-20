@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-require_relative 'riscv_base'
+require_relative '../riscv_base'
 
 #
 # Description:

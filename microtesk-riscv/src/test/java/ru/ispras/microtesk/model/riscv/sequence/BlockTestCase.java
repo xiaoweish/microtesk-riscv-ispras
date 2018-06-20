@@ -12,17 +12,18 @@
  * the License.
  */
 
-package ru.ispras.microtesk.model.riscv;
+package ru.ispras.microtesk.model.riscv.sequence;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.test.Statistics;
 
-public class ArithmeticTestCase extends RiscVTest {
+public class BlockTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("arithmetic.rb");
+    final Statistics statistics = run("sequence/block.rb");
     Assert.assertNotNull(statistics);
   }
 }

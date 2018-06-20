@@ -1,6 +1,4 @@
-TESTS = arithmetic\
-        block\
-        coverage\
+TESTS = coverage\
         groups\
         preparators_test\
         random\

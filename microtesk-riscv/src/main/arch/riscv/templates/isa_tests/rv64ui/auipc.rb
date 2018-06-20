@@ -68,10 +68,6 @@ label 1
 label 1
       sub a0, a0, a1
     end
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

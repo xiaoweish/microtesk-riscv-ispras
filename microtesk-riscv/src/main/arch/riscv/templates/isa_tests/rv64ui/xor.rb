@@ -96,10 +96,6 @@ class XorTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 25, 'xor', 0x00ff00ff, 0x00ff00ff )
     TEST_RR_ZEROSRC12( 26, 'xor', 0 )
     TEST_RR_ZERODEST( 27, 'xor', 0x11111111, 0x22222222 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

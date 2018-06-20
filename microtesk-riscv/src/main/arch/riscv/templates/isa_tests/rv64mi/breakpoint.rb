@@ -51,6 +51,20 @@ class BreakpointTemplate < RISCVBaseTemplate
     RVTEST_CODE_BEGIN()
   end
 
+  def pre_testdata
+    RVTEST_DATA_BEGIN()
+    TEST_DATA()
+
+    data {
+label :data1
+       .word 0
+label :data2
+       .word 0
+    }
+
+    RVTEST_DATA_END()
+  end
+
   def run
     # Set up breakpoint to trap on M-mode fetches.
     li TESTNUM(), 2
@@ -172,19 +186,6 @@ label 2
     mret
 
     RVTEST_CODE_END()
-
-  
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-
-    data {
-label :data1
-      .word 0
-label :data2
-      .word 0
-    }
-
-    RVTEST_DATA_END()
   end
 
   def post

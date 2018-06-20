@@ -117,10 +117,6 @@ class SllwTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 41, 'sllw', 32, 32 )
     TEST_RR_ZEROSRC12( 42, 'sllw', 0 )
     TEST_RR_ZERODEST( 43, 'sllw', 1024, 2048 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

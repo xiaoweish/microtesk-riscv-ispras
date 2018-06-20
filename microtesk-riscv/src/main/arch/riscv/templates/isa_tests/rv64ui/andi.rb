@@ -82,10 +82,6 @@ class AndiTemplate < RISCVBaseTemplate
 
     TEST_IMM_ZEROSRC1( 13, 'andi', 0, 0x0f0 )
     TEST_IMM_ZERODEST( 14, 'andi', 0x00ff00ff, 0x70f )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

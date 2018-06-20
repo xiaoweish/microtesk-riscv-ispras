@@ -112,10 +112,6 @@ class AddwTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 36, 'addw', 32, 32 )
     TEST_RR_ZEROSRC12( 37, 'addw', 0 )
     TEST_RR_ZERODEST( 38, 'addw', 16, 30 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

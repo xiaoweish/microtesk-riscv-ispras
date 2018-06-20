@@ -318,10 +318,6 @@ label 1
     end
 
     text '.option pop'
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

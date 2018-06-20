@@ -117,10 +117,6 @@ class SraTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 41, 'sra', 32, 32 )
     TEST_RR_ZEROSRC12( 42, 'sra', 0 )
     TEST_RR_ZERODEST( 43, 'sra', 1024, 2048 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

@@ -96,10 +96,6 @@ class AndTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 25, 'and', 0, 0x00ff00ff )
     TEST_RR_ZEROSRC12( 26, 'and', 0 )
     TEST_RR_ZERODEST( 27, 'and', 0x11111111, 0x22222222 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

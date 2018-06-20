@@ -98,10 +98,6 @@ class AddiwTemplate < RISCVBaseTemplate
 
     TEST_IMM_ZEROSRC1( 24, 'addiw', 32, 32 )
     TEST_IMM_ZERODEST( 25, 'addiw', 33, 50 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

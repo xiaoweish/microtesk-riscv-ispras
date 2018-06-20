@@ -95,10 +95,6 @@ class SlliwTemplate < RISCVBaseTemplate
 
     TEST_IMM_ZEROSRC1( 24, 'slliw', 0, 31 )
     TEST_IMM_ZERODEST( 25, 'slliw', 31, 28 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

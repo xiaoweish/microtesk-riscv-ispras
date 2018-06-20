@@ -68,10 +68,6 @@ class RemTemplate < RISCVBaseTemplate
     TEST_RR_OP( 8, 'rem', -1<<63, -1<<63, 0 )
     TEST_RR_OP( 9, 'rem',      1,      1, 0 )
     TEST_RR_OP(10, 'rem',      0,      0, 0 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

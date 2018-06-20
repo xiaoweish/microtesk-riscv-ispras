@@ -111,10 +111,6 @@ class SltuTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 36, 'sltu', 0, -1 )
     TEST_RR_ZEROSRC12( 37, 'sltu', 0 )
     TEST_RR_ZERODEST( 38, 'sltu', 16, 30 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

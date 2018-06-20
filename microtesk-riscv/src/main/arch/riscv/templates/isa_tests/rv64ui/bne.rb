@@ -101,10 +101,6 @@ label 1
       addi x1, x1, 1
       addi x1, x1, 1
     end
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

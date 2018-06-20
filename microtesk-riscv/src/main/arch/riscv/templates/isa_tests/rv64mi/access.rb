@@ -102,11 +102,6 @@ label 2
     mret
 
     RVTEST_CODE_END()
-
-  
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

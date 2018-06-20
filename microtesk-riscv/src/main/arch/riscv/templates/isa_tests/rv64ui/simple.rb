@@ -53,9 +53,7 @@ class SimpleTemplate < RISCVBaseTemplate
   end
 
   def run
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
+    # Empty
   end
 
   def post

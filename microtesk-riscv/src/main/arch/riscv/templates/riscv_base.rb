@@ -182,7 +182,10 @@ class RISCVBaseTemplate < Template
 
     ################################################################################################
 
+    # RISC-V prologue.
     pre_rvtest
+
+    # Test data block.
     pre_testdata
   end
 

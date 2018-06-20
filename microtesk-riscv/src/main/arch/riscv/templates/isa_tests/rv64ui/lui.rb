@@ -79,10 +79,6 @@ class LuiTemplate < RISCVBaseTemplate
     TEST_CASE( 6, x0, 0 ) do
       lui x0, 0x80000
     end
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

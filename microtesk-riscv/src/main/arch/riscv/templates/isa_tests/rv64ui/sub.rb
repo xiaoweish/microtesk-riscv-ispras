@@ -110,10 +110,6 @@ class SubTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 35, 'sub', 32, 32 )
     TEST_RR_ZEROSRC12( 36, 'sub', 0 )
     TEST_RR_ZERODEST( 37, 'sub', 16, 30 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

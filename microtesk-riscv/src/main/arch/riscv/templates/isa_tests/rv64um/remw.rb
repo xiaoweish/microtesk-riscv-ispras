@@ -69,10 +69,6 @@ class RemwTemplate < RISCVBaseTemplate
     TEST_RR_OP( 9, 'remw',      1,      1, 0 )
     TEST_RR_OP(10, 'remw',      0,      0, 0 )
     TEST_RR_OP(11, 'remw', 0xfffffffffffff897,0xfffffffffffff897, 0 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

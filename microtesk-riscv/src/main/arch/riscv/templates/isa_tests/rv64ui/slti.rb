@@ -93,10 +93,6 @@ class SltiTemplate < RISCVBaseTemplate
 
     TEST_IMM_ZEROSRC1( 24, 'slti', 0, 0xfff )
     TEST_IMM_ZERODEST( 25, 'slti', 0x00ff00ff, 0xfff )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

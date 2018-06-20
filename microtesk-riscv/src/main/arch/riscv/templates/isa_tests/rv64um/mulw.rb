@@ -98,10 +98,6 @@ class MulwTemplate < RISCVBaseTemplate
     TEST_RR_ZEROSRC2( 27, 'mulw', 0, 32 )
     TEST_RR_ZEROSRC12( 28, 'mulw', 0 )
     TEST_RR_ZERODEST( 29, 'mulw', 33, 34 )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

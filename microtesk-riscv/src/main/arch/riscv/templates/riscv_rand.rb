@@ -24,6 +24,8 @@
 #
 module RiscvRand
 
+  private
+
   def self.bit_set_values
     array = []
     (0..63).each { |n| array << (1 << n) }
@@ -38,6 +40,8 @@ module RiscvRand
 
   BIT_SET_VALUES = bit_set_values()
   BIT_CLEAR_VALUES = bit_clear_values()
+
+  public
 
   def rand_word;             rand(0x0, 0xFFFF_FFFF) end
   def rand_dword;            rand(0x0, 0xFFFF_FFFF_FFFF_FFFF) end

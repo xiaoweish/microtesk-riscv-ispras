@@ -762,7 +762,7 @@ op c_jr(rs1: X)
   syntax = format("c.jr %s", rs1.syntax)
   image  = format("1000%5s0000010", rs1.image)
   action = {
-    jalr(X(0), rs1, BRANCH_IMM(0)).action;
+    jalr(X(0), rs1, 0).action;
   }
 
 /*
@@ -775,7 +775,7 @@ op c_jalr(rs1: X)
   syntax = format("c.jalr %s", rs1.syntax)
   image  = format("1001%5s0000010", rs1.image)
   action = {
-    jalr(X(1), rs1, BRANCH_IMM(0)).action;
+    jalr(X(1), rs1, 0).action;
     // TODO: This is a hack: jal adds 4 instead of 2. Need support for sizeOf(image).
     XREG[1] = prev_pc + 2;
   }

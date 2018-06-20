@@ -320,11 +320,11 @@ pseudo op call(symbol : PSEUDO_OFFSET)
   init   = { symbol.init; }
   syntax = format("call %s", symbol.syntax)
   image  = format("%s%s", auipc(X(6), jump_imm32<31..12>).image,
-                          jalr(X(1), X(6), BRANCH_IMM(jump_imm32<11..0>)).image)
+                          jalr(X(1), X(6), jump_imm32<11..0>).image)
   action = {
     tmp_word = symbol;
     instruction(auipc(X(6), tmp_word<31..12>)).action;
-    instruction(jalr(X(1), X(6), BRANCH_IMM(tmp_word<11..0>))).action;
+    instruction(jalr(X(1), X(6), tmp_word<11..0>)).action;
   }
 
 // Tail call far-away subroutine
@@ -333,11 +333,11 @@ pseudo op tail(symbol : PSEUDO_OFFSET)
   init   = { symbol.init; }
   syntax = format("tail %s", symbol.syntax)
   image  = format("%s%s", auipc(X(6), jump_imm32<31..12>).image,
-                          jalr(X(0), X(6), BRANCH_IMM(jump_imm32<11..0>)).image)
+                          jalr(X(0), X(6), jump_imm32<11..0>).image)
   action = {
     tmp_word = symbol;
     instruction(auipc(X(6), tmp_word<31..12>)).action;
-    instruction(jalr(X(0), X(6), BRANCH_IMM(tmp_word<11..0>))).action;
+    instruction(jalr(X(0), X(6), tmp_word<11..0>)).action;
   }
 
 // Return from subroutine
@@ -345,9 +345,9 @@ pseudo op tail(symbol : PSEUDO_OFFSET)
 pseudo op ret()
   init   = {}
   syntax = format("ret")
-  image  = format("%s", jalr(X(0), X(1), BRANCH_IMM(0)).image)
+  image  = format("%s", jalr(X(0), X(1), 0).image)
   action = {
-    instruction(jalr(X(0), X(1), BRANCH_IMM(0))).action;
+    instruction(jalr(X(0), X(1), 0)).action;
   }
 
 //==================================================================================================

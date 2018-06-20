@@ -62,7 +62,7 @@ class BlockTemplate < RISCVBaseTemplate
       }
     }.run
 
-    # Merges two sequnces in random fashion. Atomic sequences are unmodifiable.
+    # Merges two sequences in random fashion. Atomic sequences are unmodifiable.
     block(:combinator => 'diagonal', :compositor => 'random', :obfuscator => 'random') {
       sequence {
         Add t0, t1, t2

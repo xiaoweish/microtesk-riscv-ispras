@@ -186,7 +186,7 @@ op jal(rd: X, imm: JUMP_ADDR_M2)
   address is not aligned to a four-byte boundary.
 */
 op jalr(rd: X, rs1: X, imm: card(12))
-  syntax = format("jalr %s, %s, %s", rd.syntax, rs1.syntax, imm)
+  syntax = format("jalr %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
   image  = format("%s%s000%s1100111", imm, rs1.image, rd.image)
   action = {
     rd = PC + 4;

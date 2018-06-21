@@ -279,7 +279,6 @@ public class RiscVTest extends TemplateTest {
    * Compiles generated test programs and runs them on emulator.
    */
   @After
-  @Test
   public void compileAndEmulate() {
 
     if (canFailOnCurrentPhase()) {

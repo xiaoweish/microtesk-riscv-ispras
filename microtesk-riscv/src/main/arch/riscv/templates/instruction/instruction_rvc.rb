@@ -22,8 +22,8 @@ require_relative '../riscv_base'
 # This small tests for Compressed Instructions.
 #
 class InstructionRVC < RISCVBaseTemplate
-  def pre
-    super
+
+  def TEST_DATA
     data {
       label :data
       word rand(1, 9), rand(1, 9), rand(1, 9), rand(1, 9)

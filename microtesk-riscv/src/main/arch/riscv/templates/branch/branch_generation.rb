@@ -28,9 +28,7 @@ class BranchGenerationTemplate < RISCVBaseTemplate
     set_option_value 'default-test-data', false
   end
 
-  def pre
-    super
-
+  def TEST_DATA
     data {
       align 8
       # Arrays to store test data for branch instructions.
@@ -71,6 +69,10 @@ class BranchGenerationTemplate < RISCVBaseTemplate
             0x0, 0x0, 0x0, 0x0,    0x0, 0x0, 0x0, 0x0,    0x0, 0x0, 0x0, 0x0,    0x0, 0x0, 0x0, 0x0,
             0x0, 0x0, 0x0, 0x0,    0x0, 0x0, 0x0, 0x0,    0x0, 0x0, 0x0, 0x0,    0x0, 0x0, 0x0, 0x0
     }
+  end
+
+  def pre
+    super
 
     stream_preparator(:data_source => 'X', :index_source => 'X') {
       init {

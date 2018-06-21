@@ -23,9 +23,7 @@ require_relative '../riscv_base'
 #
 class BranchGeneration3Template < RISCVBaseTemplate
 
-  def pre
-    super
-
+  def TEST_DATA
     data {
       org 0x0
       align 8
@@ -33,6 +31,10 @@ class BranchGeneration3Template < RISCVBaseTemplate
       label :branch_data # start label
       space (8 * 1024)   # size in bytes
     }
+  end
+
+  def pre
+    super
 
     stream_preparator(:data_source => 'X', :index_source => 'X') {
       init {

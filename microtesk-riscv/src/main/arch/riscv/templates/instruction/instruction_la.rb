@@ -26,9 +26,7 @@ require_relative '../riscv_base'
 class InstructionLaTemplate < RISCVBaseTemplate
   COUNT = 20
 
-  def pre
-    super
-
+  def TEST_DATA
     data {
       org 0x00010000
       label :data

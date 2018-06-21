@@ -25,9 +25,7 @@ require_relative '../riscv_base'
 #
 class MinMaxTemplate < RISCVBaseTemplate
 
-  def pre
-    super
-
+  def TEST_DATA
     data {
       org 0x0
       align 8

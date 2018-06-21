@@ -23,9 +23,8 @@ require_relative '../riscv_base'
 # The test makes sure that the loaded value always equals the stored one.
 #
 class InstructionLdSdTemplate < RISCVBaseTemplate
-  def pre
-    super
 
+  def TEST_DATA
     data {
       org 0x00010000
       label :data

@@ -53,7 +53,9 @@ class AuipcTemplate < RISCVBaseTemplate
   end
 
   def run
-    TEST_CASE(2, a0, 10000 ) do
+    nop
+
+    TEST_CASE( 2, a0, 10000 ) do
       align 3
       lla a0, label_f(1), 10000
       jal a1, label_f(1)
@@ -61,7 +63,7 @@ label 1
       sub a0, a0, a1
     end
 
-    TEST_CASE(3, a0, -10000 ) do
+    TEST_CASE( 3, a0, -10000 ) do
       align 3
       lla a0, label_f(1), -10000
       jal a1, label_f(1)

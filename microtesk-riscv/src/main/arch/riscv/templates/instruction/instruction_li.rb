@@ -143,11 +143,6 @@ label :"test_#{@testnum}"
      ].each {
        |val| LI_TEST_CASE( val )
      }
-
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-    RVTEST_DATA_END()
   end
 
   def post

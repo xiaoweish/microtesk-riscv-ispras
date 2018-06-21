@@ -176,7 +176,6 @@ label 1
   end
 
   def RVTEST_CODE_BEGIN
-#     # .section .text.init; # TODO
     align  6
     weak :stvec_handler
     weak :mtvec_handler

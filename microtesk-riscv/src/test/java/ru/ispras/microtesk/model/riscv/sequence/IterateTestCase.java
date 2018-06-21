@@ -20,14 +20,14 @@ import org.junit.Test;
 import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.test.Statistics;
 
-public class SequenceTestCase extends RiscVTest {
+public class IterateTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("sequence/sequence.rb");
+    final Statistics statistics = run("sequence/iterate.rb");
     Assert.assertNotNull(statistics);
 
     Assert.assertEquals(1, statistics.getPrograms());
-    Assert.assertEquals(7, statistics.getSequences());
-    Assert.assertEquals(188, statistics.getInstructions());
+    Assert.assertEquals(24, statistics.getSequences());
+    Assert.assertEquals(140, statistics.getInstructions());
   }
 }

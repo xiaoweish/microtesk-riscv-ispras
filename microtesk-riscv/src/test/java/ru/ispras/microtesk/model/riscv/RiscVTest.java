@@ -312,7 +312,7 @@ public class RiscVTest extends TemplateTest {
     final Collection<File> auxFiles = new LinkedHashSet<>();
     final Collection<File> tests = new LinkedHashSet<>();
 
-    Assert.assertFalse("No test programs are generated from this template.", files == null);
+    Assert.assertNotNull("No test programs are generated from this template.", files);
 
     for (final File file : files) {
 
@@ -502,7 +502,7 @@ public class RiscVTest extends TemplateTest {
     String path = "";
 
     final File[] files = testDirPath.listFiles();
-    Assert.assertFalse("No test programs are generated from this template.", files == null);
+    Assert.assertNotNull("No test programs are generated from this template.", files);
 
     for (final File file : files) {
 

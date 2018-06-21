@@ -52,6 +52,37 @@ class SwTemplate < RISCVBaseTemplate
     RVTEST_CODE_BEGIN()
   end
 
+  def pre_testdata
+    RVTEST_DATA_BEGIN()
+    TEST_DATA()
+
+    data {
+label :tdat
+label :tdat1
+      word 0xdeadbeef
+label :tdat2
+      word 0xdeadbeef
+label :tdat3
+      word 0xdeadbeef
+label :tdat4
+      word 0xdeadbeef
+label :tdat5
+      word 0xdeadbeef
+label :tdat6
+      word 0xdeadbeef
+label :tdat7
+      word 0xdeadbeef
+label :tdat8
+      word 0xdeadbeef
+label :tdat9
+      word 0xdeadbeef
+label :tdat10
+      word 0xdeadbeef
+    }
+
+    RVTEST_DATA_END()
+  end
+
   def run
     #-------------------------------------------------------------
     # Basic tests
@@ -107,35 +138,6 @@ class SwTemplate < RISCVBaseTemplate
     TEST_ST_SRC21_BYPASS( 21, 1, 0, 'lw', 'sw', 0x23300112, 12, :tdat )
     TEST_ST_SRC21_BYPASS( 22, 1, 1, 'lw', 'sw', 0x22330011, 16, :tdat )
     TEST_ST_SRC21_BYPASS( 23, 2, 0, 'lw', 'sw', 0x12233001, 20, :tdat )
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-
-    data {
-label :tdat
-label :tdat1
-      word 0xdeadbeef
-label :tdat2
-      word 0xdeadbeef
-label :tdat3
-      word 0xdeadbeef
-label :tdat4
-      word 0xdeadbeef
-label :tdat5
-      word 0xdeadbeef
-label :tdat6
-      word 0xdeadbeef
-label :tdat7
-      word 0xdeadbeef
-label :tdat8
-      word 0xdeadbeef
-label :tdat9
-      word 0xdeadbeef
-label :tdat10
-      word 0xdeadbeef
-    }
-
-    RVTEST_DATA_END()
   end
 
   def post

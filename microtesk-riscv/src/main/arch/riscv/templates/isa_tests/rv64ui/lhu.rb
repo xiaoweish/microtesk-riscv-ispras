@@ -52,6 +52,25 @@ class LhuTemplate < RISCVBaseTemplate
     RVTEST_CODE_BEGIN()
   end
 
+  def pre_testdata
+    RVTEST_DATA_BEGIN()
+    TEST_DATA()
+
+    data {
+label :tdat
+label :tdat1
+      half 0x00ff
+label :tdat2
+      half 0xff00
+label :tdat3
+      half 0x0ff0
+label :tdat4
+      half 0xf00f
+    }
+
+    RVTEST_DATA_END()
+  end
+
   def run
     #-------------------------------------------------------------
     # Basic tests
@@ -113,23 +132,6 @@ class LhuTemplate < RISCVBaseTemplate
       nop 
       li  x2, 2 
     end
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-
-    data {
-label :tdat
-label :tdat1
-      half 0x00ff
-label :tdat2
-      half 0xff00
-label :tdat3
-      half 0x0ff0
-label :tdat4
-      half 0xf00f
-    }
-
-    RVTEST_DATA_END()
   end
 
   def post

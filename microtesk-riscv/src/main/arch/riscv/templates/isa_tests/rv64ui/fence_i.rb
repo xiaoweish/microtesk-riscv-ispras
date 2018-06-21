@@ -52,6 +52,20 @@ class Fence_iTemplate < RISCVBaseTemplate
     RVTEST_CODE_BEGIN()
   end
 
+  def pre_testdata
+    RVTEST_DATA_BEGIN()
+    TEST_DATA()
+
+    data {
+label :insn
+      # Originally: addi a3, a3, 333
+      # TODO: Need to support instructions in data sections.
+      word 0x0de68693
+    }
+
+    RVTEST_DATA_END()
+  end
+
   def run
     li a3, 111
     lh_global a0, :insn
@@ -83,21 +97,7 @@ label 1
     TEST_CASE( 3, a3, 777 ) do nop end
 
     TEST_PASSFAIL()
-
     RVTEST_CODE_END()
-
-    RVTEST_DATA_BEGIN()
-
-    TEST_DATA()
-
-    data {
-label :insn
-      # Originally: addi a3, a3, 333
-      # TODO: Need to support instructions in data sections.
-      word 0x0de68693
-    }
-
-    RVTEST_DATA_END()
   end
 
 end

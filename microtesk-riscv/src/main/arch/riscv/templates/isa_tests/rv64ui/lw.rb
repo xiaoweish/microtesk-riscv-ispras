@@ -52,6 +52,25 @@ class LwTemplate < RISCVBaseTemplate
     RVTEST_CODE_BEGIN()
   end
 
+  def pre_testdata
+    RVTEST_DATA_BEGIN()
+    TEST_DATA()
+
+    data {
+label :tdat
+label :tdat1
+      word 0x00ff00ff
+label :tdat2
+      word 0xff00ff00
+label :tdat3
+      word 0x0ff00ff0
+label :tdat4
+      word 0xf00ff00f
+    }
+
+    RVTEST_DATA_END()
+  end
+
   def run
     #-------------------------------------------------------------
     # Basic tests
@@ -113,23 +132,6 @@ class LwTemplate < RISCVBaseTemplate
       nop
       li  x2, 2
     end
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-
-    data {
-label :tdat
-label :tdat1
-      word 0x00ff00ff
-label :tdat2
-      word 0xff00ff00
-label :tdat3
-      word 0x0ff00ff0
-label :tdat4
-      word 0xf00ff00f
-    }
-
-    RVTEST_DATA_END()
   end
 
   def post

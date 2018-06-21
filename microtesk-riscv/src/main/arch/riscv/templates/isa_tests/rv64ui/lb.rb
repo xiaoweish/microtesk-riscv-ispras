@@ -51,6 +51,26 @@ class LbTemplate < RISCVBaseTemplate
     RVTEST_RV64U()
     RVTEST_CODE_BEGIN()
   end
+
+  def pre_testdata
+    RVTEST_DATA_BEGIN()
+    TEST_DATA()
+
+    data {
+label :tdat
+label :tdat1
+      byte 0xff
+label :tdat2
+      byte 0x00
+label :tdat3
+      byte 0xf0
+label :tdat4
+      byte 0x0f
+    }
+
+    RVTEST_DATA_END()
+  end
+
   def run
     #-------------------------------------------------------------
     # Basic tests
@@ -75,7 +95,6 @@ class LbTemplate < RISCVBaseTemplate
       addi x1, x1, -32
       lb x5, x1, 32 
     end
-  
 
     # Test with unaligned base
 
@@ -113,23 +132,6 @@ class LbTemplate < RISCVBaseTemplate
       nop 
       li  x2, 2 
     end
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-   
-    data {
-  label :tdat
-  label :tdat1
-        byte 0xff
-  label :tdat2  
-        byte 0x00
-  label :tdat3  
-        byte 0xf0
-  label :tdat4  
-        byte 0x0f
-    }
-
-    RVTEST_DATA_END()
   end
 
   def post

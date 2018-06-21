@@ -52,6 +52,37 @@ class ShTemplate < RISCVBaseTemplate
     RVTEST_CODE_BEGIN()
   end
 
+  def pre_testdata
+    RVTEST_DATA_BEGIN()
+    TEST_DATA()
+
+    data {
+label :tdat
+label :tdat1
+      half 0xbeef
+label :tdat2
+      half 0xbeef
+label :tdat3
+      half 0xbeef
+label :tdat4
+      half 0xbeef
+label :tdat5
+      half 0xbeef
+label :tdat6
+      half 0xbeef
+label :tdat7
+      half 0xbeef
+label :tdat8
+      half 0xbeef
+label :tdat9
+      half 0xbeef
+label :tdat10
+      half 0xbeef
+    }
+
+    RVTEST_DATA_END()
+  end
+
   def run
     #-------------------------------------------------------------
     # Basic tests
@@ -111,35 +142,6 @@ class ShTemplate < RISCVBaseTemplate
     li a0, 0xbeef
     la a1, :tdat
     sh a0, a1, 6
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-
-    data {
-label :tdat
-label :tdat1
-      half 0xbeef
-label :tdat2
-      half 0xbeef
-label :tdat3
-      half 0xbeef
-label :tdat4
-      half 0xbeef
-label :tdat5
-      half 0xbeef
-label :tdat6
-      half 0xbeef
-label :tdat7
-      half 0xbeef
-label :tdat8
-      half 0xbeef
-label :tdat9
-      half 0xbeef
-label :tdat10
-      half 0xbeef
-    }
-
-    RVTEST_DATA_END()
   end
 
   def post

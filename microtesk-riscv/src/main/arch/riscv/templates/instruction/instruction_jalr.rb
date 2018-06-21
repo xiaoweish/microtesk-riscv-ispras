@@ -29,13 +29,13 @@ class InstructionJalrTemplate < RISCVBaseTemplate
     auipc s0, 0
     addi s0, s0, 8
 
-    jalr t0, s0, :jalr_label
+    jalr t0, s0, 16
 
     addi s1, s1, 1
     addi s1, s1, 3
     addi s1, s1, 5
 
-label :jalr_label
+label :jalr_target
     addi s1, s1, 1
     addi s1, s1, 1
 

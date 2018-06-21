@@ -182,31 +182,31 @@ class RISCVBaseTemplate < Template
 
     ################################################################################################
 
-    # RISC-V prologue.
-    pre_rvtest
-
     # Test data block.
     pre_testdata
+
+    # RISC-V prologue.
+    pre_rvtest
   end
 
-  # Prologue can be overridden in user templates
-  def pre_rvtest
-    RVTEST_RV64U()
-    RVTEST_CODE_BEGIN()
-  end
-
-  # Test data can be overridden in user templates
+  # Test data can be overridden in user templates.
   def pre_testdata
     RVTEST_DATA_BEGIN()
     TEST_DATA()
     RVTEST_DATA_END()
   end
 
+  # Prologue can be overridden in user templates.
+  def pre_rvtest
+    RVTEST_RV64U()
+    RVTEST_CODE_BEGIN()
+  end
+
   ##################################################################################################
   # Epilogue
   ##################################################################################################
 
-  # Epilogue can be overridden in user templates
+  # Epilogue can be overridden in user templates.
   def post
     j :pass
 label :fail

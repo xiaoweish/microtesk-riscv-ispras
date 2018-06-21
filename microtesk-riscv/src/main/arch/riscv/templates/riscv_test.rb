@@ -219,8 +219,7 @@ label 1
     ori TESTNUM(), TESTNUM(), 1337
 
 label :write_tohost
-#     sw_global TESTNUM(), :tohost, t5
-    nop # TODO: remove after sw_global is enabled.
+    sw_global TESTNUM(), :tohost, t5
     j :write_tohost
 
 label :reset_vector
@@ -306,28 +305,30 @@ label 1
   def RVTEST_DATA_BEGIN
     EXTRA_DATA()
 
-#     # .pushsection .tohost,"aw",@progbits # TODO: Need support for this directive
-#     data {
-#       align 6
-#       global_label :tohost
-#       dword 0
-#
-#       align 6
-#       global_label :fromhost
-#       dword 0
-#     }
-#     # .popsection # TODO: Need support for this directive
+    # .pushsection .tohost,"aw",@progbits # TODO: Need support for this directive
+    section(:name => '.tohost') {
+      data {
+        align 6
+global_label :tohost
+        dword 0
+
+        align 6
+global_label :fromhost
+        dword 0
+      }
+    }
+    # .popsection # TODO: Need support for this directive
 
     data {
       align 4
-      global_label :begin_signature
+global_label :begin_signature
     }
   end
 
   def RVTEST_DATA_END
     data {
       align 4
-      global_label :end_signature
+global_label :end_signature
     }
   end
 

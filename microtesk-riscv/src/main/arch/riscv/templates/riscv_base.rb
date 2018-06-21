@@ -86,7 +86,7 @@ class RISCVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section(:name => '.tohost', :pa => 0x8001_0000, :va => 0x8001_0000, :args => '') {}
+    section(:name => '.tohost', :pa => 0x8002_0000, :va => 0x8002_0000, :args =>'"aw",@progbits') {}
 
     #
     # Defines .text section.
@@ -94,7 +94,7 @@ class RISCVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section(:name => '.text', :pa => 0x8001_1000, :va => 0x8001_1000, :args => '') {}
+    section(:name => '.text', :pa => 0x8002_1000, :va => 0x8002_1000, :args => '') {}
 
     #
     # Defines .data section.
@@ -102,7 +102,7 @@ class RISCVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section_data(:pa => 0x8001_2000, :va => 0x8001_2000) {}
+    section_data(:pa => 0x8002_2000, :va => 0x8002_2000) {}
 
     ################################################################################################
 

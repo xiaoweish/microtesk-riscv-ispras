@@ -17,6 +17,7 @@ package ru.ispras.microtesk.model.riscv;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import ru.ispras.microtesk.Logger;
 import ru.ispras.microtesk.Logger.EventType;
 import ru.ispras.microtesk.options.Option;
@@ -278,6 +279,7 @@ public class RiscVTest extends TemplateTest {
    * Compiles generated test programs and runs them on emulator.
    */
   @After
+  @Test
   public void compileAndEmulate() {
 
     if (canFailOnCurrentPhase()) {
@@ -591,9 +593,9 @@ public class RiscVTest extends TemplateTest {
     try {
       final ProcessBuilder builder = new ProcessBuilder(cmdArray);
       final File errorLog = new File(getTestDirPath() + "/error-log.txt");
-      if (redirectError) {
+      /*if (redirectError) {
         builder.redirectError(errorLog);
-      }
+      }*/
       final Process process = builder.start();
 
       if (timeout > 0) {

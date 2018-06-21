@@ -61,6 +61,25 @@ class LrscTemplate < RISCVBaseTemplate
     RVTEST_CODE_BEGIN()
   end
 
+  def pre_testdata
+    RVTEST_DATA_BEGIN()
+    TEST_DATA()
+
+    data {
+label :coreid
+      word 0
+label :barrier
+      word 0
+label :foo
+      word 0
+      skip 1024
+label :fooTest3
+      word 0
+    }
+
+    RVTEST_DATA_END()
+  end
+
   def run
     # get a unique core id
     la a0, :coreid
@@ -121,23 +140,6 @@ label 1
       addi a3, a3, -1
       bgez a3, label_b(1)
     end
-
-    RVTEST_DATA_BEGIN()
-    TEST_DATA()
-
-    data {
-label :coreid
-      word 0
-label :barrier
-      word 0
-label :foo
-      word 0
-      skip 1024
-label :fooTest3
-      word 0
-    }
-
-    RVTEST_DATA_END()
   end
 
   def post

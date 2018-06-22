@@ -304,7 +304,7 @@ label 1
   def RVTEST_DATA_BEGIN
     EXTRA_DATA()
 
-    # .pushsection .tohost,"aw",@progbits # TODO: Need support for this directive
+    # .pushsection .tohost,"aw",@progbits
     section(:name => '.tohost') {
       data {
         align 6
@@ -316,7 +316,7 @@ global_label :fromhost
         dword 0
       }
     }
-    # .popsection # TODO: Need support for this directive
+    # .popsection
 
     data {
       align 4

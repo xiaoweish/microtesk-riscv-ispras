@@ -58,8 +58,8 @@ module RiscvRand
   def rand_addr_w(memsize); rand_range(0, memsize-1) & ~3 end
   def rand_addr_d(memsize); rand_range(0, memsize-1) & ~7 end
 
-  def rand_biased
-    rand(dist(
+  def rand_biased_dist
+    dist(
       # 0-1: return a value with a single bit set
       range(:value => BIT_SET_VALUES, :bias => 1110),
 
@@ -70,7 +70,7 @@ module RiscvRand
       range(:value => 0..9, :bias => 556),
 
       # 5: return a very large/very small 8b signed number
-      range(:value => FFFF_FFFF_FFFF_FF80..0xFFFF_FFFF_FFFF_FF89, :bias => 556),
+      range(:value => 0xFFFF_FFFF_FFFF_FF80..0xFFFF_FFFF_FFFF_FF89, :bias => 556),
 
       # 6: return a very large/very small 16b signed number
       range(:value => 0xFFFF_FFFF_FFFF_8000..0xFFFF_FFFF_FFFF_8009, :bias => 556),
@@ -83,7 +83,8 @@ module RiscvRand
 
       # 9-17: return a random dword value
       range(:value => 0x0..0xFFFF_FFFF_FFFF_FFFF, :bias => 5000)
-    ))
+    )
   end
 
+  def rand_biased; rand(rand_biased_dist) end
 end

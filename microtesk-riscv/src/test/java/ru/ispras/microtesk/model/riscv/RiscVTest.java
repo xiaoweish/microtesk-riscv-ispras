@@ -637,7 +637,7 @@ public class RiscVTest extends TemplateTest {
       }
     } catch (final IOException | InterruptedException e) {
       e.printStackTrace();
-      Assert.fail();
+      Assert.fail(e.getMessage());
     }
   }
 
@@ -697,6 +697,7 @@ public class RiscVTest extends TemplateTest {
 
     } catch (final IOException e) {
       e.printStackTrace();
+      Assert.fail(e.getMessage());
     }
     return false;
   }

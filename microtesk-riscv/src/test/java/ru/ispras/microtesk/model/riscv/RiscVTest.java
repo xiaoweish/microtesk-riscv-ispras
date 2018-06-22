@@ -14,9 +14,9 @@
 
 package ru.ispras.microtesk.model.riscv;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 import ru.ispras.microtesk.Logger;
 import ru.ispras.microtesk.Logger.EventType;
 import ru.ispras.microtesk.options.Option;
@@ -56,27 +56,27 @@ public class RiscVTest extends TemplateTest {
   /**
    * The execution phase at which the test is allowed to fail.
    */
-  private static TestPhase failPhase;
+  private TestPhase failPhase;
 
   /**
    * The current phase of test execution.
    */
-  private static TestPhase currentPhase;
+  private TestPhase currentPhase;
 
   /**
    * Shows whether rest of test execution phases should be skipped for the current test program.
    */
-  private static boolean skipRestPhases;
+  private boolean skipRestPhases;
 
   /**
    * The test program name prefix.
    */
-  private static String programPrefix;
+  private String programPrefix;
 
   /**
    * The path to directory containing test program.
    */
-  private static String testDirPath;
+  private String testDirPath;
 
   /**
    * Path to test results.
@@ -227,11 +227,11 @@ public class RiscVTest extends TemplateTest {
   }
 
   private void setProgramPrefix(final String file) {
-    programPrefix = FileUtils.getShortFileNameNoExt(file);
+    this.programPrefix = FileUtils.getShortFileNameNoExt(file);
   }
 
   private void setTestDirPath(final Path testDirPath) {
-    RiscVTest.testDirPath = testDirPath.toString();
+    this.testDirPath = testDirPath.toString();
   }
 
   private String getProgramPrefix() {
@@ -247,19 +247,19 @@ public class RiscVTest extends TemplateTest {
    * @param phase The test execution phase at which it's allowed to fail.
    */
   protected void failOnPhase(final TestPhase phase) {
-    failPhase = phase;
+    this.failPhase = phase;
   }
 
   private void setPhase(final TestPhase phase) {
-    currentPhase = phase;
+    this.currentPhase = phase;
   }
 
   private boolean canFailOnCurrentPhase() {
-    return currentPhase == failPhase;
+    return this.currentPhase == this.failPhase;
   }
 
   private void skipRestPhases(final boolean skipRestPhases) {
-    RiscVTest.skipRestPhases = skipRestPhases;
+    this.skipRestPhases = skipRestPhases;
   }
 
   private boolean skippedPhase() {
@@ -277,7 +277,7 @@ public class RiscVTest extends TemplateTest {
   /**
    * Compiles generated test programs and runs them on emulator.
    */
-  @Test
+  @After
   public void compileAndEmulate() {
 
     if (canFailOnCurrentPhase()) {

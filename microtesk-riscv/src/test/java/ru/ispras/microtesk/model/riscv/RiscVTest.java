@@ -14,7 +14,6 @@
 
 package ru.ispras.microtesk.model.riscv;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,27 +56,27 @@ public class RiscVTest extends TemplateTest {
   /**
    * The execution phase at which the test is allowed to fail.
    */
-  private TestPhase failPhase;
+  private static TestPhase failPhase;
 
   /**
    * The current phase of test execution.
    */
-  private TestPhase currentPhase;
+  private static TestPhase currentPhase;
 
   /**
    * Shows whether rest of test execution phases should be skipped for the current test program.
    */
-  private boolean skipRestPhases;
+  private static boolean skipRestPhases;
 
   /**
    * The test program name prefix.
    */
-  private String programPrefix;
+  private static String programPrefix;
 
   /**
    * The path to directory containing test program.
    */
-  private String testDirPath;
+  private static String testDirPath;
 
   /**
    * Path to test results.
@@ -228,19 +227,19 @@ public class RiscVTest extends TemplateTest {
   }
 
   private void setProgramPrefix(final String file) {
-    this.programPrefix = FileUtils.getShortFileNameNoExt(file);
+    programPrefix = FileUtils.getShortFileNameNoExt(file);
   }
 
   private void setTestDirPath(final Path testDirPath) {
-    this.testDirPath = testDirPath.toString();
+    RiscVTest.testDirPath = testDirPath.toString();
   }
 
   private String getProgramPrefix() {
-    return this.programPrefix;
+    return programPrefix;
   }
 
   private String getTestDirPath() {
-    return this.testDirPath;
+    return testDirPath;
   }
 
   /**
@@ -248,23 +247,23 @@ public class RiscVTest extends TemplateTest {
    * @param phase The test execution phase at which it's allowed to fail.
    */
   protected void failOnPhase(final TestPhase phase) {
-    this.failPhase = phase;
+    failPhase = phase;
   }
 
   private void setPhase(final TestPhase phase) {
-    this.currentPhase = phase;
+    currentPhase = phase;
   }
 
   private boolean canFailOnCurrentPhase() {
-    return this.currentPhase == this.failPhase;
+    return currentPhase == failPhase;
   }
 
   private void skipRestPhases(final boolean skipRestPhases) {
-    this.skipRestPhases = skipRestPhases;
+    RiscVTest.skipRestPhases = skipRestPhases;
   }
 
   private boolean skippedPhase() {
-    return this.skipRestPhases;
+    return skipRestPhases;
   }
 
   /**
@@ -278,7 +277,7 @@ public class RiscVTest extends TemplateTest {
   /**
    * Compiles generated test programs and runs them on emulator.
    */
-  @After
+  @Test
   public void compileAndEmulate() {
 
     if (canFailOnCurrentPhase()) {
@@ -291,8 +290,9 @@ public class RiscVTest extends TemplateTest {
 
     if (TCHAIN_PATH == null || TCHAIN_PATH.isEmpty()) {
       Logger.warning(
-          String.format("To compile test programs you should set '%s' environment variable"
-              + " to toolchain dir.", RISCV_TCHAIN_PATH));
+          String.format(
+              "To compile test programs you should set '%s' environment variable to toolchain dir.",
+              RISCV_TCHAIN_PATH));
       return;
     }
 
@@ -592,9 +592,9 @@ public class RiscVTest extends TemplateTest {
     try {
       final ProcessBuilder builder = new ProcessBuilder(cmdArray);
       final File errorLog = new File(getTestDirPath() + "/error-log.txt");
-      /*if (redirectError) {
+      if (redirectError) {
         builder.redirectError(errorLog);
-      }*/
+      }
       final Process process = builder.start();
 
       if (timeout > 0) {
@@ -637,6 +637,7 @@ public class RiscVTest extends TemplateTest {
       }
     } catch (final IOException | InterruptedException e) {
       e.printStackTrace();
+      Assert.fail();
     }
   }
 

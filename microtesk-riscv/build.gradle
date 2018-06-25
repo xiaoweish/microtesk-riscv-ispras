@@ -284,6 +284,17 @@ jacocoTestReport {
     xml.enabled true
     csv.enabled false
   }
+
+  afterEvaluate {
+    classDirectories = files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: [
+              '**/*$Info**',
+              '**/metadata**',
+              '**/decoder**',
+              '**/branch**'
+      ])
+    })
+  }
 }
 
 sonarqube {

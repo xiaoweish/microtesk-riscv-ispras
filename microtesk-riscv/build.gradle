@@ -277,6 +277,9 @@ jacoco {
 }
 
 jacocoTestReport {
+  sourceDirectories = files("${project.projectDir}/build/generated-src/models/src/java")
+  classDirectories = files("${project.projectDir}/build/classes/models")
+
   reports {
     xml.enabled true
     csv.enabled false

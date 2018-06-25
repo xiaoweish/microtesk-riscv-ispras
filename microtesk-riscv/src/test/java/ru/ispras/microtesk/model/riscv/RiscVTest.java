@@ -17,7 +17,6 @@ package ru.ispras.microtesk.model.riscv;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 import ru.ispras.microtesk.Logger;
 import ru.ispras.microtesk.Logger.EventType;
 import ru.ispras.microtesk.options.Option;
@@ -236,11 +235,11 @@ public class RiscVTest extends TemplateTest {
   }
 
   private String getProgramPrefix() {
-    return this.programPrefix;
+    return programPrefix;
   }
 
   private String getTestDirPath() {
-    return this.testDirPath;
+    return testDirPath;
   }
 
   /**
@@ -264,7 +263,7 @@ public class RiscVTest extends TemplateTest {
   }
 
   private boolean skippedPhase() {
-    return this.skipRestPhases;
+    return skipRestPhases;
   }
 
   /**
@@ -291,8 +290,9 @@ public class RiscVTest extends TemplateTest {
 
     if (TCHAIN_PATH == null || TCHAIN_PATH.isEmpty()) {
       Logger.warning(
-          String.format("To compile test programs you should set '%s' environment variable"
-              + " to toolchain dir.", RISCV_TCHAIN_PATH));
+          String.format(
+              "To compile test programs you should set '%s' environment variable to toolchain dir.",
+              RISCV_TCHAIN_PATH));
       return;
     }
 
@@ -592,9 +592,9 @@ public class RiscVTest extends TemplateTest {
     try {
       final ProcessBuilder builder = new ProcessBuilder(cmdArray);
       final File errorLog = new File(getTestDirPath() + "/error-log.txt");
-      /*if (redirectError) {
+      if (redirectError) {
         builder.redirectError(errorLog);
-      }*/
+      }
       final Process process = builder.start();
 
       if (timeout > 0) {
@@ -637,6 +637,7 @@ public class RiscVTest extends TemplateTest {
       }
     } catch (final IOException | InterruptedException e) {
       e.printStackTrace();
+      Assert.fail(e.getMessage());
     }
   }
 
@@ -696,6 +697,7 @@ public class RiscVTest extends TemplateTest {
 
     } catch (final IOException e) {
       e.printStackTrace();
+      Assert.fail(e.getMessage());
     }
     return false;
   }

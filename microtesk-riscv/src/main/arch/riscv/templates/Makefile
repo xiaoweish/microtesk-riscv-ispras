@@ -1,8 +1,7 @@
 TESTS = coverage\
         groups\
         preparators_test\
-        random\
-        register_allocation
+        random
 
 SELFCHECK_TESTS = selfcheck_example
 

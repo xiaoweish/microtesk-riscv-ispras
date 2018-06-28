@@ -175,7 +175,7 @@ into floating-point register rd0. It computes an effective address by adding the
 offset, scaled by 4, to the base address in register rs10. It expands to flw rd0, offset[6:2](rs10).
 */
 @rev(RV32FC)
-op c_flw(rd: FR, rs1: X, offset: card(5))
+op c_flw(rd: F, rs1: X, offset: card(5))
   init   = { assert(rd.i<4..3> == 0b01, "C.FLW: Only registers f8-f15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "C.FLW: Only registers x8-x15 are allowed!");}
   syntax = format("c.flw %s, %d(%s)", rd.syntax, offset, rs1.syntax)
@@ -191,7 +191,7 @@ zero-extended offset, scaled by 8, to the base address in register rs10. It expa
 offset[7:3](rs10).
 */
 @rev(RV32DC)
-op c_fld(rd: FR, rs1: X, offset: card(5))
+op c_fld(rd: F, rs1: X, offset: card(5))
   init   = { assert(rd.i<4..3> == 0b01, "C.FLD: Only registers f8-f15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "C.FLD: Only registers x8-x15 are allowed!");}
   syntax = format("c.fld %s, %d(%s)", rd.syntax, offset, rs1.syntax)
@@ -253,7 +253,7 @@ floating-point register rs20 to memory. It computes an effective address by addi
 offset, scaled by 4, to the base address in register rs10. It expands to fsw rs20, offset[6:2](rs10).
 */
 @rev(RV32FC)
-op c_fsw(rs2: FR, rs1: X, offset: card(5))
+op c_fsw(rs2: F, rs1: X, offset: card(5))
   init   = { assert(rs2.i<4..3> == 0b01, "C.FSW: Only registers f8-f15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "C.FSW: Only registers x8-x15 are allowed!");}
   syntax = format("c.fsw %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
@@ -269,7 +269,7 @@ extended offset, scaled by 8, to the base address in register rs10. It expands t
 offset[7:3](rs10).
 */
 @rev(RV32DC)
-op c_fsd(rs2: FR, rs1: X, offset: card(5))
+op c_fsd(rs2: F, rs1: X, offset: card(5))
   init   = { assert(rs2.i<4..3> == 0b01, "C.FSD: Only registers f8-f15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "C.FSD: Only registers x8-x15 are allowed!");}
   syntax = format("c.fsd %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
@@ -844,7 +844,7 @@ into floating-point register rd. It computes its effective address by adding the
 offset, scaled by 4, to the stack pointer, x2. It expands to flw rd, offset[7:2](x2).
 */
 @rev(RV32FC)
-op c_flwsp(rd: FR, offset: card(6))
+op c_flwsp(rd: F, offset: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "C.FLWSP: 16-bit opcode: only registers x8-x15 are allowed!");
              assert(rd.i<2..0> != 0b000, "c.lqsp: rd == 0"); }
   syntax = format("c.flwsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
@@ -860,7 +860,7 @@ the zero-extended offset, scaled by 8, to the stack pointer, x2. It expands to f
 offset[8:3](x2).
 */
 @rev(RV32DC)
-op c_fldsp(rd: FR, offset: card(6))
+op c_fldsp(rd: F, offset: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "C.FLDSP: 16-bit opcode: only registers x8-x15 are allowed!");}
   syntax = format("c.fldsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("001%1s%3s%2s%3s10", offset<2>, rd.i<2..0>, offset<1..0>, offset<5..3>)
@@ -915,7 +915,7 @@ oating-point value in floating-point register rs2 to memory. It computes an effe
 offset, scaled by 4, to the stack pointer, x2. It expands to fsw rs2, offset[7:2](x2).
 */
 @rev(RV32FC)
-op c_fswsp(rs2: FR, offset: card(6))
+op c_fswsp(rs2: F, offset: card(6))
   init   = {}
   syntax = format("c.fswsp %s, %d", rs2.syntax, offset)
   image  = format("111%4s%2s%5s10", offset<3..0>, offset<5..4>, rs2.image)
@@ -929,7 +929,7 @@ value in floating-point register rs2 to memory. It computes an effective address
 extended offset, scaled by 8, to the stack pointer, x2. It expands to fsd rs2, offset[8:3](x2).
 */
 @rev(RV32DC)
-op c_fsdsp(rs2: FR, offset: card(6))
+op c_fsdsp(rs2: F, offset: card(6))
   init   = {}
   syntax = format("c.fsdsp %s, %d", rs2.syntax, offset)
   image  = format("101%3s%3s%5s10", offset<2..0>, offset<5..3>, rs2.image)

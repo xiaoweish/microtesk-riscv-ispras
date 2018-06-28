@@ -49,7 +49,7 @@
     FMV.W.X (FMV.S.X) +
 */
 
-op flw(rd: FR, rs1: X, imm: card(12))
+op flw(rd: F, rs1: X, imm: card(12))
   syntax = format("flw %s, 0x%x(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s010%s0000111", imm, rs1.image, rd.image)
   action = {
@@ -59,7 +59,7 @@ op flw(rd: FR, rs1: X, imm: card(12))
     rd<31..0> = load_value<31..0>;
   }
 
-op fsw(rs2: FR, rs1: X, imm: card(12))
+op fsw(rs2: F, rs1: X, imm: card(12))
   syntax = format("fsw %s, 0x%x(%s)", rs2.syntax, imm, rs1.syntax)
   image  = format("%7s%5s%5s010%5s0100111", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
   action = {
@@ -67,7 +67,7 @@ op fsw(rs2: FR, rs1: X, imm: card(12))
     store_data(MEM_WORD, tmp_address, zero_extend(DWORD, rs2<31..0>)).action;
   }
 
-op fadd_s(rd: FR, rs1: FR, rs2: FR)
+op fadd_s(rd: F, rs1: F, rs2: F)
   syntax = format("fadd.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0000000%s%s%3s%s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -78,7 +78,7 @@ op fadd_s(rd: FR, rs1: FR, rs2: FR)
     rd<31..0> = temp_fps3<31..0>;
   }
 
-op fsub_s(rd: FR, rs1: FR, rs2: FR)
+op fsub_s(rd: F, rs1: F, rs2: F)
   syntax = format("fsub.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0000100%s%s%3s%s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -87,7 +87,7 @@ op fsub_s(rd: FR, rs1: FR, rs2: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fmul_s(rd: FR, rs1: FR, rs2: FR)
+op fmul_s(rd: F, rs1: F, rs2: F)
   syntax = format("fmul.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0001000%s%s%3s%s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -96,7 +96,7 @@ op fmul_s(rd: FR, rs1: FR, rs2: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fdiv_s(rd: FR, rs1: FR, rs2: FR)
+op fdiv_s(rd: F, rs1: F, rs2: F)
   syntax = format("fdiv.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0001100%5s%5s%3s%5s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -105,7 +105,7 @@ op fdiv_s(rd: FR, rs1: FR, rs2: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fmin_s(rd: FR, rs1: FR, rs2: FR)
+op fmin_s(rd: F, rs1: F, rs2: F)
   syntax = format("fmin.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0010100%5s%5s%3s%5s1010011", rs2.image, rs1.image, "000", rd.image)
   action = {
@@ -120,7 +120,7 @@ op fmin_s(rd: FR, rs1: FR, rs2: FR)
     endif;
   }
 
-op fmax_s(rd: FR, rs1: FR, rs2: FR)
+op fmax_s(rd: F, rs1: F, rs2: F)
   syntax = format("fmax.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0010100%5s%5s%3s%5s1010011", rs2.image, rs1.image, "001", rd.image)
   action = {
@@ -135,7 +135,7 @@ op fmax_s(rd: FR, rs1: FR, rs2: FR)
     endif;
   }
 
-op fsqrt_s(rd: FR, rs1: FR)
+op fsqrt_s(rd: F, rs1: F)
   syntax = format("fsqrt.s %s, %s", rd.syntax, rs1.syntax)
   image  = format("0101100%5s%5s%3s%5s1010011", "00000", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -144,7 +144,7 @@ op fsqrt_s(rd: FR, rs1: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fsgnj_s(rd: FR, rs1: FR, rs2: FR)
+op fsgnj_s(rd: F, rs1: F, rs2: F)
   syntax = format("fsgnj.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0010000%5s%5s%3s%5s1010011", rs2.image, rs1.image, "000", rd.image)
   action = {
@@ -154,7 +154,7 @@ op fsgnj_s(rd: FR, rs1: FR, rs2: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fsgnjn_s(rd: FR, rs1: FR, rs2: FR)
+op fsgnjn_s(rd: F, rs1: F, rs2: F)
   syntax = format("fsgnjn.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0010000%5s%5s%3s%5s1010011", rs2.image, rs1.image, "001", rd.image)
   action = {
@@ -164,7 +164,7 @@ op fsgnjn_s(rd: FR, rs1: FR, rs2: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fsgnjx_s(rd: FR, rs1: FR, rs2: FR)
+op fsgnjx_s(rd: F, rs1: F, rs2: F)
   syntax = format("fsgnjx.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0010000%5s%5s%3s%5s1010011", rs2.image, rs1.image, "010", rd.image)
   action = {
@@ -174,7 +174,7 @@ op fsgnjx_s(rd: FR, rs1: FR, rs2: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fmadd_s(rd: FR, rs1: FR, rs2: FR, rs3: FR)
+op fmadd_s(rd: F, rs1: F, rs2: F, rs3: F)
   syntax = format("fmadd.s %s, %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax, rs3.syntax)
   image  = format("%5s00%5s%5s%3s%5s1000011", rs3.image, rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -183,7 +183,7 @@ op fmadd_s(rd: FR, rs1: FR, rs2: FR, rs3: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fmsub_s(rd: FR, rs1: FR, rs2: FR, rs3: FR)
+op fmsub_s(rd: F, rs1: F, rs2: F, rs3: F)
   syntax = format("fmsub.s %s, %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax, rs3.syntax)
   image  = format("%5s00%5s%5s%3s%5s1000111", rs3.image, rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -192,7 +192,7 @@ op fmsub_s(rd: FR, rs1: FR, rs2: FR, rs3: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fnmadd_s(rd: FR, rs1: FR, rs2: FR, rs3: FR)
+op fnmadd_s(rd: F, rs1: F, rs2: F, rs3: F)
   syntax = format("fnmadd.s %s, %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax, rs3.syntax)
   image  = format("%5s00%5s%5s%3s%5s1001111", rs3.image, rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -204,7 +204,7 @@ op fnmadd_s(rd: FR, rs1: FR, rs2: FR, rs3: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fnmsub_s(rd: FR, rs1: FR, rs2: FR, rs3: FR)
+op fnmsub_s(rd: F, rs1: F, rs2: F, rs3: F)
   syntax = format("fnmsub.s %s, %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax, rs3.syntax)
   image  = format("%5s00%5s%5s%3s%5s1001011", rs3.image, rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -216,7 +216,7 @@ op fnmsub_s(rd: FR, rs1: FR, rs2: FR, rs3: FR)
     rd<31..0> = temp_fps<31..0>;
   }
 
-op fcvt_w_s(rd: X, rs1: FR)
+op fcvt_w_s(rd: X, rs1: F)
   syntax = format("fcvt.w.s %s, %s", rd.syntax, rs1.syntax)
   image  = format("1100000%5s%5s%3s%5s1010011", "00000", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -224,7 +224,7 @@ op fcvt_w_s(rd: X, rs1: FR)
     rd<31..0> = float_to_int(WORD, cast(FLOAT32, rs1<31..0>));
   }
 
-op fcvt_wu_s(rd: X, rs1: FR)
+op fcvt_wu_s(rd: X, rs1: F)
   syntax = format("fcvt.wu.s %s, %s", rd.syntax, rs1.syntax)
   image  = format("1100000%5s%5s%3s%5s1010011", "00001", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -232,7 +232,7 @@ op fcvt_wu_s(rd: X, rs1: FR)
     // TODO:
   }
 
-op fcvt_s_w(rd: FR, rs1: X)
+op fcvt_s_w(rd: F, rs1: X)
   syntax = format("fcvt.s.w %s, %s", rd.syntax, rs1.syntax)
   image  = format("1101000%5s%5s%3s%5s1010011", "00000", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -240,21 +240,21 @@ op fcvt_s_w(rd: FR, rs1: X)
     rd<31..0> = int_to_float(FLOAT32, rs1<31..0>);
   }
 
-op fcvt_s_wu(rd: FR, rs1: X)
+op fcvt_s_wu(rd: F, rs1: X)
   syntax = format("fcvt.s.wu %s, %s", rd.syntax, rs1.syntax)
   image  = format("1101000%5s%5s%3s%5s1010011", "00001", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     fcvt_s_w(rd, rs1).action;
   }
 
-op fmv_x_w(rd: X, rs1: FR) // fmv_x_s
+op fmv_x_w(rd: X, rs1: F) // fmv_x_s
   syntax = format("fmv.x.s %s, %s", rd.syntax, rs1.syntax)
   image  = format("1110000%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
   action = {
     rd = sign_extend(XWORD, rs1<31..0>);
   }
 
-op fmv_w_x(rd: FR, rs1: X) // fmv_s_x
+op fmv_w_x(rd: F, rs1: X) // fmv_s_x
   syntax = format("fmv.s.x %s, %s", rd.syntax, rs1.syntax)
   image  = format("1111000%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
   action = {
@@ -264,7 +264,7 @@ op fmv_w_x(rd: FR, rs1: X) // fmv_s_x
 /*  Floating-point compare instructions perform the specified comparison (equal, less than, or less
   than or equal) between floating-point registers rs1 and rs2 and record the Boolean result in
   integer register rd. */
-op feq_s(rd: X, rs1: FR, rs2: FR)
+op feq_s(rd: X, rs1: F, rs2: F)
   syntax = format("feq.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("1010000%5s%5s%3s%5s1010011", rs2.image, rs1.image, "010", rd.image)
   action = {
@@ -280,7 +280,7 @@ op feq_s(rd: X, rs1: FR, rs2: FR)
     endif;
   }
 
-op flt_s(rd: X, rs1: FR, rs2: FR)
+op flt_s(rd: X, rs1: F, rs2: F)
   syntax = format("flt.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("1010000%5s%5s%3s%5s1010011", rs2.image, rs1.image, "001", rd.image)
   action = {
@@ -295,7 +295,7 @@ op flt_s(rd: X, rs1: FR, rs2: FR)
     endif;
   }
 
-op fle_s(rd: X, rs1: FR, rs2: FR)
+op fle_s(rd: X, rs1: F, rs2: F)
   syntax = format("fle.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("1010000%5s%5s%3s%5s1010011", rs2.image, rs1.image, "000", rd.image)
   action = {
@@ -322,7 +322,7 @@ op fle_s(rd: X, rs1: FR, rs2: FR)
     8 rs1 is a signaling NaN.
     9 rs1 is a quiet NaN.
     */
-op fclass_s(rd: X, rs1: FR)
+op fclass_s(rd: X, rs1: F)
   syntax = format("fclass.s %s, %s", rd.syntax, rs1.syntax)
   image  = format("1110000%5s%5s%3s%5s1010011", "00000", rs1.image, "001", rd.image)
   action = {
@@ -341,7 +341,7 @@ op fclass_s(rd: X, rs1: FR)
 //==================================================================================================
 
 // Copy single-precision register
-pseudo op fmv_s(rd: FR, rs: FR)
+pseudo op fmv_s(rd: F, rs: F)
   syntax = format("fmv.s %s, %s", rd.syntax, rs.syntax)
   image  = format("%32s", fsgnj_s(rd, rs, rs).image)
   action = {
@@ -349,7 +349,7 @@ pseudo op fmv_s(rd: FR, rs: FR)
   }
 
 // Single-precision absolute value
-pseudo op fabs_s(rd: FR, rs: FR)
+pseudo op fabs_s(rd: F, rs: F)
   syntax = format("fabs.s %s, %s", rd.syntax, rs.syntax)
   image  = format("%32s", fsgnjx_s(rd, rs, rs).image)
   action = {
@@ -357,7 +357,7 @@ pseudo op fabs_s(rd: FR, rs: FR)
   }
 
 // Single-precision negate
-pseudo op fneg_s(rd: FR, rs: FR)
+pseudo op fneg_s(rd: F, rs: F)
   syntax = format("fneg.s %s, %s", rd.syntax, rs.syntax)
   image  = format("%32s", fsgnjn_s(rd, rs, rs).image)
   action = {

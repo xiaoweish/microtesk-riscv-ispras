@@ -31,14 +31,14 @@
     FMV.D.X
 */
 
-op fcvt_l_d(rd: X, rs1: FR)
+op fcvt_l_d(rd: X, rs1: F)
   syntax = format("fcvt.l.d %s, %s", rd.syntax, rs1.syntax)
   image  = format("1100001%5s%5s%3s%5s1010011", "00010", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     rd = float_to_int(DWORD, rs1);
   }
 
-op fcvt_lu_d(rd: X, rs1: FR)
+op fcvt_lu_d(rd: X, rs1: F)
   syntax = format("fcvt.lu.d %s, %s", rd.syntax, rs1.syntax)
   image  = format("1100001%5s%5s%3s%5s1010011", "00011", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -46,14 +46,14 @@ op fcvt_lu_d(rd: X, rs1: FR)
     fcvt_l_d(rd, rs1).action;
   }
 
-op fcvt_d_l(rd: FR, rs1: X)
+op fcvt_d_l(rd: F, rs1: X)
   syntax = format("fcvt.d.l %s, %s", rd.syntax, rs1.syntax)
   image  = format("1101001%5s%5s%3s%5s1010011", "00010", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     rd = int_to_float(FLOAT64, rs1);
   }
 
-op fcvt_d_lu(rd: FR, rs1: X)
+op fcvt_d_lu(rd: F, rs1: X)
   syntax = format("fcvt.d.lu %s, %s", rd.syntax, rs1.syntax)
   image  = format("1101001%5s%5s%3s%5s1010011", "00011", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
@@ -61,14 +61,14 @@ op fcvt_d_lu(rd: FR, rs1: X)
     fcvt_d_l(rd, rs1).action;
   }
 
-op fmv_x_d(rd: X, rs1: FR)
+op fmv_x_d(rd: X, rs1: F)
   syntax = format("fmv.x.d %s, %s", rd.syntax, rs1.syntax)
   image  = format("1110001%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
   action = {
     rd = rs1<63..0>;
   }
 
-op fmv_d_x(rd: FR, rs1: X)
+op fmv_d_x(rd: F, rs1: X)
   syntax = format("fmv.d.x %s, %s", rd.syntax, rs1.syntax)
   image  = format("1111001%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
   action = {

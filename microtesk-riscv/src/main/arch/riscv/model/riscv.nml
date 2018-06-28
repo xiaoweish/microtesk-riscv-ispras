@@ -190,7 +190,7 @@ mode FPSavedCallee (i: card(4))
 mode FPArgumentsCaller (i: card(3))
   syntax = format("fa%d", i)
 
-mode FR (i: card(5)) = FPR[i]
+mode F (i: card(5)) = FPR[i]
   syntax = format("%s", if i >= 0 && i <= 7 then FPTemporariesCaller(coerce(card(4), i)).syntax
                         elif i >= 8 && i <= 9 then FPSavedCallee(coerce(card(4), i-8)).syntax
                         elif i >= 10 && i <= 17 then FPArgumentsCaller(coerce(card(3), i-10)).syntax

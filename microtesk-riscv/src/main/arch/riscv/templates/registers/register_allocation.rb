@@ -29,9 +29,9 @@ class RegisterAllocationTemplate < RISCVBaseTemplate
     # is not used in this sequence.
     sequence {
       # Randomly selects destination registers from free registers
-      add reg1=get_register, t0, t1
-      sub reg2=get_register, t2, t3
-      slt reg3=get_register, t4, t5
+      add reg1=x(_ FREE), t0, t1
+      sub reg2=x(_ FREE), t2, t3
+      slt reg3=x(_ FREE), t4, t5
       newline
 
       # Frees the previously reserved registers
@@ -41,9 +41,9 @@ class RegisterAllocationTemplate < RISCVBaseTemplate
 
       # Randomly selects destination registers from free registers including
       # those that were previously freed
-      And get_register, s0, s1
-      Or  get_register, s2, s3
-      Xor get_register, s4, s5
+      And x(_ FREE), s0, s1
+      Or  x(_ FREE), s2, s3
+      Xor x(_ FREE), s4, s5
       newline
     }.run 5
   end

@@ -166,11 +166,11 @@ class BranchGeneration2Template < RISCVBaseTemplate
             # Injected Code placed in delay slot
             iterate {
               # The code must not modify registers s0-s7
-              addi reg1=get_register, reg1, 1
-              ori  reg2=get_register, reg2, 2
-              addi reg3=get_register, reg3, 3
-              ori  reg4=get_register, reg4, 4
-              addi reg5=get_register, reg5, 5
+              addi reg1=x(_ FREE), reg1, 1
+              ori  reg2=x(_ FREE), reg2, 2
+              addi reg3=x(_ FREE), reg3, 3
+              ori  reg4=x(_ FREE), reg4, 4
+              addi reg5=x(_ FREE), reg5, 5
             }
           }
         }

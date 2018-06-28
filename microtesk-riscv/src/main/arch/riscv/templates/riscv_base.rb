@@ -323,18 +323,6 @@ label :pass
     trace_data_addr(begin_addr, end_addr)
   end
 
-  ##################################################################################################
-  # Utility method to specify a random register that is not used in the current test case.
-  ##################################################################################################
-
-  def get_register(attrs = {})
-    if nil == @free_register_allocator
-      @free_register_allocator = mode_allocator('FREE')
-    end
-
-    x(_ @free_register_allocator, attrs)
-  end
-
   ###################################################################################################
   # Utility method to remove the specified addressing mode from the list of used registers.
   ###################################################################################################

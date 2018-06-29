@@ -219,10 +219,10 @@ public class RiscVTest extends TemplateTest {
     setTestDirPath(testDirPath);
 
     setCommandLineOption(Option.TRACER_LOG);
-    setCommandLineOption(Option.OUTDIR, getTestDirPath());
-    setCommandLineOption(Option.CODE_EXT, EXT);
-    setCommandLineOption(Option.DATA_EXT, EXT);
-    setCommandLineOption(Option.REVID, RISCV_REV);
+    setCommandLineOption(Option.OUTPUT_DIR, getTestDirPath());
+    setCommandLineOption(Option.CODE_FILE_EXTENSION, EXT);
+    setCommandLineOption(Option.DATA_FILE_EXTENSION, EXT);
+    setCommandLineOption(Option.REV_ID, RISCV_REV);
     return super.run(file);
   }
 

@@ -45,7 +45,7 @@
 
 require_relative '../../riscv_base'
 
-class Amoswap_wTemplate < RISCVBaseTemplate
+class Amoswap_wTemplate < RiscVBaseTemplate
 
   def pre_rvtest
     RVTEST_RV64U()

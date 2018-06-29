@@ -22,7 +22,7 @@ require_relative '../riscv_base'
 # This test checks LW and SW instructions for different data alignment.
 # The test makes sure that the loaded value always equals the stored one.
 #
-class InstructionLdSdTemplate < RISCVBaseTemplate
+class InstructionLdSdTemplate < RiscVBaseTemplate
 
   def TEST_DATA
     data {

@@ -21,7 +21,7 @@ require_relative '../riscv_base'
 #
 # This small tests for RV32D instructions.
 #
-class InstructionRV32D < RISCVBaseTemplate
+class InstructionRV32D < RiscVBaseTemplate
 
   def run
     trace "Run RV32D instruction:"

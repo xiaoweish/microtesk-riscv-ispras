@@ -21,7 +21,7 @@ require_relative '../riscv_base'
 #
 # This test template demonstrates how to specify registers used by instructions.
 #
-class RegistersTemplate < RISCVBaseTemplate
+class RegistersTemplate < RiscVBaseTemplate
 
   def run
     # Registers can be specified by their names. For example:

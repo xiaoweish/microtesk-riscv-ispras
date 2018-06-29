@@ -24,7 +24,7 @@ require_relative 'riscv_base'
 # Whatever the order is the sequences are first executed from top to bottom and
 # then from bottom to top.
 #
-class NumericLabelsRandomTemplate < RISCVBaseTemplate
+class NumericLabelsRandomTemplate < RiscVBaseTemplate
 
   def run
     block(:permutator => 'random', :presimulation => false) {

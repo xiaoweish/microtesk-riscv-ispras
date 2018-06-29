@@ -45,7 +45,7 @@
 
 require_relative '../../riscv_base'
 
-class OriTemplate < RISCVBaseTemplate
+class OriTemplate < RiscVBaseTemplate
 
   def pre_rvtest
     RVTEST_RV64U()

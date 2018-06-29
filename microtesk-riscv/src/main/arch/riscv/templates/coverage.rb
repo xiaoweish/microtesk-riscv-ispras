@@ -22,7 +22,7 @@ require_relative 'riscv_base'
 # This test template demonstrates how to generate test cases based on
 # constraints extracted from instruction specifications.
 #
-class CoverageTemplate < RISCVBaseTemplate
+class CoverageTemplate < RiscVBaseTemplate
 
   def run
     # ADD instruction with biased operand values.

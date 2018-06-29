@@ -21,7 +21,7 @@ require_relative 'riscv_base'
 #
 # This test template demonstrates how to use instruction groups in test templates.
 #
-class GroupsTemplate < RISCVBaseTemplate
+class GroupsTemplate < RiscVBaseTemplate
 
   def run
     # Using groups defined in the specification

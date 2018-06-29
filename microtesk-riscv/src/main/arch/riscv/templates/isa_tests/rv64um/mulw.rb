@@ -44,7 +44,7 @@
 #
 require_relative '../../riscv_base'
 
-class MulwTemplate < RISCVBaseTemplate
+class MulwTemplate < RiscVBaseTemplate
 
   def pre_rvtest
     RVTEST_RV64U()

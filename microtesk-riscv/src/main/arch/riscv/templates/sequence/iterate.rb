@@ -22,7 +22,7 @@ require_relative '../riscv_base'
 # This test template demonstrates how to use the 'iterate' construct that produces instruction
 # sequences by iterating over elements it contains.
 #
-class IterateTemplate < RISCVBaseTemplate
+class IterateTemplate < RiscVBaseTemplate
 
   def run
     # The 'iterate' block produces a series of sequences by iterating over nested elements.

@@ -21,7 +21,7 @@ require_relative '../riscv_base'
 #
 # This test checks JALR (jump and link register) instruction.
 #
-class InstructionJalrTemplate < RISCVBaseTemplate
+class InstructionJalrTemplate < RiscVBaseTemplate
 
   def run
     addi s1, zero, 1

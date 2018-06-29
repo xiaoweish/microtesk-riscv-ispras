@@ -21,7 +21,7 @@ require_relative 'riscv_base'
 #
 # This test template demonstrates how to define weak symbols.
 #
-class WeakSymbolTemplate < RISCVBaseTemplate
+class WeakSymbolTemplate < RiscVBaseTemplate
 
   def run
     # Undefined symbol (address resolved as 0x0)

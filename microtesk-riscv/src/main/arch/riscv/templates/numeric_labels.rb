@@ -21,7 +21,7 @@ require_relative 'riscv_base'
 #
 # This test template demonstrates how to use numeric labels.
 #
-class NumericLabelsTemplate < RISCVBaseTemplate
+class NumericLabelsTemplate < RiscVBaseTemplate
 
   def run
     prepare t0, 0x0

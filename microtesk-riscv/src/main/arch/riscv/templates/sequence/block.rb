@@ -21,7 +21,7 @@ require_relative '../riscv_base'
 #
 # This test template demonstrates how to use instruction blocks.
 #
-class BlockTemplate < RISCVBaseTemplate
+class BlockTemplate < RiscVBaseTemplate
 
   def run
     # Adds nop to all test cases as a placeholder to return from an exception

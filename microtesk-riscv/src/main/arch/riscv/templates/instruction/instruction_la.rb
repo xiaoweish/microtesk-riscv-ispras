@@ -23,7 +23,7 @@ require_relative '../riscv_base'
 # The test makes sure that the loaded address is independent of the program counter and
 # is always the same for the same label.
 #
-class InstructionLaTemplate < RISCVBaseTemplate
+class InstructionLaTemplate < RiscVBaseTemplate
   COUNT = 20
 
   def TEST_DATA

@@ -25,7 +25,7 @@ require_relative 'riscv_base'
 # The test templates produces test cases based on a Cartesian product of
 # test data generated for individual registers.
 #
-class TestDataTemplate < RISCVBaseTemplate
+class TestDataTemplate < RiscVBaseTemplate
 
   def run
     # Test data for individual registers.

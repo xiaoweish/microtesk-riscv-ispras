@@ -21,7 +21,7 @@ require_relative 'riscv_base'
 #
 # This test template demonstrates how MicroTESK creates self-checking test programs.
 #
-class SelfChecksTemplate < RISCVBaseTemplate
+class SelfChecksTemplate < RiscVBaseTemplate
 
   def initialize
     super

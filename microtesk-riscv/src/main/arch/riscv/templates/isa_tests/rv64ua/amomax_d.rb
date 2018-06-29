@@ -45,7 +45,7 @@
 
 require_relative '../../riscv_base'
 
-class Amomax_dTemplate < RISCVBaseTemplate
+class Amomax_dTemplate < RiscVBaseTemplate
 
   def pre_rvtest
     RVTEST_RV64U()

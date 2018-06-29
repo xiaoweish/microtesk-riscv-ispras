@@ -21,7 +21,7 @@ require_relative '../riscv_base'
 #
 # This small tests for RV64I instructions.
 #
-class InstructionRV64I < RISCVBaseTemplate
+class InstructionRV64I < RiscVBaseTemplate
 
   def TEST_DATA
     data {

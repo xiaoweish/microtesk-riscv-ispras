@@ -25,7 +25,7 @@ require_relative '../riscv_base'
 # the remainder of division of two random numbers by using
 # the simple algorithm of repeated subtraction.
 #
-class IntDivideTemplate < RISCVBaseTemplate
+class IntDivideTemplate < RiscVBaseTemplate
 
   def run
     dividend = rand(0, 1023)

@@ -45,7 +45,7 @@
 
 require_relative '../../riscv_base'
 
-class Fence_iTemplate < RISCVBaseTemplate
+class Fence_iTemplate < RiscVBaseTemplate
 
   def pre_rvtest
     RVTEST_RV64U()

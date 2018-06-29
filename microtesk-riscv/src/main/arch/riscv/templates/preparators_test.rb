@@ -20,7 +20,7 @@ require_relative 'riscv_base'
 # Description:
 #
 #
-class PreparatorsTest < RISCVBaseTemplate
+class PreparatorsTest < RiscVBaseTemplate
 
   def run
     trace "Run preparators:"

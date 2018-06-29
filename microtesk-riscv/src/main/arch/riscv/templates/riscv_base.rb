@@ -20,7 +20,7 @@ require ENV['TEMPLATE']
 require_relative 'riscv_test'
 require_relative 'riscv_test_macros'
 
-class RISCVBaseTemplate < Template
+class RiscVBaseTemplate < Template
   include RiscvTest
   include RiscvTestMacros
 
@@ -336,4 +336,4 @@ label :pass
     free_allocated_mode mode
   end
 
-end # RISCVBaseTemplate
+end # RiscVBaseTemplate

@@ -25,7 +25,7 @@ require_relative '../riscv_base'
 # divisor of two 5-bit random numbers ([1..63]) by using the Euclidean
 # algorithm.
 #
-class EuclidTemplate < RISCVBaseTemplate
+class EuclidTemplate < RiscVBaseTemplate
 
   def run
     trace "Euclidean Algorithm (RISCV): Debug Output"

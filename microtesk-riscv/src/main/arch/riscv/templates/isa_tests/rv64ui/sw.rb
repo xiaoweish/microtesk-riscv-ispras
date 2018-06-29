@@ -45,7 +45,7 @@
 
 require_relative '../../riscv_base'
 
-class SwTemplate < RISCVBaseTemplate
+class SwTemplate < RiscVBaseTemplate
 
   def pre_rvtest
     RVTEST_RV64U()

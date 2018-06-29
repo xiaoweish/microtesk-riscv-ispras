@@ -45,7 +45,7 @@
 
 require_relative '../../riscv_base'
 
-class LrscTemplate < RISCVBaseTemplate
+class LrscTemplate < RiscVBaseTemplate
 
   LOG_ITERATIONS = 10
 

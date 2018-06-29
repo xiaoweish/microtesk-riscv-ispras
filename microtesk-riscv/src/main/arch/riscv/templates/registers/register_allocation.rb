@@ -22,7 +22,7 @@ require_relative '../riscv_base'
 # This test template demonstrates how to randomly allocate registers so
 # that they do not conflict with other registers used in the test case.
 #
-class RegisterAllocationTemplate < RISCVBaseTemplate
+class RegisterAllocationTemplate < RiscVBaseTemplate
 
   def run
     # Destination of all instructions is a random register that

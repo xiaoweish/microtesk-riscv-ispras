@@ -21,7 +21,7 @@ require_relative '../riscv_base'
 #
 # This test checks LI (load immediate) pseudo instruction.
 #
-class InstructionLiTemplate < RISCVBaseTemplate
+class InstructionLiTemplate < RiscVBaseTemplate
 
   def initialize
     super

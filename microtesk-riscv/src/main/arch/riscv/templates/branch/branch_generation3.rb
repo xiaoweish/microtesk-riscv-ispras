@@ -21,7 +21,7 @@ require_relative '../riscv_base'
 #
 # This test template demonstrates how to generate test cases with branch instructions.
 #
-class BranchGeneration3Template < RISCVBaseTemplate
+class BranchGeneration3Template < RiscVBaseTemplate
 
   def TEST_DATA
     data {

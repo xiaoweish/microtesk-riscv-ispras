@@ -39,7 +39,7 @@ require_relative '../riscv_base'
 #   until not swapped
 # end procedure
 #
-class BubbleSortByteTemplate < RISCVBaseTemplate
+class BubbleSortByteTemplate < RiscVBaseTemplate
 
   def TEST_DATA
     data {

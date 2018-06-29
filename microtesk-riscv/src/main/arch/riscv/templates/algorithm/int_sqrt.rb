@@ -24,7 +24,7 @@ require_relative '../riscv_base'
 # design under test. The described program calculates the integer square root
 # a positive integer.
 #
-class IntSqrtTemplate < RISCVBaseTemplate
+class IntSqrtTemplate < RiscVBaseTemplate
 
   def run
     addi s0, zero, rand(0, 1023)

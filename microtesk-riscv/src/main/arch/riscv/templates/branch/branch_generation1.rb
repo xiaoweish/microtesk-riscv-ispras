@@ -24,7 +24,7 @@ require_relative '../riscv_base'
 # a limitation: only one parameter is stored and loaded from the stream. Consequently,
 # the second parameter must be a register with a predefined value such as $zero.
 #
-class BranchGeneration1Template < RISCVBaseTemplate
+class BranchGeneration1Template < RiscVBaseTemplate
 
   def initialize
     super

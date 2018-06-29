@@ -22,7 +22,7 @@ require_relative 'riscv_base'
 # This test template demonstrates how to generate randomized test cases
 # by using biased values, intervals, arrays and distributions.
 #
-class RandomTemplate < RISCVBaseTemplate
+class RandomTemplate < RiscVBaseTemplate
 
   def run
     # Predefined probability distribution.

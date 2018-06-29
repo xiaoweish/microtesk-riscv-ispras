@@ -22,7 +22,7 @@ require_relative '../riscv_base'
 # This test template demonstrates how to use the 'sequence' construct that which describes
 # trivial instruction sequences.
 #
-class SequenceTemplate < RISCVBaseTemplate
+class SequenceTemplate < RiscVBaseTemplate
 
   def run
     # The 'sequence' block describes a trivial (plain) instruction sequence.

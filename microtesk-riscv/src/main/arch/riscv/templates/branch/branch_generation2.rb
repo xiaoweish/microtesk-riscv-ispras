@@ -21,7 +21,7 @@ require_relative '../riscv_base'
 #
 # This test template demonstrates how to generate test cases with branch instructions.
 #
-class BranchGeneration2Template < RISCVBaseTemplate
+class BranchGeneration2Template < RiscVBaseTemplate
 
   def initialize
     super

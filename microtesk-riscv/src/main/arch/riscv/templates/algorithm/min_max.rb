@@ -23,7 +23,7 @@ require_relative '../riscv_base'
 # The generated program finds minimum and maximum in a 5-element array
 # storing random numbers from 0 to 31.
 #
-class MinMaxTemplate < RISCVBaseTemplate
+class MinMaxTemplate < RiscVBaseTemplate
 
   def TEST_DATA
     data {

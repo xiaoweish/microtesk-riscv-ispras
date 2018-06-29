@@ -22,7 +22,7 @@ require_relative '../riscv_base'
 # This test template demonstrates how to generate instruction sequences
 # by using combinators and compositors.
 #
-class ArithmeticTemplate < RISCVBaseTemplate
+class ArithmeticTemplate < RiscVBaseTemplate
 
   def run
     # :combinator => 'product': all possible combinations of the inner blocks' instructions.

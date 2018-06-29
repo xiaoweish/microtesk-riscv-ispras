@@ -45,7 +45,7 @@
 
 require_relative '../../riscv_base'
 
-class MulTemplate < RISCVBaseTemplate
+class MulTemplate < RiscVBaseTemplate
 
   def pre_rvtest
     RVTEST_RV32U()

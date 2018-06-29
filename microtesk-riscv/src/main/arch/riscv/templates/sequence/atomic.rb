@@ -22,7 +22,7 @@ require_relative '../riscv_base'
 # This test template demonstrates how to use the 'atomic' construct that which describes
 # atomic instruction sequences.
 #
-class AtomicTemplate < RISCVBaseTemplate
+class AtomicTemplate < RiscVBaseTemplate
 
   def initialize
     super

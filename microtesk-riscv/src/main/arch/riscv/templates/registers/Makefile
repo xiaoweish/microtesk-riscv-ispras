@@ -1,4 +1,5 @@
-TESTS = register_allocation
+TESTS = registers\
+        register_allocation
 
 all: $(TESTS)
 

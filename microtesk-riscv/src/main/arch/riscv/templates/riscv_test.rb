@@ -218,7 +218,11 @@ label 1
     ori TESTNUM(), TESTNUM(), 1337
 
 label :write_tohost
-    sw_global TESTNUM(), :tohost, t5
+# TODO: Temporary commented out because it causes the "HTIF tohost must be 8 bytes" error in QEMU.
+#    sw_global TESTNUM(), :tohost, t5
+# TODO: remove the nops when the above line is fixed.
+    nop
+    nop
     j :write_tohost
 
 label :reset_vector
@@ -304,19 +308,20 @@ label 1
   def RVTEST_DATA_BEGIN
     EXTRA_DATA()
 
-    # .pushsection .tohost,"aw",@progbits
-    section(:name => '.tohost') {
-      data {
-        align 6
-global_label :tohost
-        dword 0
-
-        align 6
-global_label :fromhost
-        dword 0
-      }
-    }
-    # .popsection
+# TODO: Temporary commented out because it causes the "HTIF tohost must be 8 bytes" error in QEMU.
+#     # .pushsection .tohost,"aw",@progbits
+#     section(:name => '.tohost') {
+#       data {
+#         align 6
+# global_label :tohost
+#         dword 0
+#
+#         align 6
+# global_label :fromhost
+#         dword 0
+#       }
+#     }
+#     # .popsection
 
     data {
       align 4

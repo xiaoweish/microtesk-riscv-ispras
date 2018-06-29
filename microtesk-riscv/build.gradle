@@ -433,7 +433,7 @@ task generateRiscvTemplates(type: JavaExec) {
     '-gt',
     'riscv',
     '-btn',
-    'RISCVBaseTemplate',
+    'RiscVBaseTemplate',
     '-btp',
     '../riscv_base',
     '-ii',

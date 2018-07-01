@@ -25,7 +25,7 @@ public class InstructionLwSwTestCase extends RiscVTest {
   @Test
   public void test() {
     setCommandLineOption(Option.VERBOSE);
-    setCommandLineOption(Option.DEBUG);
+    setCommandLineOption(Option.DEBUG_PRINT);
 
     final Statistics statistics = run("instruction/instruction_lw_sw.rb");
     Assert.assertNotNull(statistics);

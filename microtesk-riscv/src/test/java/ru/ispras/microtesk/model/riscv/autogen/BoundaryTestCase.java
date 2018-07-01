@@ -25,7 +25,7 @@ public final class BoundaryTestCase extends RiscVTest {
   @Test
   public void test() {
     setCommandLineOption(Option.VERBOSE);
-    setCommandLineOption(Option.DEBUG);
+    setCommandLineOption(Option.DEBUG_PRINT);
 
     final Statistics statistics = run("autogen/boundary_autogentemplate.rb");
     Assert.assertNotNull(statistics);

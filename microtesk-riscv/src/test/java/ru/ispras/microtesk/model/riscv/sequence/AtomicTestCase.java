@@ -28,6 +28,6 @@ public class AtomicTestCase extends RiscVTest {
 
     Assert.assertEquals(1, statistics.getPrograms());
     Assert.assertEquals(3, statistics.getSequences());
-    Assert.assertEquals(114, statistics.getInstructions());
+    Assert.assertEquals(115, statistics.getInstructions());
   }
 }

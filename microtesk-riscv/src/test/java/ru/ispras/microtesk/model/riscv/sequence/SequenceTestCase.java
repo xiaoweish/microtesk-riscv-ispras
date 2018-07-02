@@ -28,6 +28,6 @@ public class SequenceTestCase extends RiscVTest {
 
     Assert.assertEquals(1, statistics.getPrograms());
     Assert.assertEquals(7, statistics.getSequences());
-    Assert.assertEquals(188, statistics.getInstructions());
+    Assert.assertEquals(189, statistics.getInstructions());
   }
 }

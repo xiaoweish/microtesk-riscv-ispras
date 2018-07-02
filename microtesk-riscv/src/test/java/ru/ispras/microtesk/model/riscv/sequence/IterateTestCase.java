@@ -28,6 +28,6 @@ public class IterateTestCase extends RiscVTest {
 
     Assert.assertEquals(1, statistics.getPrograms());
     Assert.assertEquals(24, statistics.getSequences());
-    Assert.assertEquals(140, statistics.getInstructions());
+    Assert.assertEquals(144, statistics.getInstructions());
   }
 }

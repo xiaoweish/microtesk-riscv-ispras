@@ -24,11 +24,4 @@ $(SELFCHECK_TESTS):
 	sh run-toolchain.sh $@
 
 clean:
-	rm $(MICROTESK_HOME)/*.s \
-	   $(MICROTESK_HOME)/*.ld \
-	   $(MICROTESK_HOME)/*.dump \
-	   $(MICROTESK_HOME)/*.o \
-	   $(MICROTESK_HOME)/*.bin \
-	   $(MICROTESK_HOME)/*.elf \
-	   $(MICROTESK_HOME)/*.stdout \
-	   $(MICROTESK_HOME)/*.stderr -f
+	sh run-clean.sh ""

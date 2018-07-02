@@ -5,7 +5,15 @@ TESTS = coverage\
 
 SELFCHECK_TESTS = selfchecks
 
-all: $(TESTS) $(SELFCHECK_TESTS)
+all:\
+	$(TESTS) \
+	$(SELFCHECK_TESTS)
+	make -C algorithm
+	make -C autogen
+	make -C branch
+	make -C instruction
+	make -C registers
+	make -C sequence
 
 $(TESTS):
 	sh run.sh $@

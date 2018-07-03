@@ -27,7 +27,7 @@ require_relative '../riscv_base'
 # instructions are automatically reserved after the first use for write until the last use.
 # Reserved registers cannot be selected by the register allocator engine as output registers.
 #
-class RegisterReservationTemplate < RiscVBaseTemplate
+class RegisterReservationAutoTemplate < RiscVBaseTemplate
 
   def initialize
     super

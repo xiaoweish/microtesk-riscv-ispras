@@ -16,13 +16,17 @@ package ru.ispras.microtesk.model.riscv.registers;
 
 import org.junit.Assert;
 import org.junit.Test;
+
 import ru.ispras.microtesk.model.riscv.RiscVTest;
+import ru.ispras.microtesk.options.Option;
 import ru.ispras.microtesk.test.Statistics;
 
-public class RegisterReservationTestCase extends RiscVTest {
+public class RegisterReservationAutoTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("registers/register_reservation.rb");
+    setCommandLineOption(Option.VERBOSE);
+
+    final Statistics statistics = run("registers/register_reservation_auto.rb");
     Assert.assertNotNull(statistics);
   }
 }

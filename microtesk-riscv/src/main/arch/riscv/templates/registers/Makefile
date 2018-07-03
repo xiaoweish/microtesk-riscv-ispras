@@ -1,6 +1,7 @@
 TESTS = registers\
         register_allocation\
-        register_reservation
+        register_reservation_auto\
+        register_reservation_manual
 
 all: $(TESTS)
 

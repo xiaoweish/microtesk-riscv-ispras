@@ -87,4 +87,14 @@ module RiscvRand
   end
 
   def rand_biased; rand(rand_biased_dist) end
+
+  # Picks a random instruction or instruction sequence from the provided instruction block.
+  def pick_random(&contents)
+    block(:combinator => 'random') {
+      iterate {
+        self.instance_eval &contents
+      }
+    }
+  end
+
 end

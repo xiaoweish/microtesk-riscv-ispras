@@ -156,8 +156,7 @@ class RiscVBaseTemplate < Template
     ################################################################################################
 
     # The code below specifies a comparator sequence to be used in self-checking tests
-    # to test values in the specified register (target) accessed via the REG
-    # addressing mode.
+    # to test values in the specified register (target) accessed via the X addressing mode.
     #
     # Comparators are described using the same syntax as in preparators and can be
     # overridden in the same way.

@@ -19,7 +19,7 @@ require_relative '../riscv_rand'
 module TortureData
   include RiscvRand
 
-  def TORTURE_DATA(memory_size)
+  def TORTURE_DATA(memsize)
     data { label :hidden_data }
 
     REGISTER_DATA(:xreg_init_data, 'reg_x%d_init') { dword rand_biased }
@@ -29,7 +29,7 @@ module TortureData
 
     REGISTER_DATA(:xreg_output_data, 'reg_x%d_output') { dword rand_dword }
     REGISTER_DATA(:freg_output_data, 'reg_f%d_output') { dword rand_dword }
-    MEMORY_DATA(memory_size)
+    MEMORY_DATA(memsize)
 
     RVTEST_DATA_END()
   end

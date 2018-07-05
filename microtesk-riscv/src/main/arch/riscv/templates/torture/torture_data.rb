@@ -14,64 +14,52 @@
 # limitations under the License.
 #
 
-require_relative '../riscv_base'
 require_relative '../riscv_rand'
 
-#
-# Description:
-#
-#
 module TortureData
   include RiscvRand
 
-  def pre_testdata
-    data {
-label :hidden_data
-      align 8
-label :xreg_init_data
-      (0..31).each { |i|
-label :"reg_x#{i}_init"
-      dword rand_biased
-      }
-    }
+  def TORTURE_DATA(memory_size)
+    data { label :hidden_data }
 
-    data {
-      align 8
-label :freg_init_data
-      (0..31).each { |i|
-label :"reg_f#{i}_init"
-      dword rand_biased
-      }
-    }
+    REGISTER_DATA(:xreg_init_data, 'reg_x%d_init') { dword rand_biased }
+    REGISTER_DATA(:freg_init_data, 'reg_f%d_init') { dword rand_biased }
 
     RVTEST_DATA_BEGIN()
 
+    REGISTER_DATA(:xreg_output_data, 'reg_x%d_output') { dword rand_dword }
+    REGISTER_DATA(:freg_output_data, 'reg_f%d_output') { dword rand_dword }
+    MEMORY_DATA(memory_size)
+
+    RVTEST_DATA_END()
+  end
+
+  private
+
+  def REGISTER_DATA(head_label, item_label_frmt, &data_item)
     data {
       align 8
-label :xreg_output_data
+label head_label
       (0..31).each { |i|
-label :"reg_x#{i}_output"
-      dword rand_dword
+label :"#{item_label_frmt % i}"
+      self.instance_eval &data_item
       }
     }
+  end
 
-    data {
-      align 8
-label :freg_output_data
-      (0..31).each { |i|
-label :"reg_f#{i}_output"
-      dword rand_dword
-      }
-    }
-
+  def MEMORY_DATA(size)
     data {
       comment 'Memory Blocks'
       align 8
 label :test_memory
-      50.times { |i| dword rand_dword, rand_dword }
+      if size % 16 == 0 then
+        (size/8/2).times { dword rand_dword, rand_dword }
+      elsif size % 8 == 0 then
+        (size/8).times { dword rand_dword }
+      else
+        (size/4).times { word rand_word }
+      end
     }
-
-    RVTEST_DATA_END()
   end
 
 end

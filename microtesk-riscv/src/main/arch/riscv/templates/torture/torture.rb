@@ -21,6 +21,8 @@ require_relative 'seq_alu'
 require_relative 'seq_fpu'
 require_relative 'seq_fdiv'
 
+require_relative 'torture_data'
+
 #
 # Description:
 #
@@ -31,6 +33,15 @@ class TortureTemplate < RiscVBaseTemplate
   include SeqAlu
   include SeqFpu
   include SeqFdiv
+
+  include TortureData
+
+  # Configuration settings
+  NSEQS = 100
+  MEMSIZE = 1024
+
+  USE_MUL = true
+  USE_DIV = true
 
   def initialize
     super
@@ -43,16 +54,20 @@ class TortureTemplate < RiscVBaseTemplate
     RVTEST_CODE_BEGIN()
   end
 
+  def pre_testdata
+    TORTURE_DATA(MEMSIZE)
+  end
+
   def run
     block(:combinator => 'diagonal',
           :compositor => 'catenation',
           :permutator => 'random') {
       seq_dist = dist(
-        range(:value => lambda do seq_alu end,  :bias => 50),
-        range(:value => lambda do seq_fpu end,  :bias => 35),
+        range(:value => lambda do seq_alu(USE_MUL, USE_DIV) end, :bias => 50),
+        range(:value => lambda do seq_fpu end, :bias => 35),
         range(:value => lambda do seq_fdiv end, :bias => 15))
 
-      100.times { seq_dist.next_value.call }
+      NSEQS.times { seq_dist.next_value.call }
     }.run
   end
 

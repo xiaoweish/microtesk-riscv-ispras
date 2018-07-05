@@ -16,9 +16,7 @@
 
 module SeqAlu
 
-  def seq_alu
-    use_mul = true
-    use_div = true
+  def seq_alu(use_mul, use_div)
 
     pick_random {
       seq_immfn('LUI', rand_bigimm)

@@ -899,7 +899,11 @@ pseudo op jr(rs: X)
     jalr(X(0), rs, 0).action;
   }
 
-// BEQZ: Branch if = zero (beq rs, x0, offset). Format: beqz rs, offset
+/*
+   BEQZ: Branch if = zero (beq rs, x0, offset).
+
+   Format: beqz rs, offset
+*/
 pseudo op beqz(rs: X, offset: BRANCH_OFFSET)
   syntax = format("beqz %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", beq(rs, X(0), offset).image)
@@ -907,7 +911,11 @@ pseudo op beqz(rs: X, offset: BRANCH_OFFSET)
     beq(rs, X(0), offset).action;
   }
 
-// BNEZ: Branch if != zero (bne rs, x0, offset). Format: bnez rs, offset
+/*
+   BNEZ: Branch if != zero (bne rs, x0, offset).
+
+   Format: bnez rs, offset
+*/
 pseudo op bnez(rs: X, offset: BRANCH_OFFSET)
   syntax = format("bnez %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", bne(rs, X(0), offset).image)
@@ -915,7 +923,11 @@ pseudo op bnez(rs: X, offset: BRANCH_OFFSET)
     bne(rs, X(0), offset).action;
   }
 
-// BLEZ: Branch if <= zero (bge x0, rs, offset). Format: blez rs, offset
+/*
+   BLEZ: Branch if <= zero (bge x0, rs, offset).
+
+   Format: blez rs, offset
+*/
 pseudo op blez(rs: X, offset: BRANCH_OFFSET)
   syntax = format("blez %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", bge(X(0), rs, offset).image)
@@ -923,7 +935,11 @@ pseudo op blez(rs: X, offset: BRANCH_OFFSET)
     bge(X(0), rs, offset).action;
   }
 
-// BGEZ: Branch if >= zero (bge rs, x0, offset). Format: bgez rs, offset
+/*
+   BGEZ: Branch if >= zero (bge rs, x0, offset).
+
+   Format: bgez rs, offset
+*/
 pseudo op bgez(rs: X, offset: BRANCH_OFFSET)
   syntax = format("bgez %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", bge(rs, X(0), offset).image)
@@ -931,7 +947,11 @@ pseudo op bgez(rs: X, offset: BRANCH_OFFSET)
     bge(rs, X(0), offset).action;
   }
 
-// BLTZ: Branch if < zero (blt rs, x0, offset). Format: bltz rs, offset
+/*
+   BLTZ: Branch if < zero (blt rs, x0, offset).
+
+   Format: bltz rs, offset
+*/
 pseudo op bltz(rs: X, offset: BRANCH_OFFSET)
   syntax = format("bltz %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", blt(rs, X(0), offset).image)
@@ -939,7 +959,11 @@ pseudo op bltz(rs: X, offset: BRANCH_OFFSET)
     blt(rs, X(0), offset).action;
   }
 
-// BGTZ: Branch if > zero (blt x0, rs, offset). Format: bgtz rs, offset
+/*
+   BGTZ: Branch if > zero (blt x0, rs, offset).
+
+   Format: bgtz rs, offset
+*/
 pseudo op bgtz(rs: X, offset: BRANCH_OFFSET)
   syntax = format("bgtz %s, %s", rs.syntax, offset.syntax)
   image  = format("%s", blt(X(0), rs, offset).image)

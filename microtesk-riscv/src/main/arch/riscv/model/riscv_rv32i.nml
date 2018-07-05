@@ -900,9 +900,9 @@ pseudo op jr(rs: X)
   }
 
 /*
-   BEQZ: Branch if = zero (beq rs, x0, offset).
+  BEQZ: Branch if = zero (beq rs, x0, offset).
 
-   Format: beqz rs, offset
+  Format: beqz rs, offset
 */
 pseudo op beqz(rs: X, offset: BRANCH_OFFSET)
   syntax = format("beqz %s, %s", rs.syntax, offset.syntax)
@@ -912,9 +912,9 @@ pseudo op beqz(rs: X, offset: BRANCH_OFFSET)
   }
 
 /*
-   BNEZ: Branch if != zero (bne rs, x0, offset).
+  BNEZ: Branch if != zero (bne rs, x0, offset).
 
-   Format: bnez rs, offset
+  Format: bnez rs, offset
 */
 pseudo op bnez(rs: X, offset: BRANCH_OFFSET)
   syntax = format("bnez %s, %s", rs.syntax, offset.syntax)
@@ -924,9 +924,9 @@ pseudo op bnez(rs: X, offset: BRANCH_OFFSET)
   }
 
 /*
-   BLEZ: Branch if <= zero (bge x0, rs, offset).
+  BLEZ: Branch if <= zero (bge x0, rs, offset).
 
-   Format: blez rs, offset
+  Format: blez rs, offset
 */
 pseudo op blez(rs: X, offset: BRANCH_OFFSET)
   syntax = format("blez %s, %s", rs.syntax, offset.syntax)
@@ -936,9 +936,9 @@ pseudo op blez(rs: X, offset: BRANCH_OFFSET)
   }
 
 /*
-   BGEZ: Branch if >= zero (bge rs, x0, offset).
+  BGEZ: Branch if >= zero (bge rs, x0, offset).
 
-   Format: bgez rs, offset
+  Format: bgez rs, offset
 */
 pseudo op bgez(rs: X, offset: BRANCH_OFFSET)
   syntax = format("bgez %s, %s", rs.syntax, offset.syntax)
@@ -948,9 +948,9 @@ pseudo op bgez(rs: X, offset: BRANCH_OFFSET)
   }
 
 /*
-   BLTZ: Branch if < zero (blt rs, x0, offset).
+  BLTZ: Branch if < zero (blt rs, x0, offset).
 
-   Format: bltz rs, offset
+  Format: bltz rs, offset
 */
 pseudo op bltz(rs: X, offset: BRANCH_OFFSET)
   syntax = format("bltz %s, %s", rs.syntax, offset.syntax)
@@ -960,9 +960,9 @@ pseudo op bltz(rs: X, offset: BRANCH_OFFSET)
   }
 
 /*
-   BGTZ: Branch if > zero (blt x0, rs, offset).
+  BGTZ: Branch if > zero (blt x0, rs, offset).
 
-   Format: bgtz rs, offset
+  Format: bgtz rs, offset
 */
 pseudo op bgtz(rs: X, offset: BRANCH_OFFSET)
   syntax = format("bgtz %s, %s", rs.syntax, offset.syntax)

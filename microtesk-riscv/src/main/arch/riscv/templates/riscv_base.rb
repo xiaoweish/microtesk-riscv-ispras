@@ -42,7 +42,7 @@ class RiscVBaseTemplate < Template
     set_option_value 'separator-token', "="
 
     # Changes the name of the .text section to .text.init
-    set_option_value 'text-section-keyword', '.section .text.init'
+    set_option_value 'text-section-keyword', '.text.init'
 
     # Defines alias methods for X registers
     (0..31).each do |i|
@@ -83,7 +83,7 @@ class RiscVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section_text(:pa => 0x8000_0000, :va => 0x8000_0000) {}
+    section_text(:prefix => '.section', :pa => 0x8000_0000, :va => 0x8000_0000) {}
 
     #
     # Defines .tohost section.
@@ -91,8 +91,8 @@ class RiscVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section(:name => '.section .tohost', :pa => 0x8002_0000, :va => 0x8002_0000,
-            :args =>'"aw",@progbits') {}
+    section(:name => '.tohost', :prefix => '.section',
+            :pa => 0x8002_0000, :va => 0x8002_0000, :args =>'"aw",@progbits') {}
 
     #
     # Defines .text section.

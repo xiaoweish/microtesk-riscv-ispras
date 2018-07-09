@@ -49,6 +49,9 @@ module SeqMem
         seq_amo_addrfn('AMOMAX_D',  rand_addr_d(memsize))
         seq_amo_addrfn('AMOMAXU_D', rand_addr_d(memsize))
       end
+
+      seq_stld_overlap(memsize)
+      seq_stld_overlap(memsize)
     }
   end
 
@@ -88,6 +91,69 @@ module SeqMem
     sequence {
       lla reg_addr, :test_memory, addr
       instr op, reg_dest, reg_src, reg_addr
+    }
+  end
+
+  def seq_stld_overlap(memsize)
+    l_reg_addr = x(_) # reg_write_hidden(xregs)
+    s_reg_addr = x(_) # reg_write_hidden(xregs)
+    s_reg_src  = x(_) # reg_read_visible(xregs)
+    l_reg_dest = x(_) # reg_write_visible(xregs)
+
+    dw_addr = rand_addr_d(memsize)
+    s_imm = rand_imm()
+    l_imm = rand_imm()
+
+    block(:combinator => 'random', :permutator => 'random', :compositor => 'rotation') {
+      iterate {
+        sequence {
+          lla l_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_b(8)), l_imm)
+          lb l_reg_dest, l_reg_addr, l_imm
+        }
+        sequence {
+          lla l_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_b(8)), l_imm)
+          lbu l_reg_dest, l_reg_addr, l_imm
+        }
+        sequence {
+          lla l_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_h(8)), l_imm)
+          lh l_reg_dest, l_reg_addr, l_imm
+        }
+        sequence {
+          lla l_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_h(8)), l_imm)
+          lhu l_reg_dest, l_reg_addr, l_imm
+        }
+        sequence {
+          lla l_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_w(8)), l_imm)
+          lw l_reg_dest, l_reg_addr, l_imm
+        }
+        sequence {
+          lla l_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_w(8)), l_imm)
+          lwu l_reg_dest, l_reg_addr, l_imm
+        }
+        sequence {
+          lla l_reg_addr, :test_memory, _SUB(dw_addr, l_imm)
+          ld l_reg_dest, l_reg_addr, l_imm
+        }
+      }
+
+      iterate {
+        sequence {
+          lla s_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_b(8)), s_imm)
+          sb s_reg_src, s_reg_addr, s_imm
+        }
+        sequence {
+          lla s_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_h(8)), s_imm)
+          sh s_reg_src, s_reg_addr, s_imm
+        }
+        sequence {
+          lla s_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_w(8)), s_imm)
+          sw s_reg_src, s_reg_addr, s_imm
+        }
+        sequence {
+          lla s_reg_addr, :test_memory, _SUB(dw_addr, s_imm)
+          sd s_reg_src, s_reg_addr, s_imm
+        }
+      }
     }
   end
 

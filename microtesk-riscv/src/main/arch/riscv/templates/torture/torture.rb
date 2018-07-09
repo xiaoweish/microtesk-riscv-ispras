@@ -20,6 +20,7 @@ require_relative '../riscv_rand'
 require_relative 'seq_alu'
 require_relative 'seq_fpu'
 require_relative 'seq_fdiv'
+require_relative 'seq_mem'
 
 require_relative 'torture_data'
 
@@ -33,6 +34,7 @@ class TortureTemplate < RiscVBaseTemplate
   include SeqAlu
   include SeqFpu
   include SeqFdiv
+  include SeqMem
 
   include TortureData
 
@@ -40,6 +42,7 @@ class TortureTemplate < RiscVBaseTemplate
   NSEQS = 100
   MEMSIZE = 1024
 
+  USE_AMO = true
   USE_MUL = true
   USE_DIV = true
 
@@ -47,6 +50,7 @@ class TortureTemplate < RiscVBaseTemplate
     super
 
     set_option_value 'reserve-dependencies', true
+    #set_option_value 'default-test-data', false
   end
 
   def pre_rvtest
@@ -59,13 +63,24 @@ class TortureTemplate < RiscVBaseTemplate
   end
 
   def run
+    # Registers must be selected at random (taking into account existing reservations)
+    set_default_allocator RANDOM
+
     block(:combinator => 'diagonal',
-          :compositor => 'catenation',
+          :compositor => 'random',
           :permutator => 'random') {
+      prologue {
+        # This register must be excluded as it is used as temp
+        # by preparators and comparators.
+        set_reserved ra, true
+      }
+
       seq_dist = dist(
-        range(:value => lambda do seq_alu(USE_MUL, USE_DIV) end, :bias => 50),
-        range(:value => lambda do seq_fpu end, :bias => 35),
-        range(:value => lambda do seq_fdiv end, :bias => 15))
+        range(:bias => 20, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
+        range(:bias => 20, :value => lambda do seq_fpu end),
+        range(:bias => 20, :value => lambda do seq_fdiv end),
+        range(:bias => 40, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end)
+        )
 
       NSEQS.times { seq_dist.next_value.call }
     }.run

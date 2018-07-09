@@ -53,10 +53,10 @@ module RiscvRand
   def rand_imm;    rand_range(-2048, 2047) end
   def rand_bigimm; rand_range(0, 1048575) end
 
-  def rand_addr_b(memsize); rand_range(0, memsize-1) end
-  def rand_addr_h(memsize); rand_range(0, memsize-1) & ~1 end
-  def rand_addr_w(memsize); rand_range(0, memsize-1) & ~3 end
-  def rand_addr_d(memsize); rand_range(0, memsize-1) & ~7 end
+  def rand_addr_b(memsize);      rand_range(0, memsize-1) end
+  def rand_addr_h(memsize); _AND(rand_range(0, memsize-1), ~1) end
+  def rand_addr_w(memsize); _AND(rand_range(0, memsize-1), ~3) end
+  def rand_addr_d(memsize); _AND(rand_range(0, memsize-1), ~7) end
 
   def rand_biased_dist
     dist(

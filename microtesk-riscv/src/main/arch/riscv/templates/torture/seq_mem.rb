@@ -63,8 +63,10 @@ module SeqMem
     reg_dest = x(_) # reg_write_visible(xregs)
     imm = rand_imm()
 
-    lla_minus reg_addr, :test_memory, addr, imm
-    instr op, reg_dest, reg_addr, imm
+    sequence {
+      lla reg_addr, :test_memory, _SUB(addr, imm)
+      instr op, reg_dest, reg_addr, imm
+    }
   end
 
   def seq_store_addrfn(op, addr)
@@ -72,8 +74,10 @@ module SeqMem
     reg_src = x(_) # reg_read_visible(xregs)
     imm = rand_imm()
 
-    lla_minus reg_addr, :test_memory, addr, imm
-    instr op, reg_src, reg_addr, imm
+    sequence {
+      lla reg_addr, :test_memory, _SUB(addr, imm)
+      instr op, reg_src, reg_addr, imm
+    }
   end
 
   def seq_amo_addrfn(op, addr)
@@ -81,8 +85,10 @@ module SeqMem
     reg_dest = x(_) # reg_write_visible(xregs)
     reg_src = x(_) # reg_read_visible(xregs)
 
-    lla reg_addr, :test_memory, addr
-    instr op, reg_dest, reg_src, reg_addr
+    sequence {
+      lla reg_addr, :test_memory, addr
+      instr op, reg_dest, reg_src, reg_addr
+    }
   end
 
 end

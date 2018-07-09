@@ -116,7 +116,7 @@ class RiscVBaseTemplate < Template
     # The code below specifies an instruction sequence that writes a value
     # to the specified register (target) via the X addressing mode.
     #
-    # Default preparator: It is used when no special case previded below
+    # Default preparator: It is used when no special case provided below
     # is applicable.
     #
     preparator(:target => 'X') {
@@ -144,11 +144,11 @@ class RiscVBaseTemplate < Template
     preparator(:target => 'F') {
       #TODO: t5
       if is_rev('RV64F') then
-        prepare t5, value(0, 63)
-        fcvt_s_l target, t5
+        prepare ra, value(0, 63)
+        fcvt_s_l target, ra
       else
-        prepare t5, value(0, 31)
-        fcvt_s_w target, t5
+        prepare ra, value(0, 31)
+        fcvt_s_w target, ra
       end
     }
 

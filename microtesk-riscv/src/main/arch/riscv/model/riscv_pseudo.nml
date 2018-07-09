@@ -21,7 +21,6 @@
 // Pseudo instructions
 //==================================================================================================
 
-/**/
 var jump_imm32[card(32)]
 
 label mode PSEUDO_LABEL(target: XWORD, current: XWORD) = target<31..0> - current<31..0>
@@ -40,7 +39,12 @@ mode PSEUDO_IMM(imm: card(32)) = imm
 
 mode PSEUDO_OFFSET = PSEUDO_LABEL | PSEUDO_IMM
 
-// Load address
+
+/*
+  LA: Load address
+
+  Format: la rd, symbol
+*/
 @rev(RV32I)
 pseudo op la(rd: X, symbol: PSEUDO_OFFSET)
   init   = { symbol.init; }
@@ -59,7 +63,11 @@ pseudo op la(rd: X, symbol: PSEUDO_OFFSET)
     instruction(addi(rd, rd, symbol<11..0>)).action;
   }
 
-// Load label address
+/*
+  LLA: Load label address
+
+  Format: lla rd, symbol + imm
+*/
 @rev(RV32I)
 pseudo op lla(rd: X, symbol: PSEUDO_OFFSET, imm: int(32))
   init   = { symbol.init; }

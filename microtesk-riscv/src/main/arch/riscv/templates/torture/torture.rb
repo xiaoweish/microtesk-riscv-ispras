@@ -70,9 +70,13 @@ class TortureTemplate < RiscVBaseTemplate
           :compositor => 'random',
           :permutator => 'random') {
       prologue {
-        # This register must be excluded as it is used as temp
-        # by preparators and comparators.
+        # This register must be excluded as it is used as temp by preparators and comparators.
         set_reserved ra, true
+
+        j :test_start
+label :crash_backward
+        j :fail
+label :test_start
       }
 
       seq_dist = dist(
@@ -83,6 +87,13 @@ class TortureTemplate < RiscVBaseTemplate
         )
 
       NSEQS.times { seq_dist.next_value.call }
+
+      epilogue {
+        j :test_end
+label :crash_forward
+        j :fail
+label :test_end
+      }
     }.run
   end
 

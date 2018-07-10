@@ -43,7 +43,7 @@ class TortureTemplate < RiscVBaseTemplate
   include TortureData
 
   # Configuration settings
-  NSEQS = 100
+  NSEQS = 200
   MEMSIZE = 1024
 
   USE_AMO = true
@@ -84,12 +84,12 @@ label :test_start
       }
 
       seq_dist = dist(
-        range(:bias => 20, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
-        range(:bias => 15, :value => lambda do seq_fax end),
+        range(:bias => 30, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
+        range(:bias => 20, :value => lambda do seq_fax end),
         range(:bias => 15, :value => lambda do seq_fdiv end),
-        range(:bias => 15, :value => lambda do seq_fpmem(MEMSIZE) end),
-        range(:bias => 15, :value => lambda do seq_fpu end),
-        range(:bias => 20, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end)
+        range(:bias =>  5, :value => lambda do seq_fpmem(MEMSIZE) end),
+        range(:bias => 20, :value => lambda do seq_fpu end),
+        range(:bias => 10, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end)
         )
 
       NSEQS.times { seq_dist.next_value.call }

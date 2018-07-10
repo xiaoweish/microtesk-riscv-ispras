@@ -18,6 +18,7 @@ require_relative '../riscv_base'
 require_relative '../riscv_rand'
 
 require_relative 'seq_alu'
+require_relative 'seq_fax'
 require_relative 'seq_fpu'
 require_relative 'seq_fdiv'
 require_relative 'seq_mem'
@@ -32,6 +33,7 @@ class TortureTemplate < RiscVBaseTemplate
   include RiscvRand
 
   include SeqAlu
+  include SeqFax
   include SeqFpu
   include SeqFdiv
   include SeqMem
@@ -81,9 +83,10 @@ label :test_start
 
       seq_dist = dist(
         range(:bias => 20, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
+        range(:bias => 20, :value => lambda do seq_fax end),
         range(:bias => 20, :value => lambda do seq_fpu end),
         range(:bias => 20, :value => lambda do seq_fdiv end),
-        range(:bias => 40, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end)
+        range(:bias => 20, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end)
         )
 
       NSEQS.times { seq_dist.next_value.call }

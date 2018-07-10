@@ -56,7 +56,7 @@ class TortureTemplate < RiscVBaseTemplate
     super
 
     set_option_value 'reserve-dependencies', true
-    #set_option_value 'default-test-data', false
+    set_option_value 'default-test-data', false
   end
 
   def pre_rvtest
@@ -83,6 +83,7 @@ class TortureTemplate < RiscVBaseTemplate
 label :crash_backward
         j :fail
 label :test_start
+        LOAD_XREGS()
       }
 
       seq_dist = dist(

@@ -289,10 +289,8 @@ public class RiscVTest extends TemplateTest {
     /* Check whether toolchain has been installed. */
 
     if (TCHAIN_PATH == null || TCHAIN_PATH.isEmpty()) {
-      Logger.warning(
-          String.format(
-              "To compile test programs you should set '%s' environment variable to toolchain dir.",
-              RISCV_TCHAIN_PATH));
+      Assert.fail(
+          String.format("Can't find toolchain: '%s' env var points to null!", RISCV_TCHAIN_PATH));
       return;
     }
 
@@ -338,18 +336,18 @@ public class RiscVTest extends TemplateTest {
     /* If QEMU is installed, run the binary image on it. */
 
     if (QEMU_PATH == null || QEMU_PATH.isEmpty()) {
-      Logger.warning(
+      Assert.fail(
           String.format(
-              "To run aarch64 binaries"
-                  + " you should set '%s' environment variable"
-                  + " to dir with '%s' QEMU binary.", QEMU_VAR, QEMU_BIN));
+              "Can't find emulator: '%s' env var doesn't point to '%s' binary.",
+              QEMU_VAR,
+              QEMU_BIN));
       return;
     }
 
     final File qemu = new File(String.format("%s/%s", QEMU_PATH, QEMU_BIN));
     checkExecutable(qemu);
 
-    Logger.message("Start simulation on QEMU ...");
+    Logger.message("Start emulation ...");
     setPhase(TestPhase.EMULATION);
     final String qemuLog = insertExt(image.getAbsolutePath(), "-qemu.log");
 

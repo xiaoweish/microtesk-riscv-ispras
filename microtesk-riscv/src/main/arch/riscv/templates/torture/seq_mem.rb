@@ -18,40 +18,40 @@ module SeqMem
 
   def seq_mem(memsize, use_amo)
     pick_random {
-      seq_load_addrfn('LB',  rand_addr_b(memsize))
-      seq_load_addrfn('LBU', rand_addr_b(memsize))
-      seq_load_addrfn('LH',  rand_addr_h(memsize))
-      seq_load_addrfn('LHU', rand_addr_h(memsize))
-      seq_load_addrfn('LW',  rand_addr_w(memsize))
-      seq_load_addrfn('LWU', rand_addr_w(memsize))
-      seq_load_addrfn('LD',  rand_addr_d(memsize))
+      seq_mem_load_addrfn('LB',  rand_addr_b(memsize))
+      seq_mem_load_addrfn('LBU', rand_addr_b(memsize))
+      seq_mem_load_addrfn('LH',  rand_addr_h(memsize))
+      seq_mem_load_addrfn('LHU', rand_addr_h(memsize))
+      seq_mem_load_addrfn('LW',  rand_addr_w(memsize))
+      seq_mem_load_addrfn('LWU', rand_addr_w(memsize))
+      seq_mem_load_addrfn('LD',  rand_addr_d(memsize))
 
-      seq_store_addrfn('SB', rand_addr_b(memsize))
-      seq_store_addrfn('SH', rand_addr_h(memsize))
-      seq_store_addrfn('SW', rand_addr_w(memsize))
-      seq_store_addrfn('SD', rand_addr_d(memsize))
+      seq_mem_store_addrfn('SB', rand_addr_b(memsize))
+      seq_mem_store_addrfn('SH', rand_addr_h(memsize))
+      seq_mem_store_addrfn('SW', rand_addr_w(memsize))
+      seq_mem_store_addrfn('SD', rand_addr_d(memsize))
 
       if use_amo then
-        seq_amo_addrfn('AMOADD_W',  rand_addr_w(memsize))
-        seq_amo_addrfn('AMOSWAP_W', rand_addr_w(memsize))
-        seq_amo_addrfn('AMOAND_W',  rand_addr_w(memsize))
-        seq_amo_addrfn('AMOOR_W',   rand_addr_w(memsize))
-        seq_amo_addrfn('AMOMIN_W',  rand_addr_w(memsize))
-        seq_amo_addrfn('AMOMINU_W', rand_addr_w(memsize))
-        seq_amo_addrfn('AMOMAX_W',  rand_addr_w(memsize))
-        seq_amo_addrfn('AMOMAXU_W', rand_addr_w(memsize))
-        seq_amo_addrfn('AMOADD_D',  rand_addr_d(memsize))
-        seq_amo_addrfn('AMOSWAP_D', rand_addr_d(memsize))
-        seq_amo_addrfn('AMOAND_D',  rand_addr_d(memsize))
-        seq_amo_addrfn('AMOOR_D',   rand_addr_d(memsize))
-        seq_amo_addrfn('AMOMIN_D',  rand_addr_d(memsize))
-        seq_amo_addrfn('AMOMINU_D', rand_addr_d(memsize))
-        seq_amo_addrfn('AMOMAX_D',  rand_addr_d(memsize))
-        seq_amo_addrfn('AMOMAXU_D', rand_addr_d(memsize))
+        seq_mem_amo_addrfn('AMOADD_W',  rand_addr_w(memsize))
+        seq_mem_amo_addrfn('AMOSWAP_W', rand_addr_w(memsize))
+        seq_mem_amo_addrfn('AMOAND_W',  rand_addr_w(memsize))
+        seq_mem_amo_addrfn('AMOOR_W',   rand_addr_w(memsize))
+        seq_mem_amo_addrfn('AMOMIN_W',  rand_addr_w(memsize))
+        seq_mem_amo_addrfn('AMOMINU_W', rand_addr_w(memsize))
+        seq_mem_amo_addrfn('AMOMAX_W',  rand_addr_w(memsize))
+        seq_mem_amo_addrfn('AMOMAXU_W', rand_addr_w(memsize))
+        seq_mem_amo_addrfn('AMOADD_D',  rand_addr_d(memsize))
+        seq_mem_amo_addrfn('AMOSWAP_D', rand_addr_d(memsize))
+        seq_mem_amo_addrfn('AMOAND_D',  rand_addr_d(memsize))
+        seq_mem_amo_addrfn('AMOOR_D',   rand_addr_d(memsize))
+        seq_mem_amo_addrfn('AMOMIN_D',  rand_addr_d(memsize))
+        seq_mem_amo_addrfn('AMOMINU_D', rand_addr_d(memsize))
+        seq_mem_amo_addrfn('AMOMAX_D',  rand_addr_d(memsize))
+        seq_mem_amo_addrfn('AMOMAXU_D', rand_addr_d(memsize))
       end
 
-      seq_stld_overlap(memsize)
-      seq_stld_overlap(memsize)
+      seq_mem_stld_overlap(memsize)
+      seq_mem_stld_overlap(memsize)
     }
   end
 
@@ -61,7 +61,7 @@ module SeqMem
     self.send :"#{op}", args
   end
 
-  def seq_load_addrfn(op, addr)
+  def seq_mem_load_addrfn(op, addr)
     reg_addr = x(_) # reg_write_hidden(xregs)
     reg_dest = x(_) # reg_write_visible(xregs)
     imm = rand_imm()
@@ -72,7 +72,7 @@ module SeqMem
     }
   end
 
-  def seq_store_addrfn(op, addr)
+  def seq_mem_store_addrfn(op, addr)
     reg_addr = x(_) # reg_write_hidden(xregs)
     reg_src = x(_) # reg_read_visible(xregs)
     imm = rand_imm()
@@ -83,7 +83,7 @@ module SeqMem
     }
   end
 
-  def seq_amo_addrfn(op, addr)
+  def seq_mem_amo_addrfn(op, addr)
     reg_addr = x(_) # reg_write_hidden(xregs)
     reg_dest = x(_) # reg_write_visible(xregs)
     reg_src = x(_) # reg_read_visible(xregs)
@@ -94,7 +94,7 @@ module SeqMem
     }
   end
 
-  def seq_stld_overlap(memsize)
+  def seq_mem_stld_overlap(memsize)
     l_reg_addr = x(_) # reg_write_hidden(xregs)
     s_reg_addr = x(_) # reg_write_hidden(xregs)
     s_reg_src  = x(_) # reg_read_visible(xregs)

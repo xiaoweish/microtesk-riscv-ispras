@@ -18,10 +18,10 @@ module SeqFdiv
 
   def seq_fdiv
     pick_random {
-      seq_src1_s('FSQRT_S')
-      seq_src1_d('FSQRT_D')
-      seq_src2_s('FDIV_S')
-      seq_src2_d('FDIV_D')
+      seq_fdiv_src1_s('FSQRT_S')
+      seq_fdiv_src1_d('FSQRT_D')
+      seq_fdiv_src2_s('FDIV_S')
+      seq_fdiv_src2_d('FDIV_D')
     }
   end
 
@@ -31,14 +31,14 @@ module SeqFdiv
     self.send :"#{op}", args
   end
 
-  def seq_src1_s(op)
+  def seq_fdiv_src1_s(op)
     src1 = f(_) # reg_read_any(fregs_s)
     dest = f(_) # reg_write(fregs_s, src1)
 
     instr op, dest, src1
   end
 
-  def seq_src2_s(op)
+  def seq_fdiv_src2_s(op)
     src1 = f(_) # reg_read_any(fregs_s)
     src2 = f(_) # reg_read_any(fregs_s)
     dest = f(_) # reg_write(fregs_s, src1, src2)
@@ -46,14 +46,14 @@ module SeqFdiv
     instr op, dest, src1, src2
   end
 
-  def seq_src1_d(op)
+  def seq_fdiv_src1_d(op)
     src1 = f(_) # reg_read_any(fregs_d)
     dest = f(_) # reg_write(fregs_d, src1)
 
     instr op, dest, src1
   end
 
-  def seq_src2_d(op)
+  def seq_fdiv_src2_d(op)
     src1 = f(_) # reg_read_any(fregs_d)
     src2 = f(_) # reg_read_any(fregs_d)
     dest = f(_) # reg_write(fregs_d, src1, src2)

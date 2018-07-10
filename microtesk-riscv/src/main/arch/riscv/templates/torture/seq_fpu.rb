@@ -19,19 +19,19 @@ module SeqFpu
   def seq_fpu
     pick_random {
       ['FADD_S', 'FSUB_S', 'FMUL_S', 'FMIN_S', 'FMAX_S'].each { |op|
-        seq_src2_s(op)
+        seq_fpu_src2_s(op)
       }
 
       ['FADD_D', 'FSUB_D', 'FMUL_D', 'FMIN_D', 'FMAX_D'].each { |op|
-        seq_src2_d(op)
+        seq_fpu_src2_d(op)
       }
 
       ['FMADD_S', 'FNMADD_S', 'FMSUB_S', 'FNMSUB_S'].each { |op|
-        seq_src3_s(op)
+        seq_fpu_src3_s(op)
       }
 
       ['FMADD_D', 'FNMADD_D', 'FMSUB_D', 'FNMSUB_D'].each { |op|
-        seq_src3_d(op)
+        seq_fpu_src3_d(op)
       }
     }
   end
@@ -42,14 +42,14 @@ module SeqFpu
     self.send :"#{op}", args
   end
 
-  def seq_src1_s(op)
+  def seq_fpu_src1_s(op)
     src1 = f(_) # reg_read_any(fregs_s)
     dest = f(_) # reg_write(fregs_s, src1)
 
     instr op, dest, src1
   end
 
-  def seq_src2_s(op)
+  def seq_fpu_src2_s(op)
     src1 = f(_) # reg_read_any(fregs_s)
     src2 = f(_) # reg_read_any(fregs_s)
     dest = f(_) # reg_write(fregs_s, src1, src2)
@@ -57,7 +57,7 @@ module SeqFpu
     instr op, dest, src1, src2
   end
 
-  def seq_src3_s(op)
+  def seq_fpu_src3_s(op)
     src1 = f(_) # reg_read_any(fregs_s)
     src2 = f(_) # reg_read_any(fregs_s)
     src3 = f(_) # reg_read_any(fregs_s)
@@ -66,14 +66,14 @@ module SeqFpu
     instr op, dest, src1, src2, src3
   end
 
-  def seq_src1_d(op)
+  def seq_fpu_src1_d(op)
     src1 = f(_) # reg_read_any(fregs_d)
     dest = f(_) # reg_write(fregs_d, src1)
 
     instr op, dest, src1
   end
 
-  def seq_src2_d(op)
+  def seq_fpu_src2_d(op)
     src1 = f(_) # reg_read_any(fregs_d)
     src2 = f(_) # reg_read_any(fregs_d)
     dest = f(_) # reg_write(fregs_d, src1, src2)
@@ -81,7 +81,7 @@ module SeqFpu
     instr op, dest, src1, src2
   end
 
-  def seq_src3_d(op)
+  def seq_fpu_src3_d(op)
     src1 = f(_) # reg_read_any(fregs_d)
     src2 = f(_) # reg_read_any(fregs_d)
     src3 = f(_) # reg_read_any(fregs_d)

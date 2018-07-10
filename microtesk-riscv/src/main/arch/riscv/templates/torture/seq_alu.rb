@@ -19,21 +19,21 @@ module SeqAlu
   def seq_alu(use_mul, use_div)
 
     pick_random {
-      seq_immfn('LUI', rand_bigimm)
+      seq_alu_immfn('LUI', rand_bigimm)
 
-      seq_src1_immfn('ADDI', rand_imm)
-      seq_src1_immfn('SLLI', rand_shamt)
-      seq_src1_immfn('SLTI', rand_imm)
-      seq_src1_immfn('SLTIU', rand_imm)
-      seq_src1_immfn('XORI', rand_imm)
-      seq_src1_immfn('SRLI', rand_shamt)
-      seq_src1_immfn('SRAI', rand_shamt)
-      seq_src1_immfn('ORI', rand_imm)
-      seq_src1_immfn('ANDI', rand_imm)
-      seq_src1_immfn('ADDIW', rand_imm)
-      seq_src1_immfn('SLLIW', rand_shamtw)
-      seq_src1_immfn('SRLIW', rand_shamtw)
-      seq_src1_immfn('SRAIW', rand_shamtw)
+      seq_alu_src1_immfn('ADDI', rand_imm)
+      seq_alu_src1_immfn('SLLI', rand_shamt)
+      seq_alu_src1_immfn('SLTI', rand_imm)
+      seq_alu_src1_immfn('SLTIU', rand_imm)
+      seq_alu_src1_immfn('XORI', rand_imm)
+      seq_alu_src1_immfn('SRLI', rand_shamt)
+      seq_alu_src1_immfn('SRAI', rand_shamt)
+      seq_alu_src1_immfn('ORI', rand_imm)
+      seq_alu_src1_immfn('ANDI', rand_imm)
+      seq_alu_src1_immfn('ADDIW', rand_imm)
+      seq_alu_src1_immfn('SLLIW', rand_shamtw)
+      seq_alu_src1_immfn('SRLIW', rand_shamtw)
+      seq_alu_src1_immfn('SRAIW', rand_shamtw)
 
       ops = []
 
@@ -49,10 +49,10 @@ module SeqAlu
       end
 
       ops.each { |op|
-        seq_src1(op)
-        seq_src1_zero(op)
-        seq_src2(op)
-        seq_src2_zero(op)
+        seq_alu_src1(op)
+        seq_alu_src1_zero(op)
+        seq_alu_src2(op)
+        seq_alu_src2_zero(op)
       }
     }
   end
@@ -63,27 +63,27 @@ module SeqAlu
     self.send :"#{op}", args
   end
 
-  def seq_immfn(op, imm)
+  def seq_alu_immfn(op, imm)
     dest = x(_) # reg_write_visible(xregs)
 
     instr op, dest, imm
   end
 
-  def seq_src1(op)
+  def seq_alu_src1(op)
     src1 = x(_) # reg_read_any(xregs)
     dest = x(_) # reg_write(xregs, src1)
 
     instr op, dest, src1, src1
   end
 
-  def seq_src1_immfn(op, imm)
+  def seq_alu_src1_immfn(op, imm)
     src1 = x(_) # reg_read_any(xregs)
     dest = x(_) # reg_write(xregs, src1)
 
     instr op, dest, src1, imm
   end
 
-  def seq_src1_zero(op)
+  def seq_alu_src1_zero(op)
     tmp = x(_) # reg_write_visible(xregs)
     dest = x(_) # reg_write(xregs, src1)
 
@@ -91,7 +91,7 @@ module SeqAlu
     instr op, dest, tmp, tmp
   end
 
-  def seq_src2(op)
+  def seq_alu_src2(op)
     src1 = x(_) # reg_read_any(xregs)
     src2 = x(_) # reg_read_any(xregs)
     dest = x(_) # reg_write(xregs, src1, src2)
@@ -99,7 +99,7 @@ module SeqAlu
     instr op, dest, src1, src2
   end
 
-  def seq_src2_zero(op)
+  def seq_alu_src2_zero(op)
     dest = x(_) # reg_write(xregs, src1)
     tmp1 = x(_) # reg_write_visible(xregs)
     tmp2 = x(_) # reg_write_visible(xregs)

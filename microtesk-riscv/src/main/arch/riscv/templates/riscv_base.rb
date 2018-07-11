@@ -66,10 +66,13 @@ class RiscVBaseTemplate < Template
     # Information on data types to be used in data sections.
     #
     data_config(:target => 'MEM') {
-      define_type :id => :byte,  :text => '.byte',  :type => type('card', 8)
-      define_type :id => :half,  :text => '.half',  :type => type('card', 16)
-      define_type :id => :word,  :text => '.word',  :type => type('card', 32)
-      define_type :id => :dword, :text => '.dword', :type => type('card', 64)
+      define_type :id => :byte,   :text => '.byte',   :type => type('card', 8)
+      define_type :id => :half,   :text => '.half',   :type => type('card', 16)
+      define_type :id => :word,   :text => '.word',   :type => type('card', 32)
+      define_type :id => :dword,  :text => '.dword',  :type => type('card', 64)
+
+      define_type :id => :float,  :text => '.float',  :type => type('float', 23, 8)
+      define_type :id => :double, :text => '.double', :type => type('float', 52, 11)
 
       define_space        :id => :space,  :text => '.space',  :fill_with => 0
       define_space        :id => :skip,   :text => '.skip',   :fill_with => 0

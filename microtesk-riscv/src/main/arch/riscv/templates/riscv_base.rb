@@ -71,10 +71,15 @@ class RiscVBaseTemplate < Template
       define_type :id => :word,   :text => '.word',   :type => type('card', 32)
       define_type :id => :dword,  :text => '.dword',  :type => type('card', 64)
 
-      define_type :id => :float,  :text => '.float',  :type => type('float', 23, 8),
+      define_type :id => :floatx,  :text => '.float',  :type => type('float', 23, 8),
                   :format => '0f:%08X'
-      define_type :id => :double, :text => '.double', :type => type('float', 52, 11),
+      define_type :id => :doublex, :text => '.double', :type => type('float', 52, 11),
                   :format => '0d:%016X'
+
+      define_type :id => :float,  :text => '.float',  :type => type('float', 23, 8),
+                  :format => '%s'
+      define_type :id => :double, :text => '.double', :type => type('float', 52, 11),
+                  :format => '%s'
 
       define_space        :id => :space,  :text => '.space',  :fill_with => 0
       define_space        :id => :skip,   :text => '.skip',   :fill_with => 0
@@ -333,12 +338,44 @@ label :pass
     trace_data_addr(begin_addr, end_addr)
   end
 
-  ###################################################################################################
+  ##################################################################################################
   # Utility method to remove the specified addressing mode from the list of used registers.
-  ###################################################################################################
+  ##################################################################################################
 
   def free_register(mode)
     free_allocated_mode mode
+  end
+
+  ##################################################################################################
+  # Additional logic to handle floating-point values in data sections differently depending
+  # on whether they were specified as integer (typically hexadecimal) or floating-point constants.
+  # This provides the "what you see is what you get" behavior for floating-point data values.
+  # For example:
+  #   "float 3.14" in template => ".float 3.14" is test program
+  #   "float 0x7fc00000" in template => ".float 0f:7F800001" is test program
+  # So, values specified in integer format are forwarded to the "floatx" and "doublex" methods.
+  ##################################################################################################
+
+  class RiscDataManager < DataManager
+    def float(value)
+      if value.is_a?(Float) then
+        super(value)
+      else
+        floatx(value)
+      end
+    end
+
+    def double(value)
+      if value.is_a?(Float) then
+        super(value)
+      else
+        doublex(value)
+      end
+    end
+  end
+
+  def new_data_manager(template, manager)
+    RiscDataManager.new(self, @template.getDataManager)
   end
 
 end # RiscVBaseTemplate

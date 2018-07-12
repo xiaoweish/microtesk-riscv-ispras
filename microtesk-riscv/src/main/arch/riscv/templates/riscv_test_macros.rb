@@ -514,7 +514,7 @@ label :"test_#{testnum}_data"
       float val1
       float val2
       float val3
-      result.call
+      self.instance_eval &result
     }
   end
 
@@ -541,7 +541,7 @@ label :"test_#{testnum}_data"
       double val1
       double val2
       double val3
-      result.call
+      self.instance_eval &result
     }
   end
 
@@ -571,12 +571,12 @@ label :"test_#{testnum}_data"
       double val1
       double val2
       double val3
-      result.call
+      self.instance_eval &result
     }
   end
 
   def TEST_FCVT_S_D32( testnum, result, val1 )
-    TEST_FP_OP_D32_INTERNAL( testnum, 0, lambda { double result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_D32_INTERNAL( testnum, 0, Proc.new { double result }, val1, 0.0, 0.0 ) do
       fcvt_s_d f3, f0
       fcvt_d_s f3, f3
       fsd f3, a0, 0
@@ -586,7 +586,7 @@ label :"test_#{testnum}_data"
   end
 
   def TEST_FCVT_S_D( testnum, result, val1 )
-    TEST_FP_OP_D_INTERNAL( testnum, 0, lambda { double result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_D_INTERNAL( testnum, 0, Proc.new { double result }, val1, 0.0, 0.0 ) do
       fcvt_s_d f3, f0
       fcvt_d_s f3, f3
       fmv_x_d a0, f3
@@ -594,22 +594,22 @@ label :"test_#{testnum}_data"
   end
 
   def TEST_FCVT_D_S( testnum, result, val1 )
-    TEST_FP_OP_S_INTERNAL( testnum, 0, lambda { float result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_S_INTERNAL( testnum, 0, Proc.new { float result }, val1, 0.0, 0.0 ) do
       fcvt_d_s f3, f0
       fcvt_s_d f3, f3
-      fmv_x_s a0, f3
+      fmv_x_w a0, f3
     end
   end
 
   def TEST_FP_OP1_S( testnum, inst, flags, result, val1 )
-    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { float result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_S_INTERNAL( testnum, flags, Proc.new { float result }, val1, 0.0, 0.0 ) do
       self.send :"#{inst}", f3, f0
-      fmv_x_s a0, f3
+      fmv_x_w a0, f3
     end
   end
 
   def TEST_FP_OP1_D32( testnum, inst, flags, result, val1 )
-    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { double result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, Proc.new { double result }, val1, 0.0, 0.0 ) do
       self.send :"#{inst}", f3, f0
       fsd f3, a0, 0
       lw t2, a0, 4
@@ -619,21 +619,21 @@ label :"test_#{testnum}_data"
   end
 
   def TEST_FP_OP1_D( testnum, inst, flags, result, val1 )
-    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { double result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_D_INTERNAL( testnum, flags, Proc.new { double result }, val1, 0.0, 0.0 ) do
       self.send :"#{inst}", f3, f0
       fmv_x_d a0, f3
     end
   end
 
   def TEST_FP_OP1_S_DWORD_RESULT( testnum, inst, flags, result, val1 )
-    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { dword result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_S_INTERNAL( testnum, flags, Proc.new { dword result }, val1, 0.0, 0.0 ) do
       self.send :"#{inst}", f3, f0
-      fmv_x_s a0, f3
+      fmv_x_w a0, f3
     end
   end
 
   def TEST_FP_OP1_D32_DWORD_RESULT( testnum, inst, flags, result, val1 )
-    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { dword result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, Proc.new { dword result }, val1, 0.0, 0.0 ) do
       self.send :"#{inst}", f3, f0
       fsd f3, a0, 0
       lw t2, a0, 4
@@ -643,21 +643,21 @@ label :"test_#{testnum}_data"
   end
 
   def TEST_FP_OP1_D_DWORD_RESULT( testnum, inst, flags, result, val1 )
-    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { dword result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_D_INTERNAL( testnum, flags, Proc.new { dword result }, val1, 0.0, 0.0 ) do
       self.send :"#{inst}", f3, f0
       fmv_x_d a0, f3
     end
   end
 
   def TEST_FP_OP2_S( testnum, inst, flags, result, val1, val2 )
-    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { float result }, val1, val2, 0.0 ) do
+    TEST_FP_OP_S_INTERNAL( testnum, flags, Proc.new { float result }, val1, val2, 0.0 ) do
       self.send :"#{inst}", f3, f0, f1
-      fmv_x_s a0, f3
+      fmv_x_w a0, f3
     end
   end
 
   def TEST_FP_OP2_D32( testnum, inst, flags, result, val1, val2 )
-    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { double result }, val1, val2, 0.0 ) do
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, Proc.new { double result }, val1, val2, 0.0 ) do
       self.send :"#{inst}", f3, f0, f1
       fsd f3, a0, 0
       lw t2, a0, 4
@@ -667,21 +667,21 @@ label :"test_#{testnum}_data"
   end
 
   def TEST_FP_OP2_D( testnum, inst, flags, result, val1, val2 )
-    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { double result }, val1, val2, 0.0 ) do
+    TEST_FP_OP_D_INTERNAL( testnum, flags, Proc.new { double result }, val1, val2, 0.0 ) do
       self.send :"#{inst}", f3, f0, f1
       fmv_x_d a0, f3
     end
   end
 
   def TEST_FP_OP3_S( testnum, inst, flags, result, val1, val2, val3 )
-    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { float result }, val1, val2, val3 ) do
+    TEST_FP_OP_S_INTERNAL( testnum, flags, Proc.new { float result }, val1, val2, val3 ) do
       self.send :"#{inst}", f3, f0, f1, f2
-      fmv_x_s a0, f3
+      fmv_x_w a0, f3
     end
   end
 
   def TEST_FP_OP3_D32( testnum, inst, flags, result, val1, val2, val3 )
-    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { double result }, val1, val2, val3 ) do
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, Proc.new { double result }, val1, val2, val3 ) do
       self.send :"#{inst}", f3, f0, f1, f2
       fsd f3, a0, 0
       lw t2, a0, 4
@@ -691,46 +691,46 @@ label :"test_#{testnum}_data"
   end
 
   def TEST_FP_OP3_D( testnum, inst, flags, result, val1, val2, val3 ) \
-    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { double result }, val1, val2, val3 ) do
+    TEST_FP_OP_D_INTERNAL( testnum, flags, Proc.new { double result }, val1, val2, val3 ) do
       self.send :"#{inst}", f3, f0, f1, f2
       fmv_x_d a0, f3
     end
   end
 
   def TEST_FP_INT_OP_S( testnum, inst, flags, result, val1, rm )
-    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { word result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_S_INTERNAL( testnum, flags, Proc.new { word result }, val1, 0.0, 0.0 ) do
       self.send :"#{inst}", a0, f0, rm
     end
   end
 
   def TEST_FP_INT_OP_D32( testnum, inst, flags, result, val1, rm )
-    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { dword result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, Proc.new { dword result }, val1, 0.0, 0.0 ) do
       self.send :"#{inst}", a0, f0, f1
       li t2, 0
     end
   end
 
   def TEST_FP_INT_OP_D( testnum, inst, flags, result, val1, rm )
-    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { dword result }, val1, 0.0, 0.0 ) do
+    TEST_FP_OP_D_INTERNAL( testnum, flags, Proc.new { dword result }, val1, 0.0, 0.0 ) do
       self.send :"#{inst}", a0, f0, rm
     end
   end
 
   def TEST_FP_CMP_OP_S( testnum, inst, flags, result, val1, val2 )
-    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { word result }, val1, val2, 0.0 ) do
+    TEST_FP_OP_S_INTERNAL( testnum, flags, Proc.new { word result }, val1, val2, 0.0 ) do
       self.send :"#{inst}", a0, f0, f1
     end
   end
 
   def TEST_FP_CMP_OP_D32( testnum, inst, flags, result, val1, val2 )
-    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { dword result }, val1, val2, 0.0 ) do
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, Proc.new { dword result }, val1, val2, 0.0 ) do
       self.send :"#{inst}", a0, f0, f1
       li t2, 0
     end
   end
 
   def TEST_FP_CMP_OP_D( testnum, inst, flags, result, val1, val2 )
-    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { dword result }, val1, val2, 0.0 ) do
+    TEST_FP_OP_D_INTERNAL( testnum, flags, Proc.new { dword result }, val1, val2, 0.0 ) do
       self.send :"#{inst}", a0, f0, f1
     end
   end
@@ -738,7 +738,7 @@ label :"test_#{testnum}_data"
   def TEST_FCLASS_S( testnum, correct, input )
     TEST_CASE( testnum, a0, correct ) do
       li a0, input
-      fmv_s_x fa0, a0
+      fmv_w_x fa0, a0
       fclass_s a0, fa0
     end
   end
@@ -775,7 +775,7 @@ label :"test_#{testnum}"
     self.send :"#{inst}", f0, a0
 
     fsflags2 x0
-    fmv_x_s a0, f0
+    fmv_x_w a0, f0
     bne a0, a3, :fail
 
     data {

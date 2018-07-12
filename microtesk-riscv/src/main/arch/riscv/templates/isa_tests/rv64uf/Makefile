@@ -2,7 +2,8 @@ TESTS = fadd\
         fclass\
         fcmp\
         fcvt\
-        fdiv
+        fdiv\
+        fmadd
 
 all: $(TESTS)
 

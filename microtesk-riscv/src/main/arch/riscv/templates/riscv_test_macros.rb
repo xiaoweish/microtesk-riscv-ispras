@@ -54,7 +54,7 @@ module RiscvTestMacros
   end
 
   def MASK_XLEN(x)
-     ((x) & ((1 << (__riscv_xlen - 1) << 1) - 1))
+    ((x) & ((1 << (__riscv_xlen - 1) << 1) - 1))
   end
 
   def TEST_CASE( testnum, testreg, correctval, &code)
@@ -491,7 +491,365 @@ label 2
   QNAN  = 0x7ff8000000000000
   SNAN  = 0x7ff0000000000001
 
-  # TODO: Implement the macros here
+  def TEST_FP_OP_S_INTERNAL( testnum, flags, result, val1, val2, val3, &code )
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    la a0, :"test_#{testnum}_data"
+
+    flw f0, a0, 0
+    flw f1, a0, 4
+    flw f2, a0, 8
+    lw  a3, a0, 12
+
+    self.instance_eval &code
+
+    fsflags a1, x0
+    li a2, flags
+    bne a0, a3, :fail
+    bne a1, a2, :fail
+
+    data {
+     align 2
+label :"test_#{testnum}_data"
+      float val1
+      float val2
+      float val3
+      result.call
+    }
+  end
+
+  def TEST_FP_OP_D_INTERNAL( testnum, flags, result, val1, val2, val3, &code )
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    la a0, :"test_#{testnum}_data"
+
+    fld f0, a0, 0
+    fld f1, a0, 8
+    fld f2, a0, 16
+    ld  a3, a0, 24
+
+    self.instance_eval &code
+
+    fsflags a1, x0
+    li a2, flags
+    bne a0, a3, :fail
+    bne a1, a2, :fail
+
+    data {
+      align 3
+label :"test_#{testnum}_data"
+      double val1
+      double val2
+      double val3
+      result.call
+    }
+  end
+
+  # // TODO: assign a separate mem location for the comparison address?
+  def TEST_FP_OP_D32_INTERNAL( testnum, flags, result, val1, val2, val3, &code )
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    la a0, :"test_#{testnum}_data"
+
+    fld f0, a0, 0
+    fld f1, a0, 8
+    fld f2, a0, 16
+    lw  a3, a0, 24
+    lw  t1, a0, 28
+
+    self.instance_eval &code
+
+    fsflags a1, x0
+    li a2, flags
+    bne a0, a3, :fail
+    bne t1, t2, :fail
+    bne a1, a2, :fail
+
+    data {
+      align 3
+label :"test_#{testnum}_data"
+      double val1
+      double val2
+      double val3
+      result.call
+    }
+  end
+
+  def TEST_FCVT_S_D32( testnum, result, val1 )
+    TEST_FP_OP_D32_INTERNAL( testnum, 0, lambda { double result }, val1, 0.0, 0.0 ) do
+      fcvt_s_d f3, f0
+      fcvt_d_s f3, f3
+      fsd f3, a0, 0
+      lw t2, a0, 4
+      lw a0, a0, 0
+    end
+  end
+
+  def TEST_FCVT_S_D( testnum, result, val1 )
+    TEST_FP_OP_D_INTERNAL( testnum, 0, lambda { double result }, val1, 0.0, 0.0 ) do
+      fcvt_s_d f3, f0
+      fcvt_d_s f3, f3
+      fmv_x_d a0, f3
+    end
+  end
+
+  def TEST_FCVT_D_S( testnum, result, val1 )
+    TEST_FP_OP_S_INTERNAL( testnum, 0, lambda { float result }, val1, 0.0, 0.0 ) do
+      fcvt_d_s f3, f0
+      fcvt_s_d f3, f3
+      fmv_x_s a0, f3
+    end
+  end
+
+  def TEST_FP_OP1_S( testnum, inst, flags, result, val1 )
+    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { float result }, val1, 0.0, 0.0 ) do
+      self.send :"#{inst}", f3, f0
+      fmv_x_s a0, f3
+    end
+  end
+
+  def TEST_FP_OP1_D32( testnum, inst, flags, result, val1 )
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { double result }, val1, 0.0, 0.0 ) do
+      self.send :"#{inst}", f3, f0
+      fsd f3, a0, 0
+      lw t2, a0, 4
+      lw a0, a0, 0
+    end
+    # // ^: store computation result in address from a0, load high-word into t2
+  end
+
+  def TEST_FP_OP1_D( testnum, inst, flags, result, val1 )
+    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { double result }, val1, 0.0, 0.0 ) do
+      self.send :"#{inst}", f3, f0
+      fmv_x_d a0, f3
+    end
+  end
+
+  def TEST_FP_OP1_S_DWORD_RESULT( testnum, inst, flags, result, val1 )
+    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { dword result }, val1, 0.0, 0.0 ) do
+      self.send :"#{inst}", f3, f0
+      fmv_x_s a0, f3
+    end
+  end
+
+  def TEST_FP_OP1_D32_DWORD_RESULT( testnum, inst, flags, result, val1 )
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { dword result }, val1, 0.0, 0.0 ) do
+      self.send :"#{inst}", f3, f0
+      fsd f3, a0, 0
+      lw t2, a0, 4
+      lw a0, a0, 0
+    end
+    # // ^: store computation result in address from a0, load high-word into t2
+  end
+
+  def TEST_FP_OP1_D_DWORD_RESULT( testnum, inst, flags, result, val1 )
+    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { dword result }, val1, 0.0, 0.0 ) do
+      self.send :"#{inst}", f3, f0
+      fmv_x_d a0, f3
+    end
+  end
+
+  def TEST_FP_OP2_S( testnum, inst, flags, result, val1, val2 )
+    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { float result }, val1, val2, 0.0 ) do
+      self.send :"#{inst}", f3, f0, f1
+      fmv_x_s a0, f3
+    end
+  end
+
+  def TEST_FP_OP2_D32( testnum, inst, flags, result, val1, val2 )
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { double result }, val1, val2, 0.0 ) do
+      self.send :"#{inst}", f3, f0, f1
+      fsd f3, a0, 0
+      lw t2, a0, 4
+      lw a0, a0, 0
+    end
+    # // ^: store computation result in address from a0, load high-word into t2
+  end
+
+  def TEST_FP_OP2_D( testnum, inst, flags, result, val1, val2 )
+    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { double result }, val1, val2, 0.0 ) do
+      self.send :"#{inst}", f3, f0, f1
+      fmv_x_d a0, f3
+    end
+  end
+
+  def TEST_FP_OP3_S( testnum, inst, flags, result, val1, val2, val3 )
+    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { float result }, val1, val2, val3 ) do
+      self.send :"#{inst}", f3, f0, f1, f2
+      fmv_x_s a0, f3
+    end
+  end
+
+  def TEST_FP_OP3_D32( testnum, inst, flags, result, val1, val2, val3 )
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { double result }, val1, val2, val3 ) do
+      self.send :"#{inst}", f3, f0, f1, f2
+      fsd f3, a0, 0
+      lw t2, a0, 4
+      lw a0, a0, 0
+    end
+    # // ^: store computation result in address from a0, load high-word into t2
+  end
+
+  def TEST_FP_OP3_D( testnum, inst, flags, result, val1, val2, val3 ) \
+    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { double result }, val1, val2, val3 ) do
+      self.send :"#{inst}", f3, f0, f1, f2
+      fmv_x_d a0, f3
+    end
+  end
+
+  def TEST_FP_INT_OP_S( testnum, inst, flags, result, val1, rm )
+    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { word result }, val1, 0.0, 0.0 ) do
+      self.send :"#{inst}", a0, f0, rm
+    end
+  end
+
+  def TEST_FP_INT_OP_D32( testnum, inst, flags, result, val1, rm )
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { dword result }, val1, 0.0, 0.0 ) do
+      self.send :"#{inst}", a0, f0, f1
+      li t2, 0
+    end
+  end
+
+  def TEST_FP_INT_OP_D( testnum, inst, flags, result, val1, rm )
+    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { dword result }, val1, 0.0, 0.0 ) do
+      self.send :"#{inst}", a0, f0, rm
+    end
+  end
+
+  def TEST_FP_CMP_OP_S( testnum, inst, flags, result, val1, val2 )
+    TEST_FP_OP_S_INTERNAL( testnum, flags, lambda { word result }, val1, val2, 0.0 ) do
+      self.send :"#{inst}", a0, f0, f1
+    end
+  end
+
+  def TEST_FP_CMP_OP_D32( testnum, inst, flags, result, val1, val2 )
+    TEST_FP_OP_D32_INTERNAL( testnum, flags, lambda { dword result }, val1, val2, 0.0 ) do
+      self.send :"#{inst}", a0, f0, f1
+      li t2, 0
+    end
+  end
+
+  def TEST_FP_CMP_OP_D( testnum, inst, flags, result, val1, val2 )
+    TEST_FP_OP_D_INTERNAL( testnum, flags, lambda { dword result }, val1, val2, 0.0 ) do
+      self.send :"#{inst}", a0, f0, f1
+    end
+  end
+
+  def TEST_FCLASS_S( testnum, correct, input )
+    TEST_CASE( testnum, a0, correct ) do
+      li a0, input
+      fmv_s_x fa0, a0
+      fclass_s a0, fa0
+    end
+  end
+
+  def TEST_FCLASS_D32( testnum, correct, input )
+    TEST_CASE( testnum, a0, correct ) do
+      la a0, :"test_#{testnum}_data"
+      fld fa0, a0, 0
+      fclass_d a0, fa0
+    end
+
+    data {
+      align 3
+label :"test_#{testnum}_data"
+      dword input
+    }
+  end
+
+  def TEST_FCLASS_D(testnum, correct, input)
+    TEST_CASE( testnum, a0, correct ) do
+      li a0, input
+      fmv_d_x fa0, a0
+      fclass_d a0, fa0
+    end
+  end
+
+  def TEST_INT_FP_OP_S( testnum, inst, result, val1 )
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    la a0, :"test_#{testnum}_data"
+
+    lw a3, a0, 0
+    li a0, val1
+    self.send :"#{inst}", f0, a0
+
+    fsflags2 x0
+    fmv_x_s a0, f0
+    bne a0, a3, :fail
+
+    data {
+      align 2
+label :"test_#{testnum}_data"
+      float result
+    }
+  end
+
+  def TEST_INT_FP_OP_D32( testnum, inst, result, val1 )
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    la a0, :"test_#{testnum}_data"
+
+    lw a3, a0, 0
+    lw a4, a0, 4
+    li a1, val1
+    self.send :"#{inst}", f0, a1
+
+    fsd f0, a0, 0
+    lw a1, a0, 4
+    lw a0, a0, 0
+
+    fsflags2 x0
+    bne a0, a3, :fail
+    bne a1, a4, :fail
+
+    data {
+      align 3
+label :"test_#{testnum}_data"
+      double result
+    }
+  end
+
+  def TEST_INT_FP_OP_D( testnum, inst, result, val1 )
+label :"test_#{testnum}"
+    li TESTNUM(), testnum
+    la a0, :"test_#{testnum}_data"
+
+    ld a3, a0, 0
+    li a0, val1
+    self.send :"#{inst}", f0, a0
+    fsflags2 x0
+    fmv_x_d a0, f0
+    bne a0, a3, :fail
+
+    data {
+      align 3
+label :"test_#{testnum}_data"
+      double result
+    }
+  end
+
+  # // We need some special handling here to allow 64-bit comparison in 32-bit arch
+  # // TODO: find a better name and clean up when intended for general usage?
+  def TEST_CASE_D32( testnum, testreg1, testreg2, correctval, &code )
+label :"test_#{testnum}"
+    self.instance_eval &code
+
+    la x31, :"test_#{testnum}_data"
+    lw x29, x31, 0
+    lw x31, x31, 4
+
+    li TESTNUM(), testnum
+    bne testreg1, x29, :fail
+    bne testreg2, x31, :fail
+
+    data {
+      align 3
+label :"test_#{testnum}_data"
+      dword correctval
+    }
+  end
+  # // ^ x30 is used in some other macros, to avoid issues we use x31 for upper word
 
   ##################################################################################################
   # Pass and fail code (assumes test num is in TESTNUM)

@@ -2,6 +2,7 @@ TESTS = fadd\
         fclass\
         fcmp\
         fcvt\
+        fcvt_w\
         fdiv\
         fmadd
 

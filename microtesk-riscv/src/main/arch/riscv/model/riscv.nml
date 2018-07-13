@@ -399,15 +399,15 @@ internal op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
 var RoundingMode [card(3)] // TODO:
 
 //Round to Nearest, ties to Even
-let RM_RNE = 0x000
+let RM_RNE = 0b000
 // 001 RTZ Round towards Zero
-let RM_RTZ = 0x001
+let RM_RTZ = 0b001
 // 010 RDN Round Down (towards -infinity)
-let RM_RDN = 0x010
+let RM_RDN = 0b010
 // 011 RUP Round Up (towards +infinity)
-let RM_RUP = 0x011
+let RM_RUP = 0b011
 // 100 RMM Round to Nearest, ties to Max Magnitude
-let RM_RMM = 0x100
+let RM_RMM = 0b100
 #endif
 
 // Prints the sign-extended 12-bit immediate

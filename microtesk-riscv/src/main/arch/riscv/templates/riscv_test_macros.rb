@@ -486,6 +486,8 @@ label 2
   # Tests floating-point instructions
   ##################################################################################################
 
+  NANF = 0x7FFFFFFF # Canonical NaN (single)
+
   QNANF = 0x7fc00000 # Quiet NaN (single)
   SNANF = 0x7f800001 # Signalling NaN (single)
 

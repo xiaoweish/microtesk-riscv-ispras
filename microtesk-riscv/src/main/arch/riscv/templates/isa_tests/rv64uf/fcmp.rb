@@ -45,14 +45,15 @@
 
 require_relative '../../riscv_base'
 
+#
+# Test f{eq|lt|le}.s instructions.
+#
 class FcmpTemplate < RiscVBaseTemplate
 
   def pre_rvtest
     RVTEST_RV64UF()
     RVTEST_CODE_BEGIN()
   end
-
-  NAN = 0x7FFFFFFF
 
   def run
     #-------------------------------------------------------------
@@ -72,17 +73,17 @@ class FcmpTemplate < RiscVBaseTemplate
     # Need to investigate this.
 
     # Only sNaN should signal invalid for feq.
-    TEST_FP_CMP_OP_S( 8, 'feq_s', 0x00, 0, NAN,   0 )
-    TEST_FP_CMP_OP_S( 9, 'feq_s', 0x00, 0, NAN, NAN )
-    TEST_FP_CMP_OP_S(10, 'feq_s', 0x10, 0, SNANF, 0 )
+    TEST_FP_CMP_OP_S( 8, 'feq_s', 0x00, 0, NANF,    0 )
+    TEST_FP_CMP_OP_S( 9, 'feq_s', 0x00, 0, NANF, NANF )
+    TEST_FP_CMP_OP_S(10, 'feq_s', 0x10, 0, SNANF,   0 )
 
     # qNaN should signal invalid for fle/flt.
-    TEST_FP_CMP_OP_S(11, 'flt_s', 0x10, 0, NAN,   0 )
-    TEST_FP_CMP_OP_S(12, 'flt_s', 0x10, 0, NAN, NAN )
-    TEST_FP_CMP_OP_S(13, 'flt_s', 0x10, 0, SNANF, 0 )
-    TEST_FP_CMP_OP_S(14, 'fle_s', 0x10, 0, NAN,   0 )
-    TEST_FP_CMP_OP_S(15, 'fle_s', 0x10, 0, NAN, NAN )
-    TEST_FP_CMP_OP_S(16, 'fle_s', 0x10, 0, SNANF, 0 )
+    TEST_FP_CMP_OP_S(11, 'flt_s', 0x10, 0, NANF,    0 )
+    TEST_FP_CMP_OP_S(12, 'flt_s', 0x10, 0, NANF, NANF )
+    TEST_FP_CMP_OP_S(13, 'flt_s', 0x10, 0, SNANF,   0 )
+    TEST_FP_CMP_OP_S(14, 'fle_s', 0x10, 0, NANF,    0 )
+    TEST_FP_CMP_OP_S(15, 'fle_s', 0x10, 0, NANF, NANF )
+    TEST_FP_CMP_OP_S(16, 'fle_s', 0x10, 0, SNANF,   0 )
   end
 
   def post

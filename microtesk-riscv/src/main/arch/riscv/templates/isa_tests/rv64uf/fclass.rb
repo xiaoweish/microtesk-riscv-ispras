@@ -45,6 +45,9 @@
 
 require_relative '../../riscv_base'
 
+#
+# Test fclass.s instructions.
+#
 class FclassTemplate < RiscVBaseTemplate
 
   def pre_rvtest

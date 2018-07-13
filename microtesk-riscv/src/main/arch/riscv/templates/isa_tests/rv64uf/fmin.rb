@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 # THIS FILE IS BASED ON THE FOLLOWING RISC-V TEST SUITE SOURCE FILE:
-# https://github.com/riscv/riscv-tests/blob/master/isa/rv64uf/fadd.S
+# https://github.com/riscv/riscv-tests/blob/master/isa/rv64uf/fmin.S
 # WHICH IS DISTRIBUTED UNDER THE FOLLOWING LICENSE:
 #
 # Copyright (c) 2012-2015, The Regents of the University of California (Regents).
@@ -46,9 +46,9 @@
 require_relative '../../riscv_base'
 
 #
-# Test f{add|sub|mul}.s instructions.
+# Test f{min|max}.s instructinos.
 #
-class FaddTemplate < RiscVBaseTemplate
+class FminTemplate < RiscVBaseTemplate
 
   def pre_rvtest
     RVTEST_RV64UF()
@@ -60,20 +60,31 @@ class FaddTemplate < RiscVBaseTemplate
     # Arithmetic tests
     #-------------------------------------------------------------
 
-    TEST_FP_OP2_S( 2,  'fadd_s', 0,           3.5,        2.5,        1.0 )
-    TEST_FP_OP2_S( 3,  'fadd_s', 1,       -1234.0,    -1235.1,        1.1 )
-    TEST_FP_OP2_S( 4,  'fadd_s', 1,    3.14159265, 3.14159265, 0.00000001 )
+    TEST_FP_OP2_S( 2,  'fmin_s', 0,        1.0,        2.5,        1.0 )
+    TEST_FP_OP2_S( 3,  'fmin_s', 0,    -1235.1,    -1235.1,        1.1 )
+    TEST_FP_OP2_S( 4,  'fmin_s', 0,    -1235.1,        1.1,    -1235.1 )
+    TEST_FP_OP2_S( 5,  'fmin_s', 0,    -1235.1,       NANF,    -1235.1 )
+    TEST_FP_OP2_S( 6,  'fmin_s', 0, 0.00000001, 3.14159265, 0.00000001 )
+    TEST_FP_OP2_S( 7,  'fmin_s', 0,       -2.0,       -1.0,       -2.0 )
 
-    TEST_FP_OP2_S( 5,  'fsub_s', 0,           1.5,        2.5,        1.0 )
-    TEST_FP_OP2_S( 6,  'fsub_s', 1,       -1234.0 ,    -1235.1,      -1.1 )
-    TEST_FP_OP2_S( 7,  'fsub_s', 1,    3.14159265, 3.14159265, 0.00000001 )
+    TEST_FP_OP2_S(12,  'fmax_s', 0,        2.5,        2.5,        1.0 )
+    TEST_FP_OP2_S(13,  'fmax_s', 0,        1.1,    -1235.1,        1.1 )
+    TEST_FP_OP2_S(14,  'fmax_s', 0,        1.1,        1.1,    -1235.1 )
+    TEST_FP_OP2_S(15,  'fmax_s', 0,    -1235.1,       NANF,    -1235.1 )
+    TEST_FP_OP2_S(16,  'fmax_s', 0, 3.14159265, 3.14159265, 0.00000001 )
+    TEST_FP_OP2_S(17,  'fmax_s', 0,       -1.0,       -1.0,       -2.0 )
 
-    TEST_FP_OP2_S( 8,  'fmul_s', 0,           2.5,        2.5,        1.0 )
-    TEST_FP_OP2_S( 9,  'fmul_s', 1,       1358.61,    -1235.1,       -1.1 )
-    TEST_FP_OP2_S(10,  'fmul_s', 1, 3.14159265e-8, 3.14159265, 0.00000001 )
+    # FMIN(sNaN, x) = x
+    TEST_FP_OP2_S(20,  'fmax_s', 0x10,     1.0,      SNANF,        1.0 )
+    # FMIN(qNaN, qNaN) = canonical NaN
+    TEST_FP_OP2_S(21,  'fmax_s', 0x00,   QNANF,       NANF,       NANF )
 
-    # Is the canonical NaN generated for Inf - Inf?
-    TEST_FP_OP2_S(11,  'fsub_s', 0x10, QNANF, INFF, INFF )
+    # -0.0 < +0.0
+    TEST_FP_OP2_S(30,  'fmin_s', 0,       -0.0,       -0.0,        0.0 )
+    TEST_FP_OP2_S(31,  'fmin_s', 0,       -0.0,        0.0,       -0.0 )
+    TEST_FP_OP2_S(32,  'fmax_s', 0,        0.0,       -0.0,        0.0 )
+    TEST_FP_OP2_S(33,  'fmax_s', 0,        0.0,        0.0,       -0.0 )
+
   end
 
   def post

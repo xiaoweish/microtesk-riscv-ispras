@@ -45,6 +45,9 @@
 
 require_relative '../../riscv_base'
 
+#
+# Test fcvt.s.{wu|w|lu|l}, fcvt.s.d, and fcvt.d.s instructions.
+#
 class FcvtTemplate < RiscVBaseTemplate
 
   def pre_rvtest

@@ -45,6 +45,9 @@
 
 require_relative '../../riscv_base'
 
+#
+# Test f[n]m{add|sub}.s and f[n]m{add|sub}.d instructions.
+#
 class FmaddTemplate < RiscVBaseTemplate
 
   def pre_rvtest

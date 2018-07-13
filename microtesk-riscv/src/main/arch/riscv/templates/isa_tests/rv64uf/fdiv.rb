@@ -45,6 +45,9 @@
 
 require_relative '../../riscv_base'
 
+#
+# Test f{div|sqrt}.s instructions.
+#
 class FdivTemplate < RiscVBaseTemplate
 
   def pre_rvtest

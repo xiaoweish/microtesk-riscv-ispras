@@ -34,14 +34,32 @@ module TortureData
     RVTEST_DATA_END()
   end
 
-  def LOAD_XREGS()
-    pseudo ""
+  def LOAD_XREGS
+    pseudo ''
 label :xreg_init
     la x31, :xreg_init_data
     (0..31).each { |index|
       ld x(index), x31, index * 8
     }
     newline
+  end
+
+  def SAVE_XREGS
+    pseudo ''
+label :xreg_save
+    la 31, :xreg_output_data
+    (0..30).each { |index|
+      sd x(index), x31, index * 8
+    }
+  end
+
+  def SAVE_FREGS
+    pseudo ''
+label :freg_save
+    la x31, :freg_output_data
+    (0..31).each { |index|
+      fsd f(index), x31, index * 8
+    }
   end
 
   private

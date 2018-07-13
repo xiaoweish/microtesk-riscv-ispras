@@ -20,10 +20,9 @@ module TortureData
   include RiscvRand
 
   def TORTURE_DATA(memsize)
-    data { label :hidden_data }
-
-    REGISTER_DATA(:xreg_init_data, 'reg_x%d_init') { dword rand_biased }
-    REGISTER_DATA(:freg_init_data, 'reg_f%d_init') { dword rand_biased }
+    # data { label :hidden_data }
+    # REGISTER_DATA(:xreg_init_data, 'reg_x%d_init') { dword rand_biased }
+    # REGISTER_DATA(:freg_init_data, 'reg_f%d_init') { dword rand_biased }
 
     RVTEST_DATA_BEGIN()
 

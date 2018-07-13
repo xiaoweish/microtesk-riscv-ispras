@@ -56,7 +56,8 @@ class TortureTemplate < RiscVBaseTemplate
     super
 
     set_option_value 'reserve-dependencies', true
-    set_option_value 'default-test-data', false
+    set_option_value 'default-test-data', true
+    set_option_value 'self-checks', false
   end
 
   def pre_rvtest
@@ -76,14 +77,13 @@ class TortureTemplate < RiscVBaseTemplate
           :compositor => 'random',
           :permutator => 'random') {
       prologue {
-        # This register must be excluded as it is used as temp by preparators and comparators.
-        set_reserved ra, true
+        # This register must be excluded as it is used as temp by initializers and finalizers.
+        set_reserved x31, true
 
         j :test_start
 label :crash_backward
         j :fail
 label :test_start
-        LOAD_XREGS()
       }
 
       seq_dist = dist(
@@ -99,6 +99,10 @@ label :test_start
       NSEQS.times { seq_dist.next_value.call }
 
       epilogue {
+        SAVE_XREGS()
+        SAVE_FREGS()
+
+        newline
         j :test_end
 label :crash_forward
         j :fail

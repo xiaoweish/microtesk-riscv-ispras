@@ -154,11 +154,11 @@ class RiscVBaseTemplate < Template
     preparator(:target => 'F') {
       #TODO: t5
       if is_rev('RV64F') then
-        prepare ra, value(0, 63)
-        fcvt_s_l target, ra
+        prepare x31, value(0, 63)
+        fcvt_s_l target, x31
       else
-        prepare ra, value(0, 31)
-        fcvt_s_w target, ra
+        prepare x31, value(0, 31)
+        fcvt_s_w target, x31
       end
     }
 
@@ -175,8 +175,8 @@ class RiscVBaseTemplate < Template
     # Default comparator: It is used when no special case is applicable.
     #
     comparator(:target => 'X') {
-      prepare ra, value
-      bne ra, target, :fail
+      prepare x31, value
+      bne x31, target, :fail
     }
 
     #

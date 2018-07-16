@@ -55,9 +55,9 @@ label :xreg_save
   def SAVE_FREGS
     pseudo ''
 label :freg_save
-    la x31, :freg_output_data
+    la x30, :freg_output_data
     (0..31).each { |index|
-      fsd f(index), x31, index * 8
+      fsd f(index), x30, index * 8
     }
   end
 

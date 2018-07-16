@@ -32,7 +32,7 @@ class RandomTemplate < RiscVBaseTemplate
 
     sequence {
       # ADD instruction with random operands and biased operand values.
-      add x(_ FREE), x(_ FREE), x(_ FREE) do situation('random_biased',
+      add(x(_ FREE), x(_ FREE), x(_ FREE)) do situation('random_biased',
         :dist => dist(range(:value=> int_dist,                :bias => 80),  # Simple
                       range(:value=> [0xDEADBEEF, 0xBADF00D], :bias => 20))) # Magic
       end

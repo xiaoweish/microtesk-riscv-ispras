@@ -57,7 +57,6 @@ class TortureTemplate < RiscVBaseTemplate
 
     set_option_value 'reserve-dependencies', true
     set_option_value 'default-test-data', true
-    set_option_value 'self-checks', false
   end
 
   def pre_rvtest

@@ -52,50 +52,81 @@ module RiscvTest
   # Begin Macro
   ##################################################################################################
 
+  # Assembler macro 'init' is replaced with dynamic method
+  # 'RVTEST_INIT' that performs code inlining.
+  #
+  # def RVTEST_INIT
+  #  text "init"
+  # end
+
   def RVTEST_RV64U
-    text '.macro init'
-    text '.endm'
+    # text '.macro init'
+    # text '.endm'
+
+    proc = Proc.new {}
+    RiscvTest.send(:define_method, :"RVTEST_INIT", proc)
   end
 
   def RVTEST_RV64UF
-    text '.macro init'
-    RVTEST_FP_ENABLE()
-    text '.endm'
+    # text '.macro init'
+    # RVTEST_FP_ENABLE()
+    # text '.endm'
+
+    proc = Proc.new { RVTEST_FP_ENABLE() }
+    RiscvTest.send(:define_method, :"RVTEST_INIT", proc)
   end
 
   def RVTEST_RV32U
-    text '.macro init'
-    text '.endm'
+    # text '.macro init'
+    # text '.endm'
+
+    proc = Proc.new {}
+    RiscvTest.send(:define_method, :"RVTEST_INIT", proc)
   end
 
   def RVTEST_RV32UF
-    text '.macro init'
-    RVTEST_FP_ENABLE()
-    text '.endm'
+    # text '.macro init'
+    # RVTEST_FP_ENABLE()
+    # text '.endm'
+
+    proc = Proc.new { RVTEST_FP_ENABLE() }
+    RiscvTest.send(:define_method, :"RVTEST_INIT", proc)
    end
 
   def RVTEST_RV64M
-    text '.macro init'
-    RVTEST_ENABLE_MACHINE()
-    text '.endm'
+    # text '.macro init'
+    # RVTEST_ENABLE_MACHINE()
+    # text '.endm'
+
+    proc = Proc.new { RVTEST_ENABLE_MACHINE() }
+    RiscvTest.send(:define_method, :"RVTEST_INIT", proc)
   end
 
   def RVTEST_RV64S
-    text '.macro init'
-    RVTEST_ENABLE_SUPERVISOR()
-    text '.endm'
+    # text '.macro init'
+    # RVTEST_ENABLE_SUPERVISOR()
+    # text '.endm'
+
+    proc = Proc.new { RVTEST_ENABLE_SUPERVISOR() }
+    RiscvTest.send(:define_method, :"RVTEST_INIT", proc)
   end
 
   def RVTEST_RV32M
-    text '.macro init'
-    RVTEST_ENABLE_MACHINE()
-    text '.endm'
+    # text '.macro init'
+    # RVTEST_ENABLE_MACHINE()
+    # text '.endm'
+
+    proc = Proc.new { RVTEST_ENABLE_MACHINE() }
+    RiscvTest.send(:define_method, :"RVTEST_INIT", proc)
   end
 
   def RVTEST_RV32S
-    text '.macro init'
-    RVTEST_ENABLE_SUPERVISOR()
-    text '.endm'
+    # text '.macro init'
+    # RVTEST_ENABLE_SUPERVISOR()
+    # text '.endm'
+
+    proc = Proc.new { RVTEST_ENABLE_SUPERVISOR() }
+    RiscvTest.send(:define_method, :"RVTEST_INIT", proc)
   end
 
   def CHECK_XLEN
@@ -138,21 +169,36 @@ label 1
   end
 
   def RVTEST_ENABLE_SUPERVISOR
+    newline
+    comment 'RVTEST_ENABLE_SUPERVISOR'
+
     li a0, MSTATUS_MPP & (MSTATUS_MPP >> 1)
     csrs mstatus, a0
     li a0, SIP_SSIP | SIP_STIP
     csrs mideleg, a0
+
+    newline
   end
 
   def RVTEST_ENABLE_MACHINE
+    newline
+    comment 'RVTEST_ENABLE_MACHINE'
+
     li a0, MSTATUS_MPP
     csrs mstatus, a0
+
+    newline
   end
 
   def RVTEST_FP_ENABLE
+    newline
+    comment 'RVTEST_FP_ENABLE'
+
     li a0, MSTATUS_FS & (MSTATUS_FS >> 1)
     csrs mstatus, a0
     csrwi fcsr, 0
+
+    newline
   end
 
   def RISCV_MULTICORE_DISABLE
@@ -254,7 +300,7 @@ label :reset_vector
 
 label 1
     csrwi mstatus, 0
-    text "init"
+    RVTEST_INIT()
 
     EXTRA_INIT()
     EXTRA_INIT_TIMER()

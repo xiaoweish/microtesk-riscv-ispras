@@ -162,7 +162,7 @@ class RiscVBaseTemplate < Template
     #
     preparator(:target => 'F', :mask => 'XXXX_XXXX_XXXX_XXXX') {
       prepare x31, value(0, 63)
-      fcvt_s_l target, x31
+      fmv_d_x target, x31
     }
 
     #
@@ -170,7 +170,7 @@ class RiscVBaseTemplate < Template
     #
     preparator(:target => 'F', :mask => 'XXXX_XXXX') {
       prepare x31, value(0, 31)
-      fcvt_s_w target, x31
+      fmv_w_x target, x31
     }
 
     ################################################################################################

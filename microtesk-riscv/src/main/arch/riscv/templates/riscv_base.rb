@@ -215,6 +215,23 @@ class RiscVBaseTemplate < Template
 
     ################################################################################################
 
+    # The code below specifies a comparator sequence to be used in self-checking tests
+    # to test values in the specified register (target) accessed via the F addressing mode.
+
+    comparator(:target => 'F') {
+      prepare x31, value
+
+      if is_rev('RV64D') then
+        fmv_x_d x30, target
+      else
+        fmv_x_w x30, target
+      end
+
+      bne x31, x30, :fail
+    }
+
+    ################################################################################################
+
     # Test data block.
     pre_testdata
 

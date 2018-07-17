@@ -32,31 +32,31 @@ module SeqFdiv
   end
 
   def seq_fdiv_src1_s(op)
-    src1 = f(_) # reg_read_any(fregs_s)
-    dest = f(_) # reg_write(fregs_s, src1)
+    src1 = reg_read_any(:fregs_s)
+    dest = reg_write(:fregs_s, src1)
 
     instr op, dest, src1
   end
 
   def seq_fdiv_src2_s(op)
-    src1 = f(_) # reg_read_any(fregs_s)
-    src2 = f(_) # reg_read_any(fregs_s)
-    dest = f(_) # reg_write(fregs_s, src1, src2)
+    src1 = reg_read_any(:fregs_s)
+    src2 = reg_read_any(:fregs_s)
+    dest = reg_write(:fregs_s, src1, src2)
 
     instr op, dest, src1, src2
   end
 
   def seq_fdiv_src1_d(op)
-    src1 = f(_) # reg_read_any(fregs_d)
-    dest = f(_) # reg_write(fregs_d, src1)
+    src1 = reg_read_any(:fregs_d)
+    dest = reg_write(:fregs_d, src1)
 
     instr op, dest, src1
   end
 
   def seq_fdiv_src2_d(op)
-    src1 = f(_) # reg_read_any(fregs_d)
-    src2 = f(_) # reg_read_any(fregs_d)
-    dest = f(_) # reg_write(fregs_d, src1, src2)
+    src1 = reg_read_any(:fregs_d)
+    src2 = reg_read_any(:fregs_d)
+    dest = reg_write(:fregs_d, src1, src2)
 
     instr op, dest, src1, src2
   end

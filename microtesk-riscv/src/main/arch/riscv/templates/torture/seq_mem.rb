@@ -62,8 +62,8 @@ module SeqMem
   end
 
   def seq_mem_load_addrfn(op, addr)
-    reg_addr = x(_) # reg_write_hidden(xregs)
-    reg_dest = x(_) # reg_write_visible(xregs)
+    reg_addr = reg_write_hidden(:xregs)
+    reg_dest = reg_write_visible(:xregs)
     imm = rand_imm()
 
     sequence {
@@ -73,8 +73,8 @@ module SeqMem
   end
 
   def seq_mem_store_addrfn(op, addr)
-    reg_addr = x(_) # reg_write_hidden(xregs)
-    reg_src = x(_) # reg_read_visible(xregs)
+    reg_addr = reg_write_hidden(:xregs)
+    reg_src = reg_read_visible(:xregs)
     imm = rand_imm()
 
     sequence {
@@ -84,9 +84,9 @@ module SeqMem
   end
 
   def seq_mem_amo_addrfn(op, addr)
-    reg_addr = x(_) # reg_write_hidden(xregs)
-    reg_dest = x(_) # reg_write_visible(xregs)
-    reg_src = x(_) # reg_read_visible(xregs)
+    reg_addr = reg_write_hidden(:xregs)
+    reg_dest = reg_write_visible(:xregs)
+    reg_src = reg_read_visible(:xregs)
 
     sequence {
       lla reg_addr, :test_memory, addr
@@ -95,10 +95,10 @@ module SeqMem
   end
 
   def seq_mem_stld_overlap(memsize)
-    l_reg_addr = x(_) # reg_write_hidden(xregs)
-    s_reg_addr = x(_) # reg_write_hidden(xregs)
-    s_reg_src  = x(_) # reg_read_visible(xregs)
-    l_reg_dest = x(_) # reg_write_visible(xregs)
+    l_reg_addr = reg_write_hidden(:xregs)
+    s_reg_addr = reg_write_hidden(:xregs)
+    s_reg_src  = reg_read_visible(:xregs)
+    l_reg_dest = reg_write_visible(:xregs)
 
     dw_addr = rand_addr_d(memsize)
     s_imm = rand_imm()

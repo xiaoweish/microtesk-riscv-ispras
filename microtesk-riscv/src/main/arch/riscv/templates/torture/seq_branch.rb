@@ -122,7 +122,7 @@ label 1
   end
 
   def seq_taken_jal
-    reg_x1 = x(_) # reg_write_ra(xregs)
+    reg_x1 = reg_write_ra(:xregs)
     atomic {
       jal reg_x1, label_f(1)
       ILLEGAL()
@@ -130,10 +130,10 @@ label 1
   end
 
   def seq_taken_jalr
-    reg_x1 = x(_) # reg_write_ra(xregs)
-    reg_src1 = x(_) # reg_read_zero(xregs)
-    reg_dst1 = x(_) # reg_write_hidden(xregs)
-    reg_dst2 = x(_) # reg_write_hidden(xregs)
+    reg_x1 = reg_write_ra(:xregs)
+    reg_src1 = reg_read_zero(:xregs)
+    reg_dst1 = reg_write_hidden(:xregs)
+    reg_dst2 = reg_write_hidden(:xregs)
 
     block(:combinator => 'diagonal', :compositor => 'catenation') {
       la reg_dst1, :jalr_label
@@ -146,19 +146,19 @@ label :jalr_label
   end
 
   def helper_two_srcs_sameval_samereg_any
-    reg_src = x(_) # reg_read_any(xregs)
+    reg_src = reg_read_any(:xregs)
     [reg_src, reg_src]
   end
 
   def helper_two_srcs_sameval_samereg_zero()
-    reg_src = zero # reg_read_zero(xregs)
+    reg_src = reg_read_zero(:xregs)
     [reg_src, reg_src]
   end
 
   def helper_two_srcs_sameval_diffreg_any
-    reg_src = x(_) # reg_read_any(xregs)
-    reg_dst1 = x(_) # reg_write(xregs, reg_src)
-    reg_dst2 = x(_) # reg_write(xregs, reg_dst1)
+    reg_src = reg_read_any(:xregs)
+    reg_dst1 = reg_write(:xregs, reg_src)
+    reg_dst2 = reg_write(:xregs, reg_dst1)
 
     addi reg_dst1, reg_src, 0
     addi reg_dst2, reg_dst1, 0
@@ -167,20 +167,20 @@ label :jalr_label
   end
 
   def helper_two_srcs_sameval_diffreg_zero
-    reg_dst1 = x(_) # reg_write_visible(xregs)
-    reg_dst2 = x(_) # reg_write(xregs)
+    reg_dst1 = reg_write_visible(:xregs)
+    reg_dst2 = reg_write(:xregs)
 
-    addi reg_dst1, zero, 0
-    addi reg_dst2, zero, 0
+    addi reg_dst1, reg_read_zero(:xregs), 0
+    addi reg_dst2, reg_read_zero(:xregs), 0
 
     [reg_dst1, reg_dst2]
   end
 
   def helper_two_srcs_diffval_diffreg_bothpos
-    reg_dst1 = x(_) # reg_write_visible(xregs)
-    reg_dst2 = x(_) # reg_write(xregs, reg_dst1)
+    reg_dst1 = reg_write_visible(:xregs)
+    reg_dst2 = reg_write(:xregs, reg_dst1)
 
-    addi reg_dst1, zero, rand_range(1, 2047)
+    addi reg_dst1, reg_read_zero(:xregs), rand_range(1, 2047)
     addi reg_dst2, reg_dst1, rand_range(1, 2047)
 
     # signed (+, ++), unsigned (+, ++)
@@ -188,10 +188,10 @@ label :jalr_label
   end
 
   def helper_two_srcs_diffval_diffreg_bothneg
-    reg_dst1 = x(_) # reg_write_visible(xregs)
-    reg_dst2 = x(_) # reg_write(xregs, reg_dst1)
+    reg_dst1 = reg_write_visible(:xregs)
+    reg_dst2 = reg_write(:xregs, reg_dst1)
 
-    addi reg_dst1, zero, rand_range(-2048, -1)
+    addi reg_dst1, reg_read_zero(:xregs), rand_range(-2048, -1)
     addi reg_dst2, reg_dst1, rand_range(-2048, -1)
 
     # signed (-, --), unsigned (++++, +++)
@@ -199,15 +199,15 @@ label :jalr_label
   end
 
   def helper_two_srcs_sameval_diffreg_oppositesign
-    reg_src = x(_) # reg_read_any(xregs)
-    reg_dst1 = x(_) # reg_write(xregs, reg_src)
-    reg_dst2 = x(_) # reg_write(xregs, reg_src)
-    reg_one = x(_) # reg_write_visible(xregs)
-    reg_mask = x(_) # reg_write_visible(xregs)
+    reg_src = reg_read_any(:xregs)
+    reg_dst1 = reg_write(:xregs, reg_src)
+    reg_dst2 = reg_write(:xregs, reg_src)
+    reg_one = reg_write_visible(:xregs)
+    reg_mask = reg_write_visible(:xregs)
 
-    addi reg_one, zero, 1
+    addi reg_one, reg_read_zero(:xregs), 1
     slli reg_one, reg_one, 63
-    addi reg_mask, zero, -1
+    addi reg_mask, reg_read_zero(:xregs), -1
     xor reg_mask, reg_mask, reg_one
     And reg_dst1, reg_src, reg_mask
     Or reg_dst2, reg_dst1, reg_one
@@ -217,16 +217,16 @@ label :jalr_label
   end
 
   def helper_two_srcs_diffval_diffreg_oppositesign
-    reg_src1 = x(_) # reg_read_any(xregs)
-    reg_src2 = x(_) # reg_read_any(xregs)
-    reg_dst1 = x(_) # reg_write(xregs, reg_src1)
-    reg_dst2 = x(_) # reg_write(xregs, reg_src2)
-    reg_one = x(_) # reg_write_visible(xregs)
-    reg_mask = x(_) # reg_write_visible(xregs)
+    reg_src1 = reg_read_any(:xregs)
+    reg_src2 = reg_read_any(:xregs)
+    reg_dst1 = reg_write(:xregs, reg_src1)
+    reg_dst2 = reg_write(:xregs, reg_src2)
+    reg_one = reg_write_visible(:xregs)
+    reg_mask = reg_write_visible(:xregs)
 
-    addi reg_one, zero, 1
+    addi reg_one, reg_read_zero(:xregs), 1
     slli reg_one, reg_one, 63
-    addi reg_mask, zero, -1
+    addi reg_mask, reg_read_zero(:xregs), -1
     xor reg_mask, reg_mask, reg_one
     And reg_dst1, reg_src1, reg_mask
     Or reg_dst2, reg_src2, reg_one

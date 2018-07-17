@@ -17,15 +17,11 @@
 module SeqFpmem
 
   def seq_fpmem(memsize)
-    def xregs;   method(:x) end
-    def fregs_d; method(:f) end
-    def fregs_s; method(:f) end
-
     pick_random {
-      seq_fpmem_load_addrfn('FLW',  rand_addr_w(memsize), fregs_s)
-      seq_fpmem_store_addrfn('FSW', rand_addr_w(memsize), fregs_s)
-      seq_fpmem_load_addrfn('FLD',  rand_addr_d(memsize), fregs_d)
-      seq_fpmem_store_addrfn('FSD', rand_addr_d(memsize), fregs_d)
+      seq_fpmem_load_addrfn('FLW',  rand_addr_w(memsize), :fregs_s)
+      seq_fpmem_store_addrfn('FSW', rand_addr_w(memsize), :fregs_s)
+      seq_fpmem_load_addrfn('FLD',  rand_addr_d(memsize), :fregs_d)
+      seq_fpmem_store_addrfn('FSD', rand_addr_d(memsize), :fregs_d)
     }
   end
 
@@ -36,8 +32,8 @@ module SeqFpmem
   end
 
   def seq_fpmem_load_addrfn(op, addr, fregpool)
-    reg_addr = x(_) # reg_write_hidden(xregs)
-    reg_dest = fregpool.call(_) # reg_write_visible(fregpool)
+    reg_addr = reg_write_hidden(:xregs)
+    reg_dest = reg_write_visible(fregpool)
     imm = rand_imm
 
     sequence {
@@ -47,8 +43,8 @@ module SeqFpmem
   end
 
   def seq_fpmem_store_addrfn(op, addr, fregpool)
-    reg_addr = x(_) # reg_write_hidden(xregs)
-    reg_src = fregpool.call(_) # reg_read_visible(fregpool)
+    reg_addr = reg_write_hidden(:xregs)
+    reg_src = reg_read_visible(fregpool)
     imm = rand_imm
 
     sequence {

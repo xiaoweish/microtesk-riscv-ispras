@@ -26,6 +26,7 @@ require_relative 'seq_fpu'
 require_relative 'seq_mem'
 
 require_relative 'torture_data'
+require_relative 'torture_regs'
 
 #
 # Description:
@@ -43,6 +44,7 @@ class TortureTemplate < RiscVBaseTemplate
   include SeqMem
 
   include TortureData
+  include TortureRegs
 
   # Configuration settings
   NSEQS = 100
@@ -57,6 +59,7 @@ class TortureTemplate < RiscVBaseTemplate
 
     set_option_value 'reserve-dependencies', true
     set_option_value 'default-test-data', false
+    set_option_value 'self-checks', false
   end
 
   def pre_rvtest

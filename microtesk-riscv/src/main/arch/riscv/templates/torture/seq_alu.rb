@@ -64,48 +64,50 @@ module SeqAlu
   end
 
   def seq_alu_immfn(op, imm)
-    dest = x(_) # reg_write_visible(xregs)
+    dest = reg_write_visible(:xregs)
 
     instr op, dest, imm
   end
 
   def seq_alu_src1(op)
-    src1 = x(_) # reg_read_any(xregs)
-    dest = x(_) # reg_write(xregs, src1)
+    src1 = reg_read_any(:xregs)
+    dest = reg_write(:xregs, src1)
 
     instr op, dest, src1, src1
   end
 
   def seq_alu_src1_immfn(op, imm)
-    src1 = x(_) # reg_read_any(xregs)
-    dest = x(_) # reg_write(xregs, src1)
+    src1 = reg_read_any(:xregs)
+    dest = reg_write(:xregs, src1)
 
     instr op, dest, src1, imm
   end
 
   def seq_alu_src1_zero(op)
-    tmp = x(_) # reg_write_visible(xregs)
-    dest = x(_) # reg_write(xregs, src1)
+    src1 = reg_read_any(:xregs)
+    dest = reg_write(:xregs, src1)
+    tmp = reg_write_visible(:xregs)
 
-    addi tmp, zero, rand_imm
+    addi tmp, reg_read_zero(:xregs), rand_imm
     instr op, dest, tmp, tmp
   end
 
   def seq_alu_src2(op)
-    src1 = x(_) # reg_read_any(xregs)
-    src2 = x(_) # reg_read_any(xregs)
-    dest = x(_) # reg_write(xregs, src1, src2)
+    src1 = reg_read_any(:xregs)
+    src2 = reg_read_any(:xregs)
+    dest = reg_write(:xregs, src1, src2)
 
     instr op, dest, src1, src2
   end
 
   def seq_alu_src2_zero(op)
-    dest = x(_) # reg_write(xregs, src1)
-    tmp1 = x(_) # reg_write_visible(xregs)
-    tmp2 = x(_) # reg_write_visible(xregs)
+    src1 = reg_read_any(:xregs)
+    dest = reg_write(:xregs, src1)
+    tmp1 = reg_write_visible(:xregs)
+    tmp2 = reg_write_visible(:xregs)
 
-    addi tmp1, zero, rand_imm
-    addi tmp2, zero, rand_imm
+    addi tmp1, reg_read_zero(:xregs), rand_imm
+    addi tmp2, reg_read_zero(:xregs), rand_imm
     instr op, dest, tmp1, tmp2
   end
 

@@ -57,7 +57,7 @@ class FclassTemplate < RiscVBaseTemplate
 
   def TEST_FCLASS_D( testnum, correct, input )
     if __riscv_xlen == 32 then
-      # Replace the function with the 32-bit variant defined in riscv_test_macros.h
+      # Replace the function with the 32-bit variant defined in riscv_test_macros.
       TEST_FCLASS_D32( testnum, correct, input )
     else
       super( testnum, correct, input )

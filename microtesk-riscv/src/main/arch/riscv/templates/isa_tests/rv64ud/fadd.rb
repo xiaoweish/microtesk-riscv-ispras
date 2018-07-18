@@ -57,7 +57,7 @@ class FaddTemplate < RiscVBaseTemplate
 
   def TEST_FP_OP2_D( testnum, inst, flags, result, val1, val2 )
     if __riscv_xlen == 32 then
-      # Replace the function with the 32-bit variant defined in riscv_test_macros
+      # Replace the function with the 32-bit variant defined in riscv_test_macros.
       TEST_FP_OP2_D32( testnum, inst, flags, result, val1, val2 )
     else
       super( testnum, inst, flags, result, val1, val2 )

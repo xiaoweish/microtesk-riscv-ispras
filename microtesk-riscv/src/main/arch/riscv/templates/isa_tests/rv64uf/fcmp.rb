@@ -68,10 +68,6 @@ class FcmpTemplate < RiscVBaseTemplate
     TEST_FP_CMP_OP_S( 6, 'fle_s', 0x00, 1, -1.37, -1.36 )
     TEST_FP_CMP_OP_S( 7, 'flt_s', 0x00, 1, -1.37, -1.36 )
 
-    # TODO: QNANF and SNANF mismatch from the ones in
-    # riscv-tests/blob/master/isa/rv64uf/fcmp.S
-    # Need to investigate this.
-
     # Only sNaN should signal invalid for feq.
     TEST_FP_CMP_OP_S( 8, 'feq_s', 0x00, 0, NANF,    0 )
     TEST_FP_CMP_OP_S( 9, 'feq_s', 0x00, 0, NANF, NANF )

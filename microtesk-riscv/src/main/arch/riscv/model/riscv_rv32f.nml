@@ -55,7 +55,7 @@ op flw(rd: F, rs1: X, imm: card(12))
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
     load_data(MEM_WORD, tmp_address).action; // return load_value
-    rd = 0;
+    rd = -1;
     rd<31..0> = load_value<31..0>;
   }
 
@@ -73,7 +73,7 @@ op fadd_s(rd: F, rs1: F, rs2: F)
   action = {
     temp_fps<31..0> = rs1<31..0>;
     temp_fps2<31..0> = rs2<31..0>;
-    rd = 0;
+    rd = -1;
     temp_fps3 = temp_fps + temp_fps2;
     rd<31..0> = temp_fps3<31..0>;
   }
@@ -83,7 +83,7 @@ op fsub_s(rd: F, rs1: F, rs2: F)
   image  = format("0000100%s%s%3s%s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     temp_fps = cast(FLOAT32, rs1<31..0>) - cast(FLOAT32, rs2<31..0>);
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -92,7 +92,7 @@ op fmul_s(rd: F, rs1: F, rs2: F)
   image  = format("0001000%s%s%3s%s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     temp_fps = cast(FLOAT32, rs1<31..0>) * cast(FLOAT32, rs2<31..0>);
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -101,7 +101,7 @@ op fdiv_s(rd: F, rs1: F, rs2: F)
   image  = format("0001100%5s%5s%3s%5s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     temp_fps = cast(FLOAT32, rs1<31..0>) * cast(FLOAT32, rs2<31..0>);
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -112,7 +112,7 @@ op fmin_s(rd: F, rs1: F, rs2: F)
     //RoundingMode = RM_RNE;
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
-    rd = 0;
+    rd = -1;
     if temp_fps < temp_fps2 then
       rd<31..0> = temp_fps<31..0>;
     else
@@ -127,7 +127,7 @@ op fmax_s(rd: F, rs1: F, rs2: F)
     //RoundingMode = RM_RTZ;
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
-    rd = 0;
+    rd = -1;
     if temp_fps > temp_fps2 then
       rd<31..0> = temp_fps<31..0>;
     else
@@ -140,7 +140,7 @@ op fsqrt_s(rd: F, rs1: F)
   image  = format("0101100%5s%5s%3s%5s1010011", "00000", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     temp_fps = sqrt(cast(FLOAT32, rs1<31..0>));
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -150,7 +150,7 @@ op fsgnj_s(rd: F, rs1: F, rs2: F)
   action = {
     temp_fps<30..0> = rs1<30..0>;
     temp_fps<31> = rs2<31>;
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -160,7 +160,7 @@ op fsgnjn_s(rd: F, rs1: F, rs2: F)
   action = {
     temp_fps<30..0> = rs1<30..0>;
     temp_fps<31> = ~rs2<31>;
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -170,7 +170,7 @@ op fsgnjx_s(rd: F, rs1: F, rs2: F)
   action = {
     temp_fps<30..0> = rs1<30..0>;
     temp_fps<31> = rs1<31> ^ rs2<31>;
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -179,7 +179,7 @@ op fmadd_s(rd: F, rs1: F, rs2: F, rs3: F)
   image  = format("%5s00%5s%5s%3s%5s1000011", rs3.image, rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     temp_fps = cast(FLOAT32, rs1<31..0>) * cast(FLOAT32, rs2<31..0>) + cast(FLOAT32, rs3<31..0>);
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -188,7 +188,7 @@ op fmsub_s(rd: F, rs1: F, rs2: F, rs3: F)
   image  = format("%5s00%5s%5s%3s%5s1000111", rs3.image, rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     temp_fps = cast(FLOAT32, rs1<31..0>) * cast(FLOAT32, rs2<31..0>) - cast(FLOAT32, rs3<31..0>);
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -200,7 +200,7 @@ op fnmadd_s(rd: F, rs1: F, rs2: F, rs3: F)
     temp_fps2 = int_to_float(FLOAT32, tmp_int1);
     temp_fps = temp_fps2 * cast(FLOAT32, rs1<31..0>) *
                cast(FLOAT32, rs2<31..0>) + cast(FLOAT32, rs3<31..0>);
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -212,7 +212,7 @@ op fnmsub_s(rd: F, rs1: F, rs2: F, rs3: F)
     temp_fps2 = int_to_float(FLOAT32, tmp_int1);
     temp_fps = temp_fps2 * cast(FLOAT32, rs1<31..0>) *
                cast(FLOAT32, rs2<31..0>) - cast(FLOAT32, rs3<31..0>);
-    rd = 0;
+    rd = -1;
     rd<31..0> = temp_fps<31..0>;
   }
 
@@ -220,7 +220,7 @@ op fcvt_w_s(rd: X, rs1: F)
   syntax = format("fcvt.w.s %s, %s", rd.syntax, rs1.syntax)
   image  = format("1100000%5s%5s%3s%5s1010011", "00000", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
-    rd = 0;
+    rd = -1;
     rd<31..0> = float_to_int(WORD, cast(FLOAT32, rs1<31..0>));
   }
 
@@ -236,7 +236,7 @@ op fcvt_s_w(rd: F, rs1: X)
   syntax = format("fcvt.s.w %s, %s", rd.syntax, rs1.syntax)
   image  = format("1101000%5s%5s%3s%5s1010011", "00000", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
-    rd = 0;
+    rd = -1;
     rd<31..0> = int_to_float(FLOAT32, rs1<31..0>);
   }
 
@@ -258,6 +258,7 @@ op fmv_w_x(rd: F, rs1: X) // fmv_s_x
   syntax = format("fmv.s.x %s, %s", rd.syntax, rs1.syntax)
   image  = format("1111000%5s%5s%3s%5s1010011", "00000", rs1.image, "000", rd.image)
   action = {
+    rd = -1;
     rd<31..0> = rs1<31..0>;
   }
 
@@ -272,7 +273,7 @@ op feq_s(rd: X, rs1: F, rs2: F)
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
 
     if is_nan(temp_fps) && is_nan(temp_fps2) then
-      rd = 0;
+      rd = -1;
     elif is_signaling_nan(temp_fps) && is_signaling_nan(temp_fps2) then
       exception("Invalid Operation");
     elif temp_fps == temp_fps2 then
@@ -288,7 +289,7 @@ op flt_s(rd: X, rs1: F, rs2: F)
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
 
     if is_nan(temp_fps) && is_nan(temp_fps2) then
-      rd = 0;
+      rd = -1;
       exception("Invalid Operation");
     elif temp_fps < temp_fps2 then
       rd = 1;
@@ -303,7 +304,7 @@ op fle_s(rd: X, rs1: F, rs2: F)
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
 
     if is_nan(temp_fps) && is_nan(temp_fps2) then
-      rd = 0;
+      rd = -1;
       exception("Invalid Operation");
     elif temp_fps <= temp_fps2 then
       rd = 1;
@@ -331,7 +332,7 @@ op fclass_s(rd: X, rs1: F)
     if is_signaling_nan(temp_fps) then rd = 8;
     elif is_nan(temp_fps) then rd = 9;
     else
-      rd = 0;
+      rd = -1;
       //trace("TODO: fclass_s");
     endif;
   }

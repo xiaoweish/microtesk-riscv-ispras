@@ -7,5 +7,7 @@ all:
 	make -C rv64si
 	make -C rv64ua
 	make -C rv64uc
+	make -C rv64ud
+	make -C rv64uf
 	make -C rv64ui
 	make -C rv64um

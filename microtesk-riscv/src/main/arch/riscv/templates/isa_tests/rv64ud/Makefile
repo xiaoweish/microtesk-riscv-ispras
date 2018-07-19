@@ -6,7 +6,8 @@ TESTS = fadd\
         fdiv\
         fmadd\
         fmin\
-        ldst
+        ldst\
+        move
 
 all: $(TESTS)
 

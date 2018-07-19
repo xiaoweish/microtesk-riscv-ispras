@@ -5,7 +5,8 @@ TESTS = fadd\
         fcvt_w\
         fdiv\
         fmadd\
-        fmin
+        fmin\
+        ldst
 
 all: $(TESTS)
 

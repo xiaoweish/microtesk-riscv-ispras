@@ -697,7 +697,7 @@ label :"test_#{testnum}_data"
     # // ^: store computation result in address from a0, load high-word into t2
   end
 
-  def TEST_FP_OP3_D( testnum, inst, flags, result, val1, val2, val3 ) \
+  def TEST_FP_OP3_D( testnum, inst, flags, result, val1, val2, val3 )
     TEST_FP_OP_D_INTERNAL( testnum, flags, Proc.new { double result }, val1, val2, val3 ) do
       self.send :"#{inst}", f3, f0, f1, f2
       fmv_x_d a0, f3

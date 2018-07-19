@@ -3,7 +3,8 @@ TESTS = fadd\
         fcmp\
         fcvt\
         fcvt_w\
-        fdiv
+        fdiv\
+        fmadd
 
 all: $(TESTS)
 

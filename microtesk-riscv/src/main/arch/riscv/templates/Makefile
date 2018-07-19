@@ -24,4 +24,6 @@ $(SELFCHECK_TESTS):
 	sh run-toolchain.sh $@
 
 clean:
-	sh run-clean.sh ""
+	if [ -d $(MICROTESK_HOME)/output ]; then \
+		rm -r -f $(MICROTESK_HOME)/output/*; \
+	fi

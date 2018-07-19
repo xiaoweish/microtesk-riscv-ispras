@@ -55,13 +55,6 @@ class FcvtwTemplate < RiscVBaseTemplate
     RVTEST_CODE_BEGIN()
   end
 
-  # TODO: Move to a base class
-  RNE = 0 # 0b000
-  RTZ = 1 # 0b001
-  RDN = 2 # 0b010
-  RUP = 3 # 0b011
-  RMM = 4 # 0b100
-
   def pre_testdata
     RVTEST_DATA_BEGIN()
     TEST_DATA()

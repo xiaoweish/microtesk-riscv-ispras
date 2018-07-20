@@ -1,5 +1,6 @@
 TESTS = registers\
         register_allocation\
+        register_exclude_retain\
         register_reservation_auto\
         register_reservation_manual
 

@@ -373,9 +373,9 @@ pseudo op fld_global(rd: F, delta: DELTA, rt: X)
   Note: delta = symbol − pc
 */
 @rev(RV32F)
-pseudo op fsw_global(rd: F, rt: X, delta: DELTA)
+pseudo op fsw_global(rd: F, delta: DELTA, rt: X)
   init   = { delta.init; }
-  syntax = format("fsw %s, %s(%s)", rd.syntax, delta.syntax, rt.syntax)
+  syntax = format("fsw %s, %s, %s", rd.syntax, delta.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, tmp_delta<31..12> + zero_extend(card(20), tmp_delta<11>)).image,
                           fsw(rd, rt, tmp_delta<11..0>).image)
   action = {
@@ -390,9 +390,9 @@ pseudo op fsw_global(rd: F, rt: X, delta: DELTA)
   Note: delta = symbol − pc
 */
 @rev(RV32D)
-pseudo op fsd_global(rd: F, rt: X, delta: DELTA)
+pseudo op fsd_global(rd: F, delta: DELTA, rt: X)
   init   = { delta.init; }
-  syntax = format("fsd %s, %s(%s)", rd.syntax, delta.syntax, rt.syntax)
+  syntax = format("fsd %s, %s, %s", rd.syntax, delta.syntax, rt.syntax)
   image  = format("%s%s", auipc(rt, tmp_delta<31..12> + zero_extend(card(20), tmp_delta<11>)).image,
                           fsd(rd, rt, tmp_delta<11..0>).image)
   action = {

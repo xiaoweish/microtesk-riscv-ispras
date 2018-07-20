@@ -37,10 +37,7 @@ module SeqAluRvc
 #     C.MV
 #     C.ADD
 
-      ops  = []
-      ops += ['C_AND', 'C_OR', 'C_XOR', 'C_SUB', 'C_ADDW', 'C_SUBW']
-
-      ops.each { |op|
+      ['C_AND', 'C_OR', 'C_XOR', 'C_SUB', 'C_ADDW', 'C_SUBW'].each { |op|
         seq_alu_rvc_src(op)
         seq_alu_rvc_src_zero(op)
       }

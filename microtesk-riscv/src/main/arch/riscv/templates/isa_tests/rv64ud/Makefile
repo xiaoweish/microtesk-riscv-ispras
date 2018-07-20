@@ -8,6 +8,7 @@ TESTS = fadd\
         fmin\
         ldst\
         move\
+        recoding\
         structural
 
 all: $(TESTS)

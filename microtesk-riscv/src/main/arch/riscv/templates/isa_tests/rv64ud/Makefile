@@ -7,7 +7,8 @@ TESTS = fadd\
         fmadd\
         fmin\
         ldst\
-        move
+        move\
+        structural
 
 all: $(TESTS)
 

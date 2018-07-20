@@ -6,6 +6,9 @@
  2017/11/23 - 2018/MM/DD
 --------------------------------------------------------------------------------
 
+ 2018/XX/XX MicroTESK RISC-V 0.0.X
+ - Tests: Test suite uses QEMU4V 0.2.2
+
  2018/06/01 MicroTESK RISC-V 0.0.4
 
  - Specifications: Support for RV32C and RV64C

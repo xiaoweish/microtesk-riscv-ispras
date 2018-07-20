@@ -269,6 +269,7 @@ op feq_s(rd: X, rs1: F, rs2: F)
   syntax = format("feq.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("1010000%5s%5s%3s%5s1010011", rs2.image, rs1.image, "010", rd.image)
   action = {
+    rd = 0;
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
 
@@ -285,6 +286,7 @@ op flt_s(rd: X, rs1: F, rs2: F)
   syntax = format("flt.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("1010000%5s%5s%3s%5s1010011", rs2.image, rs1.image, "001", rd.image)
   action = {
+    rd = 0;
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
 
@@ -300,6 +302,7 @@ op fle_s(rd: X, rs1: F, rs2: F)
   syntax = format("fle.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("1010000%5s%5s%3s%5s1010011", rs2.image, rs1.image, "000", rd.image)
   action = {
+    rd = 0;
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
 

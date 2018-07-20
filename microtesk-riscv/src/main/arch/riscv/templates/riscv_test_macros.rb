@@ -486,18 +486,6 @@ label 2
   # Tests floating-point instructions
   ##################################################################################################
 
-  NANF  = 0x7FFF_FFFF # Canonical NaN (single)
-  QNANF = 0x7fc0_0000 # Quiet NaN (single)
-  SNANF = 0x7f80_0001 # Signalling NaN (single)
-  INFF  = 0x7F80_0000 # Positive infinity (single)
-  NINFF = 0xFF80_0000 # Negative infinity (single)
-
-  QNAN  = 0x7ff8_0000_0000_0000 # Quiet NaN (double)
-  SNAN  = 0x7ff0_0000_0000_0001 # Signalling NaN (double)
-  NAN   = 0x7FFF_FFFF_FFFF_FFFF # Canonical NaN (double)
-  INF   = 0x7FF0_0000_0000_0000 # Positive infinity (double)
-  NINF  = 0xFFF0_0000_0000_0000 # Negative infinity (double)
-
   def TEST_FP_OP_S_INTERNAL( testnum, flags, result, val1, val2, val3, &code )
 label :"test_#{testnum}"
     li TESTNUM(), testnum

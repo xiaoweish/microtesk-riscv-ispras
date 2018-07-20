@@ -26,7 +26,7 @@ public class LdstTestCase extends RiscVTest {
   public void test() {
     setCommandLineOption(Option.VERBOSE);
 
-    final Statistics statistics = run("isa_tests/rv64u/ldst.rb");
+    final Statistics statistics = run("isa_tests/rv64ud/ldst.rb");
     Assert.assertNotNull(statistics);
   }
 }

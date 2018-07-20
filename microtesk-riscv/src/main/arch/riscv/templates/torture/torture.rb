@@ -18,6 +18,7 @@ require_relative '../riscv_base'
 require_relative '../riscv_rand'
 
 require_relative 'seq_alu'
+require_relative 'seq_alu_rvc'
 require_relative 'seq_branch'
 require_relative 'seq_fax'
 require_relative 'seq_fdiv'
@@ -36,6 +37,7 @@ class TortureTemplate < RiscVBaseTemplate
   include RiscvRand
 
   include SeqAlu
+  include SeqAluRvc
   include SeqBranch
   include SeqFax
   include SeqFdiv
@@ -89,7 +91,8 @@ label :test_start
       }
 
       seq_dist = dist(
-        range(:bias => 20, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
+        range(:bias => 15, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
+        range(:bias =>  5, :value => lambda do seq_alu_rvc end),
         range(:bias => 10, :value => lambda do seq_branch end),
         range(:bias => 15, :value => lambda do seq_fax end),
         range(:bias => 15, :value => lambda do seq_fdiv end),

@@ -31,11 +31,21 @@ module TortureRegs
   # returns any type of register (hidden or visible)
   def reg_read_any(regtype)
     if :xregs == regtype
-      x(_) do situation('random_biased', :dist => rand_biased_dist) end
+      x(_) do
+        situation('random_biased', :dist => rand_biased_dist)
+      end
+    elsif :xregs_c == regtype
+      x(_ :retain => [x8, x9, x10, x11, x12, x13, x14, x15]) do
+        situation('random_biased', :dist => rand_biased_dist)
+      end
     elsif :fregs_d == regtype
-      f(_) do situation('random_biased', :dist => rand_biased_dist) end
+      f(_) do
+        situation('random_biased', :dist => rand_biased_dist)
+      end
     elsif :fregs_s == regtype
-      f(_) do situation('random_biased', :dist => rand_biased_dist, :size => 32) end
+      f(_) do
+        situation('random_biased', :dist => rand_biased_dist, :size => 32)
+      end
     else
       raise "Unsupported register type: #{regtype}"
     end
@@ -60,6 +70,8 @@ module TortureRegs
   def reg_write_visible(regtype)
     if :xregs == regtype
       x(_)
+    elsif :xregs_c == regtype
+      x(_ :retain => [x8, x9, x10, x11, x12, x13, x14, x15])
     elsif :fregs_d == regtype
       f(_)
     elsif :fregs_s == regtype

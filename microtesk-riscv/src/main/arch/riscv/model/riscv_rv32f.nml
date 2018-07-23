@@ -26,6 +26,7 @@ internal op process_float_exception_flags()
   action = {
     temp_word = float_exception_flags;
     FFLAGS_EXCEP = temp_word<4..0>;
+    FCSR_EXCEP = temp_word<4..0>;
     //FFLAGS_NX = temp_word<0>;
     //trace ("float_exception_flags: %x", temp_word);
     float_exception_flags = 0;

@@ -161,16 +161,16 @@ class RiscVBaseTemplate < Template
     # Preparator for double precision values.
     #
     preparator(:target => 'F', :mask => 'XXXX_XXXX_XXXX_XXXX') {
-      prepare x31, value(0, 63)
-      fmv_d_x target, x31
+      prepare sp, value(0, 63)
+      fmv_d_x target, sp
     }
 
     #
     # Preparator for single precision values.
     #
     preparator(:target => 'F', :mask => 'XXXX_XXXX') {
-      prepare x31, value(0, 31)
-      fmv_w_x target, x31
+      prepare sp, value(0, 31)
+      fmv_w_x target, sp
     }
 
     ################################################################################################
@@ -193,8 +193,8 @@ class RiscVBaseTemplate < Template
     # Default comparator: It is used when no special case is applicable.
     #
     comparator(:target => 'X') {
-      prepare x31, value
-      bne x31, target, :fail
+      prepare sp, value
+      bne sp, target, :fail
     }
 
     #
@@ -219,15 +219,15 @@ class RiscVBaseTemplate < Template
     # to test values in the specified register (target) accessed via the F addressing mode.
 
     comparator(:target => 'F') {
-      prepare x31, value
+      prepare sp, value
 
       if is_rev('RV64D') then
-        fmv_x_d x30, target
+        fmv_x_d x31, target
       else
-        fmv_x_w x30, target
+        fmv_x_w x31, target
       end
 
-      bne x31, x30, :fail
+      bne sp, x31, :fail
     }
 
     ################################################################################################

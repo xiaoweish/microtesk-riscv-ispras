@@ -46,18 +46,18 @@ label :xreg_init
   def SAVE_XREGS
     pseudo ''
 label :xreg_save
-    la 31, :xreg_output_data
-    (0..30).each { |index|
-      sd x(index), x31, index * 8
+    la sp, :xreg_output_data
+    (0..31).each { |index|
+      sd x(index), sp, index * 8 unless index == 2 # Not sp
     }
   end
 
   def SAVE_FREGS
     pseudo ''
 label :freg_save
-    la x30, :freg_output_data
+    la x31, :freg_output_data
     (0..31).each { |index|
-      fsd f(index), x30, index * 8
+      fsd f(index), x31, index * 8
     }
   end
 

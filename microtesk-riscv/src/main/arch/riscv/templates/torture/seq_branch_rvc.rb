@@ -23,8 +23,15 @@ module SeqBranchRvc
     pick_random {
       seq_taken_j_rvc('C_J')
       # seq_taken_j_rvc('C_JAL')
+
       seq_taken_jr_rvc('C_JR')
       seq_taken_jr_rvc('C_JALR')
+
+      seq_nontaken_c_beqz()
+      seq_nontaken_c_bnez()
+
+      seq_taken_c_beqz()
+      seq_taken_c_bnez()
     }
   end
 
@@ -45,6 +52,52 @@ module SeqBranchRvc
         instr op, reg_dst
         ILLEGAL()
         label :c_jr_label
+      }
+    }
+  end
+
+  def seq_nontaken_c_beqz
+    reg_dst = reg_write_visible(:xregs_c)
+    sequence {
+      ori reg_dst, zero, rand_range(1, 63)
+      c_beqz reg_dst, CRASH_LABEL()
+    }
+  end
+
+  def seq_nontaken_c_bnez
+    reg_dst = reg_write_visible(:xregs_c)
+    sequence {
+      Or reg_dst, zero, zero
+      c_bnez reg_dst, CRASH_LABEL()
+    }
+  end
+
+  def seq_taken_c_beqz
+    reg_dst = reg_write_visible(:xregs_c)
+    block(:combinator => 'diagonal', :compositor => 'catenation') {
+      Or reg_dst, zero, zero
+      atomic {
+        c_beqz reg_dst, label_f(1)
+        ILLEGAL()
+      }
+    }
+  end
+
+  def seq_nontaken_c_bnez
+    reg_dst = reg_write_visible(:xregs_c)
+    sequence {
+      Or reg_dst, zero, zero
+      c_bnez reg_dst, CRASH_LABEL()
+    }
+  end
+
+  def seq_taken_c_bnez
+    reg_dst = reg_write_visible(:xregs_c)
+    block(:combinator => 'diagonal', :compositor => 'catenation') {
+      ori reg_dst, zero, rand_range(1, 63)
+      atomic {
+        c_bnez reg_dst, label_f(1)
+        ILLEGAL()
       }
     }
   end

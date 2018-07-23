@@ -83,7 +83,7 @@ class TortureTemplate < RiscVBaseTemplate
           :permutator => 'random') {
       prologue {
         # This register must be excluded as it is used as temp by initializers and finalizers.
-        set_reserved x31, true
+        set_reserved sp, true
 
         j :test_start
 label :crash_backward
@@ -94,8 +94,8 @@ label :test_start
       seq_dist = dist(
         range(:bias => 20, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
         range(:bias => 15, :value => lambda do seq_alu_rvc end),
-        range(:bias =>  7, :value => lambda do seq_branch end),
-        range(:bias =>  3, :value => lambda do seq_branch_rvc end),
+        range(:bias =>  5, :value => lambda do seq_branch end),
+        range(:bias =>  5, :value => lambda do seq_branch_rvc end),
         range(:bias => 10, :value => lambda do seq_fax end),
         range(:bias => 15, :value => lambda do seq_fdiv end),
         range(:bias =>  5, :value => lambda do seq_fpmem(MEMSIZE) end),

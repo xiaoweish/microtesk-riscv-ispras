@@ -88,8 +88,10 @@ module SeqAlu
     dest = reg_write(:xregs, src1)
     tmp = reg_write_visible(:xregs)
 
-    addi tmp, reg_read_zero(:xregs), rand_imm
-    instr op, dest, tmp, tmp
+    atomic {
+      addi tmp, reg_read_zero(:xregs), rand_imm
+      instr op, dest, tmp, tmp
+    }
   end
 
   def seq_alu_src2(op)
@@ -106,9 +108,11 @@ module SeqAlu
     tmp1 = reg_write_visible(:xregs)
     tmp2 = reg_write_visible(:xregs)
 
-    addi tmp1, reg_read_zero(:xregs), rand_imm
-    addi tmp2, reg_read_zero(:xregs), rand_imm
-    instr op, dest, tmp1, tmp2
+    atomic {
+      addi tmp1, reg_read_zero(:xregs), rand_imm
+      addi tmp2, reg_read_zero(:xregs), rand_imm
+      instr op, dest, tmp1, tmp2
+    }
   end
 
 end

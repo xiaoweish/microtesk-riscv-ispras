@@ -32,7 +32,6 @@ require_relative 'torture_regs'
 #
 # Description:
 #
-#
 class TortureTemplate < RiscVBaseTemplate
   include RiscvRand
 
@@ -91,8 +90,8 @@ label :test_start
       }
 
       seq_dist = dist(
-        range(:bias => 15, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
-        range(:bias =>  5, :value => lambda do seq_alu_rvc end),
+        range(:bias => 10, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
+        range(:bias => 10, :value => lambda do seq_alu_rvc end),
         range(:bias => 10, :value => lambda do seq_branch end),
         range(:bias => 15, :value => lambda do seq_fax end),
         range(:bias => 15, :value => lambda do seq_fdiv end),

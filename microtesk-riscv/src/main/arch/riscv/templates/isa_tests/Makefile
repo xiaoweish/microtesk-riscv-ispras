@@ -1,6 +1,8 @@
 all:
 	make -C rv32ua
 	make -C rv32uc
+	make -C rv32ud
+	make -C rv32uf
 	make -C rv32ui
 	make -C rv32um
 	make -C rv64mi

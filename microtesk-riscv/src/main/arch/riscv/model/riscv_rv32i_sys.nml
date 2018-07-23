@@ -118,6 +118,7 @@ mode FFLAGS() = CSR[0x001]
 reg FFLAGS_CSR[DWORD] alias = CSR[0x001]
 // Accrued Exceptions (fflags)
 // NV DZ OF UF NX
+//reg FFLAGS_EXCEP[card(5)] alias = FFLAGS_CSR<4..0>
 reg FFLAGS_NX[BIT] alias = FFLAGS_CSR<0> // inexact exceptions respectively
 reg FFLAGS_UF[BIT] alias = FFLAGS_CSR<1> // underflow
 reg FFLAGS_OF[BIT] alias = FFLAGS_CSR<2> // overflow

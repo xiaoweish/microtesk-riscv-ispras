@@ -257,6 +257,32 @@ class InstructionRV32F2 < RiscVBaseTemplate
     feq_s a0, ft2, ft3
     trace "a0 => %x == 1", XREG(10)
 
+    # --- Test for fadd ---
+	li64 gp, 0x2
+	la a0, :operan1_1
+	flw ft0, a0, 0
+	flw ft1, a0, 4
+	flw ft2, a0, 8
+    trace "ft0: %x", FPR(0)
+    trace "ft1: %x", FPR(1)
+    trace "ft2: %x", FPR(2)
+	lw  a3, a0, 8
+    trace "a3 => %x == 1", XREG(13)
+
+	fadd_s ft3, ft0, ft1
+	fmv_x_w a0, ft3
+    trace "a0 => %x == 1", XREG(10)
+
+	fsflags a1, zero
+	li a2, 0x0
+	bne a0, a3, :fail
+    trace "a1 => %x == 1", XREG(11)
+    trace "a2 => %x == 1", XREG(12)
+	bne a1, a2, :fail
+
+    label :fail
+    nop
+
     nop
     nop
   end

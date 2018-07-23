@@ -115,6 +115,17 @@ mode FFLAGS() = CSR[0x001]
   syntax = format("fflags")
   image = format("%12s", csr_index)
 
+reg FFLAGS_CSR[DWORD] alias = CSR[0x001]
+// Accrued Exceptions (fflags)
+// NV DZ OF UF NX
+reg FFLAGS_NX[BIT] alias = FFLAGS_CSR<0> // inexact exceptions respectively
+reg FFLAGS_UF[BIT] alias = FFLAGS_CSR<1> // underflow
+reg FFLAGS_OF[BIT] alias = FFLAGS_CSR<2> // overflow
+reg FFLAGS_DZ[BIT] alias = FFLAGS_CSR<3> // division-by-zero
+reg FFLAGS_NV[BIT] alias = FFLAGS_CSR<4> // invalid operation
+//Rounding Mode (frm)
+reg FFLAGS_FRM [card(3)] alias = FFLAGS_CSR<7..5>
+
 // Floating-Point Dynamic Rounding Mode
 mode FRM() = CSR[0x002]
   init = { csr_index = 0x002; }

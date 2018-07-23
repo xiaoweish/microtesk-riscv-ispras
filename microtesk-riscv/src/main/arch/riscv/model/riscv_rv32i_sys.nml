@@ -116,16 +116,6 @@ mode FFLAGS() = CSR[0x001]
   image = format("%12s", csr_index)
 
 reg FFLAGS_CSR[DWORD] alias = CSR[0x001]
-// Accrued Exceptions (fflags)
-// NV DZ OF UF NX
-//reg FFLAGS_EXCEP[card(5)] alias = FFLAGS_CSR<4..0>
-reg FFLAGS_NX[BIT] alias = FFLAGS_CSR<0> // inexact exceptions respectively
-reg FFLAGS_UF[BIT] alias = FFLAGS_CSR<1> // underflow
-reg FFLAGS_OF[BIT] alias = FFLAGS_CSR<2> // overflow
-reg FFLAGS_DZ[BIT] alias = FFLAGS_CSR<3> // division-by-zero
-reg FFLAGS_NV[BIT] alias = FFLAGS_CSR<4> // invalid operation
-//Rounding Mode (frm)
-reg FFLAGS_FRM [card(3)] alias = FFLAGS_CSR<7..5>
 
 // Floating-Point Dynamic Rounding Mode
 mode FRM() = CSR[0x002]
@@ -138,6 +128,18 @@ mode FCSR() = CSR[0x003]
   init = { csr_index = 0x003; }
   syntax = format("fcsr")
   image = format("%12s", csr_index)
+
+reg FCSR_CSR[DWORD] alias = CSR[0x003]
+// Accrued Exceptions (fflags)
+// NV DZ OF UF NX
+//reg FCSR_EXCEP[card(5)] alias = FCSR_CSR<4..0>
+reg FCSR_NX[BIT] alias = FCSR_CSR<0> // inexact exceptions respectively
+reg FCSR_UF[BIT] alias = FCSR_CSR<1> // underflow
+reg FCSR_OF[BIT] alias = FCSR_CSR<2> // overflow
+reg FCSR_DZ[BIT] alias = FCSR_CSR<3> // division-by-zero
+reg FCSR_NV[BIT] alias = FCSR_CSR<4> // invalid operation
+//Rounding Mode (frm)
+reg FCSR_FRM [card(3)] alias = FCSR_CSR<7..5>
 
 //==================================================================================================
 // User Counter/Timers

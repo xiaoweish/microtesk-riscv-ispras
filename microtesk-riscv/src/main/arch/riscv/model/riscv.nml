@@ -422,6 +422,7 @@ pseudo op print_imm12(imm: card(12))
 #include "riscv_rv32i_sys.nml"
 
 reg FFLAGS_EXCEP[card(5)] alias = FFLAGS_CSR<4..0> //TODO: BUG (riscv_rv32i_sys.nml)
+reg FCSR_EXCEP[card(5)] alias = FCSR_CSR<4..0>
 
 #ifdef RV32M
   #include "riscv_rv32m.nml"

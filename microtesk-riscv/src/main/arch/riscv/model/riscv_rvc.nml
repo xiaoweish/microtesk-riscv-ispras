@@ -860,12 +860,12 @@ the zero-extended offset, scaled by 8, to the stack pointer, x2. It expands to f
 offset[8:3](x2).
 */
 @rev(RV32DC)
-op c_fldsp(rd: F, offset: card(6))
-  init   = { assert(rd.i<4..3> == 0b01, "C.FLDSP: 16-bit opcode: only registers x8-x15 are allowed!");}
+op c_fldsp(rd: F, offset: card(9))
+  init   = { assert(offset<2..0> == 0, "C.FLDSP: offset<2..0> != 0"); }
   syntax = format("c.fldsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
-  image  = format("001%1s%3s%2s%3s10", offset<2>, rd.i<2..0>, offset<1..0>, offset<5..3>)
+  image  = format("001%1s%5s%2s%3s10", offset<5>, rd.image, offset<4..3>, offset<8..6>)
   action = {
-    fld(rd, X(2), zero_extend(card(12), offset) << 3).action;
+    fld(rd, X(2), zero_extend(card(12), offset<8..3>) << 3).action;
   }
 
 /*
@@ -929,12 +929,12 @@ value in floating-point register rs2 to memory. It computes an effective address
 extended offset, scaled by 8, to the stack pointer, x2. It expands to fsd rs2, offset[8:3](x2).
 */
 @rev(RV32DC)
-op c_fsdsp(rs2: F, offset: card(6))
-  init   = {}
-  syntax = format("c.fsdsp %s, %d", rs2.syntax, offset)
-  image  = format("101%3s%3s%5s10", offset<2..0>, offset<5..3>, rs2.image)
+op c_fsdsp(rs2: F, offset: card(9))
+  init   = { assert(offset<2..0> == 0, "C.FSDSP: offset<2..0> != 0");}
+  syntax = format("c.fsdsp %s, %d(%s)", rs2.syntax, offset, X(2).syntax)
+  image  = format("101%3s%3s%5s10", offset<5..3>, offset<8..6>, rs2.image)
   action = {
-    fsd(rs2, X(2), zero_extend(card(12), offset) << 3).action;
+    fsd(rs2, X(2), zero_extend(card(12), offset<8..3>) << 3).action;
   }
 
 //==================================================================================================

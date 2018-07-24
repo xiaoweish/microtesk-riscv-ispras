@@ -47,7 +47,7 @@ module SeqMemRvc
   end
 
   def seq_mem_store_addrfn_sp_rvc(op, addr, imm)
-    reg_src = reg_read_visible(:xregs_c)
+    reg_src = reg_write_visible(:xregs, :exclude => [zero])
     atomic {
       lla sp, :test_memory, _SUB(addr, imm)
       instr op, reg_src, imm

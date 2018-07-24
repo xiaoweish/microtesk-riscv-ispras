@@ -36,8 +36,12 @@ module TortureRegs
       x(_ __XREGS_C(attrs)) do situation('random_biased', :dist => rand_biased_dist) end
     elsif :fregs_d == regtype
       f(_ attrs) do situation('random_biased', :dist => rand_biased_dist) end
+    elsif :fregs_d_c == regtype
+      f(_ __FREGS_C(attrs)) do situation('random_biased', :dist => rand_biased_dist) end
     elsif :fregs_s == regtype
       f(_ attrs) do situation('random_biased', :dist => rand_biased_dist, :size => 32) end
+    elsif :fregs_s_c == regtype
+      f(_ __FREGS_C(attrs)) do situation('random_biased', :dist => rand_biased_dist, :size => 32) end
     else
       raise "Unsupported register type: #{regtype}"
     end
@@ -66,8 +70,12 @@ module TortureRegs
       x(_ __XREGS_C(attrs))
     elsif :fregs_d == regtype
       f(_ attrs)
+    elsif :fregs_d_c == regtype
+      f(_ __FREGS_C(attrs))
     elsif :fregs_s == regtype
       f(_ attrs)
+    elsif :fregs_s_c == regtype
+      f(_ __FREGS_C(attrs))
     else
       raise "Unsupported register type: #{regtype}"
     end
@@ -100,6 +108,18 @@ module TortureRegs
       attrs[:retain] + xregs_c
     else
       attrs[:retain] = xregs_c
+    end
+
+    attrs
+  end
+
+  def __FREGS_C(attrs)
+    fregs_c = [f8, f9, f10, f11, f12, f13, f14, f15]
+
+    if attrs.has_key? :retain then
+      attrs[:retain] + fregs_c
+    else
+      attrs[:retain] = fregs_c
     end
 
     attrs

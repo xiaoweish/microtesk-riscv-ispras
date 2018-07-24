@@ -26,6 +26,7 @@ require_relative 'seq_fdiv'
 require_relative 'seq_fpmem'
 require_relative 'seq_fpu'
 require_relative 'seq_mem'
+require_relative 'seq_mem_rvc'
 
 require_relative 'torture_data'
 require_relative 'torture_regs'
@@ -45,6 +46,7 @@ class TortureTemplate < RiscVBaseTemplate
   include SeqFpmem
   include SeqFpu
   include SeqMem
+  include SeqMemRvc
 
   include TortureData
   include TortureRegs
@@ -100,7 +102,8 @@ label :test_start
         range(:bias => 15, :value => lambda do seq_fdiv end),
         range(:bias =>  5, :value => lambda do seq_fpmem(MEMSIZE) end),
         range(:bias => 15, :value => lambda do seq_fpu end),
-        range(:bias => 10, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end)
+        range(:bias =>  6, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end),
+        range(:bias =>  4, :value => lambda do seq_mem_rvc(MEMSIZE) end)
         )
 
       NSEQS.times { seq_dist.next_value.call }

@@ -54,7 +54,8 @@ class TortureTemplate < RiscVBaseTemplate
   include TortureRegs
 
   # Configuration settings
-  NSEQS = 100
+  NSEQS = 300
+  NMERGE = 20
   MEMSIZE = 1024
 
   USE_AMO = true
@@ -83,7 +84,6 @@ class TortureTemplate < RiscVBaseTemplate
     set_default_allocator RANDOM
 
     block(:combinator => 'diagonal',
-          :compositor => 'random',
           :permutator => 'random') {
       prologue {
         # This register must be excluded as it is used as temp by initializers and finalizers.
@@ -95,7 +95,23 @@ label :crash_backward
 label :test_start
       }
 
-      NSEQS.times { next_random_sequence }
+      count = 0
+      while count < NSEQS do
+        if count % NMERGE == 0 then
+          block(:combinator => 'diagonal',
+                :compositor => 'random',
+                :permutator => 'random') {
+             NMERGE.times do
+               if count >= NSEQS then
+                 break
+               end
+
+               next_random_sequence
+               count = count + 1
+             end
+          }
+        end
+      end
 
       epilogue {
         SAVE_XREGS()

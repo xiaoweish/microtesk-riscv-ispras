@@ -191,13 +191,13 @@ zero-extended offset, scaled by 8, to the base address in register rs10. It expa
 offset[7:3](rs10).
 */
 @rev(RV32DC)
-op c_fld(rd: F, rs1: X, offset: card(5))
+op c_fld(rd: F, rs1: X, offset: card(8))
   init   = { assert(rd.i<4..3> == 0b01, "C.FLD: Only registers f8-f15 are allowed!");
              assert(rs1.i<4..3> == 0b01, "C.FLD: Only registers x8-x15 are allowed!");}
   syntax = format("c.fld %s, %d(%s)", rd.syntax, offset, rs1.syntax)
-  image  = format("001%s%s%s%s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rd.i<2..0>)
+  image  = format("001%s%s%s%s00", offset<5..3>, rs1.i<2..0>, offset<7..6>, rd.i<2..0>)
   action = {
-    fld(rd, rs1, zero_extend(card(12), offset) << 3).action;
+    fld(rd, rs1, zero_extend(card(12), offset<7..3>) << 3).action;
   }
 
 /*
@@ -269,13 +269,14 @@ extended offset, scaled by 8, to the base address in register rs10. It expands t
 offset[7:3](rs10).
 */
 @rev(RV32DC)
-op c_fsd(rs2: F, rs1: X, offset: card(5))
+op c_fsd(rs2: F, rs1: X, offset: card(8))
   init   = { assert(rs2.i<4..3> == 0b01, "C.FSD: Only registers f8-f15 are allowed!");
-             assert(rs1.i<4..3> == 0b01, "C.FSD: Only registers x8-x15 are allowed!");}
+             assert(rs1.i<4..3> == 0b01, "C.FSD: Only registers x8-x15 are allowed!");
+             assert(offset<2..0> == 0,   "C.FSD: offset<2..0> != 0");}
   syntax = format("c.fsd %s, %d(%s)", rs2.syntax, offset, rs1.syntax)
-  image  = format("101%3s%3s%2s%3s00", offset<2..0>, rs1.i<2..0>, offset<4..3>, rs2.i<2..0>)
+  image  = format("101%3s%3s%2s%3s00", offset<5..3>, rs1.i<2..0>, offset<7..6>, rs2.i<2..0>)
   action = {
-    fsd(rs2, rs1, zero_extend(card(12), offset) << 3).action;
+    fsd(rs2, rs1, zero_extend(card(12), offset<7..3>) << 3).action;
   }
 
 /*

@@ -500,7 +500,10 @@ label :"test_#{testnum}"
 
     fsflags a1, x0
     li a2, flags
+
+    trace("Check: a0(0x%016x) == a3(0x%016x)", a0, a3)
     bne a0, a3, :fail
+    trace("Check: a1(0x%016x) == a2(0x%016x)", a1, a2)
     bne a1, a2, :fail
 
     data {
@@ -527,7 +530,10 @@ label :"test_#{testnum}"
 
     fsflags a1, x0
     li a2, flags
+
+    trace("Check: a0(0x%016x) == a3(0x%016x)", a0, a3)
     bne a0, a3, :fail
+    trace("Check: a1(0x%016x) == a2(0x%016x)", a1, a2)
     bne a1, a2, :fail
 
     data {
@@ -556,8 +562,12 @@ label :"test_#{testnum}"
 
     fsflags a1, x0
     li a2, flags
+
+    trace("Check: a0(0x%016x) == a3(0x%016x)", a0, a3)
     bne a0, a3, :fail
+    trace("Check: t1(0x%016x) == t2(0x%016x)", t1, t2)
     bne t1, t2, :fail
+    trace("Check: a1(0x%016x) == a2(0x%016x)", a1, a2)
     bne a1, a2, :fail
 
     data {

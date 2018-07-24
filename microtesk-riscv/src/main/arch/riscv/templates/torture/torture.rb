@@ -131,16 +131,16 @@ label :test_end
     if not (defined? @sequence_distribution) then
       @sequence_distribution = dist(
           range(:bias => 20, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
-          range(:bias => 15, :value => lambda do seq_alu_rvc end),
-          range(:bias =>  5, :value => lambda do seq_branch end),
+          range(:bias => 10, :value => lambda do seq_alu_rvc end),
+          range(:bias => 15, :value => lambda do seq_branch end),
           range(:bias =>  5, :value => lambda do seq_branch_rvc end),
-          range(:bias => 10, :value => lambda do seq_fax end),
-          range(:bias => 15, :value => lambda do seq_fdiv end),
-          range(:bias =>  3, :value => lambda do seq_fpmem(MEMSIZE) end),
-          range(:bias =>  2, :value => lambda do seq_fpmem_rvc(MEMSIZE) end),
-          range(:bias => 15, :value => lambda do seq_fpu end),
-          range(:bias =>  6, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end),
-          range(:bias =>  4, :value => lambda do seq_mem_rvc(MEMSIZE) end)
+          range(:bias =>  5, :value => lambda do seq_fax end),
+          range(:bias =>  5, :value => lambda do seq_fdiv end),
+          range(:bias =>  5, :value => lambda do seq_fpmem(MEMSIZE) end),
+          range(:bias =>  5, :value => lambda do seq_fpmem_rvc(MEMSIZE) end),
+          range(:bias => 10, :value => lambda do seq_fpu end),
+          range(:bias => 15, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end),
+          range(:bias =>  5, :value => lambda do seq_mem_rvc(MEMSIZE) end)
       )
     end
     @sequence_distribution.next_value.call

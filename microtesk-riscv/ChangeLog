@@ -6,7 +6,17 @@
  2017/11/23 - 2018/MM/DD
 --------------------------------------------------------------------------------
 
- 2018/XX/XX MicroTESK RISC-V 0.0.X
+ 2018/07/25 MicroTESK RISC-V 0.0.5
+
+ - Specifications: Bug fixes
+ - Test Templates: Test templates for generating torture tests
+ - Test Templates: Test templates for validating floating-point instructions
+ - Tool Functions: Improved floating-point support
+ - Tool Functions: Improved register allocation mechanism
+ - Tool Functions: Support for operations with dynamic immediate values in
+   test templates (_AND, _OR, _XOR, _ADD, _SUB, _PLUS, _MINUS, _NOT, _SLL)
+ - Tests: Improved Make scripts for running test templates
+ - Tests: Specification code coverage is measured
  - Tests: Test suite uses QEMU4V 0.2.2
 
  2018/06/01 MicroTESK RISC-V 0.0.4

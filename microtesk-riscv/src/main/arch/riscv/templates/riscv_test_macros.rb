@@ -781,6 +781,7 @@ label :"test_#{testnum}"
 
     fsflags2 x0
     fmv_x_w a0, f0
+    trace("Check: a0(0x%016x) == a3(0x%016x)", a0, a3)
     bne a0, a3, :fail
 
     data {
@@ -805,7 +806,9 @@ label :"test_#{testnum}"
     lw a0, a0, 0
 
     fsflags2 x0
+    trace("Check: a0(0x%016x) == a3(0x%016x)", a0, a3)
     bne a0, a3, :fail
+    trace("Check: a1(0x%016x) == a4(0x%016x)", a1, a4)
     bne a1, a4, :fail
 
     data {
@@ -825,6 +828,7 @@ label :"test_#{testnum}"
     self.send :"#{inst}", f0, a0
     fsflags2 x0
     fmv_x_d a0, f0
+    trace("Check: a0(0x%016x) == a3(0x%016x)", a0, a3)
     bne a0, a3, :fail
 
     data {
@@ -845,7 +849,9 @@ label :"test_#{testnum}"
     lw x31, x31, 4
 
     li TESTNUM(), testnum
+    trace("Check: testreg1(0x%016x) == x29(0x%016x)", testreg1, x29)
     bne testreg1, x29, :fail
+    trace("Check: testreg2(0x%016x) == x31(0x%016x)", testreg2, x31)
     bne testreg2, x31, :fail
 
     data {

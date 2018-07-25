@@ -374,12 +374,12 @@ rd0, rd0, shamt[5:0], except for RV128C with shamt=0, which expands to srli rd0,
 op c_srli(rd: X, shamt: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "C.SRLI: 16-bit opcode: only registers x8-x15 are allowed!");
              #ifndef RV128C
-               #ifdef RV32C
+               #ifdef RV64C
+                 assert(shamt != 0, "c.srli(RV64C): shamt == 0");
+               #else #ifdef RV32C
                  assert(shamt<5> == 0b0, "c.srli(RV32C): shamt<5> != 0");
                  assert(shamt != 0, "c.srli(RV32C): shamt == 0");
                #endif
-               #ifdef RV64C
-                 assert(shamt != 0, "c.srli(RV64C): shamt == 0");
                #endif
              #endif
            }
@@ -413,12 +413,12 @@ expands to srai rd0, rd0, shamt[5:0].
 op c_srai(rd: X, shamt: card(6))
   init   = { assert(rd.i<4..3> == 0b01, "C.SRLI: 16-bit opcode: only registers x8-x15 are allowed!");
              #ifndef RV128C
-               #ifdef RV32C
+               #ifdef RV64C
+                 assert(shamt != 0b0, "c.srai(RV64C): shamt == 0");
+               #else #ifdef RV32C
                  assert(shamt<5> == 0b0, "c.srai(RV32C): shamt<5> != 0");
                  assert(shamt != 0b0, "c.srai(RV32C): shamt == 0");
                #endif
-               #ifdef RV64C
-                 assert(shamt != 0b0, "c.srai(RV64C): shamt == 0");
                #endif
              #endif
            }
@@ -791,12 +791,12 @@ except for RV128C with shamt=0, which expands to slli rd, rd, 64.
 op c_slli(rd: X, shamt: card(6))
   init   = { assert(rd.i != 0, "c.slli: rd == 0");
              #ifndef RV128C
-               #ifdef RV32C
+               #ifdef RV64C
+                 assert(shamt != 0b0, "c.slli(RV64C): shamt == 0");
+               #else #ifdef RV32C
                  assert(shamt<5> == 0b0, "c.slli(RV32C): shamt<5> != 0");
                  assert(shamt != 0b0, "c.slli(RV32C): shamt == 0");
                #endif
-               #ifdef RV64C
-                 assert(shamt != 0b0, "c.slli(RV64C): shamt == 0");
                #endif
              #endif
            }

@@ -35,6 +35,10 @@ require_relative 'torture_regs'
 #
 # Description:
 #
+# This test template demonstrates how to generate random torture tests.
+# It provides facilities that are similar to the ones of
+# RISC-V Torture Test Generator (https://github.com/ucb-bar/riscv-torture).
+#
 class TortureTemplate < RiscVBaseTemplate
   include RiscvRand
 

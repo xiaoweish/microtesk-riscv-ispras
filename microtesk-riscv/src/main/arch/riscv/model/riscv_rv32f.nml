@@ -21,6 +21,8 @@
 // RV32F Standard Extension
 //==================================================================================================
 
+var tmp_ui3 [card(3)] // for rm
+
 var temp_word[WORD]
 internal op process_float_exception_flags()
   action = {
@@ -126,9 +128,12 @@ op fdiv_s(rd: F, rs1: F, rs2: F)
 
 op fmin_s(rd: F, rs1: F, rs2: F)
   syntax = format("fmin.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
-  image  = format("0010100%5s%5s%3s%5s1010011", rs2.image, rs1.image, "000", rd.image)
+  image  = format("0010100%5s%5s%3s%5s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
     //RoundingMode = RM_RNE;
+    tmp_ui3 = float_rounding_mode;
+    setSFRoundingMode(RM_RNE).action;
+
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
     rd = -1;
@@ -137,21 +142,34 @@ op fmin_s(rd: F, rs1: F, rs2: F)
     else
       rd<31..0> = temp_fps2<31..0>;
     endif;
+
+    float_rounding_mode = tmp_ui3;
+
+    //process_float_exception_flags().action;
   }
 
 op fmax_s(rd: F, rs1: F, rs2: F)
   syntax = format("fmax.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
-  image  = format("0010100%5s%5s%3s%5s1010011", rs2.image, rs1.image, "001", rd.image)
+  image  = format("0010100%5s%5s%3s%5s1010011", rs2.image, rs1.image, coerce(card(3), RM_RTZ), rd.image)
   action = {
+    // save the original value
+    tmp_ui3 = float_rounding_mode;
     //RoundingMode = RM_RTZ;
+    setSFRoundingMode(RM_RTZ).action;
+
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
     rd = -1;
-    if temp_fps > temp_fps2 then
+    if temp_fps2 < temp_fps then
       rd<31..0> = temp_fps<31..0>;
     else
       rd<31..0> = temp_fps2<31..0>;
     endif;
+
+    // return the original value
+    float_rounding_mode = tmp_ui3;
+
+    //process_float_exception_flags().action;
   }
 
 op fsqrt_s(rd: F, rs1: F)

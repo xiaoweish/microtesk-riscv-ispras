@@ -335,6 +335,9 @@ op <name>(rd: X, imm: card(20))
 // General functions
 //==================================================================================================
 
+// Include control and status registers (CSRs)
+#include "riscv_csreg.nml"
+
 #ifdef RV32A
   #define LOAD_STORE_MEM
 #endif
@@ -395,6 +398,13 @@ internal op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
   }
 #endif
 
+//==================================================================================================
+// General FP functions
+//==================================================================================================
+
+//reg FFLAGS_EXCEP[card(5)] alias = FFLAGS_CSR<4..0> //TODO: BUG (riscv_rv32i_sys.nml)
+//reg FCSR_EXCEP[card(5)] alias = FCSR_CSR<4..0>
+
 #ifdef ROUNDING_MODE_ON
 var RoundingMode [card(3)] // TODO:
 
@@ -408,6 +418,31 @@ let RM_RDN = 0b010
 let RM_RUP = 0b011
 // 100 RMM Round to Nearest, ties to Max Magnitude
 let RM_RMM = 0b100
+
+// ==========================
+// Set SoftFloat rounding mode
+internal op setSFRoundingMode(rmode: card(3))
+action = {
+  if rmode == coerce(card(3), RM_RNE) then
+    float_rounding_mode = coerce(WORD, 0);
+  elif rmode == coerce(card(3), RM_RTZ) then
+    float_rounding_mode = coerce(WORD, 3);
+  elif rmode == coerce(card(3), RM_RDN) then
+    float_rounding_mode = coerce(WORD, 2);
+  elif rmode == coerce(card(3), RM_RUP) then
+    float_rounding_mode = coerce(WORD, 1);
+  elif rmode == coerce(card(3), RM_RMM) then
+    float_rounding_mode = coerce(WORD, 4);
+  endif;
+}
+
+// FP RoundingMode operations
+internal op setFPRoundingMode(rmode: card(3))
+action = {
+  setSFRoundingMode(rmode).action;
+  FCSR_FRM = rmode;
+  FRM_FRM = rmode;
+}
 #endif
 
 // Prints the sign-extended 12-bit immediate
@@ -420,9 +455,6 @@ pseudo op print_imm12(imm: card(12))
 
 #include "riscv_rv32i.nml"
 #include "riscv_rv32i_sys.nml"
-
-reg FFLAGS_EXCEP[card(5)] alias = FFLAGS_CSR<4..0> //TODO: BUG (riscv_rv32i_sys.nml)
-reg FCSR_EXCEP[card(5)] alias = FCSR_CSR<4..0>
 
 #ifdef RV32M
   #include "riscv_rv32m.nml"

@@ -119,7 +119,10 @@ op fdiv_s(rd: F, rs1: F, rs2: F)
   syntax = format("fdiv.s %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0001100%5s%5s%3s%5s1010011", rs2.image, rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
-    temp_fps = cast(FLOAT32, rs1<31..0>) * cast(FLOAT32, rs2<31..0>);
+    // set rounding mode
+    setSFRoundingMode(RM_RNE).action;
+
+    temp_fps = cast(FLOAT32, rs1<31..0>) / cast(FLOAT32, rs2<31..0>);
     rd = -1;
     rd<31..0> = temp_fps<31..0>;
 
@@ -297,7 +300,10 @@ op fcvt_s_wu(rd: F, rs1: X)
   syntax = format("fcvt.s.wu %s, %s", rd.syntax, rs1.syntax)
   image  = format("1101000%5s%5s%3s%5s1010011", "00001", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
-    fcvt_s_w(rd, rs1).action;
+    tmp_dword = 0;
+    tmp_dword<31..0> = rs1<31..0>;
+    rd = -1;
+    rd<31..0> = int_to_float(FLOAT32, tmp_dword);
   }
 
 op fmv_x_w(rd: X, rs1: F) // fmv_x_s

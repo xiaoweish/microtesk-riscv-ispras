@@ -402,6 +402,16 @@ internal op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
 // General FP functions
 //==================================================================================================
 
+internal op process_float_exception_flags()
+  action = {
+    tmp_word = float_exception_flags;
+    FFLAGS_EXCEP = tmp_word<4..0>;
+    FCSR_EXCEP = tmp_word<4..0>;
+    //FFLAGS_NX = tmp_word<0>;
+    //trace ("float_exception_flags: %x", tmp_word);
+    float_exception_flags = 0;
+  }
+
 //reg FFLAGS_EXCEP[card(5)] alias = FFLAGS_CSR<4..0> //TODO: BUG (riscv_rv32i_sys.nml)
 //reg FCSR_EXCEP[card(5)] alias = FCSR_CSR<4..0>
 

@@ -29,18 +29,46 @@
     FCVT.S.LU
 */
 
-op fcvt_l_s(rd: X, rs1: F)
+op fcvt_l_s(rd: X, rs1: F, op_round_mod: card(3))
   syntax = format("fcvt.l.s %s, %s", rd.syntax, rs1.syntax)
-  image  = format("1100000%5s%5s%3s%5s1010011", "00010", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  image  = format("1100000%5s%5s%3s%5s1010011", "00010", rs1.image, op_round_mod, rd.image)
   action = {
+    //coerce(card(3), RM_RNE)
+    tmp_ui3 = float_rounding_mode;
+    setSFRoundingMode(op_round_mod).action;
+
     rd = float_to_int(DWORD, rs1);
+
+    float_rounding_mode = tmp_ui3; // return the original value
   }
 
-op fcvt_lu_s(rd: X, rs1: F)
-  syntax = format("fcvt.lu.s %s, %s", rd.syntax, rs1.syntax)
-  image  = format("1100000%5s%5s%3s%5s1010011", "00011", rs1.image, coerce(card(3), RM_RNE), rd.image)
+// TODO:
+op fcvt_l_s2(rd: X, rs1: F)
+  syntax = format("%s", fcvt_l_s(rd, rs1, coerce(card(3), RM_RTZ)).syntax)
+  image  = format("%32s", fcvt_l_s(rd, rs1, coerce(card(3), RM_RTZ)).image)
   action = {
+    fcvt_l_s(rd, rs1, coerce(card(3), RM_RTZ)).action;
+  }
+
+op fcvt_lu_s(rd: X, rs1: F, op_round_mod: card(3))
+  syntax = format("fcvt.lu.s %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1100000%5s%5s%3s%5s1010011", "00011", rs1.image, op_round_mod, rd.image)
+  action = {
+    //coerce(card(3), RM_RNE)
+    tmp_ui3 = float_rounding_mode;
+    setSFRoundingMode(op_round_mod).action;
+
     rd = float_to_int(DWORD, rs1);
+
+    float_rounding_mode = tmp_ui3; // return the original value
+  }
+
+// TODO:
+op fcvt_lu_s2(rd: X, rs1: F)
+  syntax = format("%s", fcvt_lu_s(rd, rs1, coerce(card(3), RM_RTZ)).syntax)
+  image  = format("%32s", fcvt_lu_s(rd, rs1, coerce(card(3), RM_RTZ)).image)
+  action = {
+    fcvt_lu_s(rd, rs1, coerce(card(3), RM_RTZ)).action;
   }
 
 op fcvt_s_l(rd: F, rs1: X)
@@ -82,6 +110,8 @@ op fcvt_s_lu(rd: F, rs1: X)
 
 op rv64f = fcvt_l_s
          | fcvt_lu_s
+         | fcvt_l_s2 // TODO:
+         | fcvt_lu_s2 // TODO:
          | fcvt_s_l
          | fcvt_s_lu
 

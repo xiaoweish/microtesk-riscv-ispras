@@ -23,17 +23,6 @@
 
 var tmp_ui3 [card(3)] // for rm
 
-var temp_word[WORD]
-internal op process_float_exception_flags()
-  action = {
-    temp_word = float_exception_flags;
-    FFLAGS_EXCEP = temp_word<4..0>;
-    FCSR_EXCEP = temp_word<4..0>;
-    //FFLAGS_NX = temp_word<0>;
-    //trace ("float_exception_flags: %x", temp_word);
-    float_exception_flags = 0;
-  }
-
 /*  FLW +
     FSW +
     FMADD.S +
@@ -272,20 +261,53 @@ op fnmsub_s(rd: F, rs1: F, rs2: F, rs3: F)
     process_float_exception_flags().action;
   }
 
-op fcvt_w_s(rd: X, rs1: F)
+op fcvt_w_s(rd: X, rs1: F, op_round_mod: card(3))
   syntax = format("fcvt.w.s %s, %s", rd.syntax, rs1.syntax)
-  image  = format("1100000%5s%5s%3s%5s1010011", "00000", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  image  = format("1100000%5s%5s%3s%5s1010011", "00000", rs1.image, op_round_mod, rd.image)
   action = {
-    rd = -1;
-    rd<31..0> = float_to_int(WORD, cast(FLOAT32, rs1<31..0>));
+    //coerce(card(3), RM_RNE)
+    tmp_ui3 = float_rounding_mode;
+    setSFRoundingMode(op_round_mod).action;
+
+    tmp_word = float_to_int(WORD, cast(FLOAT32, rs1<31..0>));
+    rd = sign_extend(XWORD, tmp_word);
+
+    float_rounding_mode = tmp_ui3; // return the original value
+
+    process_float_exception_flags().action;
   }
 
-op fcvt_wu_s(rd: X, rs1: F)
-  syntax = format("fcvt.wu.s %s, %s", rd.syntax, rs1.syntax)
-  image  = format("1100000%5s%5s%3s%5s1010011", "00001", rs1.image, coerce(card(3), RM_RNE), rd.image)
+// TODO:
+op fcvt_w_s2(rd: X, rs1: F)
+  syntax = format("%s", fcvt_w_s(rd, rs1, coerce(card(3), RM_RTZ)).syntax)
+  image  = format("%32s", fcvt_w_s(rd, rs1, coerce(card(3), RM_RTZ)).image)
   action = {
-    fcvt_w_s(rd, rs1).action;
-    // TODO:
+    fcvt_w_s(rd, rs1, coerce(card(3), RM_RTZ)).action;
+  }
+
+op fcvt_wu_s(rd: X, rs1: F, op_round_mod: card(3))
+  syntax = format("fcvt.wu.s %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1100000%5s%5s%3s%5s1010011", "00001", rs1.image, op_round_mod, rd.image)
+  action = {
+    //coerce(card(3), RM_RNE)
+    tmp_ui3 = float_rounding_mode;
+    setSFRoundingMode(op_round_mod).action;
+
+    tmp_dword = float_to_int(DWORD, cast(FLOAT32, rs1<31..0>));
+    tmp_word = tmp_dword<31..0>;
+    rd = sign_extend(XWORD, tmp_word);
+
+    float_rounding_mode = tmp_ui3; // return the original value
+
+    process_float_exception_flags().action;
+  }
+
+// TODO:
+op fcvt_wu_s2(rd: X, rs1: F)
+  syntax = format("%s", fcvt_wu_s(rd, rs1, coerce(card(3), RM_RTZ)).syntax)
+  image  = format("%32s", fcvt_wu_s(rd, rs1, coerce(card(3), RM_RTZ)).image)
+  action = {
+    fcvt_wu_s(rd, rs1, coerce(card(3), RM_RTZ)).action;
   }
 
 op fcvt_s_w(rd: F, rs1: X)
@@ -469,6 +491,8 @@ op rv32f = flw
          | fnmsub_s
          | fcvt_w_s
          | fcvt_wu_s
+         | fcvt_w_s2 //
+         | fcvt_wu_s2 //
          | fcvt_s_w
          | fcvt_s_wu
          | fmv_x_w

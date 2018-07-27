@@ -59,7 +59,6 @@ op fcvt_s_lu(rd: F, rs1: X)
   // TODO:
     tmp_word = 0;
     temp_fps = int_to_float(FLOAT32, tmp_word);
-    temp_fps = 0;
     if rs1<63> == 1 then
       tmp_dword<62> = 1;
       temp_fps = int_to_float(FLOAT32, tmp_dword<63..0>);

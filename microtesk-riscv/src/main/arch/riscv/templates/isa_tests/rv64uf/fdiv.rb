@@ -65,7 +65,7 @@ class FdivTemplate < RiscVBaseTemplate
     TEST_FP_OP2_S(4, 'fdiv_s', 0,          3.14159265, 3.14159265,        1.0 )
 
     TEST_FP_OP1_S(5, 'fsqrt_s', 1, 1.7724538498928541, 3.14159265 )
-    TEST_FP_OP1_S(6, 'fsqrt_s', 0,                100,      10000 )
+    TEST_FP_OP1_S(6, 'fsqrt_s', 0,              100.0,    10000.0 )
 
     TEST_FP_OP1_S_DWORD_RESULT(7, 'fsqrt_s', 0x10, 0x7FC00000, -1.0 )
 

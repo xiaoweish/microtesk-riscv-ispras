@@ -251,7 +251,7 @@ op fnmadd_s(rd: F, rs1: F, rs2: F, rs3: F)
     tmp_int1 = -1;
     temp_fps2 = int_to_float(FLOAT32, tmp_int1);
     temp_fps = temp_fps2 * cast(FLOAT32, rs1<31..0>) *
-               cast(FLOAT32, rs2<31..0>) + cast(FLOAT32, rs3<31..0>);
+               cast(FLOAT32, rs2<31..0>) - cast(FLOAT32, rs3<31..0>);
     rd = -1;
     rd<31..0> = temp_fps<31..0>;
 
@@ -265,7 +265,7 @@ op fnmsub_s(rd: F, rs1: F, rs2: F, rs3: F)
     tmp_int1 = -1;
     temp_fps2 = int_to_float(FLOAT32, tmp_int1);
     temp_fps = temp_fps2 * cast(FLOAT32, rs1<31..0>) *
-               cast(FLOAT32, rs2<31..0>) - cast(FLOAT32, rs3<31..0>);
+               cast(FLOAT32, rs2<31..0>) + cast(FLOAT32, rs3<31..0>);
     rd = -1;
     rd<31..0> = temp_fps<31..0>;
 

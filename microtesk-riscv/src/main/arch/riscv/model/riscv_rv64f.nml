@@ -56,9 +56,24 @@ op fcvt_s_lu(rd: F, rs1: X)
   syntax = format("fcvt.s.lu %s, %s", rd.syntax, rs1.syntax)
   image  = format("1101000%5s%5s%3s%5s1010011", "00011", rs1.image, coerce(card(3), RM_RNE), rd.image)
   action = {
-    tmp_dword<63..0> = rs1<63..0>;
+  // TODO:
+    tmp_word = 0;
+    temp_fps = int_to_float(FLOAT32, tmp_word);
+    temp_fps = 0;
+    if rs1<63> == 1 then
+      tmp_dword<62> = 1;
+      temp_fps = int_to_float(FLOAT32, tmp_dword<63..0>);
+      temp_fps = temp_fps + temp_fps;
+    endif;
+  //
+
+    tmp_dword = 0;
+    tmp_dword<62..0> = rs1<62..0>;
+
+    temp_fps2 = int_to_float(FLOAT32, tmp_dword<63..0>);
+    temp_fps = temp_fps + temp_fps2;
+
     rd = -1;
-    temp_fps = int_to_float(FLOAT32, tmp_dword<63..0>);
     rd<31..0> = temp_fps<31..0>;
   }
 

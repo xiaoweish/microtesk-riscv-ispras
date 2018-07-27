@@ -427,9 +427,27 @@ pseudo op fneg_s(rd: F, rs: F)
     fsgnjn_s(rd, rs, rs).action;
   }
 
+// The same as FMV.X.W (obsolete name for backward compatibility)
+pseudo op fmv_x_s(rd: X, rs1: F)
+  syntax = format("fmv.x.s %s, %s", rd.syntax, rs1.syntax)
+  image  = format("%s", fmv_x_w(rd, rs1).image)
+  action = {
+    fmv_x_w(rd, rs1).action;
+  }
+
+// The same as FMV.W.X (obsolete name for backward compatibility)
+pseudo op fmv_s_x(rd: F, rs1: X)
+  syntax = format("fmv.s.x %s, %s", rd.syntax, rs1.syntax)
+  image  = format("%s", fmv_w_x(rd, rs1).image)
+  action = {
+    fmv_w_x(rd, rs1).action;
+  }
+
 op rv32f_pseudo = fmv_s
                 | fabs_s
                 | fneg_s
+                | fmv_x_s
+                | fmv_s_x
 
 //==================================================================================================
 

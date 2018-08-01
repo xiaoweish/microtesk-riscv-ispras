@@ -62,6 +62,7 @@ label :"test_#{testnum}"
     self.instance_eval &code
     li x29, MASK_XLEN(correctval)
     li TESTNUM(), testnum
+    trace("Check: testreg(0x%016x) == x29(0x%016x)", testreg, x29)
     bne testreg, x29, :fail
   end
 
@@ -310,6 +311,7 @@ label 1
     TEST_INSERT_NOPS(nop_cycles)
     addi x6, x30, 0
     li x29, result
+    trace("Check: x6(0x%016x) == x29(0x%016x)", x6, x29)
     bne x6, x29, :fail
     addi x4, x4, 1
     li x5, 2
@@ -325,6 +327,7 @@ label 1
     TEST_INSERT_NOPS(nop_cycles)
     self.send :"#{inst}", x30, x1, offset
     li x29, result
+    trace("Check: x30(0x%016x) == x29(0x%016x)", x30, x29)
     bne x30, x29, :fail
     addi x4, x4, 1
     li x5, 2
@@ -352,6 +355,7 @@ label 1
     self.send :"#{store_inst}", x1, x2, offset
     self.send :"#{load_inst}", x30, x2, offset
     li x29, result
+    trace("Check: x30(0x%016x) == x29(0x%016x)", x30, x29)
     bne x30, x29, :fail
     addi x4, x4, 1
     li x5, 2
@@ -379,6 +383,7 @@ label 1
     self.send :"#{store_inst}", x1, x2, offset
     self.send :"#{load_inst}", x30, x2, offset
     li x29, result
+    trace("Check: x30(0x%016x) == x29(0x%016x)", x30, x29)
     bne x30, x29, :fail
     addi x4, x4, 1
     li x5, 2
@@ -391,11 +396,13 @@ label :"test_#{testnum}"
     li x1, val1
     li x2, val2
     self.send :"#{inst}", x1, x2, label_f(2)
+    trace("Check: x0(0x%016x) == TESTNUM(0x%016x)", x0, TESTNUM())
     bne x0, TESTNUM(), :fail
 label 1
     bne x0, TESTNUM(), label_f(3)
 label 2
     self.send :"#{inst}", x1, x2, label_b(1)
+    trace("Check: x0(0x%016x) == TESTNUM(0x%016x)", x0, TESTNUM())
     bne x0, TESTNUM(), :fail
 label 3
   end
@@ -408,6 +415,7 @@ label :"test_#{testnum}"
     self.send :"#{inst}", x1, x2, label_f(1)
     bne x0, TESTNUM(), label_f(2)
 label 1
+    trace("Check: x0(0x%016x) == TESTNUM(0x%016x)", x0, TESTNUM())
     bne x0, TESTNUM(), :fail
 label 2
     self.send :"#{inst}", x1, x2, label_b(1)
@@ -423,6 +431,7 @@ label 1
     TEST_INSERT_NOPS(src1_nops)
     li x2, val2
     TEST_INSERT_NOPS(src2_nops)
+    trace("Check: x1(0x%016x) vs. x2(0x%016x)", x1, x2)
     self.send :"#{inst}", x1, x2, :fail
     addi x4, x4, 1
     li x5, 2
@@ -438,6 +447,7 @@ label 1
     TEST_INSERT_NOPS(src1_nops)
     li x1, val1
     TEST_INSERT_NOPS(src2_nops)
+    trace("Check: x1(0x%016x) vs. x2(0x%016x)", x1, x2)
     self.send :"#{inst}", x1, x2, :fail
     addi x4, x4, 1
     li x5, 2
@@ -456,6 +466,7 @@ label 1
     la x6, label_f(2)
     TEST_INSERT_NOPS(nop_cycles)
     self.send :"#{inst}", x6
+    trace("Check: x0(0x%016x) == TESTNUM(0x%016x)", x0, TESTNUM())
     bne x0, TESTNUM(), :fail
 label 2
     addi x4, x4, 1
@@ -471,6 +482,7 @@ label 1
     la x6, label_f(2)
     TEST_INSERT_NOPS(nop_cycles)
     self.send :"#{inst}", x19, x6, 0
+    trace("Check: x0(0x%016x) == TESTNUM(0x%016x)", x0, TESTNUM())
     bne x0, TESTNUM(), :fail
 label 2
     addi x4, x4, 1
@@ -867,6 +879,7 @@ label :"test_#{testnum}_data"
   ##################################################################################################
 
   def TEST_PASSFAIL
+    trace("Check: x0(0x%016x) != TESTNUM(0x%016x)", x0, TESTNUM())
     bne x0, TESTNUM(), :pass
 label :fail
     RVTEST_FAIL()

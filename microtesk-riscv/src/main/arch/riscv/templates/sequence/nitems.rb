@@ -27,7 +27,7 @@ class NitemsTemplate < RiscVBaseTemplate
   def run
     # Sequence construction scheme:
     # 1. The sequences produced by the nested block are expanded into a single sequence.
-    # 2. the instructions in the resulting sequences are randomly shuffled.
+    # 2. The instructions in the resulting sequence are randomly shuffled.
     # 3. Steps 1 and 2 are repeated 10 times to produce 10 sequences.
     block(:rearranger => 'expand', :obfuscator => 'random', :nitems => 10) {
       # The sequence described by the block is repeated 5 times.

@@ -128,7 +128,7 @@ reg FRM_CSR[DWORD] alias = CSR[0x002]
 reg FRM_FRM [card(3)] alias = FRM_CSR<2..0>
 
 // Floating-Point Control and Status Register (frm + fflags)
-mode FCSR() = CSR[0x003]
+mode FCSR() = XREG[0]<size_of(XREG[0])-1..8>::CSR[0x003]<7..0>
   init = { csr_index = 0x003; }
   syntax = format("fcsr")
   image = format("%12s", csr_index)

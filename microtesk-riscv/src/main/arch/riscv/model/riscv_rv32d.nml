@@ -364,17 +364,32 @@ op fle_d(rd: X, rs1: F, rs2: F)
     8 rs1 is a signaling NaN.
     9 rs1 is a quiet NaN.
     */
+var sign_bit_d [BIT]
+var exponent_d [card(11)]
+var precision_d [card(52)]
+
 op fclass_d(rd: X, rs1: F)
   syntax = format("fclass.d %s, %s", rd.syntax, rs1.syntax)
   image  = format("1110001%5s%5s%3s%5s1010011", "00000", rs1.image, "001", rd.image)
   action = {
-    temp_fpd = cast(FLOAT64, rs1<63..0>);
+    temp_fpd = cast(FLOAT64, rs1);
+    sign_bit_d = rs1<63>;
+    exponent_d = rs1<62..52>;
+    precision_d = rs1<51..0>;
+    rd = 0;
 
-    if is_signaling_nan(temp_fpd) then rd = 8;
-    elif is_nan(temp_fpd) then rd = 9;
+    if sign_bit_d == 1 && exponent_d == coerce(card(11), 0x7ff) && precision_d == 0 then rd<0> = 1;
+    elif sign_bit_d == 1 && exponent_d == 0 && precision_d == 0 then rd<3> = 1;
+    elif sign_bit_d == 0 && exponent_d == 0 && precision_d == 0 then rd<4> = 1;
+    elif sign_bit_d == 0 && exponent_d == coerce(card(11), 0x7ff) && precision_d == 0 then rd<7> = 1;
+    elif is_signaling_nan(temp_fpd) then rd<8> = 1;
+    elif is_nan(temp_fpd) then rd<9> = 1;
+    elif sign_bit_d == 0 && exponent_d == coerce(card(11), 0) then rd<5> = 1;
+    elif sign_bit_d == 1 && exponent_d == coerce(card(11), 0) then rd<2> = 1;
+    elif sign_bit_d == 1 then rd<1> = 1; // TODO:
+    elif sign_bit_d == 0 then rd<6> = 1; // TODO:
     else
       rd = 0;
-      //trace("TODO: fclass_d");
     endif;
   }
 

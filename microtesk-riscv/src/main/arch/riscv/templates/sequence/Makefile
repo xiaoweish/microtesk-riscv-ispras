@@ -1,6 +1,7 @@
 TESTS = arithmetic\
         block\
         iterate\
+        nitems\
         sequence
 
 all: $(TESTS)

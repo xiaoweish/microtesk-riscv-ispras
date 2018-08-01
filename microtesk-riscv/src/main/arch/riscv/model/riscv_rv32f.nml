@@ -293,9 +293,14 @@ op fcvt_wu_s(rd: X, rs1: F, op_round_mod: card(3))
     tmp_ui3 = float_rounding_mode;
     setSFRoundingMode(op_round_mod).action;
 
-    tmp_dword = float_to_int(DWORD, cast(FLOAT32, rs1<31..0>));
-    tmp_word = tmp_dword<31..0>;
-    rd = sign_extend(XWORD, tmp_word);
+    if rs1<31> == 1 then
+      // TODO: jSoftFloat
+      rd = 0;
+    else
+      tmp_dword = float_to_int(DWORD, cast(FLOAT32, rs1<31..0>));
+      tmp_word = tmp_dword<31..0>;
+      rd = sign_extend(XWORD, tmp_word);
+    endif;
 
     float_rounding_mode = tmp_ui3; // return the original value
 

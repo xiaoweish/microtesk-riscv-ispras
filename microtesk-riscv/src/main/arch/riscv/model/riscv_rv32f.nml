@@ -360,12 +360,14 @@ op feq_s(rd: X, rs1: F, rs2: F)
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
 
     if is_nan(temp_fps) && is_nan(temp_fps2) then
-      rd = -1;
+      rd = 0;
     elif is_signaling_nan(temp_fps) && is_signaling_nan(temp_fps2) then
       exception("Invalid Operation");
     elif temp_fps == temp_fps2 then
       rd = 1;
     endif;
+
+    process_float_exception_flags().action;
   }
 
 op flt_s(rd: X, rs1: F, rs2: F)
@@ -382,6 +384,8 @@ op flt_s(rd: X, rs1: F, rs2: F)
     elif temp_fps < temp_fps2 then
       rd = 1;
     endif;
+
+    process_float_exception_flags().action;
   }
 
 op fle_s(rd: X, rs1: F, rs2: F)
@@ -398,6 +402,8 @@ op fle_s(rd: X, rs1: F, rs2: F)
     elif temp_fps <= temp_fps2 then
       rd = 1;
     endif;
+
+    process_float_exception_flags().action;
   }
 
 /*TODO:

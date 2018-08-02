@@ -120,7 +120,7 @@ reg FFLAGS_CSR[DWORD] alias = CSR[0x001] // TODO:
 reg FFLAGS_EXCEP[card(5)] alias = FFLAGS_CSR<4..0>
 
 // Floating-Point Dynamic Rounding Mode
-mode FRM() = XREG[0]<size_of(XREG[0])-1..8>::CSR[0x003]<7..5>::XREG[0]<4..0>
+mode FRM() = XREG[0]<size_of(XREG[0])-1..3>::CSR[0x003]<7..5>
   init = { csr_index = 0x002; }
   syntax = format("frm")
   image = format("%12s", csr_index)

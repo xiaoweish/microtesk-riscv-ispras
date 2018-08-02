@@ -149,10 +149,10 @@ op csrrs(rd: X, csr: CSR_MODE, rs1: X)
   syntax = format("csrrs %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
   image  = format("%12s%5s010%5s1110011", csr.image, rs1.image, rd.image)
   action = {
+    rd = zero_extend(XWORD, csr);
     if rs1.i != 0 then
       csr = csr | rs1;
     endif;
-    rd = zero_extend(XWORD, csr);
   }
 
 /* CSRRC (Atomic Read and Clear Bits in CSR) */
@@ -160,10 +160,10 @@ op csrrc(rd: X, csr: CSR_MODE, rs1: X)
   syntax = format("csrrc %s, %s, %s", rd.syntax, csr.syntax, rs1.syntax)
   image  = format("%12s%5s011%5s1110011", csr.image, rs1.image, rd.image)
   action = {
+    rd = zero_extend(XWORD, csr);
     if rs1.i != 0 then
       csr = csr & ~rs1;
     endif;
-    rd = zero_extend(XWORD, csr);
   }
 
 /* The CSRRWI, CSRRSI, and CSRRCI variants are similar to CSRRW, CSRRS, and CSRRC re-
@@ -183,20 +183,20 @@ op csrrsi(rd: X, csr: CSR_MODE, imm: card(5))
   syntax = format("csrrsi %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
   image  = format("%12s%5s110%5s1110011", csr.image, imm, rd.image)
   action = {
+    rd = zero_extend(XWORD, csr);
     if imm != 0 then
       csr = csr | zero_extend(XWORD, imm);
     endif;
-    rd = zero_extend(XWORD, csr);
   }
 
 op csrrci(rd: X, csr: CSR_MODE, imm: card(5))
   syntax = format("csrrci %s, %s, 0x%x", rd.syntax, csr.syntax, imm)
   image  = format("%12s%5s111%5s1110011", csr.image, imm, rd.image)
   action = {
+    rd = zero_extend(XWORD, csr);
     if imm != 0 then
       csr = csr & ~zero_extend(XWORD, imm);
     endif;
-    rd = zero_extend(XWORD, csr);
   }
 
 //==================================================================================================

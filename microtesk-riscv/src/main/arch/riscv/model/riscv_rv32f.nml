@@ -295,7 +295,9 @@ op fcvt_wu_s(rd: X, rs1: F, op_round_mod: card(3))
 
     if rs1<31> == 1 then
       // TODO: jSoftFloat
-      rd = 0;
+      temp_fps<31..0> = rs1<31..0>;
+      if is_nan(temp_fps) then rd = -1;
+      else rd = 0; endif;
     else
       tmp_dword = float_to_int(DWORD, cast(FLOAT32, rs1<31..0>));
       tmp_word = tmp_dword<31..0>;
@@ -305,6 +307,17 @@ op fcvt_wu_s(rd: X, rs1: F, op_round_mod: card(3))
     float_rounding_mode = tmp_ui3; // return the original value
 
     process_float_exception_flags().action;
+    if rs1<31> == 1 then
+      // TODO: jSoftFloat
+      tmp_dword = float_to_int(DWORD, cast(FLOAT32, XREG[0]<1>::rs1<30..0>));
+      tmp_word = float_exception_flags;
+      if tmp_word == 0 then
+        FFLAGS_EXCEP<4> = 0b1;
+        FCSR_EXCEP<4> = 0b1;
+      else
+        process_float_exception_flags().action;
+      endif;
+    endif;
   }
 
 // TODO:
@@ -361,13 +374,18 @@ op feq_s(rd: X, rs1: F, rs2: F)
 
     if is_nan(temp_fps) && is_nan(temp_fps2) then
       rd = 0;
-    elif is_signaling_nan(temp_fps) && is_signaling_nan(temp_fps2) then
-      exception("Invalid Operation");
     elif temp_fps == temp_fps2 then
       rd = 1;
     endif;
 
-    process_float_exception_flags().action;
+    // TODO: jSoftFloat
+    if is_signaling_nan(temp_fps) && is_signaling_nan(temp_fps2) then
+      FFLAGS_EXCEP<4> = 0b1;
+      FCSR_EXCEP<4> = 0b1;
+      exception("Invalid Operation");
+    else
+      process_float_exception_flags().action;
+    endif;
   }
 
 op flt_s(rd: X, rs1: F, rs2: F)
@@ -378,14 +396,18 @@ op flt_s(rd: X, rs1: F, rs2: F)
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
 
-    if is_nan(temp_fps) && is_nan(temp_fps2) then
-      rd = -1;
-      exception("Invalid Operation");
-    elif temp_fps < temp_fps2 then
+    if temp_fps < temp_fps2 then
       rd = 1;
     endif;
 
-    process_float_exception_flags().action;
+    // TODO: jSoftFloat
+    if is_nan(temp_fps) && is_nan(temp_fps2) then
+      FFLAGS_EXCEP<4> = 0b1;
+      FCSR_EXCEP<4> = 0b1;
+      exception("Invalid Operation");
+    else
+      process_float_exception_flags().action;
+    endif;
   }
 
 op fle_s(rd: X, rs1: F, rs2: F)
@@ -396,14 +418,18 @@ op fle_s(rd: X, rs1: F, rs2: F)
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
 
-    if is_nan(temp_fps) && is_nan(temp_fps2) then
-      rd = -1;
-      exception("Invalid Operation");
-    elif temp_fps <= temp_fps2 then
+    if temp_fps <= temp_fps2 then
       rd = 1;
     endif;
 
-    process_float_exception_flags().action;
+    // TODO: jSoftFloat
+    if is_nan(temp_fps) && is_nan(temp_fps2) then
+      FFLAGS_EXCEP<4> = 0b1;
+      FCSR_EXCEP<4> = 0b1;
+      exception("Invalid Operation");
+    else
+      process_float_exception_flags().action;
+    endif;
   }
 
 /*TODO:

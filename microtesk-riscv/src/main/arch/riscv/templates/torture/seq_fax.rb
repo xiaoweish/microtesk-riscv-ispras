@@ -43,7 +43,7 @@ module SeqFax
         seq_fax_src1(op, :xregs, :fregs_s)
       }
 
-      ['FCVT_L_D', 'FCVT_LU_D', 'FCVT_W_D', 'FCVT_WU_D', 'FMV_X_D'].each { |op|
+      ['FCVT_L_D2', 'FCVT_LU_D2', 'FCVT_W_D2', 'FCVT_WU_D2', 'FMV_X_D'].each { |op|
         seq_fax_src1(op, :xregs, :fregs_d)
       }
 

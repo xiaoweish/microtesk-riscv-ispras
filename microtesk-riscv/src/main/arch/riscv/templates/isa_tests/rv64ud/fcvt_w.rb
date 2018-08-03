@@ -126,28 +126,28 @@ label :tdat_d
     TEST_CASE(42, x1, 0x000000007fffffff) do
       la x1, :tdat_d
       fld f1, x1, 0
-      fcvt_w_d x1, f1
+      fcvt_w_d2 x1, f1
     end
 
     if __riscv_xlen >= 64 then
       TEST_CASE(43, x1, 0x7fffffffffffffff) do
         la x1, :tdat_d
         fld f1, x1, 0
-        fcvt_l_d x1, f1
+        fcvt_l_d2 x1, f1
       end
     end
 
     TEST_CASE(44, x1, 0xffffffff80000000) do
       la x1, :tdat_d
       fld f1, x1, 16
-      fcvt_w_d x1, f1
+      fcvt_w_d2 x1, f1
     end
 
     if __riscv_xlen >= 64 then
       TEST_CASE(45, x1, 0x8000000000000000) do
         la x1, :tdat_d
         fld f1, x1, 16
-        fcvt_l_d x1, f1
+        fcvt_l_d2 x1, f1
       end
     end
 
@@ -155,28 +155,28 @@ label :tdat_d
     TEST_CASE(52, x1, 0x000000007fffffff) do
       la x1, :tdat_d
       fld f1, x1, 8
-      fcvt_w_d x1, f1
+      fcvt_w_d2 x1, f1
     end
 
     if __riscv_xlen >= 64 then
       TEST_CASE(53, x1, 0x7fffffffffffffff) do
         la x1, :tdat_d
         fld f1, x1, 8
-        fcvt_l_d x1, f1
+        fcvt_l_d2 x1, f1
       end
     end
 
     TEST_CASE(54, x1, 0x000000007fffffff) do
       la x1, :tdat_d
       fld f1, x1, 24
-      fcvt_w_d x1, f1
+      fcvt_w_d2 x1, f1
     end
 
     if __riscv_xlen >= 64 then
       TEST_CASE(55, x1, 0x7fffffffffffffff) do
         la x1, :tdat_d
         fld f1, x1, 24
-        fcvt_l_d x1, f1
+        fcvt_l_d2 x1, f1
       end
     end
 
@@ -184,50 +184,50 @@ label :tdat_d
     TEST_CASE(62, x1, 0xffffffffffffffff) do
       la x1, :tdat_d
       fld f1, x1, 0
-      fcvt_wu_d x1, f1
+      fcvt_wu_d2 x1, f1
     end
 
     TEST_CASE(63, x1, 0xffffffffffffffff) do
       la x1, :tdat_d
       fld f1, x1, 8
-      fcvt_wu_d x1, f1
+      fcvt_wu_d2 x1, f1
     end
 
     TEST_CASE(64, x1, 0) do
       la x1, :tdat_d
       fld f1, x1, 16
-      fcvt_wu_d x1, f1
+      fcvt_wu_d2 x1, f1
     end
 
     TEST_CASE(65, x1, 0xffffffffffffffff) do
       la x1, :tdat_d
       fld f1, x1, 24
-      fcvt_wu_d x1, f1
+      fcvt_wu_d2 x1, f1
     end
 
     if __riscv_xlen >= 64 then
       TEST_CASE(66, x1, 0xffffffffffffffff) do
         la x1, :tdat_d
         fld f1, x1, 0
-        fcvt_lu_d x1, f1
+        fcvt_lu_d2 x1, f1
       end
 
       TEST_CASE(67, x1, 0xffffffffffffffff) do
         la x1, :tdat_d
         fld f1, x1, 8
-        fcvt_lu_d x1, f1
+        fcvt_lu_d2 x1, f1
       end
 
       TEST_CASE(68, x1, 0) do
         la x1, :tdat_d
         fld f1, x1, 16
-        fcvt_lu_d x1, f1
+        fcvt_lu_d2 x1, f1
       end
 
       TEST_CASE(69, x1, 0xffffffffffffffff) do
         la x1, :tdat_d
         fld f1, x1, 24
-        fcvt_lu_d x1, f1
+        fcvt_lu_d2 x1, f1
       end
     end
   end

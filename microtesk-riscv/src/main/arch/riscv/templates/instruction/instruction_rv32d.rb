@@ -53,8 +53,8 @@ class InstructionRV32D < RiscVBaseTemplate
       fnmadd_d ft0, ft1, ft2, ft3
       fnmsub_d ft0, ft1, ft2, ft3
 
-      fcvt_w_d t0, ft0
-      fcvt_wu_d t0, ft0
+      fcvt_w_d2 t0, ft0
+      fcvt_wu_d2 t0, ft0
       fcvt_d_w ft0, t0
       fcvt_d_wu ft0, t0
 
@@ -78,7 +78,7 @@ class InstructionRV32D < RiscVBaseTemplate
       fcvt_d_w ft1, t1
       fadd_d ft2, ft1, ft0
       trace "t2: x7 = %x", XREG(7)
-      fcvt_w_d t2, ft2
+      fcvt_w_d2 t2, ft2
       trace "ft2 = %x", fpr(2)
       trace "t2: x7 = %x", XREG(7)
 

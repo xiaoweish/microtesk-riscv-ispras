@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -115,7 +115,7 @@ op fdiv_s(rd: F, rs1: F, rs2: F)
     rd = -1;
     rd<31..0> = temp_fps<31..0>;
 
-    process_float_exception_flags().action;
+    //process_float_exception_flags().action;
   }
 
 op fmin_s(rd: F, rs1: F, rs2: F)
@@ -161,7 +161,7 @@ op fmax_s(rd: F, rs1: F, rs2: F)
     // return the original value
     float_rounding_mode = tmp_ui3;
 
-    //process_float_exception_flags().action;
+    process_float_exception_flags().action;
   }
 
 op fsqrt_s(rd: F, rs1: F)

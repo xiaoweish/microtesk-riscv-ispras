@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -253,7 +253,8 @@ op fcvt_w_d(rd: X, rs1: F, op_round_mod: card(3))
     setSFRoundingMode(op_round_mod).action;
 
     rd = 0;
-    rd<31..0> = float_to_int(WORD, cast(FLOAT64, rs1<63..0>));
+    tmp_word = float_to_int(WORD, cast(FLOAT64, rs1<63..0>));
+    rd = sign_extend(XWORD, tmp_word);
 
     float_rounding_mode = tmp_ui3; // return the original value
 
@@ -267,12 +268,26 @@ op fcvt_w_d2(rd: X, rs1: F)
     fcvt_w_d(rd, rs1, coerce(card(3), RM_RTZ)).action;
   }
 
-op fcvt_wu_d(rd: X, rs1: F)
+op fcvt_wu_d(rd: X, rs1: F, op_round_mod: card(3))
   syntax = format("fcvt.wu.d %s, %s", rd.syntax, rs1.syntax)
-  image  = format("1100001%5s%5s%3s%5s1010011", "00001", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  image  = format("1100001%5s%5s%3s%5s1010011", "00001", rs1.image, op_round_mod, rd.image)
   action = {
-    fcvt_w_d(rd, rs1, coerce(card(3), RM_RNE)).action;
-    // TODO:
+    //coerce(card(3), RM_RNE)
+    tmp_ui3 = float_rounding_mode;
+    setSFRoundingMode(op_round_mod).action;
+
+    fcvt_w_d(rd, rs1, coerce(card(3), RM_RNE)).action; // TODO
+
+    float_rounding_mode = tmp_ui3; // return the original value
+
+    process_float_exception_flags().action;
+  }
+
+op fcvt_wu_d2(rd: X, rs1: F)
+  syntax = format("%s", fcvt_wu_d(rd, rs1, coerce(card(3), RM_RTZ)).syntax)
+  image  = format("%32s", fcvt_wu_d(rd, rs1, coerce(card(3), RM_RTZ)).image)
+  action = {
+    fcvt_wu_d(rd, rs1, coerce(card(3), RM_RTZ)).action;
   }
 
 op fcvt_d_w(rd: F, rs1: X)
@@ -472,7 +487,9 @@ op rv32d = fld
          | fnmadd_d
          | fnmsub_d
          | fcvt_w_d
+         | fcvt_w_d2
          | fcvt_wu_d
+         | fcvt_wu_d2
          | fcvt_d_w
          | fcvt_d_wu
          | fcvt_s_d

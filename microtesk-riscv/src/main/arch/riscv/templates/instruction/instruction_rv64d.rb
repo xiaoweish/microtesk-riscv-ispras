@@ -28,8 +28,8 @@ class InstructionRV64D < RiscVBaseTemplate
     nop
 
     if is_rev('RV64D') then
-      fcvt_l_d t0, ft0
-      fcvt_lu_d t0, ft0
+      fcvt_l_d2 t0, ft0
+      fcvt_lu_d2 t0, ft0
       fcvt_d_l ft0, t0
       fcvt_d_lu ft0, t0
 

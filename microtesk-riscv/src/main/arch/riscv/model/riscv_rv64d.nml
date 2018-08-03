@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ISP RAS (http://www.ispras.ru)
+ * Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,19 +31,48 @@
     FMV.D.X
 */
 
-op fcvt_l_d(rd: X, rs1: F)
+op fcvt_l_d(rd: X, rs1: F, op_round_mod: card(3))
   syntax = format("fcvt.l.d %s, %s", rd.syntax, rs1.syntax)
-  image  = format("1100001%5s%5s%3s%5s1010011", "00010", rs1.image, coerce(card(3), RM_RNE), rd.image)
+  image  = format("1100001%5s%5s%3s%5s1010011", "00010", rs1.image, op_round_mod, rd.image)
   action = {
+    //coerce(card(3), RM_RNE)
+    tmp_ui3 = float_rounding_mode;
+    setSFRoundingMode(op_round_mod).action;
+
     rd = float_to_int(DWORD, rs1);
+
+    float_rounding_mode = tmp_ui3; // return the original value
+
+    process_float_exception_flags().action;
   }
 
-op fcvt_lu_d(rd: X, rs1: F)
-  syntax = format("fcvt.lu.d %s, %s", rd.syntax, rs1.syntax)
-  image  = format("1100001%5s%5s%3s%5s1010011", "00011", rs1.image, coerce(card(3), RM_RNE), rd.image)
+op fcvt_l_d2(rd: X, rs1: F)
+  syntax = format("%s", fcvt_l_d(rd, rs1, coerce(card(3), RM_RTZ)).syntax)
+  image  = format("%32s", fcvt_l_d(rd, rs1, coerce(card(3), RM_RTZ)).image)
   action = {
-    // TODO:
-    fcvt_l_d(rd, rs1).action;
+    fcvt_l_d(rd, rs1, coerce(card(3), RM_RTZ)).action;
+  }
+
+op fcvt_lu_d(rd: X, rs1: F, op_round_mod: card(3))
+  syntax = format("fcvt.lu.d %s, %s", rd.syntax, rs1.syntax)
+  image  = format("1100001%5s%5s%3s%5s1010011", "00011", rs1.image, op_round_mod, rd.image)
+  action = {
+    //coerce(card(3), RM_RNE)
+    tmp_ui3 = float_rounding_mode;
+    setSFRoundingMode(op_round_mod).action;
+
+    fcvt_l_d(rd, rs1, op_round_mod).action; // TODO:
+
+    float_rounding_mode = tmp_ui3; // return the original value
+
+    process_float_exception_flags().action;
+  }
+
+op fcvt_lu_d2(rd: X, rs1: F)
+  syntax = format("%s", fcvt_lu_d(rd, rs1, coerce(card(3), RM_RTZ)).syntax)
+  image  = format("%32s", fcvt_lu_d(rd, rs1, coerce(card(3), RM_RTZ)).image)
+  action = {
+    fcvt_lu_d(rd, rs1, coerce(card(3), RM_RTZ)).action;
   }
 
 op fcvt_d_l(rd: F, rs1: X)
@@ -81,6 +110,8 @@ op fmv_d_x(rd: F, rs1: X)
 
 op rv64d = fcvt_l_d
          | fcvt_lu_d
+         | fcvt_l_d2
+         | fcvt_lu_d2
          | fcvt_d_l
          | fcvt_d_lu
          | fmv_x_d

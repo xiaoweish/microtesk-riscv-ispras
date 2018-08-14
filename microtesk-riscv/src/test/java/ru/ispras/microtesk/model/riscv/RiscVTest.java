@@ -17,12 +17,13 @@ package ru.ispras.microtesk.model.riscv;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import ru.ispras.microtesk.Logger;
-import ru.ispras.microtesk.Logger.EventType;
+
+import ru.ispras.castle.util.FileUtils;
+import ru.ispras.castle.util.Logger;
+import ru.ispras.castle.util.Logger.EventType;
 import ru.ispras.microtesk.options.Option;
 import ru.ispras.microtesk.test.Statistics;
 import ru.ispras.microtesk.test.testutils.TemplateTest;
-import ru.ispras.microtesk.utils.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;

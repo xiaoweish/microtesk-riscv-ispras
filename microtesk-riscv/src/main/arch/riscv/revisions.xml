@@ -8,7 +8,9 @@
  <revision name="RV64I">
   <includes name="RV32I"/>
  </revision>
- <revision name="RV32M"/>
+ <revision name="RV32M">
+  <includes name="RV32I"/>
+ </revision>
  <revision name="RV64M">
   <includes name="RV32M"/>
   <includes name="RV64I"/>

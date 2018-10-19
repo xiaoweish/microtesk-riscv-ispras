@@ -151,21 +151,22 @@ mode JUMP_IMM(imm: int(20)) = imm
     jump_imm20 = imm;
   }
   syntax = format("0x%x", imm)
-  image = format("%1s%10s%1s%8s", jump_imm20<19>, jump_imm20<9..0>, jump_imm20<10>, jump_imm20<18..11>)
+  image = format("%1s%10s%1s%8s",
+                 jump_imm20<19>, jump_imm20<9..0>, jump_imm20<10>, jump_imm20<18..11>)
 
 label mode JUMP_LABEL_JAL(target: WORD, current: WORD) = target<20..1> - current<20..1>
   init = {
     jump_imm20 = target<20..1> - current<20..1>;
   }
   syntax = ""
-  image = format("%1s%10s%1s%8s", jump_imm20<19>, jump_imm20<9..0>, jump_imm20<10>, jump_imm20<18..11>)
+  image = format("%1s%10s%1s%8s",
+                  jump_imm20<19>, jump_imm20<9..0>, jump_imm20<10>, jump_imm20<18..11>)
 
 mode JUMP_ADDR_JAL = JUMP_LABEL_JAL | JUMP_IMM
 
 op jal(rd: X, imm: JUMP_ADDR_JAL)
   syntax = format("jal %s, %s", rd.syntax, imm.syntax)
-  image  = format("%20s%5s1101111",
-                  imm.image, rd.image)
+  image  = format("%20s%5s1101111", imm.image, rd.image)
   action = {
     rd = PC + 4;
     PC = PC + (sign_extend(XWORD, imm) << 1);

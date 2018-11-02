@@ -767,14 +767,14 @@ mode C_JUMP_ADDR = C_JUMP_LABEL | C_JUMP_IMM
 op c_j(target: C_JUMP_ADDR)
   syntax = format("c.j %s", target.syntax)
   image  = format("101%1s%1s%2s%1s%1s%1s%3s%1s01",
-                  c_jump_imm11<10>,
-                  c_jump_imm11<3>,
-                  c_jump_imm11<8..7>,
-                  c_jump_imm11<9>,
-                  c_jump_imm11<5>,
-                  c_jump_imm11<6>,
-                  c_jump_imm11<2..0>,
-                  c_jump_imm11<4>)
+                  target<10>,
+                  target<3>,
+                  target<8..7>,
+                  target<9>,
+                  target<5>,
+                  target<6>,
+                  target<2..0>,
+                  target<4>)
   action = {
     jal(X(0), JUMP_IMM(sign_extend(int(20), target))).action;
   }
@@ -787,14 +787,14 @@ expands to jal x1, offset[11:1].
 op c_jal(target: C_JUMP_ADDR)
   syntax = format("c.jal %s", target.syntax)
   image  = format("001%1s%1s%2s%1s%1s%1s%3s%1s01",
-                  c_jump_imm11<10>,
-                  c_jump_imm11<3>,
-                  c_jump_imm11<8..7>,
-                  c_jump_imm11<9>,
-                  c_jump_imm11<5>,
-                  c_jump_imm11<6>,
-                  c_jump_imm11<2..0>,
-                  c_jump_imm11<4>)
+                  target<10>,
+                  target<3>,
+                  target<8..7>,
+                  target<9>,
+                  target<5>,
+                  target<6>,
+                  target<2..0>,
+                  target<4>)
   action = {
     jal(X(1), JUMP_IMM(sign_extend(int(20), target))).action;
     // TODO: This is a hack: jal adds 4 instead of 2. Need support for sizeOf(image).
@@ -827,12 +827,12 @@ mode C_BRANCH_OFFSET_M2 = C_BRANCH_LABEL_M2 | C_BRANCH_IMM
 op c_beqz(rs1: CX, offset: C_BRANCH_OFFSET_M2)
   syntax = format("c.beqz %s, %s", rs1.syntax, offset.syntax)
   image  = format("110%1s%2s%3s%2s%2s%1s01",
-                  c_jump_imm8<7>,
-                  c_jump_imm8<3..2>,
+                  offset<7>,
+                  offset<3..2>,
                   rs1.image,
-                  c_jump_imm8<6..5>,
-                  c_jump_imm8<1..0>,
-                  c_jump_imm8<4>)
+                  offset<6..5>,
+                  offset<1..0>,
+                  offset<4>)
   action = {
     beq(
       X(zero_extend(card(5), rs1.i) + 8),
@@ -847,12 +847,12 @@ to bne rs10, x0, offset[8:1].
 op c_bnez(rs1: CX, offset: C_BRANCH_OFFSET_M2)
   syntax = format("c.bnez %s, %s", rs1.syntax, offset.syntax)
   image  = format("111%1s%2s%3s%2s%2s%1s01",
-                  c_jump_imm8<7>,
-                  c_jump_imm8<3..2>,
+                  offset<7>,
+                  offset<3..2>,
                   rs1.image,
-                  c_jump_imm8<6..5>,
-                  c_jump_imm8<1..0>,
-                  c_jump_imm8<4>)
+                  offset<6..5>,
+                  offset<1..0>,
+                  offset<4>)
   action = {
     bne(
       X(zero_extend(card(5), rs1.i) + 8),

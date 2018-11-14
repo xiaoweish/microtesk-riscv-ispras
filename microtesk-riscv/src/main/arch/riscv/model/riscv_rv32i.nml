@@ -222,7 +222,7 @@ mode BRANCH_IMM(imm: card(12)) = imm
 
 mode BRANCH_OFFSET = BRANCH_LABEL | BRANCH_IMM
 
-internal op branch_image(rs1: X, rs2: X, imm: card(12), branch_index: card(3))
+internal op branch_image(rs1: X, rs2: X, imm: BRANCH_OFFSET, branch_index: card(3))
   syntax = format("")
   image  = format("%1s%6s%5s%5s%3s%4s%1s1100011", imm<11>, imm<9..4>,
                   rs2.image, rs1.image, branch_index, imm<3..0>, imm<10>)

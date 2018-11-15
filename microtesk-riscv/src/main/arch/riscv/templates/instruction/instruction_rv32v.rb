@@ -26,7 +26,7 @@ class InstructionRV32V < RiscVBaseTemplate
   def run
     trace "RV32V instructions:"
 
-    if is_rev('RV32V') && true then
+    if is_rev('RV32V') && false then
       vadd v0, v1, v2
       trace "v0 = %x", VREG(0)
 

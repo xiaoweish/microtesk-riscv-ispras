@@ -53,6 +53,11 @@ class RiscVBaseTemplate < Template
     (0..31).each do |i|
       define_method "f#{i}" do |&contents| F(i, &contents) end
     end
+
+    # Defines alias methods for VR registers
+    (0..31).each do |i|
+      define_method "v#{i}" do |&contents| VR(i, &contents) end
+    end
   end
 
   ##################################################################################################

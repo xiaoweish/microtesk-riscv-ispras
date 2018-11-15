@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
+ * Copyright 2018 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -20,10 +20,10 @@ import org.junit.Test;
 import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.test.Statistics;
 
-public class InstructionRV64MTestCase extends RiscVTest {
+public class InstructionRV32VTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("instruction/instruction_rv64m.rb");
+    final Statistics statistics = run("instruction/instruction_rv32v.rb");
     Assert.assertNotNull(statistics);
   }
 }

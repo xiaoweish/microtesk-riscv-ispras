@@ -129,9 +129,9 @@ mode VR (i: card(5)) = VREG [i]
 // Instructions
 //==================================================================================================
 
-let RV32V_SE   = 1100111 // RV32V Standard Extension
-let RV32V_SEC1 = 0000111 // RV32V Standard Extension (cont.) type 1
-let RV32V_SEC2 = 0100111 // RV32V Standard Extension (cont.) type 2
+let RV32V_SE   = 0b1100111 // RV32V Standard Extension
+let RV32V_SEC1 = 0b0000111 // RV32V Standard Extension (cont.) type 1
+let RV32V_SEC2 = 0b0100111 // RV32V Standard Extension (cont.) type 2
 
 op vadd(vd: VR, vs1: VR, vs2: VR)
   init = {
@@ -732,6 +732,189 @@ op vnmsub(vd: VR, vs1: VR, vs2: VR, vs3: VR)
     // TODO:
   }
 
+//==================================================================================================
+// RV32V Standard Extension (cont.)
+//==================================================================================================
+
+op vld(vd: VR, rs1: X, imm: card(5))
+  init = {
+    im_2b = 0b00;
+    vs2_const = 0b00000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vld %s, %s, %d", vd.syntax, rs1.syntax, imm)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 imm, im_2b, vs2_const, rs1.image, vp, m, vd.image, coerce(card(7), RV32V_SEC1))
+  action = {
+    // TODO:
+  }
+
+op vlds(vd: VR, rs1: X, rs2: X, imm: card(5))
+  init = {
+    im_2b = 0b01;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vlds %s, %s, %s, %d", vd.syntax, rs1.syntax, rs2.syntax, imm)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 imm, im_2b, rs2.image, rs1.image, vp, m, vd.image, coerce(card(7), RV32V_SEC1))
+  action = {
+    // TODO:
+  }
+
+op vldx(vd: VR, rs1: X, vs2: VR, imm: card(5))
+  init = {
+    im_2b = 0b10;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vldx %s, %s, %s, %d", vd.syntax, rs1.syntax, vs2.syntax, imm)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 imm, im_2b, vs2.image, rs1.image, vp, m, vd.image, coerce(card(7), RV32V_SEC1))
+  action = {
+    // TODO:
+  }
+
+op vst(rs1: X, vs3: VR, imm: card(5))
+  init = {
+    im_2b = 0b00;
+    vs2_const = 0b00000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vst %s, %s, %d", rs1.syntax, vs3.syntax, imm)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b, vs2_const, rs1.image, vp, m, imm, coerce(card(7), RV32V_SEC2))
+  action = {
+    // TODO:
+  }
+
+op vsts(rs1: X, rs2: X, vs3: VR, imm: card(5))
+  init = {
+    im_2b = 0b01;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsts %s, %s, %s, %d", rs1.syntax, rs2.syntax, vs3.syntax, imm)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b, rs2.image, rs1.image, vp, m, imm, coerce(card(7), RV32V_SEC2))
+  action = {
+    // TODO:
+  }
+
+op vstx(rs1: X, vs2: VR, vs3: VR, imm: card(5))
+  init = {
+    im_2b = 0b10;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vstx %s, %s, %s, %d", rs1.syntax, vs2.syntax, vs3.syntax, imm)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b, vs2.image, rs1.image, vp, m, imm, coerce(card(7), RV32V_SEC2))
+  action = {
+    // TODO:
+  }
+
+op vamoswap(vd: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b11;
+    vs2_const = 0b00001;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vamoswap %s, %s, %s", vd.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs2_const, vp, m, vd.image, coerce(card(7), RV32V_SEC2))
+  action = {
+    // TODO:
+  }
+
+op vamoadd(vd: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b11;
+    vs2_const = 0b00000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vamoadd %s, %s, %s", vd.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs2_const, vp, m, vd.image, coerce(card(7), RV32V_SEC2))
+  action = {
+    // TODO:
+  }
+
+op vamoand(vd: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b11;
+    vs2_const = 0b01100;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vamoand %s, %s, %s", vd.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs2_const, vp, m, vd.image, coerce(card(7), RV32V_SEC2))
+  action = {
+    // TODO:
+  }
+
+op vamoor(vd: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b11;
+    vs2_const = 0b01000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vamoor %s, %s, %s", vd.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs2_const, vp, m, vd.image, coerce(card(7), RV32V_SEC2))
+  action = {
+    // TODO:
+  }
+
+op vamoxor(vd: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b11;
+    vs2_const = 0b00100;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vamoxor %s, %s, %s", vd.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs2_const, vp, m, vd.image, coerce(card(7), RV32V_SEC2))
+  action = {
+    // TODO:
+  }
+
+op vamomin(vd: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b11;
+    vs2_const = 0b10000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vamomin %s, %s, %s", vd.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs2_const, vp, m, vd.image, coerce(card(7), RV32V_SEC2))
+  action = {
+    // TODO:
+  }
+
+op vamomax(vd: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b11;
+    vs2_const = 0b10100;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vamomax %s, %s, %s", vd.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs2_const, vp, m, vd.image, coerce(card(7), RV32V_SEC2))
+  action = {
+    // TODO:
+  }
+
+         // RV32V Standard Extension
 op rv32v = vadd
          | vsub
          | vsl
@@ -775,6 +958,20 @@ op rv32v = vadd
          | vmsub
          | vnmadd
          | vnmsub
+         // RV32V Standard Extension (cont.)
+         | vld
+         | vlds
+         | vldx
+         | vst
+         | vsts
+         | vstx
+         | vamoswap
+         | vamoadd
+         | vamoand
+         | vamoor
+         | vamoxor
+         | vamomin
+         | vamomax
 
 //==================================================================================================
 // The End

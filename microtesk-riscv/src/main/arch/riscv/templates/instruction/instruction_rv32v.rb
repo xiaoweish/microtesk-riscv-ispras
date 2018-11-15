@@ -79,6 +79,19 @@ class InstructionRV32V < RiscVBaseTemplate
       vnmadd v0, v1, v2, v3
       vnmsub v0, v1, v2, v3
 
+      vld v0, t1, 0b11011
+      vlds v0, t1, t2, 0b10011
+      vldx v0, t1, v2, 0b01011
+      vst t0, v1, 0b00011
+      vsts t0, t1, v2, 0b00010
+      vstx t0, v1, v2, 0b00001
+      vamoswap v0, v1, v2
+      vamoadd v0, v1, v2
+      vamoand v0, v1, v2
+      vamoor v0, v1, v2
+      vamoxor v0, v1, v2
+      vamomin v0, v1, v2
+      vamomax v0, v1, v2
     end
   end
 

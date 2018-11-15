@@ -501,12 +501,12 @@ pseudo op print_imm12(imm: card(12))
   #include "riscv_rv64d.nml"
 #endif
 
-#ifdef RV32C
-  #include "riscv_rvc.nml"
-#endif
-
 #ifdef RV32V
   #include "riscv_rv32v.nml"
+#endif
+
+#ifdef RV32C
+  #include "riscv_rvc.nml"
 #endif
 
 op Op =             rv32i // 37 + 16

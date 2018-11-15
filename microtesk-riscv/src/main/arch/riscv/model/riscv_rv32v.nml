@@ -121,14 +121,13 @@ let RV32V_SEC1 = 0000111 // RV32V Standard Extension (cont.) type 1
 let RV32V_SEC2 = 0100111 // RV32V Standard Extension (cont.) type 2
 */
 //32 vector registers each with 16-bit vtypen field
-/*reg VREG [32, HWORD]
+reg VREG [32, HWORD]
 
 mode VR (i: card(5)) = VREG [i]
   syntax = format("v%d", i)
   image  = format("%5s", i)
-*/
-  //op vadd(vd: VR, vs1: VR, vs2: VR)
-  op vadd(vd: X, vs1: X, vs2: X)
+
+  op vadd(vd: HWORD, vs1: HWORD, vs2: HWORD)
 /*  init = {
     vp = 1;
     func7_0 = 0b1000;
@@ -144,7 +143,7 @@ mode VR (i: card(5)) = VREG [i]
     // TODO:
   }
 
-  op vsub(vd: X, vs1: X, vs2: X)
+  op vsub(vd: HWORD, vs1: HWORD, vs2: HWORD)
   syntax = format("")
   image  = format("")
   action = {

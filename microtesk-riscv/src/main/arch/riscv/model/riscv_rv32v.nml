@@ -82,27 +82,77 @@
 */
 
 //==================================================================================================
+// Instruction Templates
+//==================================================================================================
+
+/*
+VR-type:
+
+op <name>(vd: X, vs1: X, vs2: X)
+  syntax = format("<name> %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("<func7>%5s%5s<funct2><vp>%5s<opcode>", vs2.image, vs1.image, vd.image)
+  action = {
+    // TODO
+  }
+
+VR4-type:
+
+op <name>(vd: X, vs1: X, vs2: X, vs3: X)
+  syntax = format("<name> %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%3s<fmt>%5s%5s<funct2><vp>%5s<opcode>", vs3.image, vs2.image, vs1.image, vd.image)
+  action = {
+    // TODO
+  }
+*/
+/*
+var funct2[card(2)]
+var func7_0[card(4)]
+var func7_1[card(3)]
+var vp[BIT]
+
+var m[card(2)]
+*/
+//==================================================================================================
 // Instructions
 //==================================================================================================
-// 32 vector registers
-reg VREG [32, XWORD]
+/*
+let RV32V_SE   = 1100111 // RV32V Standard Extension
+let RV32V_SEC1 = 0000111 // RV32V Standard Extension (cont.) type 1
+let RV32V_SEC2 = 0100111 // RV32V Standard Extension (cont.) type 2
+*/
+//32 vector registers each with 16-bit vtypen field
+/*reg VREG [32, HWORD]
 
 mode VR (i: card(5)) = VREG [i]
   syntax = format("v%d", i)
   image  = format("%5s", i)
-
-/*
-  vadd v0, v1 # Add elements
 */
+  //op vadd(vd: VR, vs1: VR, vs2: VR)
+  op vadd(vd: X, vs1: X, vs2: X)
+/*  init = {
+    vp = 1;
+    func7_0 = 0b1000;
+    func7_1 = 0b000;
+    m = 0b00;
+  }*/
+  /*syntax = format("vadd %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                   func7_0, func7_1, vs2.image, vs1.image, m, vp, vd.image, RV32V_SE)*/
+  syntax = format("")
+  image  = format("")
+  action = {
+    // TODO:
+  }
 
-op vadd(rd: VR, rd2: VR)
-  syntax = format("vadd %s, %s", rd.syntax, rd2.syntax)
-  image  = format("1000000%5s%5s100000001100111", rd2.image, rd.image) // TODO
+  op vsub(vd: X, vs1: X, vs2: X)
+  syntax = format("")
+  image  = format("")
   action = {
     // TODO:
   }
 
 op rv32v = vadd
+         | vsub
 
 //==================================================================================================
 // The End

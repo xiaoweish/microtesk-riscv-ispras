@@ -274,7 +274,6 @@ var funct7[card(7)]
 //==================================================================================================
 
 /*
-
 R-type:
 
 op <name>(rd: X, rs1: X, rs2: X)
@@ -506,12 +505,17 @@ pseudo op print_imm12(imm: card(12))
   #include "riscv_rvc.nml"
 #endif
 
+#ifdef RV32V
+  #include "riscv_rv32v.nml"
+#endif
+
 op Op =             rv32i // 37 + 16
       |             rv32i_sys // 10 + 20
       | @rev(RV32M) rv32m // 8
       | @rev(RV32A) rv32a // 11
       | @rev(RV32F) rv32f // 26 + 3
       | @rev(RV32D) rv32d // 26 + 3
+      | @rev(RV32V) rv32v // -
       | @rev(RV64I) rv64i // 12
       | @rev(RV64M) rv64m // 5
       | @rev(RV64A) rv64a // 11

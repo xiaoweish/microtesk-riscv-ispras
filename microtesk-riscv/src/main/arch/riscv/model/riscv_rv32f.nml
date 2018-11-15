@@ -115,7 +115,7 @@ op fdiv_s(rd: F, rs1: F, rs2: F)
     rd = -1;
     rd<31..0> = temp_fps<31..0>;
 
-    //process_float_exception_flags().action;
+    process_float_exception_flags().action;
   }
 
 op fmin_s(rd: F, rs1: F, rs2: F)
@@ -129,15 +129,19 @@ op fmin_s(rd: F, rs1: F, rs2: F)
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
     rd = -1;
+    tmp_word = float_exception_flags;
+    trace("float_exception_flags: %x", tmp_word);
     if temp_fps < temp_fps2 then
       rd<31..0> = temp_fps<31..0>;
     else
       rd<31..0> = temp_fps2<31..0>;
     endif;
+    tmp_word = float_exception_flags;
+    trace("float_exception_flags: %x", tmp_word);
 
     float_rounding_mode = tmp_ui3;
 
-    //process_float_exception_flags().action;
+    process_float_exception_flags().action;
   }
 
 op fmax_s(rd: F, rs1: F, rs2: F)
@@ -152,6 +156,7 @@ op fmax_s(rd: F, rs1: F, rs2: F)
     temp_fps = cast(FLOAT32, rs1<31..0>);
     temp_fps2 = cast(FLOAT32, rs2<31..0>);
     rd = -1;
+    float_exception_flags = 0;
     if temp_fps2 < temp_fps then
       rd<31..0> = temp_fps<31..0>;
     else

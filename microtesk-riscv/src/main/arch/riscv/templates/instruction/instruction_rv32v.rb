@@ -26,12 +26,59 @@ class InstructionRV32V < RiscVBaseTemplate
   def run
     trace "RV32V instructions:"
 
-    if is_rev('RV32V') && false then
+    if is_rev('RV32V') && true then
       vadd v0, v1, v2
       trace "v0 = %x", VREG(0)
 
       vsub v0, v1, v2
       trace "v0 = %x", VREG(0)
+
+      vsl v0, v1, v2
+      vsr v0, v1, v2
+      vand v0, v1, v2
+      vor v0, v1, v2
+      vxor v0, v1, v2
+      vseq v0, v1, v2
+      vsne v0, v1, v2
+      vslt v0, v1, v2
+      vsge v0, v1, v2
+      vclip v0, v1, t0
+      vcvt v0, v1, t1
+
+      vmpop t0, v1
+      vmfirst t0, v1
+      vextract t0, v1, t2
+      vinsert v0, t1, t2
+      vmerge v0, v1, v2
+      vselect v0, v1, v2
+      vslide v0, v1, t2
+
+      vdiv v0, v1, v2
+      vrem v0, v1, v2
+      vmul v0, v1, v2
+      vmulh v0, v1, v2
+      vmin v0, v1, v2
+      vmax v0, v1, v2
+      vsgnj v0, v1, v2
+      vsgnjn v0, v1, v2
+      vsgnjx v0, v1, v2
+      vsqrt v0, v1
+      vclass v0, v1
+      vpopc v0, v1
+
+      vaddi  v0, v1, 0b00001111
+      vsli   v0, v1, 0b00001110
+      vsri   v0, v1, 0b00001101
+      vandi  v0, v1, 0b00001011
+      vori   v0, v1, 0b00000111
+      vxori  v0, v1, 0b00000011
+      vclipi v0, v1, 0b00001001
+
+      vmadd v0, v1, v2, v3
+      vmsub v0, v1, v2, v3
+      vnmadd v0, v1, v2, v3
+      vnmsub v0, v1, v2, v3
+
     end
   end
 

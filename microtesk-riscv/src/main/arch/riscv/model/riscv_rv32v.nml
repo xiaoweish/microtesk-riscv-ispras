@@ -109,8 +109,21 @@ var funct2[card(2)]
 var func7_0[card(4)]
 var func7_1[card(3)]
 var vp[BIT]
+var vs2_const[card(5)]
 
 var m[card(2)]
+var im_2b[card(2)]
+
+//==================================================================================================
+// Registers
+//==================================================================================================
+
+//32 vector registers each with 16-bit vtypen field
+reg VREG [32, HWORD]
+
+mode VR (i: card(5)) = VREG [i]
+  syntax = format("v%d", i)
+  image  = format("%5s", i)
 
 //==================================================================================================
 // Instructions
@@ -120,45 +133,648 @@ let RV32V_SE   = 1100111 // RV32V Standard Extension
 let RV32V_SEC1 = 0000111 // RV32V Standard Extension (cont.) type 1
 let RV32V_SEC2 = 0100111 // RV32V Standard Extension (cont.) type 2
 
-//32 vector registers each with 16-bit vtypen field
-reg VREG [32, HWORD]
-
-mode VR (i: card(5)) = VREG [i]
-  syntax = format("v%d", i)
-  image  = format("%5s", i)
-
-  op vadd(vd: VR, vs1: VR, vs2: VR)
+op vadd(vd: VR, vs1: VR, vs2: VR)
   init = {
-    vp = 1;
     func7_0 = 0b1000;
     func7_1 = 0b000;
+    vp = 1;
     m = 0b00;
   }
   syntax = format("vadd %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
   image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
-                   func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
-  /*syntax = format("")
-  image  = format("")*/
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
   action = {
     // TODO:
   }
 
-  op vsub(vd: VR, vs1: VR, vs2: VR)
+op vsub(vd: VR, vs1: VR, vs2: VR)
   init = {
-    vp = 1;
     func7_0 = 0b1000;
     func7_1 = 0b001;
+    vp = 1;
     m = 0b00;
   }
   syntax = format("vsub %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
   image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
-                   func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vsl(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1001;
+    func7_1 = 0b000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsl %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vsr(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1101;
+    func7_1 = 0b000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsr %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vand(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1111;
+    func7_1 = 0b000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vand %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vor(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1110;
+    func7_1 = 0b000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vor %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vxor(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1100;
+    func7_1 = 0b000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vxor %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vseq(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1001;
+    func7_1 = 0b100;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vseq %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vsne(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1001;
+    func7_1 = 0b101;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsne %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vslt(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1001;
+    func7_1 = 0b110;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vslt %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vsge(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1001;
+    func7_1 = 0b111;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsge %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vclip(vd: VR, vs1: VR, rs2: X)
+  init = {
+    func7_0 = 0b1011;
+    func7_1 = 0b000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vclip %s, %s, %s", vd.syntax, vs1.syntax, rs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, rs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vcvt(vd: VR, vs1: VR, rs2: X)
+  init = {
+    func7_0 = 0b1011;
+    func7_1 = 0b001;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vcvt %s, %s, %s", vd.syntax, vs1.syntax, rs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, rs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vmpop(rd: X, vs1: VR)
+  init = {
+    func7_0 = 0b1010;
+    func7_1 = 0b111;
+    vs2_const = 0b00001;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vmpop %s, %s", rd.syntax, vs1.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2_const, vs1.image, vp, m, rd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vmfirst(rd: X, vs1: VR)
+  init = {
+    func7_0 = 0b1010;
+    func7_1 = 0b111;
+    vs2_const = 0b00000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vmfirst %s, %s", rd.syntax, vs1.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2_const, vs1.image, vp, m, rd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+//1010 000 rs2 vs1 1 m rd 1100111 VEXTRACT
+//1011 100 rs2 rs1 1 m vd 1100111 VINSERT
+
+op vextract(rd: X, vs1: VR, rs2: X)
+  init = {
+    func7_0 = 0b1010;
+    func7_1 = 0b000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vextract %s, %s, %s", rd.syntax, vs1.syntax, rs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, rs2.image, vs1.image, vp, m, rd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vinsert(vd: VR, rs1: X, rs2: X)
+  init = {
+    func7_0 = 0b1011;
+    func7_1 = 0b100;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vinsert %s, %s, %s", vd.syntax, rs1.syntax, rs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, rs2.image, rs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vmerge(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1100;
+    func7_1 = 0b001;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vmerge %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vselect(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1100;
+    func7_1 = 0b010;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vselect %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vslide(vd: VR, vs1: VR, rs2: X)
+  init = {
+    func7_0 = 0b1011;
+    func7_1 = 0b010;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vslide %s, %s, %s", vd.syntax, vs1.syntax, rs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, rs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vdiv(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1000;
+    func7_1 = 0b100;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vdiv %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vrem(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1000;
+    func7_1 = 0b101;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vrem %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vmul(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1000;
+    func7_1 = 0b110;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vmul %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vmulh(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1000;
+    func7_1 = 0b111;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vmulh %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vmin(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1000;
+    func7_1 = 0b010;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vmin %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vmax(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1000;
+    func7_1 = 0b011;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vmax %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vsgnj(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1001;
+    func7_1 = 0b010;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsgnj %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vsgnjn(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1001;
+    func7_1 = 0b011;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsgnjn %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vsgnjx(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    func7_0 = 0b1001;
+    func7_1 = 0b001;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsgnjn %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vsqrt(vd: VR, vs1: VR)
+  init = {
+    func7_0 = 0b1100;
+    func7_1 = 0b111;
+    vs2_const = 0b00010;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsqrt %s, %s", vd.syntax, vs1.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2_const, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vclass(vd: VR, vs1: VR)
+  init = {
+    func7_0 = 0b1100;
+    func7_1 = 0b111;
+    vs2_const = 0b00000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vclass %s, %s", vd.syntax, vs1.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2_const, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vpopc(vd: VR, vs1: VR)
+  init = {
+    func7_0 = 0b1100;
+    func7_1 = 0b111;
+    vs2_const = 0b00001;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vpopc %s, %s", vd.syntax, vs1.syntax)
+  image  = format("%4s%3s%5s%5s%1s%2s%5s%7s",
+                 func7_0, func7_1, vs2_const, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vaddi(vd: VR, vs1: VR, imm: card(8))
+  init = {
+    func7_0 = 0b0000;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vaddi %s, %s, %d", vd.syntax, vs1.syntax, imm)
+  image  = format("%4s%8s%5s%1s%2s%5s%7s",
+                 func7_0, imm, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vsli(vd: VR, vs1: VR, imm: card(8))
+  init = {
+    func7_0 = 0b0001;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsli %s, %s, %d", vd.syntax, vs1.syntax, imm)
+  image  = format("%4s%8s%5s%1s%2s%5s%7s",
+                 func7_0, imm, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vsri(vd: VR, vs1: VR, imm: card(8))
+  init = {
+    func7_0 = 0b0101;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vsri %s, %s, %d", vd.syntax, vs1.syntax, imm)
+  image  = format("%4s%8s%5s%1s%2s%5s%7s",
+                 func7_0, imm, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vandi(vd: VR, vs1: VR, imm: card(8))
+  init = {
+    func7_0 = 0b0111;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vandi %s, %s, %d", vd.syntax, vs1.syntax, imm)
+  image  = format("%4s%8s%5s%1s%2s%5s%7s",
+                 func7_0, imm, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vori(vd: VR, vs1: VR, imm: card(8))
+  init = {
+    func7_0 = 0b0110;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vori %s, %s, %d", vd.syntax, vs1.syntax, imm)
+  image  = format("%4s%8s%5s%1s%2s%5s%7s",
+                 func7_0, imm, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vxori(vd: VR, vs1: VR, imm: card(8))
+  init = {
+    func7_0 = 0b0100;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vxori %s, %s, %d", vd.syntax, vs1.syntax, imm)
+  image  = format("%4s%8s%5s%1s%2s%5s%7s",
+                 func7_0, imm, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vclipi(vd: VR, vs1: VR, imm: card(8))
+  init = {
+    func7_0 = 0b0011;
+    vp = 1;
+    m = 0b00;
+  }
+  syntax = format("vclipi %s, %s, %d", vd.syntax, vs1.syntax, imm)
+  image  = format("%4s%8s%5s%1s%2s%5s%7s",
+                 func7_0, imm, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vmadd(vd: VR, vs1: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b00;
+    vp = 0;
+    m = 0b00;
+  }
+  syntax = format("vmadd %s, %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vmsub(vd: VR, vs1: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b01;
+    vp = 0;
+    m = 0b00;
+  }
+  syntax = format("vmsub %s, %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vnmadd(vd: VR, vs1: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b11;
+    vp = 0;
+    m = 0b00;
+  }
+  syntax = format("vnmadd %s, %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
+  action = {
+    // TODO:
+  }
+
+op vnmsub(vd: VR, vs1: VR, vs2: VR, vs3: VR)
+  init = {
+    im_2b = 0b10;
+    vp = 0;
+    m = 0b00;
+  }
+  syntax = format("vnmsub %s, %s, %s, %s", vd.syntax, vs1.syntax, vs2.syntax, vs3.syntax)
+  image  = format("%5s%2s%5s%5s%1s%2s%5s%7s",
+                 vs3.image, im_2b , vs2.image, vs1.image, vp, m, vd.image, coerce(card(7), RV32V_SE))
   action = {
     // TODO:
   }
 
 op rv32v = vadd
          | vsub
+         | vsl
+         | vsr
+         | vand
+         | vor
+         | vxor
+         | vseq
+         | vsne
+         | vslt //1
+         | vsge
+         | vclip
+         | vcvt
+         | vmpop
+         | vmfirst
+         | vextract
+         | vinsert
+         | vmerge
+         | vselect
+         | vslide // 2
+         | vdiv
+         | vrem
+         | vmul
+         | vmulh
+         | vmin
+         | vmax
+         | vsgnj
+         | vsgnjn
+         | vsgnjx
+         | vsqrt // 3
+         | vclass
+         | vpopc 
+         | vaddi
+         | vsli
+         | vsri
+         | vandi
+         | vori
+         | vxori
+         | vclipi
+         | vmadd //4
+         | vmsub
+         | vnmadd
+         | vnmsub
 
 //==================================================================================================
 // The End

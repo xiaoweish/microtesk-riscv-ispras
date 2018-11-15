@@ -515,7 +515,7 @@ op Op =             rv32i // 37 + 16
       | @rev(RV32A) rv32a // 11
       | @rev(RV32F) rv32f // 26 + 3
       | @rev(RV32D) rv32d // 26 + 3
-      | @rev(RV32V) rv32v // -
+      | @rev(RV32V) rv32v // v56
       | @rev(RV64I) rv64i // 12
       | @rev(RV64M) rv64m // 5
       | @rev(RV64A) rv64a // 11
@@ -525,7 +525,7 @@ op Op =             rv32i // 37 + 16
 @rev(RV64C)
 op Op16 =           rvc // 28/49
 // Pseudo +15
-// Total: (47+77+32)+(36+3+3)+15 = 213
+// Total: (47+77+32)+(36+3+3)+15 + v56 = 213 + (v56)
 
 op instruction(operation: Op)
   syntax = operation.syntax

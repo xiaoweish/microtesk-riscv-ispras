@@ -965,7 +965,7 @@ op rv32v = vadd
          | vst
          | vsts
          | vstx
-         | vamoswap
+         | vamoswap // 50
          | vamoadd
          | vamoand
          | vamoor

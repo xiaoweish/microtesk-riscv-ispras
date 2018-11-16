@@ -343,6 +343,25 @@ label :pass
   def ft10(&contents) F(30, &contents) end
   def ft11(&contents) F(31, &contents) end
 
+  # Registers for Standard Extension for Compressed Instructions
+  def   s0c(&contents) CX(0,  &contents) end
+  def   s1c(&contents) CX(1,  &contents) end
+  def   a0c(&contents) CX(2, &contents) end
+  def   a1c(&contents) CX(3, &contents) end
+  def   a2c(&contents) CX(4, &contents) end
+  def   a3c(&contents) CX(5, &contents) end
+  def   a4c(&contents) CX(6, &contents) end
+  def   a5c(&contents) CX(7, &contents) end
+
+  def  fs0c(&contents) CF(0,  &contents) end
+  def  fs1c(&contents) CF(1,  &contents) end
+  def  fa0c(&contents) CF(2, &contents) end
+  def  fa1c(&contents) CF(3, &contents) end
+  def  fa2c(&contents) CF(4, &contents) end
+  def  fa3c(&contents) CF(5, &contents) end
+  def  fa4c(&contents) CF(6, &contents) end
+  def  fa5c(&contents) CF(7, &contents) end
+
   ##################################################################################################
   # Constants for floating-point special values.
   ##################################################################################################

@@ -35,16 +35,16 @@ class InstructionRVC < RiscVBaseTemplate
   def run
     trace "Compressed Instructions:"
 
-    c_addi4spn s1, 4
+    c_addi4spn s1c, 4
 
     la a3, :data
     #c_flw fa2, a3, :data
-    c_fld fa2, a3, :data
+    c_fld fa2c, a3c, :data
     #c_fsw fa2, a3, :data
-    c_fsd fa2, a3, :data
+    c_fsd fa2c, a3c, :data
 
-    c_sw a3, a3, :data
-    c_sd a3, a3, :data
+    c_sw a3c, a3c, :data
+    c_sd a3c, a3c, :data
 
     c_nop
     c_addi a0, 4
@@ -52,8 +52,9 @@ class InstructionRVC < RiscVBaseTemplate
     #c_addi16sp 4
     c_li a0, 8
     c_lui a0, 4
-    c_srli a0, 8
-    c_srai a0, 4
+
+    c_srli a0c, 8
+    c_srai a0c, 4
 
     la sp, :data
     c_lwsp a0, 0
@@ -62,17 +63,19 @@ class InstructionRVC < RiscVBaseTemplate
     c_sdsp a3, 0
 
     la a3, :data
-    c_lw a0, a3, :data
-    c_ld a0, a3, :data
+    c_lw a0c, a3c, :data
+    c_ld a0c, a3c, :data
 
-    c_andi a0, _
+    c_andi a0c, _
+
     c_add a0, a0
-    c_or a0, a0
-    c_xor a0, a0
-    c_sub a0, a0
-    c_and a0, a0
-    c_addw a0, a0
-    c_subw a0, a0
+
+    c_or a0c, a0c
+    c_xor a0c, a0c
+    c_sub a0c, a0c
+    c_and a0c, a0c
+    c_addw a0c, a0c
+    c_subw a0c, a0c
 
     c_j :c_j_label
     c_nop
@@ -86,12 +89,12 @@ class InstructionRVC < RiscVBaseTemplate
     nop
     nop
 
-    c_beqz a0, :c_beqz_label
+    c_beqz a0c, :c_beqz_label
     nop
     label :c_beqz_label
     nop
 
-    c_bnez a0, :c_bnez_label
+    c_bnez a0c, :c_bnez_label
     nop
     label :c_bnez_label
     nop

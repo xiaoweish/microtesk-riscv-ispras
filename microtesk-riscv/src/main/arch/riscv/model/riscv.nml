@@ -220,6 +220,8 @@ var tmp_int2 [INT]
 var tmp_long1 [LONG]
 var tmp_long2 [LONG]
 
+var mem_index [card(MEM_SIZE)]
+
 #ifdef RV32F
   var temp_fps  [FLOAT32]
   var temp_fps2 [FLOAT32]
@@ -373,12 +375,15 @@ internal op load_data(op_type: card(4), address: XWORD)
   action = {
     tmp_bit = 0;
     check_aligned(op_type, address).action;
+
+    mem_index = coerce(card(MEM_SIZE), address >> 2);
+
     if tmp_bit != 1 then
       if op_type == MEM_DWORD then
-        load_value<63..0> = MEM[(address >> 2) + 1]::MEM[address >> 2];
+        load_value<63..0> = MEM[mem_index + 1] :: MEM[mem_index];
       elif op_type == MEM_WORD then
         load_value = 0;
-        load_value<31..0> = MEM[address >> 2];
+        load_value<31..0> = MEM[mem_index];
       endif;
     endif;
   }
@@ -387,11 +392,14 @@ internal op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
   action = {
     tmp_bit = 0;
     check_aligned(op_type, address).action;
+
+    mem_index = coerce(card(MEM_SIZE), address >> 2);
+
     if tmp_bit != 1 then
       if op_type == MEM_DWORD then
-        MEM[(address >> 2) + 1]::MEM[address >> 2] = store_value;
+        MEM[mem_index + 1] :: MEM[mem_index] = store_value;
       elif op_type == MEM_WORD then
-        MEM[address >> 2] = store_value<31..0>;
+        MEM[mem_index] = store_value<31..0>;
       endif;
     endif;
   }

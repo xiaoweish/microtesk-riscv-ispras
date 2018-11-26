@@ -166,8 +166,13 @@ class RiscVBaseTemplate < Template
     # Preparator for double precision values.
     #
     preparator(:target => 'F', :mask => 'XXXX_XXXX_XXXX_XXXX') {
-      prepare sp, value(0, 63)
-      fmv_d_x target, sp
+      if is_rev('RV64D') then
+        prepare sp, value(0, 63)
+        fmv_d_x target, sp
+      else
+        prepare sp, value(0, 31)
+        fmv_w_x target, sp
+      end
     }
 
     #

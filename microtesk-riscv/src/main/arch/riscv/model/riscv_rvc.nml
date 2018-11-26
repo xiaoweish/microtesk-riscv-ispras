@@ -350,6 +350,7 @@ immediate is scaled to represent multiples of 16 in the range (-512,496). C.ADDI
 to adjust the stack pointer in procedure prologues and epilogues. It expands into addi x2, x2,
 nzimm[9:4].
 */
+@rev(RV64I)
 op c_addi16sp(nzimm: int(10))
   init   = {
     assert(nzimm != 0,       "C.ADDI16SP: nzimm == 0");
@@ -435,7 +436,7 @@ op c_srli(rd: CX, shamt: card(6))
     srli(
       X(zero_extend(card(5), rd.i) + 8),
       X(zero_extend(card(5), rd.i) + 8),
-      shamt).action;
+      coerce(card(SHLEN), shamt)).action;
 #endif
   }
 
@@ -486,7 +487,7 @@ op c_srai(rd: CX, shamt: card(6))
   srai(
     X(zero_extend(card(5), rd.i) + 8),
     X(zero_extend(card(5), rd.i) + 8),
-    shamt).action;
+    coerce(card(SHLEN), shamt)).action;
 #endif
   }
 
@@ -922,7 +923,7 @@ op c_slli(rd: X /* not CX */, shamt: card(6))
       slli(rd, rd, shamt).action;
     endif;
 #else
-    slli(rd, rd, shamt).action;
+    slli(rd, rd, coerce(card(SHLEN), shamt)).action;
 #endif
   }
 
@@ -1070,7 +1071,7 @@ op rvc =              c_addi4spn
        |              c_nop
        |              c_addi
        | @rev(RV64C)  c_addiw
-       |              c_addi16sp
+       | @rev(RV64I)  c_addi16sp
        |              c_li
        |              c_lui
        |              c_srli

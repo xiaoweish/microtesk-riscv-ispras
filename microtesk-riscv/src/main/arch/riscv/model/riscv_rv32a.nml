@@ -50,7 +50,7 @@ op sc_w(rd: X, rs2: X, rs1: X)
   action = {
     // TODO: This is a simplified specification that replicates how it is implemented in Spike.
     if rs1 == LOAD_RESERVATION then
-      store_data(MEM_WORD, rs1, sign_extend(DWORD, rs2<31..0>)).action;
+      store_data(MEM_WORD, rs1, sign_extend(XWORD, rs2<31..0>)).action;
       rd = 0;
     else
       rd = 1;
@@ -77,7 +77,7 @@ op amoswap_w(rd: X, rs2: X, rs1: X)
     tmp_address = rs1;
     load_data(MEM_WORD, tmp_address).action; // return load_value
     rd = sign_extend(XWORD, load_value<31..0>);
-    store_data(MEM_WORD, tmp_address, sign_extend(DWORD, rs2<31..0>)).action;
+    store_data(MEM_WORD, tmp_address, sign_extend(XWORD, rs2<31..0>)).action;
   }
 
 op amoadd_w(rd: X, rs2: X, rs1: X)
@@ -89,7 +89,7 @@ op amoadd_w(rd: X, rs2: X, rs1: X)
     rd = sign_extend(XWORD, load_value<31..0>);
 
     tmp_word = rd<31..0> + rs2<31..0>;
-    store_data(MEM_WORD, tmp_address, sign_extend(DWORD, tmp_word)).action;
+    store_data(MEM_WORD, tmp_address, sign_extend(XWORD, tmp_word)).action;
   }
 
 op amoand_w(rd: X, rs2: X, rs1: X)
@@ -101,7 +101,7 @@ op amoand_w(rd: X, rs2: X, rs1: X)
     rd = sign_extend(XWORD, load_value<31..0>);
 
     tmp_word = rd<31..0> & rs2<31..0>;
-    store_data(MEM_WORD, tmp_address, sign_extend(DWORD, tmp_word)).action;
+    store_data(MEM_WORD, tmp_address, sign_extend(XWORD, tmp_word)).action;
   }
 
 op amoor_w(rd: X, rs2: X, rs1: X)
@@ -113,7 +113,7 @@ op amoor_w(rd: X, rs2: X, rs1: X)
     rd = sign_extend(XWORD, load_value<31..0>);
 
     tmp_word = rd<31..0> | rs2<31..0>;
-    store_data(MEM_WORD, tmp_address, sign_extend(DWORD, tmp_word)).action;
+    store_data(MEM_WORD, tmp_address, sign_extend(XWORD, tmp_word)).action;
   }
 
 op amoxor_w(rd: X, rs2: X, rs1: X)
@@ -125,7 +125,7 @@ op amoxor_w(rd: X, rs2: X, rs1: X)
     rd = sign_extend(XWORD, load_value<31..0>);
 
     tmp_word = rd<31..0> ^ rs2<31..0>;
-    store_data(MEM_WORD, tmp_address, sign_extend(DWORD, tmp_word)).action;
+    store_data(MEM_WORD, tmp_address, sign_extend(XWORD, tmp_word)).action;
   }
 
 op amomin_w(rd: X, rs2: X, rs1: X)
@@ -145,7 +145,7 @@ op amomin_w(rd: X, rs2: X, rs1: X)
       tmp_word = rs2<31..0>;
     endif;
 
-    store_data(MEM_WORD, tmp_address, sign_extend(DWORD, tmp_word)).action;
+    store_data(MEM_WORD, tmp_address, sign_extend(XWORD, tmp_word)).action;
   }
 
 op amomax_w(rd: X, rs2: X, rs1: X)
@@ -165,7 +165,7 @@ op amomax_w(rd: X, rs2: X, rs1: X)
       tmp_word = rs2<31..0>;
     endif;
 
-    store_data(MEM_WORD, tmp_address, sign_extend(DWORD, tmp_word)).action;
+    store_data(MEM_WORD, tmp_address, sign_extend(XWORD, tmp_word)).action;
   }
 
 op amominu_w(rd: X, rs2: X, rs1: X)
@@ -182,7 +182,7 @@ op amominu_w(rd: X, rs2: X, rs1: X)
       tmp_word = rs2<31..0>;
     endif;
 
-    store_data(MEM_WORD, tmp_address, sign_extend(DWORD, tmp_word)).action;
+    store_data(MEM_WORD, tmp_address, sign_extend(XWORD, tmp_word)).action;
   }
 
 op amomaxu_w(rd: X, rs2: X, rs1: X)
@@ -199,7 +199,7 @@ op amomaxu_w(rd: X, rs2: X, rs1: X)
       tmp_word = rs2<31..0>;
     endif;
 
-    store_data(MEM_WORD, tmp_address, sign_extend(DWORD, tmp_word)).action;
+    store_data(MEM_WORD, tmp_address, sign_extend(XWORD, tmp_word)).action;
   }
 
 //==================================================================================================

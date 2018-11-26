@@ -96,8 +96,11 @@ reg XREG [32, XWORD]
 // Program Counter
 reg PC [XWORD]
 
+// ontrol and Status Registers (CSRs) Type
+type CSR_TYPE = card(XLEN)
+
 // Control and Status Registers (CSRs), Count = 4096 (2 ** 12)
-reg CSR[1 << 12, XWORD]
+reg CSR[1 << 12, CSR_TYPE]
 
 // Memory Size
 let MEM_SIZE = XLEN - 2
@@ -228,10 +231,18 @@ var mem_index [card(MEM_SIZE)]
   var temp_fps3 [FLOAT32]
 #endif
 
+#ifdef RV32D
+  var temp_fpd  [FLOAT64]
+  var temp_fpd2 [FLOAT64]
+  var temp_fpd3 [FLOAT64]
+#endif
+
+#ifndef RV32D
 #ifdef RV64F
   var temp_fpd  [FLOAT64]
   var temp_fpd2 [FLOAT64]
   var temp_fpd3 [FLOAT64]
+#endif
 #endif
 
 // Bit Offset in a Word
@@ -369,7 +380,7 @@ internal op check_aligned(op_type: card(4), address: XWORD)
     endif;
   }
 
-var load_value[DWORD]
+var load_value[XWORD]
 
 internal op load_data(op_type: card(4), address: XWORD)
   action = {
@@ -380,7 +391,9 @@ internal op load_data(op_type: card(4), address: XWORD)
 
     if tmp_bit != 1 then
       if op_type == MEM_DWORD then
+#ifdef RV64I
         load_value<63..0> = MEM[mem_index + 1] :: MEM[mem_index];
+#endif
       elif op_type == MEM_WORD then
         load_value = 0;
         load_value<31..0> = MEM[mem_index];
@@ -388,7 +401,7 @@ internal op load_data(op_type: card(4), address: XWORD)
     endif;
   }
 
-internal op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
+internal op store_data(op_type: card(4), address: XWORD, store_value: XWORD)
   action = {
     tmp_bit = 0;
     check_aligned(op_type, address).action;
@@ -397,7 +410,9 @@ internal op store_data(op_type: card(4), address: XWORD, store_value: DWORD)
 
     if tmp_bit != 1 then
       if op_type == MEM_DWORD then
+#ifdef RV64I
         MEM[mem_index + 1] :: MEM[mem_index] = store_value;
+#endif
       elif op_type == MEM_WORD then
         MEM[mem_index] = store_value<31..0>;
       endif;
@@ -548,6 +563,7 @@ op instruction(operation: Op)
     endif;
   }
 
+@rev(RV64C)
 op instruction16(operation: Op16)
   syntax = operation.syntax
   image  = operation.image

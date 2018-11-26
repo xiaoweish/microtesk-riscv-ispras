@@ -623,36 +623,36 @@ op andi(rd: X, rs1: X, imm: card(12))
 */
 op slli(rd: X, rs1: X, imm: card(SHLEN))
   syntax = format("slli %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
-  image  = format("000000%1s%5s%s001%s0010011",
-                  if SHLEN == 6 then imm<5> else coerce(BIT, 0) endif,
-                  if SHLEN == 5 then imm else imm<4..0> endif,
-                  rs1.image,
-                  rd.image
-                  )
+  @rev(RV64I)
+    image  = format("000000%1s%5s%s001%s0010011", imm<5>, imm<4..0>, rs1.image, rd.image)
+#ifndef RV64I
+  @rev(RV32I)
+    image = format("000000%1s%5s%s001%s0010011", coerce(BIT, 0), imm<4..0>, rs1.image, rd.image)
+#endif
   action = {
     rd = rs1 << imm;
   }
 
 op srli(rd: X, rs1: X, imm: card(SHLEN))
   syntax = format("srli %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
-  image  = format("000000%1s%5s%s101%s0010011",
-                   if SHLEN == 6 then imm<5> else coerce(BIT, 0) endif,
-                   if SHLEN == 5 then imm else imm<4..0> endif,
-                   rs1.image,
-                   rd.image
-                   )
+  @rev(RV64I)
+    image  = format("000000%1s%5s%s101%s0010011", imm<5>, imm<4..0>, rs1.image, rd.image)
+#ifndef RV64I
+  @rev(RV32I)
+    image  = format("000000%1s%5s%s101%s0010011", coerce(BIT, 0), imm<4..0>, rs1.image, rd.image)
+#endif
   action = {
     rd = rs1 >> imm;
   }
 
 op srai(rd: X, rs1: X, imm: card(SHLEN))
   syntax = format("srai %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
-  image  = format("010000%1s%5s%s101%s0010011",
-                  if SHLEN == 6 then imm<5> else coerce(BIT, 0) endif,
-                  if SHLEN == 5 then imm else imm<4..0> endif,
-                  rs1.image,
-                  rd.image
-                  )
+  @rev(RV64I)
+    image  = format("010000%1s%5s%s101%s0010011", imm<5>, imm<4..0>, rs1.image, rd.image)
+#ifndef RV64I
+  @rev(RV32I)
+    image  = format("010000%1s%5s%s101%s0010011", coerce(BIT, 0), imm<4..0>, rs1.image, rd.image)
+#endif
   action = {
     rd = cast(XINT, rs1) >> imm;
   }

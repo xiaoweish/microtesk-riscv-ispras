@@ -6,6 +6,10 @@
  2017/11/23 - 2018/MM/DD
 --------------------------------------------------------------------------------
 
+ 2018/11/30 MicroTESK RISC-V 0.0.7
+
+ - Specifications: Vector extension
+
  2018/08/21 MicroTESK RISC-V 0.0.6
 
  - Specifications: Bug fixes in floating-point instructions

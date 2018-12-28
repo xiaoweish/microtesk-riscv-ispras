@@ -618,6 +618,16 @@ mode SATP() = CSR[0x180]
   syntax = format("satp")
   image = format("%12s", csr_index)
 
+reg SATP_CSR[CSR_TYPE] alias = CSR[0x300]
+
+@rev(RV32) reg SATP_MODE [BIT]      alias = SATP_CSR<31>
+@rev(RV32) reg SATP_ASID [card(9)]  alias = SATP_CSR<30..22>
+@rev(RV32) reg SATP_PPN  [card(22)] alias = SATP_CSR<21..0>
+
+@rev(RV64) reg SATP_MODE [card(4)]  alias = SATP_CSR<63..60>
+@rev(RV64) reg SATP_ASID [card(16)] alias = SATP_CSR<59..44>
+@rev(RV64) reg SATP_PPN  [card(44)] alias = SATP_CSR<43..0>
+
 //==================================================================================================
 // Machine Information Registers
 
@@ -653,6 +663,36 @@ mode MSTATUS() = CSR[0x300]
   init = { csr_index = 0x300; }
   syntax = format("mstatus")
   image = format("%12s", csr_index)
+
+reg MSTATUS_CSR[CSR_TYPE] alias = CSR[0x300]
+
+@rev(RV32) reg MSTATUS_SD [BIT] alias = MSTATUS_CSR<31>
+//@rev(RV32) reg MSTATUS_WPRI [card(8)] alias = MSTATUS_CSR<30..23>
+
+@rev(RV64) reg MSTATUS_SD [BIT] alias = MSTATUS_CSR<XLEN-1>
+//@rev(RV64) reg MSTATUS_WPRI [card(XLEN-37)] alias = MSTATUS_CSR<XLEN-2..36>
+@rev(RV64) reg MSTATUS_SXL [card(2)] alias = MSTATUS_CSR<35..34>
+@rev(RV64) reg MSTATUS_UXL [card(2)] alias = MSTATUS_CSR<33..32>
+//@rev(RV64) reg MSTATUS_WPRI [card(9)] alias = MSTATUS_CSR<31..23>
+
+reg MSTATUS_TSR  [BIT] alias = MSTATUS_CSR<22>
+reg MSTATUS_TW   [BIT] alias = MSTATUS_CSR<21>
+reg MSTATUS_TVM  [BIT] alias = MSTATUS_CSR<20>
+reg MSTATUS_MXR  [BIT] alias = MSTATUS_CSR<19>
+reg MSTATUS_SUM  [BIT] alias = MSTATUS_CSR<18>
+reg MSTATUS_XS   [card(2)] alias = MSTATUS_CSR<16..15>
+reg MSTATUS_FS   [card(2)] alias = MSTATUS_CSR<14..13>
+reg MSTATUS_MPP  [card(2)] alias = MSTATUS_CSR<12..11>
+//reg MSTATUS_WPRI [card(2)] alias = MSTATUS_CSR<10..9>
+reg MSTATUS_SPP  [BIT] alias = MSTATUS_CSR<8>
+reg MSTATUS_MPIE [BIT] alias = MSTATUS_CSR<7>
+//reg MSTATUS_WPRI [BIT] alias = MSTATUS_CSR<6>
+reg MSTATUS_SPIE [BIT] alias = MSTATUS_CSR<5>
+reg MSTATUS_UPIE [BIT] alias = MSTATUS_CSR<4>
+reg MSTATUS_MIE  [BIT] alias = MSTATUS_CSR<3>
+//reg MSTATUS_WPRI [BIT] alias = MSTATUS_CSR<2>
+reg MSTATUS_SIE  [BIT] alias = MSTATUS_CSR<1>
+reg MSTATUS_UIE  [BIT] alias = MSTATUS_CSR<0>
 
 // ISA and extensions
 mode MISA() = CSR[0x301]

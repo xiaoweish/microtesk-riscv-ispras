@@ -8,6 +8,6 @@ on the basis of ISA formal specifications.
 
 ### Running Test Generation
 
-To generate test programs for the given test templates, simply run the following command:
+To generate test programs for all test templates, run the following command:
 
     make

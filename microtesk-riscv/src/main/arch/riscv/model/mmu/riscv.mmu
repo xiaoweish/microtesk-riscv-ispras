@@ -1,0 +1,208 @@
+/*
+ * Copyright 2018-2019 ISP RAS (http://www.ispras.ru)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+// Sv32:
+// Sv64: null
+
+/* For RV32, four CSRs, pmpcfg0{pmpcfg3, hold the configurations pmp0cfg-pmp15cfg for the 16 PMP
+entries. PMPCFGx = {pmp(x*4+3)cfg, pmp(x*4+2)cfg, pmp(x*4+1)cfg, pmp(x*4+0)cfg}
+Physical Memory Protection (PMP) entries are described by an 8-bit configuration register and one
+MXLEN-bit address register.
+*/
+// For RV32: 32-bit
+extern PMPCFG0 = PMPCFG0 // pmp3cfg pmp2cfg pmp1cfg pmp0cfg
+extern PMPCFG2 = PMPCFG2
+
+// Only for RV32
+extern PMPCFG1 = PMPCFG1
+extern PMPCFG3 = PMPCFG3
+
+// Supervisor address translation and protection
+extern SATP = SATP
+// The physical page number of the root page table is stored in the satp register's PPN field.
+extern SATP_PPN = SATP_PPN // RV32: 22-bit / RV64: 44-bit
+
+// For Sv32, PAGESIZE=2^12 and LEVELS=2
+let PAGESIZE = 2 ** 12
+let LEVELS   = 2
+
+// For Sv32, PTESIZE=4
+let PTESIZE = 4
+
+// Sv32 page tables consist of 2x10 page-table entries (PTEs), each of four bytes.
+let PTE_SIZE = 32
+
+//==================================================================================================
+// Address Types
+//==================================================================================================
+
+// TODO: let VA_BITS = 32
+
+// Sv32 virtual address.
+address VA(
+  vpn1     : 10,
+  vpn0     : 10,
+  offset   : 12
+)
+
+// Sv32 physical address.
+address PA(
+  ppn1     : 12,
+  ppn0     : 10,
+  offset   : 12
+)
+
+//==================================================================================================
+// Translation Buffers
+//==================================================================================================
+
+// Sv32 Page Table Entry
+register buffer PTE1 (pa: PA)
+  ways = PTE_SIZE
+  sets = 2**10
+  entry  = (PPN1: 12, PPN0: 10, RSW: 2, D: 1, A: 1, G: 1, U: 1, X: 1, W: 1, R: 1, V: 1)
+  index  = 0
+  match  = SATP_PPN * PAGESIZE + PPN1 == pa.ppn1
+  policy = NONE
+
+register buffer PTE0 (pa: PA)
+  ways = PTE_SIZE
+  sets = 2**10
+  entry  = (PPN1: 12, PPN0: 10, RSW: 2, D: 1, A: 1, G: 1, U: 1, X: 1, W: 1, R: 1, V: 1)
+  index  = 0
+  match  = SATP_PPN * PAGESIZE + PPN0 == pa.ppn0
+  policy = NONE
+
+/* The V bit indicates whether the PTE is valid; if it is 0, all other bits in the PTE are
+don't-cares and may be used freely by software.
+   R, W, and X, indicate whether the page is readable, writable, and executable, respectively.
+*/
+
+//==================================================================================================
+// Translate Address
+//==================================================================================================
+
+segment SV32Translate (va: VA) = (pa: PA)
+  var pte: PTE1.entry;
+//  var pa: PA;
+//  var a: 32;
+//  var i: 4;
+
+  var d: 1;
+  var a: 1;
+  var g: 1;
+  var u: 1;
+  var x: 1;
+  var w: 1;
+  var r: 1;
+  var v: 1;
+
+  read  = {
+    // The address hits PTE.
+    if PTE1(va).hit then
+      pte = PTE1(va);
+
+      if pte.r = 1 || pte.x = 1 then
+      endif;
+    // The address does not hit the TLB.
+    elif PTE0(va).hit then
+      pte = PTE0(va);
+      // TODO:
+    else
+      exception("PTE Miss");
+    endif;
+    // If the address hits the PTE.
+
+    d = pte.d;
+    a = pte.a;
+    g = pte.g;
+    u = pte.u;
+    x = pte.x;
+    w = pte.w;
+    r = pte.r;
+    v = pte.v;
+
+    if pte.v == 0 || (pte.r == 0 && pte.w == 1) then
+      exception("SV32Translate: page-fault exception");
+    endif;
+
+    if pte.a = 0 || /* Store &&*/ pte.d == 0 then
+      exception("SV32Translate: page-fault exception");
+    endif;
+
+    // Update PTE.
+    PTE(va) = pte;
+  }
+
+/*{
+  // Step 1
+  a = SATP_PPN * PAGESIZE;
+  i = LEVELS - 1;
+  // Step 2
+  pte = a + va.vpn1 * PTESIZE;
+  // pte = a + va.vpn[i] * PTESIZE;
+  return pa;
+}*/
+
+function TranslateAddress(va: VA): PA
+var pa: PA;
+{
+  if SV32Translate(va).hit then
+    pa = SV32Translate(va);
+    trace("SV32Translate: va=%x, pa=%x", va.vpn1::va.vpn0::va.offset, pa.ppn1::pa.ppn0::pa.offset);
+  else
+    trace("ERROR: va=%x, pa=%x", va.vpn1::va.vpn0::va.offset, pa.ppn1::pa.ppn0::pa.offset);
+  endif;
+
+  return pa;
+}
+
+//==================================================================================================
+// Main Memory
+//==================================================================================================
+
+// A word of memory is defined as 32 bits (4 bytes).
+let DATA_SIZE = 32
+
+// A RISC-V hart has a single byte-addressable address space of 2XLEN bytes for all memory accesses.
+extern MEM_SETS = MEM_SIZE_IN_WORDS //  2 ** (XLEN - 2)
+
+buffer MEM (pa: PA)
+  // Direct-mapped buffer.
+  ways  = 1
+  sets  = MEM_SETS
+  entry = (DATA: DATA_SIZE)
+  index = pa.ppn1::pa.ppn0::pa.offset<11..4>
+  match = 0
+
+//==================================================================================================
+// Memory Management Unit
+//==================================================================================================
+
+mmu pmem (va: VA) = (data: DATA_SIZE)
+  read = {
+    pa = TranslateAddress(va);
+    data = MEM(pa);
+  }
+
+  write = {
+    pa = TranslateAddress(va);
+    MEM(pa) = data;
+  }
+
+//==================================================================================================
+// The End
+//==================================================================================================

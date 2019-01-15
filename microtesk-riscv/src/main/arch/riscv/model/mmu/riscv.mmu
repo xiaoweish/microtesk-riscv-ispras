@@ -53,16 +53,14 @@ let PTE_SIZE = 32
 
 // Sv32 virtual address.
 address VA(
-  vpn1     : 10,
-  vpn0     : 10,
-  offset   : 12
+  // vpn1     : 10,   vpn0     : 10,   offset   : 12
+  value: 32
 )
 
 // Sv32 physical address.
-address PA(
-  ppn1     : 12,
-  ppn0     : 10,
-  offset   : 12
+address PA( // TODO: value
+  //ppn1     : 12,  ppn0     : 10,  offset   : 12
+  value: 34
 )
 
 //==================================================================================================
@@ -70,20 +68,12 @@ address PA(
 //==================================================================================================
 
 // Sv32 Page Table Entry
-register buffer PTE1 (pa: PA)
-  ways = PTE_SIZE
+memory buffer PT (va: VA)
+  ways = 1; //PTE_SIZE
   sets = 2**10
   entry  = (PPN1: 12, PPN0: 10, RSW: 2, D: 1, A: 1, G: 1, U: 1, X: 1, W: 1, R: 1, V: 1)
   index  = 0
-  match  = SATP_PPN * PAGESIZE + PPN1 == pa.ppn1
-  policy = NONE
-
-register buffer PTE0 (pa: PA)
-  ways = PTE_SIZE
-  sets = 2**10
-  entry  = (PPN1: 12, PPN0: 10, RSW: 2, D: 1, A: 1, G: 1, U: 1, X: 1, W: 1, R: 1, V: 1)
-  index  = 0
-  match  = SATP_PPN * PAGESIZE + PPN0 == pa.ppn0
+  match  = 0
   policy = NONE
 
 /* The V bit indicates whether the PTE is valid; if it is 0, all other bits in the PTE are
@@ -96,7 +86,7 @@ don't-cares and may be used freely by software.
 //==================================================================================================
 
 segment SV32Translate (va: VA) = (pa: PA)
-  var pte: PTE1.entry;
+  var pte: PT.entry;
 //  var pa: PA;
 //  var a: 32;
 //  var i: 4;
@@ -112,10 +102,11 @@ segment SV32Translate (va: VA) = (pa: PA)
 
   read  = {
     // The address hits PTE.
-    if PTE1(va).hit then
-      pte = PTE1(va);
+    if PT(va).hit then
+      pte = PT(va);
 
       if pte.r = 1 || pte.x = 1 then
+        // TODO:
       endif;
     // The address does not hit the TLB.
     elif PTE0(va).hit then

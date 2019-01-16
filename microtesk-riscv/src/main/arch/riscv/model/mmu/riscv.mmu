@@ -43,7 +43,7 @@ let LEVELS   = 2
 let PTESIZE = 4
 
 // Sv32 page tables consist of 2x10 page-table entries (PTEs), each of four bytes.
-let PTE_SIZE = 32
+let PTE_SIZE = 2**10
 
 //==================================================================================================
 // Address Types
@@ -69,8 +69,8 @@ address PA( // TODO: value
 
 // Sv32 Page Table Entry
 memory buffer PT (va: VA)
-  ways = 1; //PTE_SIZE
-  sets = 2**10
+  ways = 1
+  sets = PTE_SIZE // 2**10
   entry  = (PPN1: 12, PPN0: 10, RSW: 2, D: 1, A: 1, G: 1, U: 1, X: 1, W: 1, R: 1, V: 1)
   index  = 0
   match  = 0
@@ -86,13 +86,15 @@ don't-cares and may be used freely by software.
 //==================================================================================================
 
 segment SV32Translate (va: VA) = (pa: PA)
+  range = (0x0000000000000000, 0xFFFFffffFFFFffffFFFFffff) // TODO: riscv.mmu line 89:2 mismatched input 'var' expecting MMU_RANGE"
+
   var pte: PT.entry;
-//  var pa: PA;
-//  var a: 32;
-//  var i: 4;
+  var i: 4;
+  var a: 32;
+  var temp_address: 32;
 
   var d: 1;
-  var a: 1;
+  var accessed: 1; // a
   var g: 1;
   var u: 1;
   var x: 1;
@@ -100,17 +102,24 @@ segment SV32Translate (va: VA) = (pa: PA)
   var r: 1;
   var v: 1;
 
-  read  = {
-    // The address hits PTE.
-    if PT(va).hit then
-      pte = PT(va);
+  read = {
+    // Step 1
+    a = coerce(card(32), SATP_PPN) * coerce(card(32), PAGESIZE);
+    i = LEVELS - 1;
 
-      if pte.r = 1 || pte.x = 1 then
+    // Step 2
+    temp_address = a + va.value<31..22> * PTESIZE; //va.vpn1 * PTESIZE;
+
+   // The address hits PT.
+    if PT(temp_address).hit then
+      pte = PT(temp_address);
+
+      if pte.r == 1 || pte.x == 1 then
         // TODO:
       endif;
-    // The address does not hit the TLB.
-    elif PTE0(va).hit then
-      pte = PTE0(va);
+    // The address does not hit the PT.
+    elif PT(va).hit then
+      pte = PT(va);
       // TODO:
     else
       exception("PTE Miss");
@@ -118,7 +127,7 @@ segment SV32Translate (va: VA) = (pa: PA)
     // If the address hits the PTE.
 
     d = pte.d;
-    a = pte.a;
+    accessed = pte.a;
     g = pte.g;
     u = pte.u;
     x = pte.x;
@@ -126,27 +135,18 @@ segment SV32Translate (va: VA) = (pa: PA)
     r = pte.r;
     v = pte.v;
 
+    // Step 3
     if pte.v == 0 || (pte.r == 0 && pte.w == 1) then
       exception("SV32Translate: page-fault exception");
     endif;
 
-    if pte.a = 0 || /* Store &&*/ pte.d == 0 then
+    if pte.accessed == 0 || /* Store &&*/ pte.d == 0 then
       exception("SV32Translate: page-fault exception");
     endif;
 
-    // Update PTE.
-    PTE(va) = pte;
+    // Update PT.
+    PT(va) = pte;
   }
-
-/*{
-  // Step 1
-  a = SATP_PPN * PAGESIZE;
-  i = LEVELS - 1;
-  // Step 2
-  pte = a + va.vpn1 * PTESIZE;
-  // pte = a + va.vpn[i] * PTESIZE;
-  return pa;
-}*/
 
 function TranslateAddress(va: VA): PA
 var pa: PA;

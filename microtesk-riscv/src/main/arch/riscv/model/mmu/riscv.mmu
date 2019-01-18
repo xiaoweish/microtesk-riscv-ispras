@@ -17,6 +17,15 @@
 // Sv32:
 // Sv64: null
 
+let TRUE = 1
+let FALSE = 0
+
+#ifdef RV64I
+  let XLEN = 64
+#else
+  let XLEN = 32
+#endif
+
 /* For RV32, four CSRs, pmpcfg0{pmpcfg3, hold the configurations pmp0cfg-pmp15cfg for the 16 PMP
 entries. PMPCFGx = {pmp(x*4+3)cfg, pmp(x*4+2)cfg, pmp(x*4+1)cfg, pmp(x*4+0)cfg}
 Physical Memory Protection (PMP) entries are described by an 8-bit configuration register and one
@@ -37,13 +46,35 @@ extern SATP_PPN = SATP_PPN // RV32: 22-bit / RV64: 44-bit
 
 // For Sv32, PAGESIZE=2^12 and LEVELS=2
 let PAGESIZE = 2 ** 12
-let LEVELS   = 2
+#ifdef RV32FULL
+  let LEVELS   = 2
+#else
+  #ifdef RV64Sv39
+    let LEVELS   = 3
+  #else
+    // Sv48
+    let LEVELS   = 4
+  #endif
+#endif
 
 // For Sv32, PTESIZE=4
-let PTESIZE = 4
+#ifdef RV32FULL
+  let PTESIZE = 4
+#else
+  // Sv39, Sv 48
+  let PTESIZE = 8
+#endif
 
 // Sv32 page tables consist of 2x10 page-table entries (PTEs), each of four bytes.
-let PTE_SIZE = 2**10
+#ifdef RV32FULL
+  let PTE_SIZE = 2**10
+#else
+  #ifdef RV64FULLSV39
+    let PTE_SIZE = 2**9
+  #else
+    // Sv48
+  #endif
+#endif
 
 //==================================================================================================
 // Address Types
@@ -51,15 +82,40 @@ let PTE_SIZE = 2**10
 
 // TODO: let VA_BITS = 32
 
+struct VASv39 (
+  vpn2   : 9, // 38..30
+  vpn1   : 9, // 29..21
+  vpn0   : 9, // 20..12
+  offset : 12 // 11..0
+)
+
+struct PASv39 (
+  ppn2   : 26, // 55..30
+  ppn1   : 9,  // 29..21
+  ppn0   : 9,  // 20..12
+  offset : 12  // 11..0
+)
+
 // Sv32 virtual address.
+struct VASv32 (
+  vpn1   : 10, // 31..22
+  vpn0   : 10, // 21..12
+  offset : 12  // 11..0
+)
+
 address VA(
-  // vpn1     : 10,   vpn0     : 10,   offset   : 12
   value: 32
 )
 
 // Sv32 physical address.
-address PA( // TODO: value
-  //ppn1     : 12,  ppn0     : 10,  offset   : 12
+struct PASv32 (
+  ppn1   : 12, // 33..22
+  ppn0   : 10, // 21..12
+  offset : 12,  // 11..0
+  error  : 1
+)
+
+address PA(
   value: 34
 )
 
@@ -70,8 +126,8 @@ address PA( // TODO: value
 // Sv32 Page Table Entry
 memory buffer PT (va: VA)
   ways = 1
-  sets = PTE_SIZE // 2**10
-  entry  = (PPN1: 12, PPN0: 10, RSW: 2, D: 1, A: 1, G: 1, U: 1, X: 1, W: 1, R: 1, V: 1)
+  sets = PTE_SIZE
+  entry  = (ppn1: 12, ppn0: 10, rsw: 2, d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1)
   index  = 0
   match  = 0
   policy = NONE
@@ -79,19 +135,21 @@ memory buffer PT (va: VA)
 /* The V bit indicates whether the PTE is valid; if it is 0, all other bits in the PTE are
 don't-cares and may be used freely by software.
    R, W, and X, indicate whether the page is readable, writable, and executable, respectively.
+   The RSW field is reserved for use by supervisor software; the implementation shall ignore this
+field.
 */
 
 //==================================================================================================
 // Translate Address
 //==================================================================================================
 
-segment SV32Translate (va: VA) = (pa: PA)
-  range = (0x0000000000000000, 0xFFFFffffFFFFffffFFFFffff) // TODO: riscv.mmu line 89:2 mismatched input 'var' expecting MMU_RANGE"
-
+function SV32Translate (va: VA, store_op: 1): PASv32
   var pte: PT.entry;
   var i: 4;
   var a: 32;
-  var temp_address: 32;
+  var temp_address: VA;
+  var pa: PASv32;
+  var error: 1;
 
   var d: 1;
   var accessed: 1; // a
@@ -102,29 +160,35 @@ segment SV32Translate (va: VA) = (pa: PA)
   var r: 1;
   var v: 1;
 
-  read = {
+  var temp: 32;
+  {
+    error = 0;
+
     // Step 1
-    a = coerce(card(32), SATP_PPN) * coerce(card(32), PAGESIZE);
+    temp<21..0> = SATP_PPN;
+    a = temp * PAGESIZE;
     i = LEVELS - 1;
 
     // Step 2
     temp_address = a + va.value<31..22> * PTESIZE; //va.vpn1 * PTESIZE;
 
-   // The address hits PT.
+   // The address hits PT
     if PT(temp_address).hit then
       pte = PT(temp_address);
 
-      if pte.r == 1 || pte.x == 1 then
+      if pte.r == TRUE || pte.x == TRUE then
+        error = TRUE;
         // TODO:
       endif;
-    // The address does not hit the PT.
-    elif PT(va).hit then
-      pte = PT(va);
+    // The address does not hit the PT
+    elif PT(temp_address).hit then
+      pte = PT(temp_address);
       // TODO:
     else
+      error = TRUE;
       exception("PTE Miss");
     endif;
-    // If the address hits the PTE.
+    // If the address hits the PT
 
     d = pte.d;
     accessed = pte.a;
@@ -136,30 +200,45 @@ segment SV32Translate (va: VA) = (pa: PA)
     v = pte.v;
 
     // Step 3
-    if pte.v == 0 || (pte.r == 0 && pte.w == 1) then
+    if v == FALSE || (r == FALSE && w == TRUE) then
+      error = TRUE;
       exception("SV32Translate: page-fault exception");
     endif;
 
-    if pte.accessed == 0 || /* Store &&*/ pte.d == 0 then
+    if pte.a == FALSE || store_op == TRUE && pte.d == FALSE then
+      error = TRUE;
       exception("SV32Translate: page-fault exception");
     endif;
 
     // Update PT.
-    PT(va) = pte;
+    PT(temp_address) = pte; // TODO: !
+
+    pa.ppn1   = pte.ppn1;
+    pa.ppn0   = pte.ppn0;
+    pa.offset = va<11..0>;
+    pa.error  = error;
+
+    return pa;
   }
 
-function TranslateAddress(va: VA): PA
-var pa: PA;
-{
-  if SV32Translate(va).hit then
-    pa = SV32Translate(va);
-    trace("SV32Translate: va=%x, pa=%x", va.vpn1::va.vpn0::va.offset, pa.ppn1::pa.ppn0::pa.offset);
-  else
-    trace("ERROR: va=%x, pa=%x", va.vpn1::va.vpn0::va.offset, pa.ppn1::pa.ppn0::pa.offset);
-  endif;
+function TranslateAddress(va: VA, store_op: 1): PA
+  var pa: PASv32;
+  var pAddress: PA;
+  {
+    pa = SV32Translate(va, store_op);
+    pAddress = pa.ppn1::pa.ppn0::pa.offset;
 
-  return pa;
-}
+    //if SV32Translate(va, store_op).hit then
+    //  pa = SV32Translate(va, store_op);
+    if pa.error == 0 then
+      trace("SV32Translate: va=%x, pa=%x", va.value, pa.ppn1::pa.ppn0::pa.offset);
+      // va.value = va.vpn1::va.vpn0::va.offset
+    else
+      trace("ERROR: va=%x, pa=%x", va.value, pa.ppn1::pa.ppn0::pa.offset);
+    endif;
+
+    return pAddress;
+  }
 
 //==================================================================================================
 // Main Memory
@@ -169,14 +248,18 @@ var pa: PA;
 let DATA_SIZE = 32
 
 // A RISC-V hart has a single byte-addressable address space of 2XLEN bytes for all memory accesses.
-extern MEM_SETS = MEM_SIZE_IN_WORDS //  2 ** (XLEN - 2)
+// TODO: extern
+// Memory Size
+let MEM_SIZE = XLEN - 2
+// Memory Size is 2 ** XLEN Bytes
+let MEM_SIZE_IN_WORDS = 2 ** (MEM_SIZE)
 
 buffer MEM (pa: PA)
   // Direct-mapped buffer.
   ways  = 1
-  sets  = MEM_SETS
+  sets  = MEM_SIZE_IN_WORDS
   entry = (DATA: DATA_SIZE)
-  index = pa.ppn1::pa.ppn0::pa.offset<11..4>
+  index = pa.value<33..4>
   match = 0
 
 //==================================================================================================
@@ -184,13 +267,14 @@ buffer MEM (pa: PA)
 //==================================================================================================
 
 mmu pmem (va: VA) = (data: DATA_SIZE)
+  var pa: PA;
   read = {
-    pa = TranslateAddress(va);
+    pa = TranslateAddress(va, 0);
     data = MEM(pa);
   }
 
   write = {
-    pa = TranslateAddress(va);
+    pa = TranslateAddress(va, 1);
     MEM(pa) = data;
   }
 

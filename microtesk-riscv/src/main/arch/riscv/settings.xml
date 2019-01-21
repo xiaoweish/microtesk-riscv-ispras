@@ -17,8 +17,8 @@
     />
 
     <!-- Virtual address space -->
-    <region type="table" name="TranslationTable" start="0011_0000" end="0011_ffff" mode="rw-rw-"/>
-    <region type="table" name="pmem"             start="0012_0000" end="ffff_ffff" mode="rw-rw-"/>
+    <region type="table" name="PT"     start="0011_0000" end="0011_ffff" mode="rw-rw-"/>
+    <region type="table" name="memory" start="0012_0000" end="ffff_ffff" mode="rw-rw-"/>
   </memory>
 
   <allocation>

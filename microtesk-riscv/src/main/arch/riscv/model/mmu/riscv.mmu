@@ -172,21 +172,29 @@ function SV32Translate (va: VA, store_op: 1): PASv32
     // Step 2
     temp_address = a + va.value<31..22> * PTESIZE; //va.vpn1 * PTESIZE;
 
-   // The address hits PT
     if PT(temp_address).hit then
+    // The address hits PT
       pte = PT(temp_address);
 
       if pte.r == TRUE || pte.x == TRUE then
         error = TRUE;
         // TODO:
       endif;
-    // The address does not hit the PT
-    elif PT(temp_address).hit then
-      pte = PT(temp_address);
-      // TODO:
     else
-      error = TRUE;
-      exception("PTE Miss");
+      pte = PT(temp_address);
+      temp<21..0> = pte.ppn1::pte.ppn0;
+      a = temp * PAGESIZE;
+
+      temp_address = a + va.value<21..12> * PTESIZE; //va.vpn0 * PTESIZE;
+      if PT(temp_address).hit then
+        pte = PT(temp_address);
+        // TODO:
+      else
+      // The address does not hit the PT
+        error = TRUE;
+        exception("PT Miss");
+        // TODO:
+      endif;
     endif;
     // If the address hits the PT
 
@@ -200,12 +208,22 @@ function SV32Translate (va: VA, store_op: 1): PASv32
     v = pte.v;
 
     // Step 3
-    if v == FALSE || (r == FALSE && w == TRUE) then
+    // if v == FALSE || (r == FALSE && w == TRUE) then
+    if v == FALSE then
+      error = TRUE;
+      exception("SV32Translate: page-fault exception");
+    endif;
+    if r == FALSE && w == TRUE then
       error = TRUE;
       exception("SV32Translate: page-fault exception");
     endif;
 
-    if pte.a == FALSE || store_op == TRUE && pte.d == FALSE then
+    //if pte.a == FALSE || store_op == TRUE && pte.d == FALSE then
+    if pte.a == FALSE then
+      error = TRUE;
+      exception("SV32Translate: page-fault exception");
+    endif;
+    if store_op == TRUE && pte.d == FALSE then
       error = TRUE;
       exception("SV32Translate: page-fault exception");
     endif;
@@ -266,7 +284,7 @@ buffer MEM (pa: PA)
 // Memory Management Unit
 //==================================================================================================
 
-mmu pmem (va: VA) = (data: DATA_SIZE)
+mmu memory (va: VA) = (data: DATA_SIZE)
   var pa: PA;
   read = {
     pa = TranslateAddress(va, 0);

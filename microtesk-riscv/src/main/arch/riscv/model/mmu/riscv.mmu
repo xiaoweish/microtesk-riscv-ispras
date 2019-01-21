@@ -17,9 +17,6 @@
 // Sv32:
 // Sv64: null
 
-let TRUE = 1
-let FALSE = 0
-
 #ifdef RV64I
   let XLEN = 64
 #else
@@ -143,9 +140,51 @@ field.
 // Translate Address
 //==================================================================================================
 
+// Sv32: step 2-4
+function SV32TranslateCycle (va: VA, a: 32, i: 3): PT.entry
+  var pte: PT.entry;
+  var temp_address: VA;
+  var w: 1;
+  var r: 1;
+  var v: 1;
+
+  var temp: 32;
+  {
+    if i == 1 then
+      //temp_address = a + va.value<31-(1-i)*10..22-(1-i)*10> * PTESIZE;
+      //temp_address = a + va.value<31-(1-1)*10..22-(1-1)*10> * PTESIZE;
+      //temp = 0;
+      //temp<9..0> = va.value<31..22>;
+      //temp_address = temp << 2;
+      //temp = a;
+      temp_address = a + va.value<31..22> << 2;
+    elif i == 0 then
+      //temp_address = a + va.value<31-(1-1)*10..22-(1-1)*10> * PTESIZE;
+      temp_address = a + va.value<21..12> * PTESIZE;
+    else
+      trace("ERROR: the i must be in range [1,0]");
+    endif;
+
+    pte = PT(temp_address);
+
+    w = pte.w;
+    r = pte.r;
+    v = pte.v;
+
+    // TODO: if v == 0 || (r == 0 && w == 1) then
+    if v == 0 then
+      exception("SV32Translate: page-fault exception");
+    endif;
+    if r == 0 && w == 1 then
+      exception("SV32Translate: page-fault exception");
+    endif;
+
+    return pte;
+  }
+
 function SV32Translate (va: VA, store_op: 1): PASv32
   var pte: PT.entry;
-  var i: 4;
+  var i: 3;
   var a: 32;
   var temp_address: VA;
   var pa: PASv32;
@@ -167,74 +206,56 @@ function SV32Translate (va: VA, store_op: 1): PASv32
     // Step 1
     temp<21..0> = SATP_PPN;
     a = temp * PAGESIZE;
-    i = LEVELS - 1;
+    //i = LEVELS - 1;
+    i = 1;
 
-    // Step 2
-    temp_address = a + va.value<31..22> * PTESIZE; //va.vpn1 * PTESIZE;
+    // Step 2-4
+    pte = SV32TranslateCycle(va, a, i);
 
-    if PT(temp_address).hit then
-    // The address hits PT
-      pte = PT(temp_address);
-
-      if pte.r == TRUE || pte.x == TRUE then
-        error = TRUE;
-        // TODO:
-      endif;
+    if pte.r == 1 || pte.x == 1 then
+      // Go step 5
     else
-      pte = PT(temp_address);
+      //i = i - 1;
       temp<21..0> = pte.ppn1::pte.ppn0;
       a = temp * PAGESIZE;
-
-      temp_address = a + va.value<21..12> * PTESIZE; //va.vpn0 * PTESIZE;
-      if PT(temp_address).hit then
-        pte = PT(temp_address);
-        // TODO:
-      else
-      // The address does not hit the PT
-        error = TRUE;
-        exception("PT Miss");
-        // TODO:
+      pte = SV32TranslateCycle(va, a, i);
+      if pte.r == 1 || pte.x == 1 then
+        // Go step 5
+      else // i < 0
+        exception("SV32Translate: page-fault exception");
       endif;
     endif;
-    // If the address hits the PT
 
-    d = pte.d;
-    accessed = pte.a;
-    g = pte.g;
-    u = pte.u;
-    x = pte.x;
-    w = pte.w;
-    r = pte.r;
-    v = pte.v;
+    // Step 5
+    // TODO:
 
-    // Step 3
-    // if v == FALSE || (r == FALSE && w == TRUE) then
-    if v == FALSE then
-      error = TRUE;
-      exception("SV32Translate: page-fault exception");
-    endif;
-    if r == FALSE && w == TRUE then
-      error = TRUE;
-      exception("SV32Translate: page-fault exception");
+    // Step 6
+    if i > 0 && pte.ppn0 != 0 then
+      exception("SV32Translate 6: page-fault exception");
     endif;
 
-    //if pte.a == FALSE || store_op == TRUE && pte.d == FALSE then
-    if pte.a == FALSE then
-      error = TRUE;
-      exception("SV32Translate: page-fault exception");
+    // Step 7
+    //if pte.a == 0 || store_op == 1 && pte.d == 0 then
+    if pte.a == 0 then
+      error = 1;
+      exception("SV32Translate 7: page-fault exception");
     endif;
-    if store_op == TRUE && pte.d == FALSE then
-      error = TRUE;
-      exception("SV32Translate: page-fault exception");
+    if store_op == 1 && pte.d == 0 then
+      error = 1;
+      exception("SV32Translate 7: page-fault exception");
     endif;
+    // TODO: or
 
-    // Update PT.
-    PT(temp_address) = pte; // TODO: !
-
+    // The translation is successful.
+    pa.offset = va<11..0>;
     pa.ppn1   = pte.ppn1;
     pa.ppn0   = pte.ppn0;
-    pa.offset = va<11..0>;
+    if i > 0 then
+      pa.ppn0 = va.value<21..12>;
+    endif;
     pa.error  = error;
+
+    PT(temp_address) = pte; // TODO: !
 
     return pa;
   }

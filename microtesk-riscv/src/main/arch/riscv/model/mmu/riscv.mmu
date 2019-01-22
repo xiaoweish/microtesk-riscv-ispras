@@ -116,6 +116,10 @@ address PA(
   value: 34
 )
 
+address PTAddress(
+  value: 34
+)
+
 //==================================================================================================
 // Translation Buffers
 //==================================================================================================
@@ -141,31 +145,30 @@ field.
 //==================================================================================================
 
 // Sv32: step 2-4
-function SV32TranslateCycle (va: VA, a: 32, i: 3): PT.entry
+function SV32TranslateCycle (va: VA, a: 34, i: 3): PT.entry
   var pte: PT.entry;
-  var temp_address: VA;
+  var temp_address: PTAddress;
+  var temp_va: VA;
   var w: 1;
   var r: 1;
   var v: 1;
 
-  var temp: 32;
+  var temp: 34;
   {
+    temp = 0;
     if i == 1 then
       //temp_address = a + va.value<31-(1-i)*10..22-(1-i)*10> * PTESIZE;
-      //temp_address = a + va.value<31-(1-1)*10..22-(1-1)*10> * PTESIZE;
-      //temp = 0;
-      //temp<9..0> = va.value<31..22>;
-      //temp_address = temp << 2;
-      //temp = a;
-      temp_address = a + va.value<31..22> << 2;
+      temp<9..0> = va.value<31..22>;
     elif i == 0 then
-      //temp_address = a + va.value<31-(1-1)*10..22-(1-1)*10> * PTESIZE;
-      temp_address = a + va.value<21..12> * PTESIZE;
+      temp<9..0> = va.value<21..12>;
     else
       trace("ERROR: the i must be in range [1,0]");
     endif;
+    temp_address.value = temp << 2;
+    temp_address.value<33..12> = a<33..12>;
 
-    pte = PT(temp_address);
+    temp_va.value<31..0> = temp_address.value<33..2>;
+    pte = PT(temp_va);
 
     w = pte.w;
     r = pte.r;
@@ -173,10 +176,12 @@ function SV32TranslateCycle (va: VA, a: 32, i: 3): PT.entry
 
     // TODO: if v == 0 || (r == 0 && w == 1) then
     if v == 0 then
-      exception("SV32Translate: page-fault exception");
+      trace("SV32TranslateCycle: page-fault exception");
+      exception("page_fault_exception");
     endif;
     if r == 0 && w == 1 then
-      exception("SV32Translate: page-fault exception");
+      trace("SV32TranslateCycle: page-fault exception");
+      exception("page_fault_exception");
     endif;
 
     return pte;
@@ -185,8 +190,8 @@ function SV32TranslateCycle (va: VA, a: 32, i: 3): PT.entry
 function SV32Translate (va: VA, store_op: 1): PASv32
   var pte: PT.entry;
   var i: 3;
-  var a: 32;
-  var temp_address: VA;
+  var a: 34;
+  var temp_address: PTAddress;
   var pa: PASv32;
   var error: 1;
 
@@ -199,13 +204,13 @@ function SV32Translate (va: VA, store_op: 1): PASv32
   var r: 1;
   var v: 1;
 
-  var temp: 32;
+  var temp: 34;
   {
     error = 0;
 
     // Step 1
     temp<21..0> = SATP_PPN;
-    a = temp * PAGESIZE;
+    a = temp << 12; //a = temp * PAGESIZE;
     //i = LEVELS - 1;
     i = 1;
 
@@ -217,12 +222,13 @@ function SV32Translate (va: VA, store_op: 1): PASv32
     else
       //i = i - 1;
       temp<21..0> = pte.ppn1::pte.ppn0;
-      a = temp * PAGESIZE;
+      a = temp << 12; //a = temp * PAGESIZE;
       pte = SV32TranslateCycle(va, a, i);
       if pte.r == 1 || pte.x == 1 then
         // Go step 5
       else // i < 0
-        exception("SV32Translate: page-fault exception");
+        trace("SV32Translate: page-fault exception");
+        exception("page_fault_exception");
       endif;
     endif;
 
@@ -231,23 +237,26 @@ function SV32Translate (va: VA, store_op: 1): PASv32
 
     // Step 6
     if i > 0 && pte.ppn0 != 0 then
-      exception("SV32Translate 6: page-fault exception");
+      trace("SV32Translate 6: page-fault exception");
+      exception("page_fault_exception");
     endif;
 
     // Step 7
     //if pte.a == 0 || store_op == 1 && pte.d == 0 then
     if pte.a == 0 then
       error = 1;
-      exception("SV32Translate 7: page-fault exception");
+      trace("SV32Translate 7: page-fault exception");
+      exception("page_fault_exception");
     endif;
     if store_op == 1 && pte.d == 0 then
       error = 1;
-      exception("SV32Translate 7: page-fault exception");
+      trace("SV32Translate 7: page-fault exception");
+      exception("page_fault_exception");
     endif;
     // TODO: or
 
     // The translation is successful.
-    pa.offset = va<11..0>;
+    pa.offset = va.value<11..0>;
     pa.ppn1   = pte.ppn1;
     pa.ppn0   = pte.ppn0;
     if i > 0 then
@@ -255,7 +264,7 @@ function SV32Translate (va: VA, store_op: 1): PASv32
     endif;
     pa.error  = error;
 
-    PT(temp_address) = pte; // TODO: !
+    //PT(temp_va) = pte; // TODO: !
 
     return pa;
   }
@@ -265,7 +274,7 @@ function TranslateAddress(va: VA, store_op: 1): PA
   var pAddress: PA;
   {
     pa = SV32Translate(va, store_op);
-    pAddress = pa.ppn1::pa.ppn0::pa.offset;
+    pAddress.value = pa.ppn1::pa.ppn0::pa.offset;
 
     //if SV32Translate(va, store_op).hit then
     //  pa = SV32Translate(va, store_op);

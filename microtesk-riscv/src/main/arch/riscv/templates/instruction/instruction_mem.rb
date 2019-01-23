@@ -30,6 +30,13 @@ class InstructionMemTemplate < RiscVBaseTemplate
            0x0, 0x0, 0x0, 0x0
       label :end
       space 1
+
+      org 0x00110000
+      label :data1
+      word 0x0, 0x0, 0x0, 0x0,
+           0x0, 0x0, 0x0, 0x0
+      label :end1
+      space 1
     }
   end
 
@@ -38,7 +45,7 @@ class InstructionMemTemplate < RiscVBaseTemplate
     prepare t0, 0xFFFFFFFFDEADBEEF # Value being loaded/stored
 
     trace "s0 = 0x%x", XREG(8)
-    #sw t0, s0, 0x0
+    sw t0, s0, 0x0
     trace "t0 = 0x%x", XREG(5)
     lw t1, s0, 0x0
     trace "t1 = 0x%x", XREG(6)

@@ -17,6 +17,9 @@
 // Sv32:
 // Sv64: null
 
+let LOAD_OP  = 0
+let STORE_OP = 1
+
 #ifdef RV64I
   let XLEN = 64
 #else
@@ -40,6 +43,7 @@ extern PMPCFG3 = PMPCFG3
 extern SATP = SATP
 // The physical page number of the root page table is stored in the satp register's PPN field.
 extern SATP_PPN = SATP_PPN // RV32: 22-bit / RV64: 44-bit
+extern SATP_MODE = SATP_MODE // 0 - No translation or protection.
 
 // For Sv32, PAGESIZE=2^12 and LEVELS=2
 let PAGESIZE = 2 ** 12
@@ -102,6 +106,7 @@ struct VASv32 (
 
 address VA(
   value : 32,
+  type  : 1,
   is_pa : 1,
   pa    : 34
 )
@@ -121,6 +126,24 @@ address PA(
 address PTAddress(
   value: 34
 )
+
+//==================================================================================================
+// Initializing the VA fields
+//==================================================================================================
+
+op sw(va: VA)
+init = {
+  va.is_pa = 0;
+  va.pa = 0;
+  va.type = STORE_OP;
+}
+
+op lw(va: VA)
+init = {
+  va.is_pa = 0;
+  va.pa = 0;
+  va.type = LOAD_OP;
+}
 
 //==================================================================================================
 // Translation Buffers
@@ -173,6 +196,7 @@ function SV32TranslateCycle (va: VA, a: 34, i: 3): PT.entry
     temp_va.is_pa = 1;
     temp_va.pa = temp_address.value;
 
+    trace("SV32TranslateCycle.temp_address.value = 0x%x", temp_address.value);
     pte = PT(temp_va);
 
     w = pte.w;
@@ -180,11 +204,11 @@ function SV32TranslateCycle (va: VA, a: 34, i: 3): PT.entry
     v = pte.v;
 
     // TODO: if v == 0 || (r == 0 && w == 1) then
-    if v == 0 then
+    if pte.v == 0 then
       trace("SV32TranslateCycle: page-fault exception");
       exception("page_fault_exception");
     endif;
-    if r == 0 && w == 1 then
+    if pte.r == 0 && pte.w == 1 then
       trace("SV32TranslateCycle: page-fault exception");
       exception("page_fault_exception");
     endif;
@@ -247,7 +271,7 @@ function SV32Translate (va: VA, store_op: 1): PA
     endif;
 
     // Step 7
-    //if pte.a == 0 || store_op == 1 && pte.d == 0 then
+    //if pte.a == 0 || va.type == STORE_OP && pte.d == 0 then
     if pte.a == 0 then
       error = 1;
       trace("SV32Translate 7: page-fault exception");
@@ -326,15 +350,29 @@ buffer MEM (pa: PA)
 // Memory Management Unit
 //==================================================================================================
 
+// Check the MODE field, which selects the current address-translation scheme
+function PreTranslateAddress(va: VA): PA
+  var pa: PA;
+  {
+    if SATP_MODE != 0 then
+      pa = TranslateAddress(va, 0);
+    else
+      pa.value<31..0> = va.value;
+    endif;
+
+    return pa;
+  }
+
+// Store/Load memory
 mmu memory (va: VA) = (data: DATA_SIZE)
   var pa: PA;
   read = {
-    pa = TranslateAddress(va, 0);
+    pa = PreTranslateAddress(va);
     data = MEM(pa);
   }
 
   write = {
-    pa = TranslateAddress(va, 1);
+    pa = PreTranslateAddress(va);
     MEM(pa) = data;
   }
 

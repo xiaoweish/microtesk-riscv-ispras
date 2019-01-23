@@ -74,6 +74,7 @@ let PAGESIZE = 2 ** 12
     let PTE_SIZE = 2**9
   #else
     // Sv48
+    let PTE_SIZE = 2**9
   #endif
 #endif
 
@@ -238,7 +239,9 @@ function SV32Translate (va: VA, store_op: 1): PA
     error = 0;
 
     // Step 1
+#ifdef RV32FULL
     temp<21..0> = SATP_PPN;
+#endif
     a = temp << 12; //a = temp * PAGESIZE;
     //i = LEVELS - 1;
     i = 1;

@@ -103,7 +103,7 @@ type CSR_TYPE = card(XLEN)
 reg CSR[1 << 12, CSR_TYPE]
 
 // Memory Size
-let MEM_SIZE = XLEN - 2
+let MEM_SIZE = XLEN
 
 // Memory Size is 2 ** XLEN Bytes
 let MEM_SIZE_IN_WORDS = 2 ** (MEM_SIZE)

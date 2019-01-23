@@ -101,7 +101,9 @@ struct VASv32 (
 )
 
 address VA(
-  value: 32
+  value : 32,
+  is_pa : 1,
+  pa    : 34
 )
 
 // Sv32 physical address.
@@ -167,7 +169,10 @@ function SV32TranslateCycle (va: VA, a: 34, i: 3): PT.entry
     temp_address.value = temp << 2;
     temp_address.value<33..12> = a<33..12>;
 
-    temp_va.value<31..0> = temp_address.value<33..2>;
+    temp_va.value = 0;
+    temp_va.is_pa = 1;
+    temp_va.pa = temp_address.value;
+
     pte = PT(temp_va);
 
     w = pte.w;
@@ -187,12 +192,12 @@ function SV32TranslateCycle (va: VA, a: 34, i: 3): PT.entry
     return pte;
   }
 
-function SV32Translate (va: VA, store_op: 1): PASv32
+function SV32Translate (va: VA, store_op: 1): PA
   var pte: PT.entry;
   var i: 3;
   var a: 34;
   var temp_address: PTAddress;
-  var pa: PASv32;
+  var pa: PA;
   var error: 1;
 
   var d: 1;
@@ -256,13 +261,16 @@ function SV32Translate (va: VA, store_op: 1): PASv32
     // TODO: or
 
     // The translation is successful.
-    pa.offset = va.value<11..0>;
-    pa.ppn1   = pte.ppn1;
-    pa.ppn0   = pte.ppn0;
+//    pa.offset = va.value<11..0>;
+//    pa.ppn1   = pte.ppn1;
+//    pa.ppn0   = pte.ppn0;
+    pa.value<11..0> = va.value<11..0>;
+    pa.value<33..22> = pte.ppn1;
+    pa.value<21..12> = pte.ppn0;
     if i > 0 then
-      pa.ppn0 = va.value<21..12>;
+      pa.value<21..12> = va.value<21..12>;
     endif;
-    pa.error  = error;
+    //pa.error  = error;
 
     //PT(temp_va) = pte; // TODO: !
 
@@ -270,22 +278,26 @@ function SV32Translate (va: VA, store_op: 1): PASv32
   }
 
 function TranslateAddress(va: VA, store_op: 1): PA
-  var pa: PASv32;
-  var pAddress: PA;
+  var pa: PA;
   {
-    pa = SV32Translate(va, store_op);
-    pAddress.value = pa.ppn1::pa.ppn0::pa.offset;
+    if va.is_pa == 1 then
+      pa.value = va.pa;
+    else
+      pa = SV32Translate(va, store_op);
+    endif;
+
+//    pAddress.value = pa.ppn1::pa.ppn0::pa.offset;
 
     //if SV32Translate(va, store_op).hit then
     //  pa = SV32Translate(va, store_op);
-    if pa.error == 0 then
-      trace("SV32Translate: va=%x, pa=%x", va.value, pa.ppn1::pa.ppn0::pa.offset);
+//    if pa.error == 0 then
+      trace("SV32Translate: va=%x, pa=%x", va.value, pa.value);
       // va.value = va.vpn1::va.vpn0::va.offset
-    else
-      trace("ERROR: va=%x, pa=%x", va.value, pa.ppn1::pa.ppn0::pa.offset);
-    endif;
+//    else
+//      trace("ERROR: va=%x, pa=%x", va.value, pa.ppn1::pa.ppn0::pa.offset);
+//    endif;
 
-    return pAddress;
+    return pa;
   }
 
 //==================================================================================================

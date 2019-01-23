@@ -298,7 +298,7 @@ let DATA_SIZE = 32
 // A RISC-V hart has a single byte-addressable address space of 2XLEN bytes for all memory accesses.
 // TODO: extern
 // Memory Size
-let MEM_SIZE = XLEN - 2
+let MEM_SIZE = XLEN
 // Memory Size is 2 ** XLEN Bytes
 let MEM_SIZE_IN_WORDS = 2 ** (MEM_SIZE)
 
@@ -307,7 +307,7 @@ buffer MEM (pa: PA)
   ways  = 1
   sets  = MEM_SIZE_IN_WORDS
   entry = (DATA: DATA_SIZE)
-  index = pa.value<33..4>
+  index = pa.value<33..2>
   match = 0
 
 //==================================================================================================

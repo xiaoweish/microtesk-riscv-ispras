@@ -175,9 +175,6 @@ function SV32TranslateCycle (va: VA, a: 34, i: 3): PT.entry
   var pte: PT.entry;
   var temp_address: PTAddress;
   var temp_va: VA;
-  var w: 1;
-  var r: 1;
-  var v: 1;
 
   var temp: 34;
   {
@@ -200,10 +197,6 @@ function SV32TranslateCycle (va: VA, a: 34, i: 3): PT.entry
     trace("SV32TranslateCycle.temp_address.value = 0x%x", temp_address.value);
     pte = PT(temp_va);
 
-    w = pte.w;
-    r = pte.r;
-    v = pte.v;
-
     // TODO: if v == 0 || (r == 0 && w == 1) then
     if pte.v == 0 then
       trace("SV32TranslateCycle: page-fault exception");
@@ -217,26 +210,15 @@ function SV32TranslateCycle (va: VA, a: 34, i: 3): PT.entry
     return pte;
   }
 
-function SV32Translate (va: VA, store_op: 1): PA
+function SV32Translate (va: VA): PA
   var pte: PT.entry;
   var i: 3;
   var a: 34;
   var temp_address: PTAddress;
   var pa: PA;
-  var error: 1;
-
-  var d: 1;
-  var accessed: 1; // a
-  var g: 1;
-  var u: 1;
-  var x: 1;
-  var w: 1;
-  var r: 1;
-  var v: 1;
 
   var temp: 34;
   {
-    error = 0;
 
     // Step 1
 #ifdef RV32FULL
@@ -276,12 +258,10 @@ function SV32Translate (va: VA, store_op: 1): PA
     // Step 7
     //if pte.a == 0 || va.type == STORE_OP && pte.d == 0 then
     if pte.a == 0 then
-      error = 1;
       trace("SV32Translate 7: page-fault exception");
       exception("page_fault_exception");
     endif;
-    if store_op == 1 && pte.d == 0 then
-      error = 1;
+    if va.type == STORE_OP && pte.d == 0 then
       trace("SV32Translate 7: page-fault exception");
       exception("page_fault_exception");
     endif;
@@ -297,32 +277,21 @@ function SV32Translate (va: VA, store_op: 1): PA
     if i > 0 then
       pa.value<21..12> = va.value<21..12>;
     endif;
-    //pa.error  = error;
 
     //PT(temp_va) = pte; // TODO: !
 
     return pa;
   }
 
-function TranslateAddress(va: VA, store_op: 1): PA
+function TranslateAddress(va: VA): PA
   var pa: PA;
   {
     if va.is_pa == 1 then
       pa.value = va.pa;
     else
-      pa = SV32Translate(va, store_op);
+      pa = SV32Translate(va);
     endif;
-
-//    pAddress.value = pa.ppn1::pa.ppn0::pa.offset;
-
-    //if SV32Translate(va, store_op).hit then
-    //  pa = SV32Translate(va, store_op);
-//    if pa.error == 0 then
-      trace("SV32Translate: va=%x, pa=%x", va.value, pa.value);
-      // va.value = va.vpn1::va.vpn0::va.offset
-//    else
-//      trace("ERROR: va=%x, pa=%x", va.value, pa.ppn1::pa.ppn0::pa.offset);
-//    endif;
+    trace("TranslateAddress: va=%x, pa=%x", va.value, pa.value);
 
     return pa;
   }
@@ -358,9 +327,10 @@ function PreTranslateAddress(va: VA): PA
   var pa: PA;
   {
     if SATP_MODE != 0 then
-      pa = TranslateAddress(va, 0);
+      pa = TranslateAddress(va);
     else
       pa.value<31..0> = va.value;
+      trace("Mmu.PreTranslateAddress: satp.mode=%x (off)", SATP_MODE);
     endif;
 
     return pa;

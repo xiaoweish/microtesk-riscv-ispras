@@ -1,5 +1,5 @@
 #
-# Copyright 2018 ISP RAS (http://www.ispras.ru)
+# Copyright 2019 ISP RAS (http://www.ispras.ru)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,24 +31,50 @@ class InstructionMemTemplate < RiscVBaseTemplate
       label :end
       space 1
 
-      org 0x00110000
+      # Page Table Level: 1
+      org 0x3ed00800
       label :data1
-      word 0x0, 0x0, 0x0, 0x0,
-           0x0, 0x0, 0x0, 0x0
+      word 0x33B488e1, 0xdeadbeef, 0xdeadbeef, 0xdeadbeef
       label :end1
+      space 1
+
+      # Page Table Level: 0
+      org 0x4ed000c8
+      label :data2
+      word 0x37B488e3, 0xdeadbeef, 0xdeadbeef, 0xdeadbeef
+      label :end2
+      space 1
+
+      # Data
+      org 0x5ed00000
+      label :data3
+      word 0xc001beef, 0xc001beef, 0xc001beef, 0xc001beef
+      label :end3
       space 1
     }
   end
 
   def run
+    # Only for Sv32, (RV32)
+    # csrwi satp, 0x80000002 # MODE = 1, PPN = 0x2
+    trace "satp = 0x%x", satp
+    li t1, :data1
+    trace "t1 = 0x%x", t1
+    li t0, 0x800bed22
+    trace "t0 = 0x%x", t0
+    csrw satp, t0
+    trace "satp = 0x%x", satp
+
     la s0, :data # Address
     prepare t0, 0xFFFFFFFFDEADBEEF # Value being loaded/stored
 
-    trace "s0 = 0x%x", XREG(8)
-    sw t0, s0, 0x0
-    trace "t0 = 0x%x", XREG(5)
+    trace "s0 = 0x%x", s0
     lw t1, s0, 0x0
-    trace "t1 = 0x%x", XREG(6)
+    trace "t1 = 0x%x", t1
+    sw t0, s0, 0x0
+    trace "t0 = 0x%x", t0
+    lw t1, s0, 0x0
+    trace "t1 = 0x%x", t1
     nop
   end
 

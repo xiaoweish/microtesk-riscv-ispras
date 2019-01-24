@@ -5,13 +5,13 @@
   <memory>
     <region type  = "text"
             name  = "code"
-            start = "0000_0000_8000_0000"
+            start = "0000_0000_0000_0000"
             end   = "0000_0000_ffff_ffff"
             mode  = "--x---"
     />
     <region type  = "data"
             name  = "data"
-            start = "0000_0000_8000_0000"
+            start = "0000_0000_0000_0000"
             end   = "0000_0000_ffff_ffff"
             mode  = "rw----"
     />

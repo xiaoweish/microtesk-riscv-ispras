@@ -618,7 +618,7 @@ mode SATP() = CSR[0x180]
   syntax = format("satp")
   image = format("%12s", csr_index)
 
-reg SATP_CSR[CSR_TYPE] alias = CSR[0x300]
+reg SATP_CSR[CSR_TYPE] alias = CSR[0x180]
 
 @rev(RV32) reg SATP_MODE [BIT]      alias = SATP_CSR<31>
 @rev(RV32) reg SATP_ASID [card(9)]  alias = SATP_CSR<30..22>

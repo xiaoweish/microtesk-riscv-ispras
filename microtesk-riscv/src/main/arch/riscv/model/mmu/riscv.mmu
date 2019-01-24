@@ -173,12 +173,19 @@ init = {
 //==================================================================================================
 // Translation Buffers
 //==================================================================================================
+struct PTEntry (
+  ppn1: 12,
+  ppn0: 10,
+  rsw: 2,
+  d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1
+)
 
 // Sv32 Page Table Entry
 memory buffer PT (va: VA)
   ways = 1
   sets = PTE_SIZE
-  entry  = (ppn1: 12, ppn0: 10, rsw: 2, d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1)
+//  entry  = (ppn1: 12, ppn0: 10, rsw: 2, d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1)
+  entry  = (v: 1, r: 1, w: 1, x: 1,  u: 1, g: 1, a: 1, d: 1, rsw: 2, ppn0: 10, ppn1: 12)
   index  = 0
   match  = 0
   policy = NONE
@@ -213,8 +220,6 @@ function SV32TranslateCycle (va: VA): PT.entry
       temp = 0;
       //temp_address = a + va.value<31-(1-i)*10..22-(1-i)*10> * PTESIZE;
       temp<9..0> = va.value<31..22>;
-      //i = LEVELS - 1;
-      va.i = 0;
     elif va.i == 0 then
       temp<21..0> = va.ppn;
       a = temp << 12; //a = ppn * PAGESIZE;
@@ -234,14 +239,18 @@ function SV32TranslateCycle (va: VA): PT.entry
 
     trace("SV32TranslateCycle.temp_address.value = 0x%x", temp_address.value);
     pte = PT(temp_va);
+    trace("SV32TranslateCycle: pte = 0x%x", pte.v::pte.r::pte.w::pte.x::pte.u::pte.g::pte.a::pte.d::pte.rsw::pte.ppn0::pte.ppn1);
+    trace("SV32TranslateCycle: pte = 0x%x", pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
+    trace("SV32TranslateCycle: pte.v = 0x%x, pte.r = 0x%x, pte.w = 0x%x", pte.v, pte.r, pte.w);
+    trace("SV32TranslateCycle: ppn1 = 0x%x, ppn0 = 0x%x", pte.ppn1, pte.ppn0);
 
     // TODO: if v == 0 || (r == 0 && w == 1) then
     if pte.v == 0 then
-      trace("SV32TranslateCycle: page-fault exception");
+      trace("SV32TranslateCycle: page-fault exception (pte.v = 0x%x)", pte.v);
       exception("page_fault_exception");
     endif;
     if pte.r == 0 && pte.w == 1 then
-      trace("SV32TranslateCycle: page-fault exception");
+      trace("SV32TranslateCycle: page-fault exception (pte.r = 0x%x, pte.w = 0x%x)", pte.r, pte.w);
       exception("page_fault_exception");
     endif;
 
@@ -260,12 +269,16 @@ function SV32Translate (va: VA): PA
 
     if pte.r == 1 || pte.x == 1 then
       // Go step 5
+      trace("Go step 5: (pte.r = 0x%x, pte.x = 0x%x)", pte.r, pte.x);
     else
+      //i = LEVELS - 1;
+      va.i = 0;
       pte = SV32TranslateCycle(va);
       if pte.r == 1 || pte.x == 1 then
         // Go step 5
+        trace("Go step 5: (pte.r = 0x%x, pte.x = 0x%x)", pte.r, pte.x);
       else // i < 0
-        trace("SV32Translate: page-fault exception");
+        trace("SV32Translate: page-fault exception (i < 0)");
         exception("page_fault_exception");
       endif;
     endif;
@@ -275,18 +288,18 @@ function SV32Translate (va: VA): PA
 
     // Step 6
     if va.i == 1 && pte.ppn0 != 0 then
-      trace("SV32Translate 6: page-fault exception");
+      trace("SV32Translate 6: page-fault exception (va.i = 0x%x)", va.i);
       exception("page_fault_exception");
     endif;
 
     // Step 7
     //if pte.a == 0 || va.type == STORE_OP && pte.d == 0 then
     if pte.a == 0 then
-      trace("SV32Translate 7: page-fault exception");
+      trace("SV32Translate 7: page-fault exception (pte.a = 0x%x)", pte.a);
       exception("page_fault_exception");
     endif;
     if va.type == STORE_OP && pte.d == 0 then
-      trace("SV32Translate 7: page-fault exception");
+      trace("SV32Translate 7: page-fault exception (pte.d = 0x%x)", pte.d);
       exception("page_fault_exception");
     endif;
     // TODO: or
@@ -307,7 +320,7 @@ function TranslateAddress(va: VA): PA
   var pa: PA;
   {
     if va.is_pa == 1 then
-      pa.value = va.pa;
+      pa.value = va.pa; // TODO: pa.value = va.pa
     else
       pa = SV32Translate(va);
     endif;
@@ -336,16 +349,21 @@ buffer MEM (pa: PA)
   sets  = MEM_SIZE_IN_WORDS
   entry = (DATA: DATA_SIZE)
   index = pa.value<33..2>
+//  index = pa.value >> 2
   match = 0
 
 //==================================================================================================
 // Memory Management Unit
 //==================================================================================================
 
+extern SATP_CSR = SATP_CSR
+
 // Check the MODE field, which selects the current address-translation scheme
 function PreTranslateAddress(va: VA): PA
   var pa: PA;
   {
+    //trace("SATP_CSR=%x", SATP_CSR);
+
     if SATP_MODE != 0 then
       pa = TranslateAddress(va);
     else

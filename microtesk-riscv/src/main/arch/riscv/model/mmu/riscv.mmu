@@ -110,6 +110,7 @@ address VA(
   type  : 1,
   is_pa : 1,
   i     : 1,
+  ppn   : 22,
   pa    : 34
 )
 
@@ -138,6 +139,7 @@ op va_initializing(va: VA)
 init = {
   va.is_pa = 0;
   va.pa = 0;
+  va.ppn = 0;
 #ifdef RV32FULL
   va.i = 1; // Sv32
 #else
@@ -149,6 +151,7 @@ init = {
   va.type = STORE_OP;
   va.is_pa = 0;
   va.pa = 0;
+  va.ppn = 0;
 #ifdef RV32FULL
   va.i = 1; // Sv32
 #else
@@ -160,6 +163,7 @@ init = {
   va.type = LOAD_OP;
   va.is_pa = 0;
   va.pa = 0;
+  va.ppn = 0;
 #ifdef RV32FULL
   va.i = 1; // Sv32
 #else
@@ -191,20 +195,31 @@ field.
 //==================================================================================================
 
 // Sv32: step 2-4
-function SV32TranslateCycle (va: VA, a: 34): PT.entry
+function SV32TranslateCycle (va: VA): PT.entry
   var pte: PT.entry;
   var temp_address: PTAddress;
   var temp_va: VA;
-
+  var a: 34;
   var temp: 34;
   {
     temp = 0;
     if va.i == 1 then
+      // Step 1
+#ifdef RV32FULL
+      temp<21..0> = SATP_PPN;
+#endif
+      a = temp << 12; //a = temp * PAGESIZE;
+
+      temp = 0;
       //temp_address = a + va.value<31-(1-i)*10..22-(1-i)*10> * PTESIZE;
       temp<9..0> = va.value<31..22>;
       //i = LEVELS - 1;
       va.i = 0;
     elif va.i == 0 then
+      temp<21..0> = va.ppn;
+      a = temp << 12; //a = ppn * PAGESIZE;
+
+      temp = 0;
       temp<9..0> = va.value<21..12>;
     else
       trace("ERROR: the i must be in range [1,0]");
@@ -239,22 +254,14 @@ function SV32Translate (va: VA): PA
   var pa: PA;
   var temp: 34;
   {
-    // Step 1
-#ifdef RV32FULL
-    temp<21..0> = SATP_PPN;
-#endif
-    a = temp << 12; //a = temp * PAGESIZE;
-
-    // Step 2-4
-    pte = SV32TranslateCycle(va, a);
+    // Step 1-4
+    pte = SV32TranslateCycle(va);
+    va.ppn = pte.ppn1::pte.ppn0;
 
     if pte.r == 1 || pte.x == 1 then
       // Go step 5
     else
-      //i = i - 1;
-      temp<21..0> = pte.ppn1::pte.ppn0;
-      a = temp << 12; //a = temp * PAGESIZE;
-      pte = SV32TranslateCycle(va, a);
+      pte = SV32TranslateCycle(va);
       if pte.r == 1 || pte.x == 1 then
         // Go step 5
       else // i < 0

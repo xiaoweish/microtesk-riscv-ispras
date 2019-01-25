@@ -170,6 +170,30 @@ init = {
 #endif
 }
 
+op store_rv32i(va: VA)
+init = {
+  va.type = STORE_OP;
+  va.is_pa = 0;
+  va.pa = 0;
+  va.ppn = 0;
+#ifdef RV32FULL
+  va.i = 1; // Sv32
+#else
+#endif
+}
+
+op load_rv32i(va: VA)
+init = {
+  va.type = LOAD_OP;
+  va.is_pa = 0;
+  va.pa = 0;
+  va.ppn = 0;
+#ifdef RV32FULL
+  va.i = 1; // Sv32
+#else
+#endif
+}
+
 //==================================================================================================
 // Translation Buffers
 //==================================================================================================
@@ -184,8 +208,8 @@ struct PTEntry (
 memory buffer PT (va: VA)
   ways = 1
   sets = PTE_SIZE
-//  entry  = (ppn1: 12, ppn0: 10, rsw: 2, d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1)
-  entry  = (v: 1, r: 1, w: 1, x: 1,  u: 1, g: 1, a: 1, d: 1, rsw: 2, ppn0: 10, ppn1: 12)
+  entry  = (ppn1: 12, ppn0: 10, rsw: 2, d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1)
+//  entry  = (v: 1, r: 1, w: 1, x: 1,  u: 1, g: 1, a: 1, d: 1, rsw: 2, ppn0: 10, ppn1: 12)
   index  = 0
   match  = 0
   policy = NONE
@@ -239,8 +263,8 @@ function SV32TranslateCycle (va: VA): PT.entry
 
     trace("SV32TranslateCycle.temp_address.value = 0x%x", temp_address.value);
     pte = PT(temp_va);
-    trace("SV32TranslateCycle: pte = 0x%x", pte.v::pte.r::pte.w::pte.x::pte.u::pte.g::pte.a::pte.d::pte.rsw::pte.ppn0::pte.ppn1);
-    trace("SV32TranslateCycle: pte = 0x%x", pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
+    trace("SV32TranslateCycle: pte 1f = 0x%x", pte.v::pte.r::pte.w::pte.x::pte.u::pte.g::pte.a::pte.d::pte.rsw::pte.ppn0::pte.ppn1);
+    trace("SV32TranslateCycle: pte 2t = 0x%x", pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
     trace("SV32TranslateCycle: pte.v = 0x%x, pte.r = 0x%x, pte.w = 0x%x", pte.v, pte.r, pte.w);
     trace("SV32TranslateCycle: ppn1 = 0x%x, ppn0 = 0x%x", pte.ppn1, pte.ppn0);
 

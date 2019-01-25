@@ -71,6 +71,15 @@ let FP_FMT_S = 0b00
 let FP_FMT_D = 0b01
 let FP_FMT_Q = 0b11
 
+// Memory read/write operations type
+let MEM_DWORD = 8
+let MEM_WORD  = 4
+let MEM_HWORD = 2
+let MEM_BYTE  = 1
+
+let SIGN_EXTEND_VALUE = 1
+let ZERO_EXTEND_VALUE = 0
+
 //==================================================================================================
 // Registers and Memory
 //==================================================================================================
@@ -360,11 +369,6 @@ op <name>(rd: X, imm: card(20))
 #endif
 
 #ifdef LOAD_STORE_MEM
-let MEM_DWORD = 8
-let MEM_WORD  = 4
-let MEM_HWORD = 2
-let MEM_BYTE  = 1
-
 var temp_address_load[DWORD]
 var temp_address_tail[card(2)]
 

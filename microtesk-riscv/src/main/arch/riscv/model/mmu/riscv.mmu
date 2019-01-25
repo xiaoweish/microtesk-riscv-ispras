@@ -194,6 +194,30 @@ init = {
 #endif
 }
 
+op store_data(va: VA)
+init = {
+  va.type = STORE_OP;
+  va.is_pa = 0;
+  va.pa = 0;
+  va.ppn = 0;
+#ifdef RV32FULL
+  va.i = 1; // Sv32
+#else
+#endif
+}
+
+op load_data(va: VA)
+init = {
+  va.type = STORE_OP;
+  va.is_pa = 0;
+  va.pa = 0;
+  va.ppn = 0;
+#ifdef RV32FULL
+  va.i = 1; // Sv32
+#else
+#endif
+}
+
 //==================================================================================================
 // Translation Buffers
 //==================================================================================================

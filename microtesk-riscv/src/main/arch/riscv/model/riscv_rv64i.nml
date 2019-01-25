@@ -58,19 +58,7 @@ op lwu(rd: X, rs1: X, imm: card(12))
   image  = format("%12s%s110%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
-    mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
-
-    if tmp_address<1..0> == 0 then // Word-aligned address
-      tmp_word = MEM[mem_index];
-    elif tmp_address<1..0> == 1 then
-      tmp_word = MEM[mem_index + 1]<7..0> :: MEM[mem_index]<31..8>;
-    elif tmp_address<1..0> == 2 then
-      tmp_word = MEM[mem_index + 1]<15..0> :: MEM[mem_index]<31..16>;
-    else
-      tmp_word = MEM[mem_index + 1]<23..0> :: MEM[mem_index]<31..24>;
-    endif;
-
-    rd = zero_extend(XWORD, tmp_word);
+    load_rvi(tmp_address, rd, MEM_WORD, ZERO_EXTEND_VALUE).action;
   }
 
 /*
@@ -91,26 +79,7 @@ op ld(rd: X, rs1: X, imm: card(12))
   image  = format("%12s%s011%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
-    mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
-
-    if tmp_address<1..0> == 0 then // Word-aligned address
-      tmp_dword<63..32> = MEM[mem_index + 1];
-      tmp_dword<31..0>  = MEM[mem_index];
-    elif tmp_address<1..0> == 1 then
-      tmp_dword<63..56> = MEM[mem_index + 2]<7..0>;
-      tmp_dword<55..24> = MEM[mem_index + 1];
-      tmp_dword<23..0>  = MEM[mem_index]<31..8>;
-    elif tmp_address<1..0> == 2 then
-      tmp_dword = MEM[mem_index + 2]<15..0> ::
-                  MEM[mem_index + 1] ::
-                  MEM[mem_index]<31..16>;
-    else
-      tmp_dword = MEM[mem_index + 2]<23..0> ::
-                  MEM[mem_index + 1] ::
-                  MEM[mem_index]<31..24>;
-    endif;
-
-    rd = tmp_dword;
+    load_rvi(tmp_address, rd, MEM_DWORD, ZERO_EXTEND_VALUE).action;
   }
 
 op sd(rs2: X, rs1: X, imm: card(12))
@@ -118,24 +87,7 @@ op sd(rs2: X, rs1: X, imm: card(12))
   image  = format("%7s%s%s011%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
-    mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
-
-    if tmp_address<1..0> == 0 then // Word-aligned address
-      MEM[mem_index + 1] = rs2<63..32>;
-      MEM[mem_index] = rs2<31..0>;
-    elif tmp_address<1..0> == 1 then
-      MEM[mem_index + 2]<7..0> = rs2<63..56>;
-      MEM[mem_index + 1] = rs2<55..24>;
-      MEM[mem_index]<31..8> = rs2<23..0>;
-    elif tmp_address<1..0> == 2 then
-      MEM[mem_index + 2]<15..0> ::
-      MEM[mem_index + 1] ::
-      MEM[mem_index]<31..16> = rs2;
-    else
-      MEM[mem_index + 2]<23..0> ::
-      MEM[mem_index + 1] ::
-      MEM[mem_index]<31..24> = rs2;
-    endif;
+    store_rvi(tmp_address, rs2, MEM_DWORD).action;
   }
 
 /*

@@ -358,6 +358,144 @@ op <name>(rd: X, imm: card(20))
 
 // Include control and status registers (CSRs)
 #include "riscv_csreg.nml"
+op load_rvi(tmp_address_op: XWORD, rd: X, load_type: card(4), sign_type: BIT)
+  action = {
+    if load_type == MEM_BYTE then
+      // MEM_BYTE
+      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
+
+      tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
+      tmp_byte = MEM[mem_index]<tmp_bit_offset + 7..tmp_bit_offset>;
+
+      if sign_type == ZERO_EXTEND_VALUE then
+        rd = zero_extend(XWORD, tmp_byte);
+      else // sign_type == SIGN_EXTEND_VALUE
+        rd = sign_extend(XWORD, tmp_byte);
+      endif;
+    elif load_type == MEM_HWORD then
+      // MEM_HWORD
+      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
+
+      if tmp_address<1..0> != 3 then
+        tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
+        tmp_half = MEM[mem_index]<tmp_bit_offset + 15..tmp_bit_offset>;
+      else
+        tmp_half = MEM[mem_index + 1]<7..0> :: MEM[mem_index]<31..24>;
+      endif;
+
+      if sign_type == ZERO_EXTEND_VALUE then
+        rd = zero_extend(XWORD, tmp_half);
+      else // sign_type == SIGN_EXTEND_VALUE
+        rd = sign_extend(XWORD, tmp_half);
+      endif;
+    elif load_type == MEM_WORD then
+      // MEM_WORD
+      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
+
+      if tmp_address<1..0> == 0 then // Word-aligned address
+        tmp_word = MEM[mem_index];
+      elif tmp_address<1..0> == 1 then
+        tmp_word = MEM[mem_index + 1]<7..0> :: MEM[mem_index]<31..8>;
+      elif tmp_address<1..0> == 2 then
+        tmp_word = MEM[mem_index + 1]<15..0> :: MEM[mem_index]<31..16>;
+      else
+        tmp_word = MEM[mem_index + 1]<23..0> :: MEM[mem_index]<31..24>;
+      endif;
+
+      if sign_type == ZERO_EXTEND_VALUE then
+        rd = zero_extend(XWORD, tmp_word);
+      else // sign_type == SIGN_EXTEND_VALUE
+        rd = sign_extend(XWORD, tmp_word);
+      endif;
+#ifdef RV64I
+    elif load_type == MEM_DWORD then
+      // MEM_DWORD
+    mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
+      if tmp_address<1..0> == 0 then // Word-aligned address
+        tmp_dword<63..32> = MEM[mem_index + 1];
+        tmp_dword<31..0>  = MEM[mem_index];
+      elif tmp_address<1..0> == 1 then
+        tmp_dword<63..56> = MEM[mem_index + 2]<7..0>;
+        tmp_dword<55..24> = MEM[mem_index + 1];
+        tmp_dword<23..0>  = MEM[mem_index]<31..8>;
+      elif tmp_address<1..0> == 2 then
+        tmp_dword = MEM[mem_index + 2]<15..0> ::
+                    MEM[mem_index + 1] ::
+                    MEM[mem_index]<31..16>;
+      else
+        tmp_dword = MEM[mem_index + 2]<23..0> ::
+                    MEM[mem_index + 1] ::
+                    MEM[mem_index]<31..24>;
+      endif;
+
+      rd = tmp_dword;
+
+      rd = zero_extend(XWORD, tmp_word);
+#endif
+    endif;
+  }
+
+op store_rvi(tmp_address_op: XWORD, rs2: X, store_type: card(4))
+  action = {
+    if store_type == MEM_BYTE then
+      mem_index = coerce(card(MEM_SIZE), tmp_address_op >> 2);
+
+      tmp_bit_offset = zero_extend(card(5), tmp_address_op<1..0>) * 8;
+      tmp_word = MEM[mem_index];
+      tmp_word<(tmp_bit_offset + 7)..tmp_bit_offset> = rs2<7..0>;
+      MEM[mem_index] = tmp_word;
+    elif store_type == MEM_HWORD then
+      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
+
+      if tmp_address<1..0> != 3 then
+        tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
+        tmp_word = MEM[mem_index];
+        tmp_word<tmp_bit_offset + 15..tmp_bit_offset> = rs2<15..0>;
+        MEM[mem_index] = tmp_word;
+      else
+        tmp_word = MEM[mem_index + 1];
+        tmp_word<7..0> :: MEM[mem_index]<31..24> = rs2<15..0>;
+        MEM[mem_index + 1] = tmp_word;
+      endif;
+    elif store_type == MEM_WORD then
+      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
+
+      if tmp_address<1..0> == 0 then // Word-aligned address
+        MEM[mem_index] = rs2<31..0>;
+      elif tmp_address<1..0> == 1 then
+        MEM[mem_index + 1]<7..0> ::
+        MEM[mem_index]<31..8> = rs2<31..0>;
+      elif tmp_address<1..0> == 2 then
+        MEM[mem_index + 1]<15..0> ::
+        MEM[mem_index]<31..16> = rs2<31..0>;
+      else
+        MEM[mem_index + 1]<23..0> ::
+        MEM[mem_index]<31..24> = rs2<31..0>;
+      endif;
+#ifdef RV64I
+    elif store_type == MEM_DWORD then
+      // MEM_DWORD
+      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
+
+      if tmp_address<1..0> == 0 then // Word-aligned address
+        MEM[mem_index + 1] = rs2<63..32>;
+        MEM[mem_index] = rs2<31..0>;
+      elif tmp_address<1..0> == 1 then
+        MEM[mem_index + 2]<7..0> = rs2<63..56>;
+        MEM[mem_index + 1] = rs2<55..24>;
+        MEM[mem_index]<31..8> = rs2<23..0>;
+      elif tmp_address<1..0> == 2 then
+        MEM[mem_index + 2]<15..0> ::
+        MEM[mem_index + 1] ::
+        MEM[mem_index]<31..16> = rs2;
+      else
+        MEM[mem_index + 2]<23..0> ::
+        MEM[mem_index + 1] ::
+        MEM[mem_index]<31..24> = rs2;
+      endif;
+#endif
+    endif;
+  }
 
 #ifdef RV32A
   #define LOAD_STORE_MEM

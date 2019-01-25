@@ -170,7 +170,7 @@ init = {
 #endif
 }
 
-op store_rv32i(va: VA)
+op store_rvi(va: VA)
 init = {
   va.type = STORE_OP;
   va.is_pa = 0;
@@ -182,7 +182,7 @@ init = {
 #endif
 }
 
-op load_rv32i(va: VA)
+op load_rvi(va: VA)
 init = {
   va.type = LOAD_OP;
   va.is_pa = 0;

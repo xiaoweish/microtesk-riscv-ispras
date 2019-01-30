@@ -69,7 +69,7 @@ class InstructionMemTemplate < RiscVBaseTemplate
     csrw satp, t0
     trace "satp = 0x%x", satp
 
-    la s0, 0x00010000 # Address
+    li s0, 0x00010000 # Address
     prepare t0, 0xFFFFFFFFDEADBEEF # Value being loaded/stored
 
     trace "s0 = 0x%x", s0

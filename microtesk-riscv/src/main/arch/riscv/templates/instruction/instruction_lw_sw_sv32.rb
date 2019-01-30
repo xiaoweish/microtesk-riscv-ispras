@@ -23,9 +23,9 @@ require_relative '../riscv_base'
 class InstructionMemTemplate < RiscVBaseTemplate
 
   def TEST_DATA
-    section(:name => '.page_table_sv32_step1',
-            :pa   => 0x00000000BED22800,
-            :va   => 0x00000000BED22800) {
+    section(:name => 'page_table_sv32_step1', :prefix => '.section',
+            :pa   => 0x00000000BED22000,
+            :va   => 0x00000000BED22000) {
       data {
         # Page Table Level: 1
         label :data1
@@ -35,7 +35,7 @@ class InstructionMemTemplate < RiscVBaseTemplate
       }
     }
 
-    section(:name => '.page_table_sv32_step0',
+    section(:name => 'page_table_sv32_step0', :prefix => '.section',
             :pa   => 0x00000000CED22040,
             :va   => 0x00000000CED22040) {
       data {
@@ -47,9 +47,9 @@ class InstructionMemTemplate < RiscVBaseTemplate
       }
     }
 
-    section(:name => '.data_for_sv32',
-            :pa   => 0x00000000DED22130,
-            :va   => 0x00000000DED22130) {
+    section(:name => 'data_for_sv32', :prefix => '.section',
+            :pa   => 0x00000000DED22000,
+            :va   => 0x00000000DED22000) {
       data {
         # Data
         label :data

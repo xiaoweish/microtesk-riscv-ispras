@@ -370,7 +370,15 @@ function TranslateAddress(va: VA): PA
     if va.is_pa == 1 then
       pa.value = va.pa; // TODO: pa.value = va.pa
     else
+#ifdef RV32FULL
       pa = SV32Translate(va);
+#else
+  #ifdef RV64Sv39
+    // TODO:
+  #else // Sv48
+    // TODO:
+  #endif
+#endif
     endif;
     trace("TranslateAddress: va=%x, pa=%x", va.value, pa.value);
 
@@ -382,7 +390,11 @@ function TranslateAddress(va: VA): PA
 //==================================================================================================
 
 // A word of memory is defined as 32 bits (4 bytes).
-let DATA_SIZE = 32
+//#ifdef RV32FULL
+  let DATA_SIZE = 32
+//#else // Sv39 & Sv48
+//  let DATA_SIZE = 64
+//#endif
 
 // A RISC-V hart has a single byte-addressable address space of 2XLEN bytes for all memory accesses.
 // TODO: extern
@@ -410,12 +422,20 @@ extern SATP_CSR = SATP_CSR
 function PreTranslateAddress(va: VA): PA
   var pa: PA;
   {
-    //trace("SATP_CSR=%x", SATP_CSR);
-
     if SATP_MODE != 0 then
       pa = TranslateAddress(va);
     else
+#ifdef RV32FULL
       pa.value<31..0> = va.value;
+#else
+  #ifdef RV64Sv39
+      pa.value<31..0> = va.value;
+    // TODO:
+  #else // Sv48
+      pa.value<31..0> = va.value;
+    // TODO:
+  #endif
+#endif
       trace("Mmu.PreTranslateAddress: satp.mode=%x (off)", SATP_MODE);
     endif;
 

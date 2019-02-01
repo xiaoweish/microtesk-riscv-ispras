@@ -20,7 +20,7 @@ require_relative '../riscv_base'
 # Description:
 #
 
-class InstructionMemTemplate < RiscVBaseTemplate
+class InstructionLdSdSv32Template < RiscVBaseTemplate
 
   def TEST_DATA
     section(:name => 'page_table_sv32_step1', :prefix => '.section',
@@ -61,25 +61,27 @@ class InstructionMemTemplate < RiscVBaseTemplate
   end
 
   def run
-    # Only for Sv32, (RV32)
-    # csrwi satp, 0x80000002 # MODE = 1, PPN = 0x2
-    trace "satp = 0x%x", satp
-    li t0, 0x800bed22
-    trace "t0 = 0x%x", t0
-    csrw satp, t0
-    trace "satp = 0x%x", satp
+    if is_rev('MEM_SV32') then
+      # Only for Sv32, (RV32)
+      # csrwi satp, 0x80000002 # MODE = 1, PPN = 0x2
+      trace "CSR satp = 0x%x", satp
+      li t0, 0x800bed22
+      trace "Register t0 = 0x%x", t0
+      csrw satp, t0
+      trace "CSR satp = 0x%x", satp
 
-    li s0, 0x00010000 # Address
-    prepare t0, 0xFFFFFFFFDEADBEEF # Value being loaded/stored
+      li s0, 0x00010000 # Address
+      prepare t0, 0xFFFFFFFFDEADBEEF # Value being loaded/stored
 
-    trace "s0 = 0x%x", s0
-    lw t1, s0, 0x0
-    trace "t1 = 0x%x", t1
-    sw t0, s0, 0x0
-    trace "t0 = 0x%x", t0
-    lw t1, s0, 0x0
-    trace "t1 = 0x%x", t1
-    nop
+      trace "Register s0 = 0x%x", s0
+      lw t1, s0, 0x0
+      trace "Register t1 = 0x%x", t1
+      sw t0, s0, 0x0
+      trace "Register t0 = 0x%x", t0
+      lw t1, s0, 0x0
+      trace "Register t1 = 0x%x", t1
+      nop
+    end
   end
 
 end

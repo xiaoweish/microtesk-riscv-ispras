@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <revisions>
- <revision name="RV32I"/>
+ <revision name="MEM_SV32"/>
+ <revision name="MEM_V64">
+<!---  <includes name="MEM_SV39"/> -->
+<!---  <includes name="MEM_SV48"/> -->
+ </revision>
+
+ <revision name="RV32I">
+  <includes name="MEM_SV32"/>
+ </revision>
  <revision name="RV32C"/>
  <revision name="RV32FC"/>
  <revision name="RV64C"/>
  <revision name="RV64I">
   <includes name="RV32I"/>
+  <excludes name="MEM_SV32"/>
+  <includes name="MEM_V64"/>
  </revision>
  <revision name="RV32M">
   <includes name="RV32I"/>
@@ -61,5 +71,6 @@
   <includes name="RV32DC"/>
   <includes name="RV32V"/>
   <includes name="RV64"/>
+  <excludes name="MEM_SV32"/>
  </revision>
 </revisions>

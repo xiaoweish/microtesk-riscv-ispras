@@ -398,12 +398,19 @@ label :pass
   ##################################################################################################
 
   def trace_data_addr(begin_addr, end_addr)
-    count = (end_addr - begin_addr) / 4
-    additional_count = (end_addr - begin_addr) % 4
+    if is_rev('MEM_SV32') then
+      mem_shift = 4
+    else
+      mem_shift = 8
+    end
+
+    count = (end_addr - begin_addr) / mem_shift
+    additional_count = (end_addr - begin_addr) % mem_shift
     if additional_count > 0
        count = count + 1
     end
-    begin_index = begin_addr / 4
+
+    begin_index = begin_addr / mem_shift
 
     trace "\nData starts: 0x%x", begin_addr
     trace "Data ends:   0x%x", end_addr
@@ -414,9 +421,13 @@ label :pass
 
     trace "\nData values:"
     count.times {
-      trace "%016x (MEM[0x%x]): 0x%08x", addr, index, MEM(index)
+      if is_rev('MEM_SV32') then
+        trace "%016x (MEM[0x%x]): 0x%08x", addr, index, MEM(index)
+      else
+        trace "%016x (MEM[0x%x]): 0x%016x", addr, index, MEM(index)
+      end
       index = index + 1
-      addr = addr + 4
+      addr = addr + mem_shift
     }
     trace ""
   end

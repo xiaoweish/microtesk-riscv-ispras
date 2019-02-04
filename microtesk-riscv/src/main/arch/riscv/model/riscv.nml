@@ -105,20 +105,28 @@ reg XREG [32, XWORD]
 // Program Counter
 reg PC [XWORD]
 
-// ontrol and Status Registers (CSRs) Type
+// Control and Status Registers (CSRs) Type
 type CSR_TYPE = card(XLEN)
 
 // Control and Status Registers (CSRs), Count = 4096 (2 ** 12)
 reg CSR[1 << 12, CSR_TYPE]
 
 // Memory Size
-let MEM_SIZE = XLEN
+#ifdef MEM_SV32
+  let MEM_SIZE = 34 - 2
+#else //#ifdef MEM_V64
+  let MEM_SIZE = 56 - 3
+#endif
 
 // Memory Size is 2 ** XLEN Bytes
 let MEM_SIZE_IN_WORDS = 2 ** (MEM_SIZE)
 
 // Main Memory
-shared mem MEM [MEM_SIZE_IN_WORDS, WORD]
+#ifdef MEM_SV32
+  shared mem MEM [MEM_SIZE_IN_WORDS, WORD]
+#else //#ifdef MEM_V64
+  shared mem MEM [MEM_SIZE_IN_WORDS, DWORD]
+#endif
 
 // Register that stores reserved address used by instructions LR/SC from RV32A and RV64A.
 // TODO: This is a simplified specification that replicates how it is implemented in Spike.
@@ -223,8 +231,9 @@ var tmp_index [XWORD]
 var tmp_bit [BIT]
 var tmp_byte [BYTE]
 var tmp_half [HWORD]
-var tmp_dword [DWORD]
 var tmp_word [WORD]
+var tmp_dword [DWORD]
+var tmp_qword [QWORD]
 
 var tmp_int1 [INT]
 var tmp_int2 [INT]
@@ -255,246 +264,223 @@ var mem_index [card(MEM_SIZE)]
 #endif
 
 // Bit Offset in a Word
-var tmp_bit_offset [card(5)]
+#ifdef MEM_SV32
+  var tmp_bit_offset [card(5)]
+#else
+  var tmp_bit_offset [card(6)]
+#endif
 
-//==================================================================================================
-// Instruction Types
-//==================================================================================================
-
-/*
- R-type:  |31             25|24       20|19   15|14  12|11             7|6     0|
-          |     funct7      |    rs2    |  rs1  |funct3|       rd       |opcode |
-          |       7         |     5     |   5   |  3   |       5        |   7   |
-
- I-type:  |31                         20|19   15|14  12|11             7|6     0|
-          |          imm[11:0]          |  rs1  |funct3|       rd       |opcode |
-          |              12             |   5   |  3   |       5        |   7   |
-
- S-type:  |31             25|24       20|19   15|14  12|11             7|6     0|
-          |    imm[11:5]    |    rs2    |  rs1  |funct3|   imm[4:0]     |opcode |
-          |       7         |     5     |   5   |  3   |       5        |   7   |
-
- SB-type: |31   31|30     25|24       20|19   15|14  12|11     8|7     7|6     0|
-          |imm[12]|imm[10:5]|    rs2    |  rs1  |funct3|imm[4:1]|imm[11]|opcode |
-          |   1   |    6    |     5     |   5   |  3   |   4    |   1   |   7   |
-
- U-type:  |31                                        12|11             7|6     0|
-          |               imm[31:12]                   |       rd       |opcode |
-          |                   20                       |       5        |   7   |
-
- UJ-type: |31   31|30         21|20   20|19          12|11             7|6     0|
-          |imm[20]|  imm[10:1]  |imm[11]|  imm[19:12]  |       rd       |opcode |
-          |   1   |     10      |   1   |       8      |       5        |   7   |
-*/
-
+// For opcodes
 var opcode_xtype[card(7)]
 var funct3[card(3)]
 var funct7[card(7)]
 
 //==================================================================================================
-// Instruction Templates
-//==================================================================================================
-
-/*
-R-type:
-
-op <name>(rd: X, rs1: X, rs2: X)
-  syntax = format("<name> %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
-  image  = format("<func7>%s%s<func3>%s<opcode>", rs2.image, rs1.image, rd.image)
-  action = {
-    // TODO
-  }
-
-I-type:
-
-op <name>(rd: X, rs1: X, imm: card(12))
-  syntax = format("<name> %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
-  image  = format("%12s%s<func3>%s<opcode>", imm, rs1.image, rd.image)
-  action = {
-    // TODO
-  }
-
-S-type:
-
-op <name>(rs1: X, rs2: X, imm: card(12))
-  syntax = format("<name> %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
-  image  = format("%7s%s%s<func3>%5s<opcode>", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
-  action = {
-    // TODO
-  }
-
-SB-type:
-
-op <name>(rs1: X, rs2: X, imm: card(12))
-  syntax = format("<name> %s, %s, 0x%x", rs1.syntax, rs2.syntax, imm)
-  image  = format("%1s%6s%s%s<func3>%4s%1s<opcode>",
-                  imm<11>, imm<9..4>, rs2.image, rs1.image, imm<3..0>, imm<10>)
-  action = {
-    // TODO
-  }
-
-U-type:
-
-op <name>(rd: X, imm: card(20))
-  syntax = format("<name> %s, 0x%x", rd.syntax, imm)
-  image  = format("%20s%s<opcode>", imm, rd.image)
-  action = {
-    // TODO
-  }
-
-UJ-type:
-
-op <name>(rd: X, imm: card(20))
-  syntax = format("<name> %s, 0x%x", rd.syntax, imm)
-  image  = format("%1s%10s%1s%8s%s1101111", imm<19>, imm<9..0>, imm<10>, imm<18..11>, rd.image)
-  action = {
-    // TODO
-  }
-*/
-
-//==================================================================================================
 // General functions
 //==================================================================================================
 
+/*3.5.2 Supported Access Type PMAs
+Access types specify which access widths, from 8-bit byte to long multi-word burst, are supported,
+and also whether misaligned accesses are supported for each access width.*/
+
 // Include control and status registers (CSRs)
 #include "riscv_csreg.nml"
-op load_rvi(tmp_address_op: XWORD, rd: X, load_type: card(4), sign_type: BIT)
+
+var rd_var[XWORD]
+
+op load_global(tmp_address_op: XWORD, load_type: card(4), sign_type: BIT)
   action = {
+#ifdef MEM_SV32
+    mem_index = coerce(card(MEM_SIZE), tmp_address_op >> 2);
+#else
+    mem_index = coerce(card(MEM_SIZE), tmp_address_op >> 3);
+#endif
+
     if load_type == MEM_BYTE then
       // MEM_BYTE
-      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
-
-      tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
+#ifdef MEM_SV32
+      tmp_bit_offset = zero_extend(card(5), tmp_address_op<1..0>) * 8;
       tmp_byte = MEM[mem_index]<tmp_bit_offset + 7..tmp_bit_offset>;
-
+#else
+      tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
+      tmp_byte = MEM[mem_index]<tmp_bit_offset + 7..tmp_bit_offset>;
+#endif
       if sign_type == ZERO_EXTEND_VALUE then
-        rd = zero_extend(XWORD, tmp_byte);
+        rd_var = zero_extend(XWORD, tmp_byte);
       else // sign_type == SIGN_EXTEND_VALUE
-        rd = sign_extend(XWORD, tmp_byte);
+        rd_var = sign_extend(XWORD, tmp_byte);
       endif;
+
     elif load_type == MEM_HWORD then
       // MEM_HWORD
-      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
-
-      if tmp_address<1..0> != 3 then
-        tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
+#ifdef MEM_SV32
+      if tmp_address_op<1..0> != 3 then
+        tmp_bit_offset = zero_extend(card(5), tmp_address_op<1..0>) * 8;
         tmp_half = MEM[mem_index]<tmp_bit_offset + 15..tmp_bit_offset>;
       else
         tmp_half = MEM[mem_index + 1]<7..0> :: MEM[mem_index]<31..24>;
       endif;
-
-      if sign_type == ZERO_EXTEND_VALUE then
-        rd = zero_extend(XWORD, tmp_half);
-      else // sign_type == SIGN_EXTEND_VALUE
-        rd = sign_extend(XWORD, tmp_half);
+#else
+      if tmp_address_op<2..0> != 7 then
+        tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
+        tmp_half = MEM[mem_index]<tmp_bit_offset + 15..tmp_bit_offset>;
+      else
+        tmp_half = MEM[mem_index + 1]<7..0> :: MEM[mem_index]<63..56>;
       endif;
+#endif
+      if sign_type == ZERO_EXTEND_VALUE then
+        rd_var = zero_extend(XWORD, tmp_half);
+      else // sign_type == SIGN_EXTEND_VALUE
+        rd_var = sign_extend(XWORD, tmp_half);
+      endif;
+
     elif load_type == MEM_WORD then
       // MEM_WORD
-      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
-
-      if tmp_address<1..0> == 0 then // Word-aligned address
+#ifdef MEM_SV32
+      if tmp_address_op<1..0> == 0 then // Word-aligned address
         tmp_word = MEM[mem_index];
-      elif tmp_address<1..0> == 1 then
+      elif tmp_address_op<1..0> == 1 then
         tmp_word = MEM[mem_index + 1]<7..0> :: MEM[mem_index]<31..8>;
-      elif tmp_address<1..0> == 2 then
+      elif tmp_address_op<1..0> == 2 then
         tmp_word = MEM[mem_index + 1]<15..0> :: MEM[mem_index]<31..16>;
       else
         tmp_word = MEM[mem_index + 1]<23..0> :: MEM[mem_index]<31..24>;
       endif;
-
-      if sign_type == ZERO_EXTEND_VALUE then
-        rd = zero_extend(XWORD, tmp_word);
-      else // sign_type == SIGN_EXTEND_VALUE
-        rd = sign_extend(XWORD, tmp_word);
+#else
+      tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
+      if tmp_address_op<2..0> < 0b101 then
+        tmp_word = MEM[mem_index]<tmp_bit_offset + 31..tmp_bit_offset>;
+      else
+        tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
+        tmp_word = tmp_qword<tmp_bit_offset + 31..tmp_bit_offset>;
       endif;
-#ifdef RV64I
+#endif
+      if sign_type == ZERO_EXTEND_VALUE then
+        rd_var = zero_extend(XWORD, tmp_word);
+      else // sign_type == SIGN_EXTEND_VALUE
+        rd_var = sign_extend(XWORD, tmp_word);
+      endif;
+
+#ifndef MEM_SV32
+//#ifdef MEM_V64
     elif load_type == MEM_DWORD then
       // MEM_DWORD
-    mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
-      if tmp_address<1..0> == 0 then // Word-aligned address
-        tmp_dword<63..32> = MEM[mem_index + 1];
-        tmp_dword<31..0>  = MEM[mem_index];
-      elif tmp_address<1..0> == 1 then
-        tmp_dword<63..56> = MEM[mem_index + 2]<7..0>;
-        tmp_dword<55..24> = MEM[mem_index + 1];
-        tmp_dword<23..0>  = MEM[mem_index]<31..8>;
-      elif tmp_address<1..0> == 2 then
-        tmp_dword = MEM[mem_index + 2]<15..0> ::
-                    MEM[mem_index + 1] ::
-                    MEM[mem_index]<31..16>;
+      if tmp_address_op<2..0> == 0 then // Word-aligned address
+        tmp_dword = MEM[mem_index];
       else
-        tmp_dword = MEM[mem_index + 2]<23..0> ::
-                    MEM[mem_index + 1] ::
-                    MEM[mem_index]<31..24>;
+        tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
+        tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
+        tmp_dword = tmp_qword<63+tmp_bit_offset..0+tmp_bit_offset>;
       endif;
 
-      rd = tmp_dword;
-
-      rd = zero_extend(XWORD, tmp_word);
+      rd_var = tmp_dword;
 #endif
     endif;
   }
 
-op store_rvi(tmp_address_op: XWORD, rs2: X, store_type: card(4))
+op load_rvi(tmp_address_op: XWORD, rd: X, load_type: card(4), sign_type: BIT)
   action = {
-    if store_type == MEM_BYTE then
-      mem_index = coerce(card(MEM_SIZE), tmp_address_op >> 2);
+    load_global(tmp_address_op, load_type, sign_type).action; // return rd_var
+    rd = rd_var;
+  }
 
+op store_global(tmp_address_op: XWORD, rs2_op: XWORD, store_type: card(4))
+  action = {
+#ifdef MEM_SV32
+    mem_index = coerce(card(MEM_SIZE), tmp_address_op >> 2);
+#else
+    mem_index = coerce(card(MEM_SIZE), tmp_address_op >> 3);
+#endif
+
+    if store_type == MEM_BYTE then
+#ifdef MEM_SV32
       tmp_bit_offset = zero_extend(card(5), tmp_address_op<1..0>) * 8;
       tmp_word = MEM[mem_index];
-      tmp_word<(tmp_bit_offset + 7)..tmp_bit_offset> = rs2<7..0>;
+      tmp_word<tmp_bit_offset + 7..tmp_bit_offset> = rs2_op<7..0>;
       MEM[mem_index] = tmp_word;
-    elif store_type == MEM_HWORD then
-      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
+#else
+      tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
+      tmp_dword = MEM[mem_index];
+      tmp_dword<tmp_bit_offset + 7..tmp_bit_offset> = rs2_op<7..0>;
+      MEM[mem_index] = tmp_dword;
+#endif
 
-      if tmp_address<1..0> != 3 then
-        tmp_bit_offset = zero_extend(card(5), tmp_address<1..0>) * 8;
+    elif store_type == MEM_HWORD then
+    // MEM_HWORD
+#ifdef MEM_SV32
+      if tmp_address_op<1..0> != 3 then
+        tmp_bit_offset = zero_extend(card(5), tmp_address_op<1..0>) * 8;
         tmp_word = MEM[mem_index];
-        tmp_word<tmp_bit_offset + 15..tmp_bit_offset> = rs2<15..0>;
+        tmp_word<tmp_bit_offset + 15..tmp_bit_offset> = rs2_op<15..0>;
         MEM[mem_index] = tmp_word;
       else
         tmp_word = MEM[mem_index + 1];
-        tmp_word<7..0> :: MEM[mem_index]<31..24> = rs2<15..0>;
+        tmp_word<7..0> :: MEM[mem_index]<31..24> = rs2_op<15..0>;
         MEM[mem_index + 1] = tmp_word;
       endif;
-    elif store_type == MEM_WORD then
-      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
+#else
+      if tmp_address_op<2..0> != 7 then
+        tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
+        tmp_dword = MEM[mem_index];
+        tmp_dword<tmp_bit_offset + 15..tmp_bit_offset> = rs2_op<15..0>;
+        MEM[mem_index] = tmp_dword;
+      else
+        tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
+        tmp_qword<71..56> = rs2_op<15..0>;
+        MEM[mem_index + 1]::MEM[mem_index] = tmp_qword;
+      endif;
+#endif
 
-      if tmp_address<1..0> == 0 then // Word-aligned address
-        MEM[mem_index] = rs2<31..0>;
-      elif tmp_address<1..0> == 1 then
+    elif store_type == MEM_WORD then
+    // MEM_WORD
+#ifdef MEM_SV32
+      if tmp_address_op<1..0> == 0 then // Word-aligned address
+        MEM[mem_index] = rs2_op<31..0>;
+      elif tmp_address_op<1..0> == 1 then
         MEM[mem_index + 1]<7..0> ::
-        MEM[mem_index]<31..8> = rs2<31..0>;
-      elif tmp_address<1..0> == 2 then
+        MEM[mem_index]<31..8> = rs2_op<31..0>;
+      elif tmp_address_op<1..0> == 2 then
         MEM[mem_index + 1]<15..0> ::
-        MEM[mem_index]<31..16> = rs2<31..0>;
+        MEM[mem_index]<31..16> = rs2_op<31..0>;
       else
         MEM[mem_index + 1]<23..0> ::
-        MEM[mem_index]<31..24> = rs2<31..0>;
+        MEM[mem_index]<31..24> = rs2_op<31..0>;
       endif;
-#ifdef RV64I
+#else
+      tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
+      if tmp_address_op<2..0> < 0b101 then
+        tmp_dword = MEM[mem_index];
+        tmp_dword<tmp_bit_offset + 31..tmp_bit_offset> = rs2_op<31..0>;
+        MEM[mem_index] = tmp_dword;
+      else
+        tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
+        tmp_qword<tmp_bit_offset + 31..tmp_bit_offset> = rs2_op<31..0>;
+        MEM[mem_index + 1]::MEM[mem_index] = tmp_qword;
+      endif;
+#endif
+
+#ifndef MEM_SV32
+//#ifdef MEM_V64
     elif store_type == MEM_DWORD then
       // MEM_DWORD
-      mem_index = coerce(card(MEM_SIZE), tmp_address >> 2);
-
-      if tmp_address<1..0> == 0 then // Word-aligned address
-        MEM[mem_index + 1] = rs2<63..32>;
-        MEM[mem_index] = rs2<31..0>;
-      elif tmp_address<1..0> == 1 then
-        MEM[mem_index + 2]<7..0> = rs2<63..56>;
-        MEM[mem_index + 1] = rs2<55..24>;
-        MEM[mem_index]<31..8> = rs2<23..0>;
-      elif tmp_address<1..0> == 2 then
-        MEM[mem_index + 2]<15..0> ::
-        MEM[mem_index + 1] ::
-        MEM[mem_index]<31..16> = rs2;
+      if tmp_address_op<2..0> == 0 then // Word-aligned address
+        MEM[mem_index] = rs2_op;
       else
-        MEM[mem_index + 2]<23..0> ::
-        MEM[mem_index + 1] ::
-        MEM[mem_index]<31..24> = rs2;
+        tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
+        tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
+        tmp_qword<63+tmp_bit_offset..0+tmp_bit_offset> = rs2_op;
+        MEM[mem_index + 1]::MEM[mem_index] = tmp_qword;
       endif;
 #endif
     endif;
+  }
+
+var rs2_var[XWORD]
+
+op store_rvi(tmp_address_op: XWORD, rs2: X, store_type: card(4))
+  action = {
+    rs2_var = rs2;
+    store_global(tmp_address_op, rs2_var, store_type).action;
   }
 
 #ifdef RV32A
@@ -528,18 +514,9 @@ internal op load_data(op_type: card(4), address: XWORD)
   action = {
     tmp_bit = 0;
     check_aligned(op_type, address).action;
-
-    mem_index = coerce(card(MEM_SIZE), address >> 2);
-
     if tmp_bit != 1 then
-      if op_type == MEM_DWORD then
-#ifdef RV64I
-        load_value<63..0> = MEM[mem_index + 1] :: MEM[mem_index];
-#endif
-      elif op_type == MEM_WORD then
-        load_value = 0;
-        load_value<31..0> = MEM[mem_index];
-      endif;
+      load_global(address, op_type, ZERO_EXTEND_VALUE).action; // return rd_var
+      load_value = rd_var;
     endif;
   }
 
@@ -551,13 +528,7 @@ internal op store_data(op_type: card(4), address: XWORD, store_value: XWORD)
     mem_index = coerce(card(MEM_SIZE), address >> 2);
 
     if tmp_bit != 1 then
-      if op_type == MEM_DWORD then
-#ifdef RV64I
-        MEM[mem_index + 1] :: MEM[mem_index] = store_value;
-#endif
-      elif op_type == MEM_WORD then
-        MEM[mem_index] = store_value<31..0>;
-      endif;
+      store_global(address, store_value, op_type).action;
     endif;
   }
 #endif

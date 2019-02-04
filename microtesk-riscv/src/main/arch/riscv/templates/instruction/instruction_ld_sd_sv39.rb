@@ -25,37 +25,49 @@ require_relative '../riscv_base'
 class InstructionLdSdSv39Template < RiscVBaseTemplate
 
   def TEST_DATA
-    section(:name => 'page_table_sv32_step1', :prefix => '.section',
+    section(:name => 'page_table_sv32_step2', :prefix => '.section',
             :pa   => 0x00000000BED22000,
             :va   => 0x00000000BED22000) {
       data {
+        # Page Table Level: 2
+        label :data2
+        dword 0x0000000033B488e1, 0xdeadbeefdeadbeef
+        label :end2
+        space 1
+      }
+    }
+
+    section(:name => 'page_table_sv32_step1', :prefix => '.section',
+            :pa   => 0x00000000CED22000,
+            :va   => 0x00000000CED22000) {
+      data {
         # Page Table Level: 1
         label :data1
-        word 0x33B488e1, 0xdeadbeef, 0xdeadbeef, 0xdeadbeef
+        dword 0x0000000035B488e1, 0xdeadbeefdeadbeef
         label :end1
         space 1
       }
     }
 
     section(:name => 'page_table_sv32_step0', :prefix => '.section',
-            :pa   => 0x00000000CED22040,
-            :va   => 0x00000000CED22040) {
+            :pa   => 0x00000000cED22080,
+            :va   => 0x00000000cED22080) {
       data {
         # Page Table Level: 0
         label :data0
-        word 0x37B488e3, 0xdeadbeef, 0xdeadbeef, 0xdeadbeef
+        dword 0x0000000038B488e3, 0xdeadbeefdeadbeef
         label :end0
         space 1
       }
     }
 
     section(:name => 'data_for_sv32', :prefix => '.section',
-            :pa   => 0x00000000DED22000,
-            :va   => 0x00000000DED22000) {
+            :pa   => 0x00000000E2D22000,
+            :va   => 0x00000000E2D22000) {
       data {
         # Data
         label :data
-        word 0xc001beef, 0xc001beef, 0xc001beef, 0xc001beef
+        dword 0xdeadbeefc001beef, 0xc001beefdeadbeef
         label :end
         space 1
       }
@@ -63,17 +75,17 @@ class InstructionLdSdSv39Template < RiscVBaseTemplate
   end
 
   def run
-    if is_rev('MEM_SV39TTTT') then
+    if is_rev('MEM_V64') then
       # Only for Sv39, (RV64)
       trace "CSR satp = 0x%x", satp
       # sv39 MODE = 8
-      # li t0, 0x80000000000bed22
+      li t0, 0x80000000000bed22
       trace "Register t0 = 0x%x", t0
       csrw satp, t0
       trace "CSR satp = 0x%x", satp
 
       li s0, 0x00010000 # Address
-      prepare t0, 0xFFFFFFFFDEADBEEF # Value being loaded/stored
+      prepare t0, 0xDEADBEEFDEADBEEF # Value being loaded/stored
 
       trace "Register s0 = 0x%x", s0
       ld t1, s0, 0x0

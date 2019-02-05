@@ -103,20 +103,21 @@ struct VASv32 (
 
 address VA(
 #ifdef MEM_SV32
-  value : 32,
+  value  : 32,
 #else
-  value : 53,
+  value  : 53,
 #endif
-  type  : 1,
-  is_pa : 1,
+  type   : 1,
+  is_pa  : 1,
+  i_flag : 1,
 #ifdef MEM_SV32
-  i     : 1,
-  ppn   : 22,
-  pa    : 34
+  i      : 1,
+  ppn    : 22,
+  pa     : 34
 #else
-  i     : 2,
-  ppn   : 44,
-  pa    : 56
+  i      : 2,
+  ppn    : 44,
+  pa     : 56
 #endif
 )
 
@@ -166,11 +167,8 @@ init = {
   va.is_pa = 0;
   va.pa = 0;
   va.ppn = 0;
-#ifdef MEM_SV32
-  va.i = 1; // Sv32
-#else
-  va.i = 2; // V64
-#endif
+  va.i_flag = 0;
+  va.i = 0;
 }
 
 op load_global(va: VA)
@@ -179,11 +177,8 @@ init = {
   va.is_pa = 0;
   va.pa = 0;
   va.ppn = 0;
-#ifdef MEM_SV32
-  va.i = 1; // Sv32
-#else
-  va.i = 2; // V64
-#endif
+  va.i_flag = 0;
+  va.i = 0;
 }
 
 //==================================================================================================
@@ -221,7 +216,7 @@ memory buffer PT39 (va: VA)
 memory buffer PT48 (va: VA)
   ways = 1
   sets = PTE_SIZE
-  entry  = (reserved: 10, ppn2: 26, ppn1: 9, ppn0: 9, rsw: 2, d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1)
+  entry  = (reserved: 10, ppn3: 17, ppn2: 9, ppn1: 9, ppn0: 9, rsw: 2, d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1)
   index  = 0
   match  = 0
   policy = NONE
@@ -402,7 +397,7 @@ function SV39TranslateCycle (va: VA): PT39.entry
 
     trace("SV39TranslateCycle.temp_address.value = 0x%x", temp_address.value);
     pte = PT39(temp_va);
-    trace("SV39TranslateCycle: pte = 0x%x", pte.ppn1::pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
+    trace("SV39TranslateCycle: pte = 0x%x", pte.ppn2::pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
     trace("SV39TranslateCycle: pte.v = 0x%x, pte.r = 0x%x, pte.w = 0x%x", pte.v, pte.r, pte.w);
 
     // TODO: if v == 0 || (r == 0 && w == 1) then
@@ -492,13 +487,169 @@ function SV39Translate (va: VA): PA
     //PT(temp_va) = pte; // TODO: !
     return pa;
   }
+
+//==================================================================================================
+// Sv48
+//==================================================================================================
+
+// Sv48: step 2-4
+function SV48TranslateCycle (va: VA): PT48.entry
+  var pte: PT48.entry;
+  var temp_address: PTAddress;
+  var temp_va: VA;
+  var a: 56;
+  var temp: 56;
+  {
+    trace("LEVEL 0%x", va.i);
+
+    temp = 0;
+    if va.i == 3 then
+      // Step 1
+      temp<43..0> = SATP_PPN;
+      a = temp << 12; //a = temp * PAGESIZE;
+
+      temp = 0;
+      //temp_address = a + va.value<31-(1-i)*10..22-(1-i)*10> * PTESIZE;
+      temp<8..0> = va.value<47..39>;
+    elif va.i == 2 then
+      temp<43..0> = va.ppn;
+      a = temp << 12; //a = ppn * PAGESIZE;
+
+      temp = 0;
+      temp<8..0> = va.value<38..30>;
+    elif va.i == 1 then
+      temp<43..0> = va.ppn;
+      a = temp << 12; //a = ppn * PAGESIZE;
+
+      temp = 0;
+      temp<8..0> = va.value<29..21>;
+    elif va.i == 0 then
+      temp<43..0> = va.ppn;
+      a = temp << 12; //a = ppn * PAGESIZE;
+
+      temp = 0;
+      temp<8..0> = va.value<20..12>;
+    else
+      trace("ERROR: the i must be in range [3,0]");
+    endif;
+    temp_address.value = temp << 3;
+    temp_address.value<55..12> = a<55..12>;
+
+    temp_va = va;
+    temp_va.value = 0;
+    temp_va.is_pa = 1;
+    temp_va.pa = temp_address.value;
+
+    trace("SV48TranslateCycle.temp_address.value = 0x%x", temp_address.value);
+    pte = PT48(temp_va);
+    trace("SV48TranslateCycle: pte = 0x%x", pte.ppn3::pte.ppn2::pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
+    trace("SV48TranslateCycle: pte.v = 0x%x, pte.r = 0x%x, pte.w = 0x%x", pte.v, pte.r, pte.w);
+
+    // TODO: if v == 0 || (r == 0 && w == 1) then
+    if pte.v == 0 then
+      trace("SV48TranslateCycle: page-fault exception (pte.v = 0x%x)", pte.v);
+      exception("page_fault_exception");
+    endif;
+    if pte.r == 0 && pte.w == 1 then
+      trace("SV48TranslateCycle: page-fault exception (pte.r = 0x%x, pte.w = 0x%x)", pte.r, pte.w);
+      exception("page_fault_exception");
+    endif;
+
+    return pte;
+  }
+
+function SV48Translate (va: VA): PA
+  var pte: PT48.entry;
+  var pa: PA;
+  var temp: 56;
+  var a: 56;
+  {
+    // Step 1-4
+    pte = SV48TranslateCycle(va);
+
+    va.ppn = pte.ppn3::pte.ppn2::pte.ppn1::pte.ppn0;
+    if pte.r == 1 || pte.x == 1 then
+      // Go step 5
+      trace("Go step 5: (pte.r = 0x%x, pte.x = 0x%x)", pte.r, pte.x);
+    else
+      //i = LEVELS - 1;
+      va.i = 2;
+      pte = SV48TranslateCycle(va);
+      if pte.r == 1 || pte.x == 1 then
+        // Go step 5
+        trace("Go step 5: (pte.r = 0x%x, pte.x = 0x%x)", pte.r, pte.x);
+      else // i < 0
+        //i = LEVELS - 1;
+        va.i = 1;
+        pte = SV48TranslateCycle(va);
+        if pte.r == 1 || pte.x == 1 then
+          // Go step 5
+          trace("Go step 5: (pte.r = 0x%x, pte.x = 0x%x)", pte.r, pte.x);
+        else // i < 0
+          //i = LEVELS - 1;
+          va.i = 0;
+          pte = SV48TranslateCycle(va);
+          if pte.r == 1 || pte.x == 1 then
+            // Go step 5
+            trace("Go step 5: (pte.r = 0x%x, pte.x = 0x%x)", pte.r, pte.x);
+          else // i < 0
+            trace("SV48Translate: page-fault exception (i < 0)");
+            exception("page_fault_exception");
+          endif;
+        endif;
+      endif;
+    endif;
+
+    // Step 5
+    // TODO:
+
+    // Step 6
+    if va.i == 3 && pte.ppn2::pte.ppn1::pte.ppn0 != 0 then
+      trace("SV48Translate 6: page-fault exception (va.i = 0x%x)", va.i);
+      exception("page_fault_exception");
+    endif;
+    if va.i == 2 && pte.ppn1::pte.ppn0 != 0 then
+      trace("SV48Translate 6: page-fault exception (va.i = 0x%x)", va.i);
+      exception("page_fault_exception");
+    endif;
+    if va.i == 1 && pte.ppn0 != 0 then
+      trace("SV48Translate 6: page-fault exception (va.i = 0x%x)", va.i);
+      exception("page_fault_exception");
+    endif;
+
+    // Step 7
+    //if pte.a == 0 || va.type == STORE_OP && pte.d == 0 then
+    if pte.a == 0 then
+      trace("SV48Translate 7: page-fault exception (pte.a = 0x%x)", pte.a);
+      exception("page_fault_exception");
+    endif;
+    if va.type == STORE_OP && pte.d == 0 then
+      trace("SV48Translate 7: page-fault exception (pte.d = 0x%x)", pte.d);
+      exception("page_fault_exception");
+    endif;
+    // TODO: or
+
+    // The translation is successful.
+    pa.value<11..0> = va.value<11..0>;
+    pa.value<55..39> = pte.ppn3;
+    pa.value<38..30> = pte.ppn2;
+    pa.value<29..21> = pte.ppn1;
+    pa.value<20..12> = pte.ppn0;
+    if va.i == 3 then
+      pa.value<38..12> = va.value<38..12>;
+    elif va.i == 2 then
+      pa.value<29..12> = va.value<29..12>;
+    elif va.i == 1 then
+      pa.value<20..12> = va.value<20..12>;
+    endif;
+
+    //PT(temp_va) = pte; // TODO: !
+    return pa;
+  }
+
 #endif
 
-
-
-
-
-extern SATP_CSR = SATP_CSR
+//extern SATP_CSR = SATP_CSR
 
 function TranslateAddress(va: VA): PA
   var pa: PA;
@@ -514,7 +665,7 @@ function TranslateAddress(va: VA): PA
         pa = SV39Translate(va);
       elif SATP_MODE == 9 then
         // Page-based 48-bit virtual addressing
-        //pa = SV39Translate(va);
+        pa = SV48Translate(va);
       else
         // 1-7, 12-15 Reserved
         // 10 Sv57    Reserved for page-based 57-bit virtual addressing.
@@ -567,8 +718,22 @@ buffer MEM (pa: PA)
 function PreTranslateAddress(va: VA): PA
   var pa: PA;
   {
-    //trace("PreTranslateAddress va: value:%x, type:%x, is_pa:%x, i:%x, ppn:%x, pa:%x",
-    //                               va.value, va.type, va.is_pa, va.i, va.ppn, va.pa);
+    // Index Initialization
+    if va.i_flag == 0 then
+      va.i_flag = 1; // Sv32
+#ifdef MEM_SV32
+      va.i = 1; // Sv32
+#else // V64
+      if SATP_MODE == 8 then
+        va.i = 2; // Sv39
+      else
+        va.i = 3; // Sv48
+      endif;
+#endif
+    endif;
+
+    trace("PreTranslateAddress va: value:%x, type:%x, is_pa:%x, i:%x, ppn:%x, pa:%x",
+                                   va.value, va.type, va.is_pa, va.i, va.ppn, va.pa);
     if SATP_MODE != 0 then
       pa = TranslateAddress(va);
     else
@@ -580,6 +745,7 @@ function PreTranslateAddress(va: VA): PA
       trace("Mmu.PreTranslateAddress: satp.mode=%x. No translation or protection.", SATP_MODE);
     endif;
 
+    //trace("PreTranslateAddress");
     return pa;
   }
 
@@ -587,13 +753,19 @@ function PreTranslateAddress(va: VA): PA
 mmu memory (va: VA) = (data: DATA_SIZE)
   var pa: PA;
   read = {
+    //trace("PreTranslateAddress: read 1");
     pa = PreTranslateAddress(va);
+    //trace("PreTranslateAddress: read 2");
     data = MEM(pa);
+    //trace("PreTranslateAddress: read 3");
   }
 
   write = {
+    //trace("PreTranslateAddress: write 1");
     pa = PreTranslateAddress(va);
+    //trace("PreTranslateAddress: write 2");
     MEM(pa) = data;
+    //trace("PreTranslateAddress: write 3");
   }
 
 //==================================================================================================

@@ -21,24 +21,24 @@ require_relative '../riscv_base'
 #
 # This test checks LD and SD instructions for Sv48 virtual address translation process.
 #
-class InstructionLdSdSv39Template < RiscVBaseTemplate
+class InstructionLdSdSv48Template < RiscVBaseTemplate
 
   def TEST_DATA
-    section(:name => 'page_table_sv39_step2', :prefix => '.section',
-            :pa   => 0x00000000BED22000,
-            :va   => 0x00000000BED22000) {
+    section(:name => 'page_table_sv48_step3', :prefix => '.section',
+            :pa   => 0x00000000AED22000,
+            :va   => 0x00000000AED22000) {
       data {
-        # Page Table Level: 2
-        label :data2
-        dword 0x0000000033B488e1, 0xdeadbeefdeadbeef
-        label :end2
+        # Page Table Level: 3
+        label :data3
+        dword 0x0000000031B488e1, 0xdeadbeefdeadbeef
+        label :end3
         space 1
       }
     }
 
-    section(:name => 'page_table_sv39_step1', :prefix => '.section',
-            :pa   => 0x00000000CED22000,
-            :va   => 0x00000000CED22000) {
+    section(:name => 'page_table_sv48_step1_2', :prefix => '.section',
+            :pa   => 0x00000000C6D22000,
+            :va   => 0x00000000C6D22000) {
       data {
         # Page Table Level: 1
         label :data1
@@ -48,9 +48,9 @@ class InstructionLdSdSv39Template < RiscVBaseTemplate
       }
     }
 
-    section(:name => 'page_table_sv39_step0', :prefix => '.section',
-            :pa   => 0x00000000cED22080,
-            :va   => 0x00000000cED22080) {
+    section(:name => 'page_table_sv48_step0', :prefix => '.section',
+            :pa   => 0x00000000C6D22080,
+            :va   => 0x00000000C6D22080) {
       data {
         # Page Table Level: 0
         label :data0
@@ -60,7 +60,7 @@ class InstructionLdSdSv39Template < RiscVBaseTemplate
       }
     }
 
-    section(:name => 'data_for_sv39', :prefix => '.section',
+    section(:name => 'data_for_sv48', :prefix => '.section',
             :pa   => 0x00000000E2D22000,
             :va   => 0x00000000E2D22000) {
       data {
@@ -75,10 +75,10 @@ class InstructionLdSdSv39Template < RiscVBaseTemplate
 
   def run
     if is_rev('MEM_V64') then
-      # Only for Sv39, (RV64)
+      # Only for Sv48, (RV64)
       trace "CSR satp = 0x%x", satp
-      # sv39 MODE = 8
-      li t0, 0x80000000000bed22
+      # sv48 MODE = 9
+      li t0, 0x90000000000aed22
       trace "Register t0 = 0x%x", t0
       csrw satp, t0
       trace "CSR satp = 0x%x", satp

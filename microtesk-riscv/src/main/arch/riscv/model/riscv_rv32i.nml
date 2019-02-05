@@ -346,6 +346,7 @@ op lw(rd: X, rs1: X, imm: card(12))
   syntax = format("lw %s, %s(%s)", rd.syntax, print_imm12(imm).syntax, rs1.syntax)
   image  = format("%12s%s010%s0000011", imm, rs1.image, rd.image)
   action = {
+    trace("op lw");
     tmp_address = rs1 + sign_extend(XWORD, imm);
     load_rvi(tmp_address, rd, MEM_WORD, SIGN_EXTEND_VALUE).action;
   }

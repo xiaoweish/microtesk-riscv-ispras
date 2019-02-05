@@ -48,7 +48,9 @@ class InstructionLdSdTemplate < RiscVBaseTemplate
     sw t0, s0, 0x0
     trace "t0 = 0x%x", XREG(5)
     lw t1, s0, 0x0
+    trace "t1 ="
     trace "t1 = 0x%x", XREG(6)
+    trace "t1 ="
 
     bne t0, t1, :report_error
 

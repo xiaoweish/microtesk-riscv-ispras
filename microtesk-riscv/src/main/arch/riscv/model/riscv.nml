@@ -290,11 +290,14 @@ var rd_var[XWORD]
 
 op load_global(tmp_address_op: XWORD, load_type: card(4), sign_type: BIT)
   action = {
+      //trace("load_global: MEM_WORD");
+
 #ifdef MEM_SV32
     mem_index = coerce(card(MEM_SIZE), tmp_address_op >> 2);
 #else
     mem_index = coerce(card(MEM_SIZE), tmp_address_op >> 3);
 #endif
+    //trace("load_global: MEM_WORD");
 
     if load_type == MEM_BYTE then
       // MEM_BYTE
@@ -347,13 +350,16 @@ op load_global(tmp_address_op: XWORD, load_type: card(4), sign_type: BIT)
         tmp_word = MEM[mem_index + 1]<23..0> :: MEM[mem_index]<31..24>;
       endif;
 #else
+      //trace("load_global: MEM_WORD");
       tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
+      //trace("load_global: MEM_WORD");
       if tmp_address_op<2..0> < 0b101 then
         tmp_word = MEM[mem_index]<tmp_bit_offset + 31..tmp_bit_offset>;
       else
         tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
         tmp_word = tmp_qword<tmp_bit_offset + 31..tmp_bit_offset>;
       endif;
+      //trace("load_global: MEM_WORD");
 #endif
       if sign_type == ZERO_EXTEND_VALUE then
         rd_var = zero_extend(XWORD, tmp_word);
@@ -453,9 +459,13 @@ op store_global(tmp_address_op: XWORD, rs2_op: XWORD, store_type: card(4))
         tmp_dword<tmp_bit_offset + 31..tmp_bit_offset> = rs2_op<31..0>;
         MEM[mem_index] = tmp_dword;
       else
+        //trace("store_global: MEM_WORD 1");
         tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
-        tmp_qword<tmp_bit_offset + 31..tmp_bit_offset> = rs2_op<31..0>;
+        //trace("store_global: MEM_WORD 2 tmp_bit_offset = 0x%x", tmp_bit_offset);
+        tmp_qword<tmp_bit_offset + 31..0+tmp_bit_offset> = rs2_op<31..0>;
+        //trace("store_global: MEM_WORD 3");
         MEM[mem_index + 1]::MEM[mem_index] = tmp_qword;
+        //trace("store_global: MEM_WORD 4");
       endif;
 #endif
 
@@ -473,6 +483,7 @@ op store_global(tmp_address_op: XWORD, rs2_op: XWORD, store_type: card(4))
       endif;
 #endif
     endif;
+    //trace("store_global: MEM_WORD 5");
   }
 
 var rs2_var[XWORD]

@@ -373,11 +373,11 @@ op load_global(tmp_address_op: XWORD, load_type: card(4), sign_type: BIT)
         trace("load_global: MEM_WORD 2");
         */
         if tmp_address_op<1..0> == 1 then
-          tmp_word = tmp_dword1<7+32..0+32>::tmp_dword2<31+32..8+32>;
+          tmp_word = tmp_dword1<7..0>::tmp_dword2<63..40>;
         elif tmp_address_op<1..0> == 2 then
-          tmp_word = tmp_dword1<15+32..0+32>::tmp_dword2<31+32..16+32>;
+          tmp_word = tmp_dword1<15..0>::tmp_dword2<63..48>;
         else
-          tmp_word = tmp_dword1<23+32..0+32>::tmp_dword2<31+32..24+32>;
+          tmp_word = tmp_dword1<23..0>::tmp_dword2<63..56>;
         endif;
       endif;
       //trace("load_global: MEM_WORD");
@@ -510,11 +510,11 @@ op store_global(tmp_address_op: XWORD, rs2_op: XWORD, store_type: card(4))
         tmp_dword1 = MEM[mem_index + 1];
         tmp_dword2 = MEM[mem_index];
         if tmp_address_op<1..0> == 1 then
-          tmp_dword1<7+32..0+32>::tmp_dword2<31+32..8+32> = rs2_op<31..0>;
+          tmp_dword1<7..0>::tmp_dword2<63..40> = rs2_op<31..0>;
         elif tmp_address_op<1..0> == 2 then
-          tmp_dword1<15+32..0+32>::tmp_dword2<31+32..16+32> = rs2_op<31..0>;
+          tmp_dword1<15..0>::tmp_dword2<63..48> = rs2_op<31..0>;
         else
-          tmp_dword1<23+32..0+32>::tmp_dword2<31+32..24+32> = rs2_op<31..0>;
+          tmp_dword1<23..0>::tmp_dword2<63..56> = rs2_op<31..0>;
         endif;
         MEM[mem_index + 1] = tmp_dword1;
         MEM[mem_index] = tmp_dword2;

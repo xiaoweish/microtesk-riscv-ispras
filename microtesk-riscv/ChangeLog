@@ -9,6 +9,8 @@
 20XX/XX/XX MicroTESK RISC-V 0.0.X
 
  - Tests: Test suite uses QEMU4V 0.3.2
+ - Specifications: Virtual address translation process for Sv32, Sv39, Sv48 modes
+ - Test Templates: Test templates for virtual address translation process
 
  2018/11/30 MicroTESK RISC-V 0.0.7
 

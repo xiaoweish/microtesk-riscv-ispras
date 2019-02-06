@@ -3,14 +3,14 @@
 ================================================================================
 
 --------------------------------------------------------------------------------
- 2017/11/23 - 2018/MM/DD
+ 2017/11/23 - 2019/MM/DD
 --------------------------------------------------------------------------------
 
-20XX/XX/XX MicroTESK RISC-V 0.0.X
+ 2019/02/06 MicroTESK RISC-V 0.0.8
 
+ - Specifications: Address translation for the Sv32, Sv39, and Sv48 modes
+ - Test Templates: Test templates for address translation
  - Tests: Test suite uses QEMU4V 0.3.2
- - Specifications: Virtual address translation process for Sv32, Sv39, Sv48 modes
- - Test Templates: Test templates for virtual address translation process
 
  2018/11/30 MicroTESK RISC-V 0.0.7
 

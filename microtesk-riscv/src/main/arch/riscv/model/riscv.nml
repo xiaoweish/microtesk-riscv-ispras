@@ -395,9 +395,28 @@ op load_global(tmp_address_op: XWORD, load_type: card(4), sign_type: BIT)
       if tmp_address_op<2..0> == 0 then // Word-aligned address
         tmp_dword = MEM[mem_index];
       else
-        tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
-        tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
-        tmp_dword = tmp_qword<63+tmp_bit_offset..0+tmp_bit_offset>;
+        //tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
+        //tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
+        //tmp_dword = tmp_qword<63+tmp_bit_offset..0+tmp_bit_offset>;
+
+        tmp_dword1 = MEM[mem_index + 1];
+        tmp_dword2 = MEM[mem_index];
+
+        if tmp_address_op<2..0> == 1 then
+          tmp_dword = tmp_dword1<7..0>::tmp_dword2<63..8>;
+        elif tmp_address_op<2..0> == 2 then
+          tmp_dword = tmp_dword1<15..0>::tmp_dword2<63..16>;
+        elif tmp_address_op<2..0> == 3 then
+          tmp_dword = tmp_dword1<23..0>::tmp_dword2<63..24>;
+        elif tmp_address_op<2..0> == 4 then
+          tmp_dword = tmp_dword1<31..0>::tmp_dword2<63..32>;
+        elif tmp_address_op<2..0> == 5 then
+          tmp_dword = tmp_dword1<39..0>::tmp_dword2<63..40>;
+        elif tmp_address_op<2..0> == 6 then
+          tmp_dword = tmp_dword1<47..0>::tmp_dword2<63..48>;
+        else
+          tmp_dword = tmp_dword1<55..0>::tmp_dword2<63..56>;
+        endif;
       endif;
 
       rd_var = tmp_dword;
@@ -509,10 +528,34 @@ op store_global(tmp_address_op: XWORD, rs2_op: XWORD, store_type: card(4))
       if tmp_address_op<2..0> == 0 then // Word-aligned address
         MEM[mem_index] = rs2_op;
       else
+      /*
         tmp_bit_offset = zero_extend(card(6), tmp_address_op<2..0>) * 8;
         tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
         tmp_qword<63+tmp_bit_offset..0+tmp_bit_offset> = rs2_op;
         MEM[mem_index + 1]::MEM[mem_index] = tmp_qword;
+        */
+
+        tmp_dword1 = MEM[mem_index + 1];
+        tmp_dword2 = MEM[mem_index];
+
+        if tmp_address_op<2..0> == 1 then
+          tmp_dword1<7..0>::tmp_dword2<63..8> = rs2_op;
+        elif tmp_address_op<2..0> == 2 then
+          tmp_dword1<15..0>::tmp_dword2<63..16> = rs2_op;
+        elif tmp_address_op<2..0> == 3 then
+          tmp_dword1<23..0>::tmp_dword2<63..24> = rs2_op;
+        elif tmp_address_op<2..0> == 4 then
+          tmp_dword1<31..0>::tmp_dword2<63..32> = rs2_op;
+        elif tmp_address_op<2..0> == 5 then
+          tmp_dword1<39..0>::tmp_dword2<63..40> = rs2_op;
+        elif tmp_address_op<2..0> == 6 then
+          tmp_dword1<47..0>::tmp_dword2<63..48> = rs2_op;
+        else
+          tmp_dword1<55..0>::tmp_dword2<63..56> = rs2_op;
+        endif;
+
+        MEM[mem_index + 1] = tmp_dword1;
+        MEM[mem_index] = tmp_dword2;
       endif;
 #endif
     endif;

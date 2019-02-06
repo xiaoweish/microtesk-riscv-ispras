@@ -272,10 +272,10 @@ function SV32TranslateCycle (va: VA): PT.entry
     temp_va.is_pa = 1;
     temp_va.pa = temp_address.value;
 
-    trace("SV32TranslateCycle.temp_address.value = 0x%x", temp_address.value);
+   // trace("SV32TranslateCycle.temp_address.value = 0x%x", temp_address.value);
     pte = PT(temp_va);
-    trace("SV32TranslateCycle: pte = 0x%x", pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
-    trace("SV32TranslateCycle: pte.v = 0x%x, pte.r = 0x%x, pte.w = 0x%x", pte.v, pte.r, pte.w);
+    //trace("SV32TranslateCycle: pte = 0x%x", pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
+    //trace("SV32TranslateCycle: pte.v = 0x%x, pte.r = 0x%x, pte.w = 0x%x", pte.v, pte.r, pte.w);
 
     // TODO: if v == 0 || (r == 0 && w == 1) then
     if pte.v == 0 then
@@ -395,10 +395,10 @@ function SV39TranslateCycle (va: VA): PT39.entry
     temp_va.is_pa = 1;
     temp_va.pa = temp_address.value;
 
-    trace("SV39TranslateCycle.temp_address.value = 0x%x", temp_address.value);
+    //trace("SV39TranslateCycle.temp_address.value = 0x%x", temp_address.value);
     pte = PT39(temp_va);
-    trace("SV39TranslateCycle: pte = 0x%x", pte.ppn2::pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
-    trace("SV39TranslateCycle: pte.v = 0x%x, pte.r = 0x%x, pte.w = 0x%x", pte.v, pte.r, pte.w);
+    //trace("SV39TranslateCycle: pte = 0x%x", pte.ppn2::pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
+    //trace("SV39TranslateCycle: pte.v = 0x%x, pte.r = 0x%x, pte.w = 0x%x", pte.v, pte.r, pte.w);
 
     // TODO: if v == 0 || (r == 0 && w == 1) then
     if pte.v == 0 then
@@ -500,7 +500,7 @@ function SV48TranslateCycle (va: VA): PT48.entry
   var a: 56;
   var temp: 56;
   {
-    trace("LEVEL 0%x", va.i);
+    //trace("LEVEL 0%x", va.i);
 
     temp = 0;
     if va.i == 3 then
@@ -540,10 +540,10 @@ function SV48TranslateCycle (va: VA): PT48.entry
     temp_va.is_pa = 1;
     temp_va.pa = temp_address.value;
 
-    trace("SV48TranslateCycle.temp_address.value = 0x%x", temp_address.value);
+    //trace("SV48TranslateCycle.temp_address.value = 0x%x", temp_address.value);
     pte = PT48(temp_va);
-    trace("SV48TranslateCycle: pte = 0x%x", pte.ppn3::pte.ppn2::pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
-    trace("SV48TranslateCycle: pte.v = 0x%x, pte.r = 0x%x, pte.w = 0x%x", pte.v, pte.r, pte.w);
+    //trace("SV48TranslateCycle: pte = 0x%x", pte.ppn3::pte.ppn2::pte.ppn1::pte.ppn0::pte.rsw::pte.d::pte.a::pte.g::pte.u::pte.x::pte.w::pte.r::pte.v);
+    //trace("SV48TranslateCycle: pte.v = 0x%x, pte.r = 0x%x, pte.w = 0x%x", pte.v, pte.r, pte.w);
 
     // TODO: if v == 0 || (r == 0 && w == 1) then
     if pte.v == 0 then
@@ -674,7 +674,7 @@ function TranslateAddress(va: VA): PA
       endif;
 #endif
     endif;
-    trace("TranslateAddress: va=%x, pa=%x", va.value, pa.value);
+    //trace("TranslateAddress: va=%x, pa=%x", va.value, pa.value);
 
     return pa;
   }
@@ -732,8 +732,8 @@ function PreTranslateAddress(va: VA): PA
 #endif
     endif;
 
-    trace("PreTranslateAddress va: value:%x, type:%x, is_pa:%x, i:%x, ppn:%x, pa:%x",
-                                   va.value, va.type, va.is_pa, va.i, va.ppn, va.pa);
+//    trace("PreTranslateAddress va: value:%x, type:%x, is_pa:%x, i:%x, ppn:%x, pa:%x",
+//                                   va.value, va.type, va.is_pa, va.i, va.ppn, va.pa);
     if SATP_MODE != 0 then
       pa = TranslateAddress(va);
     else

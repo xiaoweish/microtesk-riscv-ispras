@@ -28,6 +28,6 @@ public class NitemsTestCase extends RiscVTest {
 
     Assert.assertEquals(1, statistics.getPrograms());
     Assert.assertEquals(10, statistics.getSequences());
-    Assert.assertEquals(536, statistics.getInstructions());
+    Assert.assertEquals(533, statistics.getInstructions());
   }
 }

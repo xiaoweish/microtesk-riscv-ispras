@@ -233,6 +233,8 @@ var tmp_byte [BYTE]
 var tmp_half [HWORD]
 var tmp_word [WORD]
 var tmp_dword [DWORD]
+var tmp_dword1 [DWORD]
+var tmp_dword2 [DWORD]
 var tmp_qword [QWORD]
 
 var tmp_int1 [INT]
@@ -356,8 +358,27 @@ op load_global(tmp_address_op: XWORD, load_type: card(4), sign_type: BIT)
       if tmp_address_op<2..0> < 0b101 then
         tmp_word = MEM[mem_index]<tmp_bit_offset + 31..tmp_bit_offset>;
       else
-        tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
+        //tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
+        //tmp_word = tmp_qword<tmp_bit_offset + 31..tmp_bit_offset>;
+
+        tmp_dword1 = MEM[mem_index + 1];
+        tmp_dword2 = MEM[mem_index];
+        /*
+        trace("load_global: MEM_WORD 1");
+        tmp_dword1 = MEM[mem_index + 1];
+        tmp_dword2 = MEM[mem_index];
+        trace("load_global: MEM_WORD 1.5");
+        tmp_qword = tmp_dword1::tmp_dword2;
         tmp_word = tmp_qword<tmp_bit_offset + 31..tmp_bit_offset>;
+        trace("load_global: MEM_WORD 2");
+        */
+        if tmp_address_op<1..0> == 1 then
+          tmp_word = tmp_dword1<7+32..0+32>::tmp_dword2<31+32..8+32>;
+        elif tmp_address_op<1..0> == 2 then
+          tmp_word = tmp_dword1<15+32..0+32>::tmp_dword2<31+32..16+32>;
+        else
+          tmp_word = tmp_dword1<23+32..0+32>::tmp_dword2<31+32..24+32>;
+        endif;
       endif;
       //trace("load_global: MEM_WORD");
 #endif
@@ -460,12 +481,24 @@ op store_global(tmp_address_op: XWORD, rs2_op: XWORD, store_type: card(4))
         MEM[mem_index] = tmp_dword;
       else
         //trace("store_global: MEM_WORD 1");
-        tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
+        //tmp_qword = MEM[mem_index + 1]::MEM[mem_index];
         //trace("store_global: MEM_WORD 2 tmp_bit_offset = 0x%x", tmp_bit_offset);
-        tmp_qword<tmp_bit_offset + 31..0+tmp_bit_offset> = rs2_op<31..0>;
+        //tmp_qword<tmp_bit_offset + 31..0+tmp_bit_offset> = rs2_op<31..0>;
         //trace("store_global: MEM_WORD 3");
-        MEM[mem_index + 1]::MEM[mem_index] = tmp_qword;
+        //MEM[mem_index + 1]::MEM[mem_index] = tmp_qword;
         //trace("store_global: MEM_WORD 4");
+        
+        tmp_dword1 = MEM[mem_index + 1];
+        tmp_dword2 = MEM[mem_index];
+        if tmp_address_op<1..0> == 1 then
+          tmp_dword1<7+32..0+32>::tmp_dword2<31+32..8+32> = rs2_op<31..0>;
+        elif tmp_address_op<1..0> == 2 then
+          tmp_dword1<15+32..0+32>::tmp_dword2<31+32..16+32> = rs2_op<31..0>;
+        else
+          tmp_dword1<23+32..0+32>::tmp_dword2<31+32..24+32> = rs2_op<31..0>;
+        endif;
+        MEM[mem_index + 1] = tmp_dword1;
+        MEM[mem_index] = tmp_dword2;
       endif;
 #endif
 

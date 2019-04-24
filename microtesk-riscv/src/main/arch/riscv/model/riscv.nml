@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
+ * Copyright 2017-2019 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -582,6 +582,160 @@ internal op store_data(op_type: card(4), address: XWORD, store_value: XWORD)
 #endif
 
 //==================================================================================================
+// Internal Operation to Handle Exceptions
+//==================================================================================================
+
+let DCSR_CAUSE_SWBP = 1
+
+let DEBUG_ROM_ENTRY = 0x800
+let DEBUG_ROM_TVEC = 0x808
+
+let CAUSE_MISALIGNED_FETCH = 0x0
+let CAUSE_FETCH_ACCESS = 0x1
+let CAUSE_ILLEGAL_INSTRUCTION = 0x2
+let CAUSE_BREAKPOINT = 0x3
+let CAUSE_MISALIGNED_LOAD = 0x4
+let CAUSE_LOAD_ACCESS = 0x5
+let CAUSE_MISALIGNED_STORE = 0x6
+let CAUSE_STORE_ACCESS = 0x7
+let CAUSE_USER_ECALL = 0x8
+let CAUSE_SUPERVISOR_ECALL = 0x9
+let CAUSE_HYPERVISOR_ECALL = 0xa
+let CAUSE_MACHINE_ECALL = 0xb
+let CAUSE_FETCH_PAGE_FAULT = 0xc
+let CAUSE_LOAD_PAGE_FAULT = 0xd
+let CAUSE_STORE_PAGE_FAULT = 0xf
+
+let PRIVILEGE_MODE_U = 0
+let PRIVILEGE_MODE_S = 1
+let PRIVILEGE_MODE_M = 3
+
+let PRV_U = 0
+let PRV_S = 1
+let PRV_H = 2
+let PRV_M = 3
+
+reg t_cause[CSR_TYPE]
+reg t_get_tval[CSR_TYPE] // TODO: for mem
+
+reg privilege_mode[card(2)]
+
+//var alias to reg_t [CSR_TYPE]
+var bit [CSR_TYPE]
+var deleg [CSR_TYPE]
+var interrupt [BIT]
+var epc [CSR_TYPE]
+var vector [CSR_TYPE]
+
+internal op set_privilege(prv_op: card(2))
+action = {
+  // set_privilege(PRV_x);
+    // TODO: mmu->flush_tlb();
+    // state.prv = legalize_privilege(prv);
+  assert(prv_op <= PRV_M, "exception (set_privilege): prv_op > PRV_M");
+  if MISA_U == 0 then
+    PRV = PRV_M;
+  elif prv_op == PRV_H || MISA_S == 0 then
+    PRV = PRV_U;
+  else
+    PRV = prv_op;
+  endif;
+}
+
+internal op exception()
+action = {
+  epc = PC;
+
+  if DCSR_CAUSE != 0 then
+    if t_cause == CAUSE_BREAKPOINT then
+      PC = DEBUG_ROM_ENTRY;
+    else
+      PC = DEBUG_ROM_TVEC;
+    endif;
+    // return;
+  else
+    if (t_cause == CAUSE_BREAKPOINT && (
+         (PRV == PRV_M && DCSR_EBREAKM == 1) ||
+         (PRV == PRV_S && DCSR_EBREAKS == 1) ||
+         (PRV == PRV_U && DCSR_EBREAKU == 1))) then
+      //enter_debug_mode(DCSR_CAUSE_SWBP);
+      DCSR_CAUSE = DCSR_CAUSE_SWBP;
+      DCSR_PRV = PRV;
+
+      // set_privilege(PRV_M);
+      set_privilege(PRV_M).action;
+
+      DPC_CSR = PC;
+      PC = DEBUG_ROM_ENTRY;
+      //return;
+    else
+      bit = t_cause;
+      deleg = MEDELEG_CSR;
+      if (bit & (1 << (XLEN-1))) != 0 then
+        interrupt = 1;
+      else
+        interrupt = 0;
+      endif;
+      if interrupt == 1 then
+        //TODO deleg = state.mideleg, bit &= ~((reg_t)1 << (max_xlen-1));
+        deleg = MEDELEG_CSR;
+        //bit &= ~((reg_t)1 << (max_xlen-1));
+        bit = bit & ~(coerce(CSR_TYPE, 1) << (XLEN-1));
+      endif;
+
+      if (PRV <= PRV_S && bit < XLEN && ((deleg >> bit) & coerce(card(XLEN), 1)) != 0) then
+        // handle the trap in S-mode
+        //state.pc = state.stvec;
+        PC = STVEC_CSR;
+        //state.scause = t.cause();
+        SCAUSE_CSR = t_cause;
+        //state.sepc = epc;
+        SEPC_CSR = epc;
+        //state.stval = t.get_tval();
+        STVAL_CSR = t_get_tval;
+
+        //state.mstatus;
+        MSTATUS_SPIE = MSTATUS_SIE;
+        MSTATUS_SPP = coerce(BIT, PRV[0]);
+        MSTATUS_SIE = 0;
+
+        //set_privilege(PRV_S);
+        set_privilege(PRV_S).action;
+      else
+        // reg_t vector = (state.mtvec & 1) && interrupt ? 4*bit : 0;
+        if (MTVEC_CSR & coerce(CSR_TYPE, 1)) == 1 && interrupt == 1 then
+         vector = 4*bit;
+        else
+         vector = 0;
+        endif;
+
+        //state.pc = (state.mtvec & ~(reg_t)1) + vector;
+        PC = (MTVEC_CSR & sign_extend(CSR_TYPE, -1)) + vector;
+        //state.mepc = epc;
+        MEPC_CSR = epc;
+        //state.mcause = t.cause();
+        MCAUSE_CSR = t_cause;
+        //state.mtval = t.get_tval();
+        MTVAL_CSR = t_get_tval;
+
+        //reg_t s = state.mstatus;
+        MSTATUS_MPIE = MSTATUS_MIE;
+        MSTATUS_MPP = PRV;
+        MSTATUS_MIE = 0;
+
+        // set_privilege(PRV_M);
+        set_privilege(PRV_M).action;
+      endif;
+
+    endif;
+  endif;
+
+  // illegal instruction exceptions
+  // TODO: Exceptions are temporary ignored
+  // PC = PC + 4;
+}
+
+//==================================================================================================
 // General FP functions
 //==================================================================================================
 
@@ -737,15 +891,6 @@ op instruction16(operation: Op16)
       PC = PC + 2;
     endif;
   }
-//==================================================================================================
-// Internal Operation to Handle Exceptions
-//==================================================================================================
-
-internal op exception()
-action = {
-  // TODO: Exceptions are temporary ignored
-  PC = PC + 4;
-}
 
 //==================================================================================================
 // Special pseudoinstructions

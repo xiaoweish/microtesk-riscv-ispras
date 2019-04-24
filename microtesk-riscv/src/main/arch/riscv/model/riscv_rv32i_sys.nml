@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
+ * Copyright 2017-2019 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -46,7 +46,16 @@ op ecall()
   syntax = format("ecall")
   image  = format("%12s00000%3s00000%7s", "000000000000", "000", "1110011")
   action = {
-    // TODO
+    if PRV == PRV_U then
+      t_cause = CAUSE_USER_ECALL;
+      exception("user_ecall");
+    elif PRV == PRV_S then
+      t_cause = CAUSE_SUPERVISOR_ECALL;
+      exception("supervisor_ecall");
+    elif PRV == PRV_M then
+      t_cause = CAUSE_MACHINE_ECALL;
+      exception("machine_ecall");
+    endif;
   }
 
 /* The EBREAK instruction is used by debuggers to cause control to be transferred back to
@@ -55,7 +64,8 @@ op ebreak()
   syntax = format("ebreak")
   image  = format("%12s00000%3s00000%7s", "000000000001", "000", "1110011")
   action = {
-    // TODO
+    t_cause = CAUSE_BREAKPOINT;
+    exception("breakpoint");
   }
 
 op fence()//(pred: card(4), succ: card(4))

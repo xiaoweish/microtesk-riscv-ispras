@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 ISP RAS (http://www.ispras.ru)
+ * Copyright 2018-2019 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -570,6 +570,8 @@ mode STVEC() = CSR[0x105]
   syntax = format("stvec")
   image = format("%12s", csr_index)
 
+reg STVEC_CSR[CSR_TYPE] alias = CSR[0x105]
+
 // Supervisor counter enable
 mode SCOUNTEREN() = CSR[0x106]
   init = { csr_index = 0x106; }
@@ -591,17 +593,23 @@ mode SEPC() = CSR[0x141]
   syntax = format("sepc")
   image = format("%12s", csr_index)
 
+reg SEPC_CSR[CSR_TYPE] alias = CSR[0x141]
+
 // Supervisor trap cause
 mode SCAUSE() = CSR[0x142]
   init = { csr_index = 0x142; }
   syntax = format("scause")
   image = format("%12s", csr_index)
 
+reg SCAUSE_CSR[CSR_TYPE] alias = CSR[0x142]
+
 // Supervisor bad address or instruction
 mode STVAL() = CSR[0x143]
   init = { csr_index = 0x143; }
   syntax = format("stval")
   image = format("%12s", csr_index)
+
+reg STVAL_CSR[CSR_TYPE] alias = CSR[0x143]
 
 // Supervisor interrupt pending
 mode SIP() = CSR[0x144]
@@ -700,11 +708,18 @@ mode MISA() = CSR[0x301]
   syntax = format("misa")
   image = format("%12s", csr_index)
 
+reg MISA_CSR[CSR_TYPE] alias = CSR[0x301]
+
+reg MISA_U[BIT] alias = MISA_CSR<20>
+reg MISA_S[BIT] alias = MISA_CSR<18>
+
 // Machine exception delegation register
 mode MEDELEG() = CSR[0x302]
   init = { csr_index = 0x302; }
   syntax = format("medeleg")
   image = format("%12s", csr_index)
+
+reg MEDELEG_CSR[CSR_TYPE] alias = CSR[0x302]
 
 // Machine interrupt delegation register
 mode MIDELEG() = CSR[0x303]
@@ -723,6 +738,8 @@ mode MTVEC() = CSR[0x305]
   init = { csr_index = 0x305; }
   syntax = format("mtvec")
   image = format("%12s", csr_index)
+
+reg MTVEC_CSR[CSR_TYPE] alias = CSR[0x305]
 
 // Machine counter enable
 mode MCOUNTEREN() = CSR[0x306]
@@ -745,17 +762,23 @@ mode MEPC() = CSR[0x341]
   syntax = format("mepc")
   image = format("%12s", csr_index)
 
+reg MEPC_CSR[CSR_TYPE] alias = CSR[0x341]
+
 // Machine trap cause
 mode MCAUSE() = CSR[0x342]
   init = { csr_index = 0x342; }
   syntax = format("mcause")
   image = format("%12s", csr_index)
 
+reg MCAUSE_CSR[CSR_TYPE] alias = CSR[0x342]
+
 // Machine bad address or instruction
 mode MTVAL() = CSR[0x343]
   init = { csr_index = 0x343; }
   syntax = format("mtval")
   image = format("%12s", csr_index)
+
+reg MTVAL_CSR[CSR_TYPE] alias = CSR[0x343]
 
 // Machine interrupt pending
 mode MIP() = CSR[0x344]
@@ -1471,18 +1494,30 @@ mode TDATA3() = CSR[0x7A3]
 
 //==================================================================================================
 // Debug Mode Registers
-
 // Debug control and status register
 mode DCSR() = CSR[0x7B0]
   init = { csr_index = 0x7B0; }
   syntax = format("dcsr")
   image = format("%12s", csr_index)
 
+reg DCSR_CSR[CSR_TYPE] alias = CSR[0x7B0]
+
+reg DCSR_PRV[card(2)] alias = DCSR_CSR<1..0>
+reg DCSR_CAUSE[card(3)] alias = DCSR_CSR<8..6>
+reg DCSR_EBREAKU[BIT] alias = DCSR_CSR<12>
+reg DCSR_EBREAKS[BIT] alias = DCSR_CSR<13>
+reg DCSR_EBREAKM[BIT] alias = DCSR_CSR<15>
+
+// Privilege Level (virtual))
+reg PRV[card(2)] alias = DCSR_PRV
+
 // Debug PC
 mode DPC() = CSR[0x7B1]
   init = { csr_index = 0x7B1; }
   syntax = format("dpc")
   image = format("%12s", csr_index)
+
+reg DPC_CSR[CSR_TYPE] alias = CSR[0x7B1]
 
 // Debug scratch register
 mode DSCRATCH() = CSR[0x7B2]

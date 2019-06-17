@@ -584,6 +584,9 @@ internal op store_data(op_type: card(4), address: XWORD, store_value: XWORD)
 //==================================================================================================
 // Internal Operation to Handle Exceptions
 //==================================================================================================
+let PC_SERIALIZE_BEFORE = 3
+let PC_SERIALIZE_AFTER = 5
+let PC_SERIALIZE_WFI = 7
 
 let DCSR_CAUSE_SWBP = 1
 
@@ -729,10 +732,6 @@ action = {
 
     endif;
   endif;
-
-  // illegal instruction exceptions
-  // TODO: Exceptions are temporary ignored
-  // PC = PC + 4;
 }
 
 //==================================================================================================

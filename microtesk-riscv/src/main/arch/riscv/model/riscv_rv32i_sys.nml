@@ -49,6 +49,7 @@ op ecall()
   syntax = format("ecall")
   image  = format("%12s00000%3s00000%7s", "000000000000", "000", "1110011")
   action = {
+  /*
     if PRV == PRV_U then
       t_cause = CAUSE_USER_ECALL;
       exception("user_ecall");
@@ -59,6 +60,7 @@ op ecall()
       t_cause = CAUSE_MACHINE_ECALL;
       exception("machine_ecall");
     endif;
+    */
   }
 
 /* The EBREAK instruction is used by debuggers to cause control to be transferred back to
@@ -67,8 +69,10 @@ op ebreak()
   syntax = format("ebreak")
   image  = format("%12s00000%3s00000%7s", "000000000001", "000", "1110011")
   action = {
+  /*
     t_cause = CAUSE_BREAKPOINT;
     exception("breakpoint");
+    */
   }
 
 op fence()//(pred: card(4), succ: card(4))
@@ -111,6 +115,7 @@ op mret()
   syntax = format("mret")
   image  = format("00110000001000000000000001110011")
   action = {
+  /*
     //require_privilege(PRV_M);
     if !(PRV >= PRV_M) then
       t_cause = CAUSE_ILLEGAL_INSTRUCTION;
@@ -136,12 +141,14 @@ op mret()
     MSTATUS_MIE = MSTATUS_MPIE;
     MSTATUS_MPIE = 1;
     MSTATUS_MPP = PRV_U;
+    */
   }
 
 op sret()
   syntax = format("sret")
   image  = format("00010000001000000000000001110011")
   action = {
+  /*
     // require_privilege(get_field(STATE.mstatus, MSTATUS_TSR) ? PRV_M : PRV_S);
     if MSTATUS_TSR == 1 then
       if !(PRV >= PRV_M) then
@@ -174,6 +181,7 @@ op sret()
     MSTATUS_SIE = MSTATUS_SPIE;
     MSTATUS_SPIE = 1;
     MSTATUS_SPP = PRV_U;
+    */
   }
 
 op uret()
@@ -199,6 +207,7 @@ op wfi()
   syntax = format("wfi")
   image  = format("00010000010100000000000001110011")
   action = {
+  /*
     //require_privilege(get_field(STATE.mstatus, MSTATUS_TW) ? PRV_M : PRV_S);
     if MSTATUS_TW == 1 then
       if !(PRV >= PRV_M) then
@@ -219,6 +228,7 @@ op wfi()
 #endif
     npc = PC_SERIALIZE_WFI;
     // TODO:
+    */
   }
 
 /* CSRRW (Atomic Read/Write CSR) */

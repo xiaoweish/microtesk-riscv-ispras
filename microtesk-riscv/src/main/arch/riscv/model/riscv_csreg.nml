@@ -147,6 +147,39 @@ reg FCSR_NV[BIT] alias = FCSR_CSR<4> // invalid operation
 reg FCSR_FRM [card(3)] alias = FCSR_CSR<7..5>
 
 //==================================================================================================
+// The vector extension CSRs
+
+// Vector start position
+mode VSTART() = CSR[0x008]
+  init = { csr_index = 0x008; }
+  syntax = format("vstart")
+  image = format("%12s", csr_index)
+
+// Fixed-Point Saturate Flag Vector start position
+mode VXTART() = CSR[0x009]
+  init = { csr_index = 0x009; }
+  syntax = format("vxsat")
+  image = format("%12s", csr_index)
+
+// Fixed-Point Rounding Mode
+mode VXRM() = CSR[0x00a]
+  init = { csr_index = 0x00a; }
+  syntax = format("vxrm")
+  image = format("%12s", csr_index)
+
+// Vector length
+mode VL() = CSR[0xc20]
+  init = { csr_index = 0xc20; }
+  syntax = format("vl")
+  image = format("%12s", csr_index)
+
+// Vector data type register
+mode VTYPE() = CSR[0xc21]
+  init = { csr_index = 0xc21; }
+  syntax = format("vtype")
+  image = format("%12s", csr_index)
+
+//==================================================================================================
 // User Counter/Timers
 
 // Cycle counter for RDCYCLE instruction

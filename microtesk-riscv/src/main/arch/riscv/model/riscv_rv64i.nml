@@ -132,21 +132,21 @@ op slliw(rd: X, rs1: X, imm: card(5))
   syntax = format("slliw %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
   image  = format("0000000%5s%s001%s0011011", imm, rs1.image, rd.image)
   action = {
-    rd = sign_extend(XWORD, rs1<31..0> << imm);
+    rd = sign_extend(XWORD, rs1<31..0> << zero_extend(WORD, imm));
   }
 
 op srliw(rd: X, rs1: X, imm: card(5))
   syntax = format("srliw %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
   image  = format("0000000%5s%s101%s0011011", imm, rs1.image, rd.image)
   action = {
-    rd = sign_extend(XWORD, rs1<31..0> >> imm);
+    rd = sign_extend(XWORD, rs1<31..0> >> zero_extend(WORD, imm));
   }
 
 op sraiw(rd: X, rs1: X, imm: card(5))
   syntax = format("sraiw %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
   image  = format("0100000%5s%s101%s0011011", imm, rs1.image, rd.image)
   action = {
-    rd = sign_extend(XWORD, cast(INT, rs1<31..0>) >> imm);
+    rd = sign_extend(XWORD, cast(INT, rs1<31..0>) >> zero_extend(INT, imm));
   }
 
 /*
@@ -194,21 +194,21 @@ op sllw(rd: X, rs1: X, rs2: X)
   syntax = format("sllw %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0000000%s%s001%s0111011", rs2.image, rs1.image, rd.image)
   action = {
-    rd = sign_extend(XWORD, rs1<31..0> << rs2<4..0>);
+    rd = sign_extend(XWORD, rs1<31..0> << zero_extend(WORD, rs2<4..0>));
   }
 
 op srlw(rd: X, rs1: X, rs2: X)
   syntax = format("srlw %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0000000%s%s101%s0111011", rs2.image, rs1.image, rd.image)
   action = {
-    rd = sign_extend(XWORD, rs1<31..0> >> rs2<4..0>);
+    rd = sign_extend(XWORD, rs1<31..0> >> zero_extend(WORD, rs2<4..0>));
   }
 
 op sraw(rd: X, rs1: X, rs2: X)
   syntax = format("sraw %s, %s, %s", rd.syntax, rs1.syntax, rs2.syntax)
   image  = format("0100000%s%s101%s0111011", rs2.image, rs1.image, rd.image)
   action = {
-    rd = sign_extend(XWORD, cast(INT, rs1<31..0>) >> rs2<4..0>);
+    rd = sign_extend(XWORD, cast(INT, rs1<31..0>) >> zero_extend(INT, rs2<4..0>));
   }
 
 //==================================================================================================

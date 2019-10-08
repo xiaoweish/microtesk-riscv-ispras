@@ -36,6 +36,35 @@
         <exclude item="31"/>
       </range>
     </mode>
+    <mode name="VR">
+      <strategy name="biased" free-bias="50" used-bias="50"/>
+      <range min="0" max="31">
+        <exclude item="1"/>
+        <exclude item="2"/>
+        <exclude item="3"/>
+        <exclude item="5"/>
+        <exclude item="6"/>
+        <exclude item="7"/>
+        <exclude item="9"/>
+        <exclude item="10"/>
+        <exclude item="11"/>
+        <exclude item="13"/>
+        <exclude item="14"/>
+        <exclude item="15"/>
+        <exclude item="17"/>
+        <exclude item="18"/>
+        <exclude item="19"/>
+        <exclude item="21"/>
+        <exclude item="22"/>
+        <exclude item="23"/>
+        <exclude item="25"/>
+        <exclude item="26"/>
+        <exclude item="27"/>
+        <exclude item="29"/>
+        <exclude item="30"/>
+        <exclude item="31"/>
+      </range>
+    </mode>
   </allocation>
 
   <delaySlot size="0"/>

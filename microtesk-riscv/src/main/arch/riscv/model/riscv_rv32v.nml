@@ -105,21 +105,39 @@ op <name>(vd: X, vs1: X, vs2: X, vs3: X)
   }
 */
 
-var funct2[card(2)]
-var func7_0[card(4)]
-var func7_1[card(3)]
-var vp[BIT]
-var vs2_const[card(5)]
+let VLEN = 32
 
-var m[card(2)]
-var im_2b[card(2)]
+// vsew[2:0] (standard element width) encoding
+let SEW8    = 0b000
+let SEW16   = 0b001
+let SEW32   = 0b010
+let SEW64   = 0b011
+let SEW128  = 0b100
+let SEW256  = 0b101
+let SEW512  = 0b110
+let SEW1024 = 0b111
+
+// The number of vector registers in a group, LMUL
+let LMUL1 = 0b00
+let LMUL2 = 0b01
+let LMUL4 = 0b10
+let LMUL8 = 0b11
+
+var v_funct7[card(6)]
+var v_funct6[card(6)]
+var v_funct5[card(5)]
+var v_funct3[card(3)]
+var v_vm[BIT] // Mask Encoding (p.22)
 
 //==================================================================================================
 // Registers
 //==================================================================================================
 
+
 //32 vector registers each with 16-bit vtypen field
-reg VREG [32, HWORD]
+
+//32 vector registers each with 32-bit
+reg VREG [32, WORD]
 
 mode VR (i: card(5)) = VREG [i]
   syntax = format("v%d", i)
@@ -129,10 +147,91 @@ mode VR (i: card(5)) = VREG [i]
 // Instructions
 //==================================================================================================
 
-let RV32V_SE   = 0b1100111 // RV32V Standard Extension
-let RV32V_SEC1 = 0b0000111 // RV32V Standard Extension (cont.) type 1
-let RV32V_SEC2 = 0b0100111 // RV32V Standard Extension (cont.) type 2
+//let RV32V_SE   = 0b1100111 // RV32V Standard Extension
+//let RV32V_SEC1 = 0b0000111 // RV32V Standard Extension (cont.) type 1
+//let RV32V_SEC2 = 0b0100111 // RV32V Standard Extension (cont.) type 2
 
+let OP_V = 1010111 // The vector arithmetic instructions use a new major opcode
+
+let OPIVV = 000 // Source of scalar(s): vector-vector
+
+op vadd_cycle_vv(vd: VR, vs2: VR, vs1: VR)
+  action = {
+    vd = vs2 + vs1;
+  }
+/*
+op vadd_cycle_vx(vd: VR, vs2: VR, rs1: X)
+  action = {
+    vd = vs2 + rs1;
+  }*/
+
+// Add vector-vector
+op vadd(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    v_funct6 = 0b000000;
+    v_funct3 = coerce(card(3), OPIVV);
+    v_vm = 1;
+    assert(vs1.i%4 == 0);
+    assert(vs2.i%4 == 0);
+    assert(vd.i%4 == 0);
+  }
+  syntax = format("vadd.vv %s, %s, %s", vd.syntax, vs2.syntax, vs1.syntax)
+  image  = format("%6s%1s%5s%5s%3s%5s%7s",
+                 v_funct6, v_vm, vs2.image, vs1.image, v_funct3, vd.image, coerce(card(7), OP_V))
+  action = {
+    vadd_cycle_vv(VR(vd.i), VR(vs2.i), VR(vs1.i)).action;
+    vadd_cycle_vv(VR(vd.i + 1), VR(vs2.i + 1), VR(vs1.i + 1)).action;
+    vadd_cycle_vv(VR(vd.i + 2), VR(vs2.i + 2), VR(vs1.i + 2)).action;
+    vadd_cycle_vv(VR(vd.i + 3), VR(vs2.i + 3), VR(vs1.i + 3)).action;
+  }
+
+op vsub_cycle_vv(vd: VR, vs2: VR, vs1: VR)
+  action = {
+    vd = vs2 - vs1;
+  }
+
+  var temppp[card(32)]
+// Sub vector-vector
+op vsub(vd: VR, vs1: VR, vs2: VR)
+  init = {
+    v_funct6 = 0b000010;
+    v_funct3 = coerce(card(3), OPIVV);
+    v_vm = 1;
+    assert(vs1.i%4 == 0);
+    assert(vs2.i%4 == 0);
+    assert(vd.i%4 == 0);
+  }
+  syntax = format("vsub.vv %s, %s, %s", vd.syntax, vs2.syntax, vs1.syntax)
+  image  = format("%6s%1s%5s%5s%3s%5s%7s",
+                 v_funct6, v_vm, vs2.image, vs1.image, v_funct3, vd.image, coerce(card(7), OP_V))
+  action = {
+    vsub_cycle_vv(VR(vd.i), VR(vs2.i), VR(vs1.i)).action;
+    vsub_cycle_vv(VR(vd.i + 1), VR(vs2.i + 1), VR(vs1.i + 1)).action;
+    vsub_cycle_vv(VR(vd.i + 2), VR(vs2.i + 2), VR(vs1.i + 2)).action;
+    vsub_cycle_vv(VR(vd.i + 3), VR(vs2.i + 3), VR(vs1.i + 3)).action;
+  }
+
+op vsetvli(rd: X, rs1: X, elements: card(3), vlmul: card(2))
+  init = {
+    v_funct6 = 0b1010111;
+    v_funct5 = 0b00000; // TODO:
+    v_funct3 = 0b111;
+  }
+  syntax = format("vsetvli %s, %s, %s, %s", rd.syntax, rs1.syntax, "e32", "m4") // TODO: zimm[10:0]
+  image  = format("0%5s%2s%3s%5s%3s%5s%7s",
+                 v_funct5, vlmul, elements, rs1.image, v_funct3, rd.image, coerce(card(7), OP_V))
+  action = {
+    VTYPE_VSEW  = elements;
+    VTYPE_VLMUL = vlmul;
+    rd = VTYPE_CSR;
+    VL_CSR = 0b100000; // TODO: VL_CSR = rs1 (AVL)
+  }
+
+op rv32v = vadd
+         | vsub
+         | vsetvli
+
+/*
 op vadd(vd: VR, vs1: VR, vs2: VR)
   init = {
     func7_0 = 0b1000;
@@ -972,7 +1071,7 @@ op rv32v = vadd
          | vamoxor
          | vamomin
          | vamomax
-
+      */
 //==================================================================================================
 // The End
 //==================================================================================================

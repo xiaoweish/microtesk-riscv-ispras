@@ -183,6 +183,13 @@ class RiscVBaseTemplate < Template
       fmv_w_x target, sp
     }
 
+    ################################################################################################
+
+    #
+    # The code below specifies instruction sequences that write values
+    # to the specified register (target) via the VR addressing mode.
+    #
+
     preparator(:target => 'VR') {
     }
 
@@ -242,6 +249,8 @@ class RiscVBaseTemplate < Template
 
       bne sp, x31, :fail
     }
+
+    ################################################################################################
 
     # The code below specifies a comparator sequence to be used in self-checking tests
     # to test values in the specified register (target) accessed via the VR addressing mode.

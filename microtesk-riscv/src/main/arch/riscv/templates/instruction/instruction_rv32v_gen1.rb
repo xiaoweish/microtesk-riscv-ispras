@@ -22,6 +22,27 @@ require_relative '../riscv_base'
 # This small tests for RV32V instructions.
 #
 class InstructionRV32VGEN1 < RiscVBaseTemplate
+  def initialize
+    super
+    # Enables marking all explicitly specified registers as used
+ #   set_option_value 'reserve-explicit', false
+  end
+
+  def TEST_DATA
+    data {
+      label :data
+      word rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999)
+      word rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999)
+      word rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999)
+      word rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999)
+      word rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999)
+      word rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999)
+      word rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999)
+      word rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999), rand(-9999, 9999)
+      label :end
+      space 1
+    }
+  end
 
   def run
     trace "RV32V instructions:"
@@ -35,14 +56,20 @@ class InstructionRV32VGEN1 < RiscVBaseTemplate
       vsetvli t0, a0, e32, m4
 
       #vadd vr(_), vr(_), vr(_)
-      
 
       trace "Test gen1:"
-      xxx_dist = dist(range(:value => ['vadd', 'vsub'], :bias => 100))
+      xxx_dist = dist(range(:value => ['vadd', 'vmul', 'vsub', 'vmulh', 'vdiv'], :bias => 100))
       define_op_group('xxx', xxx_dist)
 
       10.times {
         atomic {
+          la t1, :data
+          for i in 0..31
+            vlw vr(i), t1
+            trace "v%x = %x", i, VREG(i)
+            addi t1, t1, 4
+          end
+
           # Placeholder to return from an exception
           epilogue { nop }
           trace "10 vector instructions block:"
@@ -50,9 +77,25 @@ class InstructionRV32VGEN1 < RiscVBaseTemplate
           10.times {
             xxx vr(_), vr(_), vr(_)
           }
-        }.run
-      }
 
+          la t1, :end
+          for i in 0..31
+            vsw vr(i), t1
+            trace "v%x = %x", i, VREG(i)
+            addi t1, t1, 4
+          end
+        }.run
+
+        for j in 0..3
+        atomic {
+          la t1, :end
+          addi t1, t1, j*32
+          for i in 10..17
+            lw x(i), t1, 4*(i-10)
+          end
+        }.run
+        end
+      }
     end
   end
 

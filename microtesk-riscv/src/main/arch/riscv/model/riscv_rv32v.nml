@@ -123,11 +123,22 @@ let LMUL2 = 0b01
 let LMUL4 = 0b10
 let LMUL8 = 0b11
 
-var v_funct7[card(6)]
+let OPIVV = 0b000 // Source of scalar(s): vector-vector
+let OPFVV = 0b001
+let OPMVV = 0b010
+let OPIVI = 0b011
+let OPIVX = 0b100
+let OPFVF = 0b101
+let OPMVX = 0b110
+
+var v_funct7[card(7)]
 var v_funct6[card(6)]
 var v_funct5[card(5)]
 var v_funct3[card(3)]
 var v_vm[BIT] // Mask Encoding (p.22)
+
+var v_temp[card(32)]
+var v_long[LONG]
 
 //==================================================================================================
 // Registers
@@ -153,8 +164,6 @@ mode VR (i: card(5)) = VREG [i]
 
 let OP_V = 1010111 // The vector arithmetic instructions use a new major opcode
 
-let OPIVV = 000 // Source of scalar(s): vector-vector
-
 op vadd_cycle_vv(vd: VR, vs2: VR, vs1: VR)
   action = {
     vd = vs2 + vs1;
@@ -166,7 +175,7 @@ op vadd_cycle_vx(vd: VR, vs2: VR, rs1: X)
   }*/
 
 // Add vector-vector
-op vadd(vd: VR, vs1: VR, vs2: VR)
+op vadd(vd: VR, vs2: VR, vs1: VR)
   init = {
     v_funct6 = 0b000000;
     v_funct3 = coerce(card(3), OPIVV);
@@ -190,9 +199,8 @@ op vsub_cycle_vv(vd: VR, vs2: VR, vs1: VR)
     vd = vs2 - vs1;
   }
 
-  var temppp[card(32)]
 // Sub vector-vector
-op vsub(vd: VR, vs1: VR, vs2: VR)
+op vsub(vd: VR, vs2: VR, vs1: VR)
   init = {
     v_funct6 = 0b000010;
     v_funct3 = coerce(card(3), OPIVV);
@@ -227,8 +235,143 @@ op vsetvli(rd: X, rs1: X, elements: card(3), vlmul: card(2))
     VL_CSR = 0b100000; // TODO: VL_CSR = rs1 (AVL)
   }
 
+op vmul_cycle_vv_low(vd: VR, vs2: VR, vs1: VR)
+  action = {
+    v_long = coerce(LONG, coerce(INT, vs2) * coerce(INT, vs1));
+    vd<31..0> = v_long<31..0>;
+  }
+
+// Mul vector-vector
+op vmul(vd: VR, vs2: VR, vs1: VR)
+  init = {
+    v_funct6 = 0b100101;
+    v_funct3 = coerce(card(3), OPIVV);
+    v_vm = 1;
+    assert(vs1.i%4 == 0);
+    assert(vs2.i%4 == 0);
+    assert(vd.i%4 == 0);
+  }
+  syntax = format("vmul.vv %s, %s, %s", vd.syntax, vs2.syntax, vs1.syntax)
+  image  = format("%6s%1s%5s%5s%3s%5s%7s",
+                 v_funct6, v_vm, vs2.image, vs1.image, v_funct3, vd.image, coerce(card(7), OP_V))
+  action = {
+    vmul_cycle_vv_low(VR(vd.i), VR(vs2.i), VR(vs1.i)).action;
+    vmul_cycle_vv_low(VR(vd.i + 1), VR(vs2.i + 1), VR(vs1.i + 1)).action;
+    vmul_cycle_vv_low(VR(vd.i + 2), VR(vs2.i + 2), VR(vs1.i + 2)).action;
+    vmul_cycle_vv_low(VR(vd.i + 3), VR(vs2.i + 3), VR(vs1.i + 3)).action;
+  }
+
+op vmulh_cycle_vv_low(vd: VR, vs2: VR, vs1: VR)
+  action = {
+    v_long = coerce(LONG, coerce(INT, vs2) * coerce(INT, vs1));
+    vd<31..0> = v_long<63..32>;
+  }
+
+// Mulh vector-vector
+op vmulh(vd: VR, vs2: VR, vs1: VR)
+  init = {
+    v_funct6 = 0b100111;
+    v_funct3 = coerce(card(3), OPIVV);
+    v_vm = 1;
+    assert(vs1.i%4 == 0);
+    assert(vs2.i%4 == 0);
+    assert(vd.i%4 == 0);
+  }
+  syntax = format("vmulh.vv %s, %s, %s", vd.syntax, vs2.syntax, vs1.syntax)
+  image  = format("%6s%1s%5s%5s%3s%5s%7s",
+                 v_funct6, v_vm, vs2.image, vs1.image, v_funct3, vd.image, coerce(card(7), OP_V))
+  action = {
+    vmulh_cycle_vv_low(VR(vd.i), VR(vs2.i), VR(vs1.i)).action;
+    vmulh_cycle_vv_low(VR(vd.i + 1), VR(vs2.i + 1), VR(vs1.i + 1)).action;
+    vmulh_cycle_vv_low(VR(vd.i + 2), VR(vs2.i + 2), VR(vs1.i + 2)).action;
+    vmulh_cycle_vv_low(VR(vd.i + 3), VR(vs2.i + 3), VR(vs1.i + 3)).action;
+  }
+
+op vdiv_cycle_vv(vd: VR, vs2: VR, vs1: VR)
+  action = {
+    if vs1 == 0 then
+      vd = -1;
+    elif vs2 == 1 << (VLEN - 1) && vs1 == -1 then
+      vd = vs2;
+    else
+      vd = cast(INT, vs2) / cast(INT, vs1); // TODO:
+    endif;
+  }
+
+// Div vector-vector
+op vdiv(vd: VR, vs2: VR, vs1: VR)
+  init = {
+    v_funct6 = 0b100001;
+    v_funct3 = coerce(card(3), OPIVV);
+    v_vm = 1;
+    assert(vs1.i%4 == 0);
+    assert(vs2.i%4 == 0);
+    assert(vd.i%4 == 0);
+  }
+  syntax = format("vdiv.vv %s, %s, %s", vd.syntax, vs2.syntax, vs1.syntax)
+  image  = format("%6s%1s%5s%5s%3s%5s%7s",
+                 v_funct6, v_vm, vs2.image, vs1.image, v_funct3, vd.image, coerce(card(7), OP_V))
+  action = {
+    vdiv_cycle_vv(VR(vd.i), VR(vs2.i), VR(vs1.i)).action;
+    vdiv_cycle_vv(VR(vd.i + 1), VR(vs2.i + 1), VR(vs1.i + 1)).action;
+    vdiv_cycle_vv(VR(vd.i + 2), VR(vs2.i + 2), VR(vs1.i + 2)).action;
+    vdiv_cycle_vv(VR(vd.i + 3), VR(vs2.i + 3), VR(vs1.i + 3)).action;
+  }
+
+let VXW = 0b110
+let VLx_MOP = 0b100
+let VSx_MOP = 0b000
+
+var v_lumop[card(5)]
+var v_sumop[card(5)]
+var v_mop[card(3)]
+var v_nf[card(3)]
+
+// Vector Load Word
+op vlw(vd: VR, rs1: X)
+  init = {
+    v_funct7 = 0b0000111;
+    v_funct3 = coerce(card(3), VXW);
+    v_vm = 1;
+    v_lumop = 0b00000; //unit-stride
+    v_mop = coerce(card(3), VLx_MOP);
+    v_nf = 0b000; // NFIELDS = 1
+  }
+  syntax = format("vlw.v %s, %s", vd.syntax, rs1.syntax)
+  image  = format("%3s%3s%1s%5s%5s%3s%5s%7s",
+                 v_nf, v_mop, v_vm, v_lumop, rs1.image, v_funct3, vd.image, v_funct7)
+  action = {
+    tmp_address = rs1;
+    load_global(tmp_address, MEM_WORD, SIGN_EXTEND_VALUE).action; // return rd_var
+    vd = rd_var;
+  }
+
+// Vector Store Word
+op vsw(vs3: VR, rs1: X)
+  init = {
+    v_funct7 = 0b0100111;
+    v_funct3 = coerce(card(3), VXW);
+    v_vm = 1;
+    v_sumop = 0b00000; //unit-stride
+    v_mop = coerce(card(3), VSx_MOP);
+    v_nf = 0b000; // NFIELDS = 1
+  }
+  syntax = format("vsw.v %s, %s", vs3.syntax, rs1.syntax)
+  image  = format("%3s%3s%1s%5s%5s%3s%5s%7s",
+                 v_nf, v_mop, v_vm, v_lumop, rs1.image, v_funct3, vs3.image, v_funct7)
+  action = {
+    tmp_address = rs1;
+    rs2_var = vs3;
+    store_global(tmp_address, rs2_var, MEM_WORD).action;
+  }
+
 op rv32v = vadd
          | vsub
+         | vmul
+         | vmulh
+         | vdiv
+         | vlw
+         | vsw
          | vsetvli
 
 /*

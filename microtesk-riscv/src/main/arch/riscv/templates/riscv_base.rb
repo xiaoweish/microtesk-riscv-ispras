@@ -183,6 +183,9 @@ class RiscVBaseTemplate < Template
       fmv_w_x target, sp
     }
 
+    preparator(:target => 'VR') {
+    }
+
     ################################################################################################
 
     #
@@ -238,6 +241,13 @@ class RiscVBaseTemplate < Template
       end
 
       bne sp, x31, :fail
+    }
+
+    # The code below specifies a comparator sequence to be used in self-checking tests
+    # to test values in the specified register (target) accessed via the VR addressing mode.
+
+    comparator(:target => 'VR') {
+      # Empty
     }
 
     ################################################################################################

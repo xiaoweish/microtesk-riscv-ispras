@@ -343,7 +343,7 @@ op vlw(vd: VR, rs1: X)
   action = {
     tmp_address = rs1;
     load_global(tmp_address, MEM_WORD, SIGN_EXTEND_VALUE).action; // return rd_var
-    vd = rd_var;
+    vd = rd_var<31..0>;
   }
 
 // Vector Store Word
@@ -361,7 +361,7 @@ op vsw(vs3: VR, rs1: X)
                  v_nf, v_mop, v_vm, v_lumop, rs1.image, v_funct3, vs3.image, v_funct7)
   action = {
     tmp_address = rs1;
-    rs2_var = vs3;
+    rs2_var<31..0> = vs3;
     store_global(tmp_address, rs2_var, MEM_WORD).action;
   }
 

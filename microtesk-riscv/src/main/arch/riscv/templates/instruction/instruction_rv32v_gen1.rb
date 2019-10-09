@@ -25,7 +25,7 @@ class InstructionRV32VGEN1 < RiscVBaseTemplate
   def initialize
     super
     # Enables marking all explicitly specified registers as used
- #   set_option_value 'reserve-explicit', false
+    set_option_value 'reserve-explicit', false
   end
 
   def TEST_DATA

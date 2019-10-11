@@ -1,0 +1,1 @@
+cat *.nml | sed 's|/\*|\n&|g;s|*/|&\n|g' | sed '/\/\*/,/*\//d' | sed '/\/\/.*$/d' | sed '/^\s*$/d' > "total.nml"

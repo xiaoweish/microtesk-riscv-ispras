@@ -337,7 +337,7 @@ op vlw(vd: VR, rs1: X)
     v_mop = coerce(card(3), VLx_MOP);
     v_nf = 0b000; // NFIELDS = 1
   }
-  syntax = format("vlw.v %s, %s", vd.syntax, rs1.syntax)
+  syntax = format("vlw.v %s, (%s)", vd.syntax, rs1.syntax)
   image  = format("%3s%3s%1s%5s%5s%3s%5s%7s",
                  v_nf, v_mop, v_vm, v_lumop, rs1.image, v_funct3, vd.image, v_funct7)
   action = {
@@ -356,7 +356,7 @@ op vsw(vs3: VR, rs1: X)
     v_mop = coerce(card(3), VSx_MOP);
     v_nf = 0b000; // NFIELDS = 1
   }
-  syntax = format("vsw.v %s, %s", vs3.syntax, rs1.syntax)
+  syntax = format("vsw.v %s, (%s)", vs3.syntax, rs1.syntax)
   image  = format("%3s%3s%1s%5s%5s%3s%5s%7s",
                  v_nf, v_mop, v_vm, v_lumop, rs1.image, v_funct3, vs3.image, v_funct7)
   action = {
@@ -364,6 +364,26 @@ op vsw(vs3: VR, rs1: X)
     rs2_var<31..0> = vs3;
     store_global(tmp_address, rs2_var, MEM_WORD).action;
   }
+
+// vlsseg3b.v v4, (x5), x6
+// vlsseg<nf>{b,h,w}.v vd, (rs1), rs2, vm # Strided signed segment loads
+
+// Vector Strided Segment Loads and Stores
+// load 4 word
+/*op vlsseg4w(vd: VR, rs1: X, rs1: X)
+  init = {
+    v_funct7 = 0b0000111;
+    v_funct3 = coerce(card(3), VXW);
+    v_vm = 1;
+    v_lumop = 0b00000; //unit-stride
+    v_mop = coerce(card(3), VLx_MOP);
+    v_nf = 0b000; // NFIELDS = 1
+  }
+  syntax = format("vlsseg4w.v %s, %s", vd.syntax, rs1.syntax)
+  image  = format("%3s%3s%1s%5s%5s%3s%5s%7s",
+                 v_nf, v_mop, v_vm, v_lumop, rs1.image, v_funct3, vd.image, v_funct7)
+  action = {
+  }*/
 
 op rv32v = vadd
          | vsub

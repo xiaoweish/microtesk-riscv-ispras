@@ -268,6 +268,7 @@ label :write_tohost
 #    sw_global TESTNUM(), :tohost, t5
 # TODO: remove the nops when the above line is fixed.
     nop
+    text "sw gp, tohost, t5" # TODO: Fix me!!11
     nop
     j :write_tohost
 
@@ -369,16 +370,32 @@ label 1
 #     }
 #     # .popsection
 
+
     data {
+      text '.align 4'
+      # TODO: Fix me!
+      text '.pushsection .tohost,"aw",@progbits'
+      text '.align 8; .global tohost; tohost: .dword 0;'
+      text '.align 8; .global fromhost; fromhost: .dword 0;'
+      text '.popsection;'
+      # TODO: end Fix me!
+
       align 4
-global_label :begin_signature
+      global_label :begin_signature
     }
   end
 
   def RVTEST_DATA_END
     data {
       align 4
-global_label :end_signature
+      global_label :end_signature
+
+      # TODO: Fix me!
+      text '.align 8; .global begin_regstate; begin_regstate:'
+      text '.word 128;'
+      text '.align 8; .global end_regstate; end_regstate:'
+      text '.word 4;'
+      # TODO: end Fix me!
     }
   end
 

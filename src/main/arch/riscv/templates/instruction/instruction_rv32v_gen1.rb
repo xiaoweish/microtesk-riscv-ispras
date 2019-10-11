@@ -58,9 +58,11 @@ class InstructionRV32VGEN1 < RiscVBaseTemplate
       #vadd vr(_), vr(_), vr(_)
 
       trace "Test gen1:"
-      xxx_dist = dist(range(:value => ['vadd', 'vmul', 'vsub', 'vmulh', 'vdiv'], :bias => 100))
+      # 'vadd', 'vmul', 'vsub', 'vmulh', 'vdiv'
+      xxx_dist = dist(range(:value => ['vadd', 'vmul', 'vsub', 'vdiv'], :bias => 100))
       define_op_group('xxx', xxx_dist)
 
+      cycle_for_times = 0
       10.times {
         atomic {
           la t1, :data
@@ -72,7 +74,7 @@ class InstructionRV32VGEN1 < RiscVBaseTemplate
 
           # Placeholder to return from an exception
           epilogue { nop }
-          trace "10 vector instructions block:"
+          trace "10 vector instructions block: %d cycle", cycle_for_times
           # Selects an instruction according to the 'xxx_dist' distribution
           10.times {
             xxx vr(_), vr(_), vr(_)
@@ -84,6 +86,7 @@ class InstructionRV32VGEN1 < RiscVBaseTemplate
             trace "v%x = %x", i, VREG(i)
             addi t1, t1, 4
           end
+          cycle_for_times = cycle_for_times + 1
         }.run
 
         for j in 0..3

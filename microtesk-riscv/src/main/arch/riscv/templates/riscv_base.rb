@@ -214,6 +214,7 @@ class RiscVBaseTemplate < Template
     #
     comparator(:target => 'X') {
       prepare sp, value
+      trace "%x = %x", 2, XREG(2)
       bne sp, target, :fail
     }
 

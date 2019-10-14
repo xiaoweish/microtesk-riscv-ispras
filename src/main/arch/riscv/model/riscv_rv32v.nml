@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 ISP RAS (http://www.ispras.ru)
+ * Copyright 2018-2019 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -327,7 +327,13 @@ var v_sumop[card(5)]
 var v_mop[card(3)]
 var v_nf[card(3)]
 
-// Vector Load Word
+op vlw_stride(vd: VR, tmp_address_op: XWORD, load_type: card(4), sign_type: BIT)
+  action = {
+    load_global(tmp_address_op, MEM_WORD, SIGN_EXTEND_VALUE).action; // return rd_var
+    vd = rd_var<31..0>;
+  }
+
+// Vector unit-stride Load Word
 op vlw(vd: VR, rs1: X)
   init = {
     v_funct7 = 0b0000111;
@@ -342,11 +348,19 @@ op vlw(vd: VR, rs1: X)
                  v_nf, v_mop, v_vm, v_lumop, rs1.image, v_funct3, vd.image, v_funct7)
   action = {
     tmp_address = rs1;
-    load_global(tmp_address, MEM_WORD, SIGN_EXTEND_VALUE).action; // return rd_var
-    vd = rd_var<31..0>;
+    vlw_stride(vd, tmp_address, MEM_WORD, SIGN_EXTEND_VALUE).action;
+    vlw_stride(VR(vd.i + 1), tmp_address + coerce(XWORD, 4), MEM_WORD, SIGN_EXTEND_VALUE).action;
+    vlw_stride(VR(vd.i + 2), tmp_address + coerce(XWORD, 8), MEM_WORD, SIGN_EXTEND_VALUE).action;
+    vlw_stride(VR(vd.i + 3), tmp_address + coerce(XWORD, 12), MEM_WORD, SIGN_EXTEND_VALUE).action;
   }
 
-// Vector Store Word
+op vsw_stride(vs3: VR, tmp_address_op: XWORD, load_type: card(4))
+  action = {
+    rs2_var<31..0> = vs3;
+    store_global(tmp_address_op, rs2_var, load_type).action;
+  }
+
+// Vector unit-stride Store Word
 op vsw(vs3: VR, rs1: X)
   init = {
     v_funct7 = 0b0100111;
@@ -361,8 +375,10 @@ op vsw(vs3: VR, rs1: X)
                  v_nf, v_mop, v_vm, v_lumop, rs1.image, v_funct3, vs3.image, v_funct7)
   action = {
     tmp_address = rs1;
-    rs2_var<31..0> = vs3;
-    store_global(tmp_address, rs2_var, MEM_WORD).action;
+    vsw_stride(vs3, tmp_address, MEM_WORD).action;
+    vsw_stride(VR(vs3.i + 1), tmp_address + coerce(XWORD, 4), MEM_WORD).action;
+    vsw_stride(VR(vs3.i + 2), tmp_address + coerce(XWORD, 8), MEM_WORD).action;
+    vsw_stride(VR(vs3.i + 3), tmp_address + coerce(XWORD, 12), MEM_WORD).action;
   }
 
 // vlsseg3b.v v4, (x5), x6

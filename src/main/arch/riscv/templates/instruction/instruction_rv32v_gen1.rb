@@ -74,10 +74,13 @@ class InstructionRV32VGEN1 < RiscVBaseTemplate
       10.times {
         atomic {
           la t1, :data
-          for i in 0..31
-            vlw vr(i), t1
-            trace "v%x = %x", i, VREG(i)
-            addi t1, t1, 4
+          for i in 0..7
+            vlw vr(i*4), t1
+            j = i*4;
+            for j1 in 0..3
+              trace "v%x = %x", j + j1, VREG(j + j1)
+            end
+            addi t1, t1, 4*4
           end
 
           # Placeholder to return from an exception
@@ -89,10 +92,13 @@ class InstructionRV32VGEN1 < RiscVBaseTemplate
           }
 
           la t1, :end
-          for i in 0..31
-            vsw vr(i), t1
-            trace "v%x = %x", i, VREG(i)
-            addi t1, t1, 4
+          for i in 0..7
+            vsw vr(i*4), t1
+            j = i*4;
+            for j1 in 0..3
+              trace "v%x = %x", j + j1, VREG(j + j1)
+            end
+            addi t1, t1, 4*4
           end
           cycle_for_times = cycle_for_times + 1
         }.run

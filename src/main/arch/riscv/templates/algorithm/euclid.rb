@@ -1,5 +1,5 @@
 #
-# Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
+# Copyright 2017-2019 ISP RAS (http://www.ispras.ru)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ require_relative '../riscv_base'
 class EuclidTemplate < RiscVBaseTemplate
 
   def run
-    trace "Euclidean Algorithm (RISCV): Debug Output"
+    trace "Euclidean algorithm: debug output"
 
     # Values from [1..63], zero is excluded because there is no solution
     val1 = rand(1, 63)

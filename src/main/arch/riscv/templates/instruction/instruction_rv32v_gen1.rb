@@ -67,7 +67,7 @@ class InstructionRV32VGEN1 < RiscVBaseTemplate
 
       trace "Test gen1:"
       # 'vadd', 'vmul', 'vsub', 'vmulh', 'vdiv'
-      xxx_dist = dist(range(:value => ['vadd', 'vmul', 'vsub', 'vdiv'], :bias => 100))
+      xxx_dist = dist(range(:value => ['vadd', 'vmul', 'vsub', 'vdiv', 'vmulh'], :bias => 100))
       define_op_group('xxx', xxx_dist)
 
       cycle_for_times = 0

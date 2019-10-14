@@ -263,7 +263,7 @@ op vmul(vd: VR, vs2: VR, vs1: VR)
 
 op vmulh_cycle_vv_low(vd: VR, vs2: VR, vs1: VR)
   action = {
-    v_long = coerce(LONG, coerce(INT, vs2) * coerce(INT, vs1));
+    v_long = sign_extend(LONG, vs2) * sign_extend(LONG, vs1);
     vd<31..0> = v_long<63..32>;
   }
 

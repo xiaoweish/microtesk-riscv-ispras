@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-require_relative '../riscv_base'
+require_relative '../../riscv_base'
 
 #
 # Description:
@@ -54,6 +54,7 @@ class InstructionX < RiscVBaseTemplate
       for j in 0..7
         atomic {
 
+        # Load test data
         la t0, :data
         lw t2, t0, 4*i
         la t1, :end
@@ -62,23 +63,29 @@ class InstructionX < RiscVBaseTemplate
         end
         vlw v28, t1
 
+        # Load test data
         la t1, :data
         addi t1, t1, 16*j
         vlw v8, t1
         vlw v12, t1
 
+        # Test sequence of instructions: 4
         xxx v0, v8, v28
         xxx v4, v28, v12
-        
+        xxx v8, v0, v4
+        xxx v12, v8, v28
+
+        # Save results to label_end: [0 .. 64] (16 registers: [v0 .. v15])
         la t1, :end
-        vsw v0, t1
-        addi t1, t1, 16
-        vsw v4, t1
+        for i2 in 0..3
+          vsw vr(4*i2), t1
+          addi t1, t1, 16
+        end
 
         # For self-check:
         la t1, :end
-        for i in 10..17
-          lw x(i), t1, 4*(i-10)
+        for i3 in 10..25
+          lw x(i3), t1, 4*(i3-10)
         end
 
        }.run

@@ -214,7 +214,6 @@ class RiscVBaseTemplate < Template
     #
     comparator(:target => 'X') {
       prepare sp, value
-      trace "%x = %x", 2, XREG(2)
       bne sp, target, :fail
     }
 
@@ -449,7 +448,6 @@ label :pass
       index = index + 1
       addr = addr + mem_shift
     }
-    trace ""
   end
 
   def trace_data(begin_label, end_label)

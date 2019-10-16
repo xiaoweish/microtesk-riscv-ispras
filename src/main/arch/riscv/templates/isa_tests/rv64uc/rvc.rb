@@ -93,7 +93,7 @@ label 1
     li sp, 0x1234
 
     RVC_TEST_CASE( 3, a0, 0x1234 + 1020 ) do
-      c_addi4spn a0, 1020
+      c_addi4spn a0c, 1020
     end
 
     RVC_TEST_CASE( 4, sp, 0x1234 + 496 ) do
@@ -106,18 +106,18 @@ label 1
 
     la a1, :data
     RVC_TEST_CASE( 6, a2, 0xfffffffffedcba99 ) do
-      c_lw a0, a1, 4
+      c_lw a0c, a1c, 4
       addi a0, a0, 1
-      c_sw a0, a1, 4
-      c_lw a2, a1, 4
+      c_sw a0c, a1c, 4
+      c_lw a2c, a1c, 4
     end
 
   if __riscv_xlen == 64
     RVC_TEST_CASE( 7, a2, 0xfedcba9976543211 ) do
-      c_ld a0, a1, 0
+      c_ld a0c, a1c, 0
       addi a0, a0, 1
-      c_sd a0, a1, 0
-      c_ld a2, a1, 0
+      c_sd a0c, a1c, 0
+      c_ld a2c, a1c, 0
     end
   end
 
@@ -140,61 +140,61 @@ label 1
 
     RVC_TEST_CASE( 11, s0, 0xffffffffffffffe1 ) do
       c_lui s0, 0xfffe1
-      c_srai s0, 12
+      c_srai s0c, 12
     end
 
   if __riscv_xlen == 64
     RVC_TEST_CASE( 12, s0, 0x000fffffffffffe1 ) do
       c_lui s0, 0xfffe1
-      c_srli s0, 12
+      c_srli s0c, 12
     end
   else
     RVC_TEST_CASE( 12, s0, 0x000fffe1 ) do
       c_lui s0, 0xfffe1
-      c_srli s0, 12
+      c_srli s0c, 12
     end
   end
 
     RVC_TEST_CASE( 14, s0, ~0x11 ) do
       c_li s0, -2
-      c_andi s0, ~0x10
+      c_andi s0c, ~0x10
     end
 
     RVC_TEST_CASE( 15, s1, 14 ) do
       li s1, 20
       li a0, 6
-      c_sub s1, a0
+      c_sub s1c, a0c
     end
 
     RVC_TEST_CASE( 16, s1, 18 ) do
       li s1, 20
       li a0, 6
-      c_xor s1, a0
+      c_xor s1c, a0c
     end
 
     RVC_TEST_CASE( 17, s1, 22 ) do
       li s1, 20
       li a0, 6
-      c_or s1, a0
+      c_or s1c, a0c
     end
 
     RVC_TEST_CASE( 18, s1,  4 ) do
       li s1, 20
       li a0, 6
-      c_and s1, a0
+      c_and s1c, a0c
     end
 
   if __riscv_xlen == 64
     RVC_TEST_CASE( 19, s1, 0xffffffff80000000 ) do
       li s1, 0x7fffffff
       li a0, -1
-      c_subw s1, a0
+      c_subw s1c, a0c
     end
 
     RVC_TEST_CASE( 20, s1, 0xffffffff80000000 ) do
       li s1, 0x7fffffff
       li a0, 1
-      c_addw s1, a0
+      c_addw s1c, a0c
     end
   end
 
@@ -216,7 +216,7 @@ label 1
 
     RVC_TEST_CASE( 31, x0, 0 ) do
       li a0, 0
-      c_beqz a0, label_f(1)
+      c_beqz a0c, label_f(1)
       c_j label_f(2)
 label 1
       c_j label_f(1)
@@ -227,7 +227,7 @@ label 1
 
     RVC_TEST_CASE( 32, x0, 0 ) do
       li a0, 1
-      c_bnez a0, label_f(1)
+      c_bnez a0c, label_f(1)
       c_j label_f(2)
 label 1
       c_j label_f(1)
@@ -238,7 +238,7 @@ label 1
 
     RVC_TEST_CASE( 33, x0, 0 ) do
       li a0, 1
-      c_beqz a0, label_f(1)
+      c_beqz a0c, label_f(1)
       c_j label_f(2)
 label 1
       c_j :fail
@@ -247,7 +247,7 @@ label 2
 
     RVC_TEST_CASE( 34, x0, 0 ) do
       li a0, 0
-      c_bnez a0, label_f(1)
+      c_bnez a0c, label_f(1)
       c_j label_f(2)
 label 1
       c_j :fail

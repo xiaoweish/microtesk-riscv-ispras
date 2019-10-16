@@ -44,6 +44,7 @@ class InstructionX < RiscVBaseTemplate
     e32 = 0b010 # standard element width = 32
     m4 = 0b10 # the number of vector registers in a group = 4
 
+    # VLEN = 32
     addi a0, zero, 0b100000
     vsetvli t0, a0, e32, m4
 

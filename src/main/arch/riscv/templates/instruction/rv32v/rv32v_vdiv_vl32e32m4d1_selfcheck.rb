@@ -14,15 +14,15 @@
 # limitations under the License.
 #
 
-require_relative 'instruction_x'
+require_relative 'rv32v_x_vl32e32m4d1_selfcheck'
 
 #
 # Description:
 #
-# This tests for vmul instruction.
+# This tests for vdiv instruction.
 #
-class InstructionVmul < InstructionX
+class InstructionVdiv < InstructionX
   def run
-    generate_simple_tests('vmul')
+    generate_simple_tests('vdiv')
   end
 end

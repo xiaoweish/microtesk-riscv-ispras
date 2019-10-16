@@ -162,9 +162,25 @@ mode VR (i: card(5)) = VREG [i]
 //let RV32V_SEC1 = 0b0000111 // RV32V Standard Extension (cont.) type 1
 //let RV32V_SEC2 = 0b0100111 // RV32V Standard Extension (cont.) type 2
 
-let OP_V = 1010111 // The vector arithmetic instructions use a new major opcode
+let OP_V = 0b1010111 // The vector arithmetic instructions use a new major opcode
 
-op vadd_cycle_vv(vd: VR, vs2: VR, vs1: VR)
+op vsetvli(rd: X, rs1: X, elements: card(3), vlmul: card(2))
+  init = {
+    v_funct6 = 0b1010111;
+    v_funct5 = 0b00000; // TODO:
+    v_funct3 = 0b111;
+  }
+  syntax = format("vsetvli %s, %s, %s, %s", rd.syntax, rs1.syntax, "e32", "m4") // TODO: zimm[10:0]
+  image  = format("0%5s%3s%2s%5s%3s%5s%7s",
+                 v_funct5, elements, vlmul, rs1.image, v_funct3, rd.image, coerce(card(7), OP_V))
+  action = {
+    VTYPE_VSEW  = elements;
+    VTYPE_VLMUL = vlmul;
+    rd = VTYPE_CSR;
+    VL_CSR = 0b100000; // TODO: VL_CSR = rs1 (AVL)
+  }
+
+internal op vadd_cycle_vv(vd: VR, vs2: VR, vs1: VR)
   action = {
     vd = vs2 + vs1;
   }
@@ -194,7 +210,7 @@ op vadd(vd: VR, vs2: VR, vs1: VR)
     vadd_cycle_vv(VR(vd.i + 3), VR(vs2.i + 3), VR(vs1.i + 3)).action;
   }
 
-op vsub_cycle_vv(vd: VR, vs2: VR, vs1: VR)
+internal op vsub_cycle_vv(vd: VR, vs2: VR, vs1: VR)
   action = {
     vd = vs2 - vs1;
   }
@@ -219,23 +235,7 @@ op vsub(vd: VR, vs2: VR, vs1: VR)
     vsub_cycle_vv(VR(vd.i + 3), VR(vs2.i + 3), VR(vs1.i + 3)).action;
   }
 
-op vsetvli(rd: X, rs1: X, elements: card(3), vlmul: card(2))
-  init = {
-    v_funct6 = 0b1010111;
-    v_funct5 = 0b00000; // TODO:
-    v_funct3 = 0b111;
-  }
-  syntax = format("vsetvli %s, %s, %s, %s", rd.syntax, rs1.syntax, "e32", "m4") // TODO: zimm[10:0]
-  image  = format("0%5s%2s%3s%5s%3s%5s%7s",
-                 v_funct5, vlmul, elements, rs1.image, v_funct3, rd.image, coerce(card(7), OP_V))
-  action = {
-    VTYPE_VSEW  = elements;
-    VTYPE_VLMUL = vlmul;
-    rd = VTYPE_CSR;
-    VL_CSR = 0b100000; // TODO: VL_CSR = rs1 (AVL)
-  }
-
-op vmul_cycle_vv_low(vd: VR, vs2: VR, vs1: VR)
+internal op vmul_cycle_vv_low(vd: VR, vs2: VR, vs1: VR)
   action = {
     v_long = coerce(LONG, coerce(INT, vs2) * coerce(INT, vs1));
     vd<31..0> = v_long<31..0>;
@@ -245,7 +245,7 @@ op vmul_cycle_vv_low(vd: VR, vs2: VR, vs1: VR)
 op vmul(vd: VR, vs2: VR, vs1: VR)
   init = {
     v_funct6 = 0b100101;
-    v_funct3 = coerce(card(3), OPIVV);
+    v_funct3 = coerce(card(3), OPMVV);
     v_vm = 1;
     assert(vs1.i%4 == 0);
     assert(vs2.i%4 == 0);
@@ -261,7 +261,7 @@ op vmul(vd: VR, vs2: VR, vs1: VR)
     vmul_cycle_vv_low(VR(vd.i + 3), VR(vs2.i + 3), VR(vs1.i + 3)).action;
   }
 
-op vmulh_cycle_vv_low(vd: VR, vs2: VR, vs1: VR)
+internal op vmulh_cycle_vv_low(vd: VR, vs2: VR, vs1: VR)
   action = {
     v_long = sign_extend(LONG, vs2) * sign_extend(LONG, vs1);
     vd<31..0> = v_long<63..32>;
@@ -271,7 +271,7 @@ op vmulh_cycle_vv_low(vd: VR, vs2: VR, vs1: VR)
 op vmulh(vd: VR, vs2: VR, vs1: VR)
   init = {
     v_funct6 = 0b100111;
-    v_funct3 = coerce(card(3), OPIVV);
+    v_funct3 = coerce(card(3), OPMVV);
     v_vm = 1;
     assert(vs1.i%4 == 0);
     assert(vs2.i%4 == 0);
@@ -287,7 +287,7 @@ op vmulh(vd: VR, vs2: VR, vs1: VR)
     vmulh_cycle_vv_low(VR(vd.i + 3), VR(vs2.i + 3), VR(vs1.i + 3)).action;
   }
 
-op vdiv_cycle_vv(vd: VR, vs2: VR, vs1: VR)
+internal op vdiv_cycle_vv(vd: VR, vs2: VR, vs1: VR)
   action = {
     if vs1 == 0 then
       vd = -1;
@@ -302,7 +302,7 @@ op vdiv_cycle_vv(vd: VR, vs2: VR, vs1: VR)
 op vdiv(vd: VR, vs2: VR, vs1: VR)
   init = {
     v_funct6 = 0b100001;
-    v_funct3 = coerce(card(3), OPIVV);
+    v_funct3 = coerce(card(3), OPMVV);
     v_vm = 1;
     assert(vs1.i%4 == 0);
     assert(vs2.i%4 == 0);
@@ -327,7 +327,7 @@ var v_sumop[card(5)]
 var v_mop[card(3)]
 var v_nf[card(3)]
 
-op vlw_stride(vd: VR, tmp_address_op: XWORD, load_type: card(4), sign_type: BIT)
+internal op vlw_stride(vd: VR, tmp_address_op: XWORD, load_type: card(4), sign_type: BIT)
   action = {
     load_global(tmp_address_op, MEM_WORD, SIGN_EXTEND_VALUE).action; // return rd_var
     vd = rd_var<31..0>;
@@ -354,7 +354,7 @@ op vlw(vd: VR, rs1: X)
     vlw_stride(VR(vd.i + 3), tmp_address + coerce(XWORD, 12), MEM_WORD, SIGN_EXTEND_VALUE).action;
   }
 
-op vsw_stride(vs3: VR, tmp_address_op: XWORD, load_type: card(4))
+internal op vsw_stride(vs3: VR, tmp_address_op: XWORD, load_type: card(4))
   action = {
     rs2_var<31..0> = vs3;
     store_global(tmp_address_op, rs2_var, load_type).action;

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-require_relative 'instruction_x'
+require_relative 'rv32v_x_vl32e32m4d1_selfcheck'
 
 #
 # Description:

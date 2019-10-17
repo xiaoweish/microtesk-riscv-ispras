@@ -47,9 +47,17 @@ class InstructionLdSdTemplate < RiscVBaseTemplate
     label :start
 
     trace "s0 = 0x%x", XREG(8)
-    sd t0, s0, 0x0
+    if is_rev('RV64I') then
+      sd t0, s0, 0x0
+    else
+      sw t0, s0, 0x0
+    end
     trace "t0 = 0x%x", XREG(5)
-    ld t1, s0, 0x0
+    if is_rev('RV64I') then
+      ld t1, s0, 0x0
+    else
+      lw t1, s0, 0x0
+    end
     trace "t1 = 0x%x", XREG(6)
 
     bne t0, t1, :report_error

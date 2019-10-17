@@ -53,11 +53,17 @@ label :testnum_label
       # The 'addr1' register is reserved from here.
       la addr1=x(_), :val_label
 
-      # The 'testnum' register is reserved from here.
-      ld testnum=x(_), addr1, 8
-      addi testnum, testnum, 1
-      sd testnum, addr1, 8
-      # The 'testnum' register is no longer reserved from here.
+      if is_rev('RV64I') then
+        # The 'testnum' register is reserved from here.
+        ld testnum=x(_), addr1, 8
+        addi testnum, testnum, 1
+        sd testnum, addr1, 8
+        # The 'testnum' register is no longer reserved from here.
+      else
+        lw testnum=x(_), addr1, 4
+        addi testnum, testnum, 1
+        sw testnum, addr1, 4
+      end
 
       # Some operations with random registers.
       # The value of the 'addr1' register is preserved.
@@ -67,7 +73,11 @@ label :testnum_label
       slt  x(_), x(_), x(_)
 
       # The 'val1' register is reserved from here.
-      ld val1=x(_), addr1, 0
+      if is_rev('RV64I') then
+        ld val1=x(_), addr1, 0
+      else
+        lw val1=x(_), addr1, 0
+      end
 
       # Some operations with random registers.
       # The value of the 'val1' register is preserved.
@@ -81,7 +91,11 @@ label :testnum_label
       beq val1, val2, :passed
 
       # Test fails if execution reaches here.
-      ld_global TESTNUM(), :testnum_label
+      if is_rev('RV64I') then
+        ld_global TESTNUM(), :testnum_label
+      else
+        lw_global TESTNUM(), :testnum_label
+      end
       RVTEST_FAIL()
 
 label :passed

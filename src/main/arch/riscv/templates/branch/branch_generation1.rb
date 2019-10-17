@@ -84,12 +84,20 @@ label :branch_data_3
       }
 
       read {
-        ld data_source, index_source, 0x0
+        if is_rev('RV64I') then
+          ld data_source, index_source, 0x0
+        else
+          lw data_source, index_source, 0x0
+        end
         addi index_source, index_source, 8
       }
 
       write {
-        sd data_source, index_source, 0x0
+        if is_rev('RV64I') then
+          sd data_source, index_source, 0x0
+        else
+          sw data_source, index_source, 0x0
+        end
         addi index_source, index_source, 8
       }
     }

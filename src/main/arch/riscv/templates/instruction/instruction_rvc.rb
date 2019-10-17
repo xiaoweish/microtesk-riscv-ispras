@@ -38,17 +38,24 @@ class InstructionRVC < RiscVBaseTemplate
     c_addi4spn s1c, 4
 
     la a3, :data
-    #c_flw fa2, a3, :data
-    c_fld fa2c, a3c, :data
-    #c_fsw fa2, a3, :data
-    c_fsd fa2c, a3c, :data
+    if is_rev('RV64C') then
+      c_fld fa2c, a3c, :data
+      c_fsd fa2c, a3c, :data
+    else
+      c_flw fa2c, a3c, :data
+      c_fsw fa2c, a3c, :data
+    end
 
     c_sw a3c, a3c, :data
-    c_sd a3c, a3c, :data
+    if is_rev('RV64C') then
+      c_sd a3c, a3c, :data
+    end
 
     c_nop
     c_addi a0, 4
-    c_addiw a0, 8
+    if is_rev('RV64C') then
+      c_addiw a0, 8
+    end
     #c_addi16sp 4
     c_li a0, 8
     c_lui a0, 4
@@ -58,13 +65,17 @@ class InstructionRVC < RiscVBaseTemplate
 
     la sp, :data
     c_lwsp a0, 0
-    c_ldsp a0, 0
     c_swsp a3, 0
-    c_sdsp a3, 0
+    if is_rev('RV64C') then
+      c_ldsp a0, 0
+      c_sdsp a3, 0
+    end
 
     la a3, :data
     c_lw a0c, a3c, :data
-    c_ld a0c, a3c, :data
+    if is_rev('RV64C') then
+      c_ld a0c, a3c, :data
+    end
 
     c_andi a0c, _
 
@@ -74,8 +85,10 @@ class InstructionRVC < RiscVBaseTemplate
     c_xor a0c, a0c
     c_sub a0c, a0c
     c_and a0c, a0c
-    c_addw a0c, a0c
-    c_subw a0c, a0c
+    if is_rev('RV64C') then
+      c_addw a0c, a0c
+      c_subw a0c, a0c
+    end
 
     c_j :c_j_label
     c_nop

@@ -49,9 +49,15 @@ label :testnum_label
 
       # Sets up the current TESTNUM() value.
       la addr=x(_), :testnum_label
-      ld TESTNUM(), addr, 0
-      addi TESTNUM(), TESTNUM(), 1
-      sd TESTNUM(), addr, 0
+      if is_rev('RV64I') then
+        ld TESTNUM(), addr, 0
+        addi TESTNUM(), TESTNUM(), 1
+        sd TESTNUM(), addr, 0
+      else
+        lw TESTNUM(), addr, 0
+        addi TESTNUM(), TESTNUM(), 1
+        sw TESTNUM(), addr, 0
+      end
 
       # The 'addr1' register is reserved from here.
       la addr1=x(_ :reserved => true), :val_label
@@ -64,7 +70,11 @@ label :testnum_label
       slt  x(_), x(_), x(_)
 
       # The 'val1' register is reserved from here.
-      ld val1=x(_ :reserved => true), addr1, 0
+      if is_rev('RV64I') then
+        ld val1=x(_ :reserved => true), addr1, 0
+      else
+        lw val1=x(_ :reserved => true), addr1, 0
+      end
 
       # The 'addr1' register is unreserved from here.
       set_reserved addr1, false

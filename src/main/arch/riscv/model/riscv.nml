@@ -859,7 +859,7 @@ op Op =             rv32i // 37 + 16
       | @rev(RV64F) rv64f // 4
       | @rev(RV64D) rv64d // 6
 
-@rev(RV64C)
+@rev(RV32C)
 op Op16 =           rvc // 28/49
 // Pseudo +15
 // Total: (47+77+32)+(36+3+3)+15 + v56 = 213 + (v56)
@@ -877,7 +877,7 @@ op instruction(operation: Op)
     endif;
   }
 
-@rev(RV64C)
+@rev(RV32C)
 op instruction16(operation: Op16)
   syntax = operation.syntax
   image  = operation.image

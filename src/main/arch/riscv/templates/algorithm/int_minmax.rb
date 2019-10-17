@@ -1,5 +1,5 @@
 #
-# Copyright 2017-2018 ISP RAS (http://www.ispras.ru)
+# Copyright 2017-2019 ISP RAS (http://www.ispras.ru)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ require_relative '../riscv_base'
 # The generated program finds minimum and maximum in a 5-element array
 # storing random numbers from 0 to 31.
 #
-class MinMaxTemplate < RiscVBaseTemplate
+class IntMinMaxTemplate < RiscVBaseTemplate
 
   def TEST_DATA
     data {

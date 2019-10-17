@@ -1,10 +1,10 @@
-TESTS = bubble_sort_byte\
-        bubble_sort_hword\
-        bubble_sort_word\
-        euclid\
+TESTS = bubblesort_byte\
+        bubblesort_hword\
+        bubblesort_word\
+        int_euclid\
         int_divide\
         int_sqrt\
-        min_max
+        int_minmax
 
 all: $(TESTS)
 

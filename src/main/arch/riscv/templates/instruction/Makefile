@@ -8,6 +8,7 @@ TESTS = instruction_la\
         instruction_rv32f\
         instruction_rv32i\
         instruction_rv32m\
+        instruction_rv32v_gen1\
         instruction_rv64a\
         instruction_rv64d\
         instruction_rv64f\

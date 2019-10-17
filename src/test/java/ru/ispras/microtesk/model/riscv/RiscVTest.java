@@ -384,7 +384,7 @@ public class RiscVTest extends TemplateTest {
     final String spikeLog = insertExt(image.getAbsolutePath(), "-spike.log");
 
     final String[] shellSpikeArgs = new String[] {
-        "-c", String.format("%s -l --isa=rv64gc %s %s &>%s",
+        "-c", String.format("%s -l --isa=rv64imafdcv -p1 %s %s &>%s",
         spike,
         getPkPath(),
         image.getAbsolutePath(),
@@ -458,7 +458,7 @@ public class RiscVTest extends TemplateTest {
         asm,
         true,
         program.getAbsolutePath(),
-        "-march=rv64imafdc",
+        "-march=rv64gcv",
         "-o",
         getOutOption(getNameNoExt(program), "o"));
 
@@ -467,7 +467,7 @@ public class RiscVTest extends TemplateTest {
           asm,
           true,
           file.getAbsolutePath(),
-          "-march=rv64imafdc",
+          "-march=rv64gcv",
           "-o",
           getOutOption(getNameNoExt(file), "o"));
     }

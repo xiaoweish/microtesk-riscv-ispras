@@ -30,16 +30,16 @@ module SeqFpmemRvc
       seq_fpmem_store_addrfn_sp_rvc(
           'C_FSDSP', :fregs_d,   rand_addr_d(memsize), _SLL(rand_range(0, 63), 3))
 
-      # seq_fpmem_load_addrfn_rvc(
+      # seq_fpmem_load_addrfn_rvc_c(
       #    'C_FLW',   :fregs_s_c, rand_addr_w(memsize), _SLL(rand_range(0, 31), 2))
 
-      seq_fpmem_load_addrfn_rvc(
+      seq_fpmem_load_addrfn_rvc_c(
           'C_FLD',   :fregs_d_c, rand_addr_d(memsize), _SLL(rand_range(0, 31), 3))
 
-      # seq_fpmem_store_addrfn_rvc(
+      # seq_fpmem_store_addrfn_rvc_c(
       #    'C_FSW',   :fregs_s_c, rand_addr_w(memsize), _SLL(rand_range(0, 31), 2))
 
-      seq_fpmem_store_addrfn_rvc(
+      seq_fpmem_store_addrfn_rvc_c(
           'C_FSD',   :fregs_d_c, rand_addr_d(memsize), _SLL(rand_range(0, 31), 3))
     }
   end
@@ -66,13 +66,23 @@ module SeqFpmemRvc
     }
   end
 
-  def seq_fpmem_load_addrfn_rvc(op, fregpool, addr, imm)
+  def seq_fpmem_load_addrfn_rvc(op, addr, imm)
     reg_addr = reg_write_hidden(:xregs_c)
     reg_dest = reg_write_visible(fregpool)
 
     sequence {
       lla reg_addr, :test_memory, _SUB(addr, imm)
-      instr op, reg_dest, reg_addr, imm
+      instr op, reg_dest, to_cx(reg_addr), imm
+    }
+  end
+
+  def seq_fpmem_load_addrfn_rvc_c(op, fregpool_c, addr, imm)
+    reg_addr = reg_write_hidden(:xregs_c)
+    reg_dest = reg_write_visible(fregpool_c)
+
+    sequence {
+      lla reg_addr, :test_memory, _SUB(addr, imm)
+      instr op, to_cf(reg_dest), to_cx(reg_addr), imm
     }
   end
 
@@ -82,7 +92,17 @@ module SeqFpmemRvc
 
     sequence {
       lla reg_addr, :test_memory, _SUB(addr, imm)
-      instr op, reg_src, reg_addr, imm
+      instr op, reg_src, to_cx(reg_addr), imm
+    }
+  end
+
+  def seq_fpmem_store_addrfn_rvc_c(op, fregpool_c, addr, imm)
+    reg_addr = reg_write_hidden(:xregs_c)
+    reg_src = reg_read_visible(fregpool_c)
+
+    sequence {
+      lla reg_addr, :test_memory, _SUB(addr, imm)
+      instr op, to_cf(reg_src), to_cx(reg_addr), imm
     }
   end
 

@@ -72,7 +72,7 @@ module SeqAluRvc
   end
 
   def seq_alu_rvc_addi16sp()
-    c_addi4spn reg_write_hidden(:xregs_c), _SLL(rand_range(1, 255), 2)
+    c_addi4spn to_cx(reg_write_hidden(:xregs_c)), _SLL(rand_range(1, 255), 2)
   end
 
   def seq_alu_rvc_immfn(op, imm)
@@ -86,7 +86,7 @@ module SeqAluRvc
     src = reg_read_any(:xregs_c)
     dest = reg_write(:xregs_c, src)
 
-    instr op, dest, imm
+    instr op, to_cx(dest), imm
   end
 
   def seq_alu_rvc_src(op)
@@ -111,7 +111,7 @@ module SeqAluRvc
     src = reg_read_any(:xregs_c)
     dest = reg_write(:xregs_c, src)
 
-    instr op, dest, src
+    instr op, to_cx(dest), to_cx(src)
   end
 
   def seq_alu_rvc_src_zero_c(op)
@@ -121,7 +121,7 @@ module SeqAluRvc
 
     atomic {
       addi tmp, reg_read_zero(:xregs), rand_imm
-      instr op, dest, tmp
+      instr op, to_cx(dest), to_cx(tmp)
     }
   end
 

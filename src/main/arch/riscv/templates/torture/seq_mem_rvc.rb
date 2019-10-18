@@ -60,7 +60,7 @@ module SeqMemRvc
 
     sequence {
       lla reg_addr, :test_memory, _SUB(addr, imm)
-      instr op, reg_dest, reg_addr, imm
+      instr op, to_cx(reg_dest), to_cx(reg_addr), imm
     }
   end
 
@@ -70,7 +70,7 @@ module SeqMemRvc
 
     sequence {
       lla reg_addr, :test_memory, _SUB(addr, imm)
-      instr op, reg_src, reg_addr, imm
+      instr op, to_cx(reg_src), to_cx(reg_addr), imm
     }
   end
 

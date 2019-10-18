@@ -99,6 +99,20 @@ module TortureRegs
     end
   end
 
+  # FIXME: Begin
+  def reg_num(reg)
+    reg.getArguments.get('i').getValue.getValue.to_i
+  end
+
+  def to_cx(reg_x)
+    cx(reg_num(reg_x) - 8)
+  end
+
+  def to_cf(reg_f)
+    cf(reg_num(reg_f) - 8)
+  end
+  # FIXME: End
+
   private
 
   def __XREGS_C(attrs)

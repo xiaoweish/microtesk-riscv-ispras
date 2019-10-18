@@ -60,7 +60,7 @@ module SeqBranchRvc
     reg_dst = reg_write_visible(:xregs_c)
     sequence {
       ori reg_dst, zero, rand_range(1, 63)
-      c_beqz reg_dst, CRASH_LABEL()
+      c_beqz to_cx(reg_dst), CRASH_LABEL()
     }
   end
 
@@ -68,7 +68,7 @@ module SeqBranchRvc
     reg_dst = reg_write_visible(:xregs_c)
     sequence {
       Or reg_dst, zero, zero
-      c_bnez reg_dst, CRASH_LABEL()
+      c_bnez to_cx(reg_dst), CRASH_LABEL()
     }
   end
 
@@ -77,7 +77,7 @@ module SeqBranchRvc
     block(:combinator => 'diagonal', :compositor => 'catenation') {
       Or reg_dst, zero, zero
       atomic {
-        c_beqz reg_dst, label_f(1)
+        c_beqz to_cx(reg_dst), label_f(1)
         ILLEGAL()
       }
     }
@@ -87,7 +87,7 @@ module SeqBranchRvc
     reg_dst = reg_write_visible(:xregs_c)
     sequence {
       Or reg_dst, zero, zero
-      c_bnez reg_dst, CRASH_LABEL()
+      c_bnez to_cx(reg_dst), CRASH_LABEL()
     }
   end
 
@@ -96,7 +96,7 @@ module SeqBranchRvc
     block(:combinator => 'diagonal', :compositor => 'catenation') {
       ori reg_dst, zero, rand_range(1, 63)
       atomic {
-        c_bnez reg_dst, label_f(1)
+        c_bnez to_cx(reg_dst), label_f(1)
         ILLEGAL()
       }
     }

@@ -1,5 +1,5 @@
 #
-# Copyright 2018 ISP RAS (http://www.ispras.ru)
+# Copyright 2018-2019 ISP RAS (http://www.ispras.ru)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ class TortureTemplate < RiscVBaseTemplate
   include TortureRegs
 
   # Configuration settings
-  NSEQS = 300
+  NSEQS = 100
   NMERGE = 20
   MEMSIZE = 1024
 
@@ -70,6 +70,7 @@ class TortureTemplate < RiscVBaseTemplate
     super
 
     set_option_value 'reserve-dependencies', true
+    set_option_value 'reserve-explicit', false
     set_option_value 'default-test-data', false
     set_option_value 'self-checks', false
   end

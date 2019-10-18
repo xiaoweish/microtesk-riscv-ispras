@@ -29,12 +29,20 @@
         <exclude item="31"/>
       </range>
     </mode>
+    <mode name="CX">
+      <strategy name="biased" free-bias="50" used-bias="50"/>
+      <range min="0" max="7"/>
+    </mode>
     <mode name="F">
       <strategy name="biased" free-bias="50" used-bias="50"/>
       <range min="0" max="31">
         <exclude item="0"/>
         <exclude item="31"/>
       </range>
+    </mode>
+    <mode name="CF">
+      <strategy name="biased" free-bias="50" used-bias="50"/>
+      <range min="0" max="7"/>
     </mode>
     <mode name="VR">
       <strategy name="biased" free-bias="50" used-bias="50"/>

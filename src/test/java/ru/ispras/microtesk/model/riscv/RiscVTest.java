@@ -295,8 +295,7 @@ public class RiscVTest extends TemplateTest {
       return;
     }
 
-    final File asm = getToolchainBinary("as");
-    final File linker = getToolchainBinary("ld");
+    final File compiler = getToolchainBinary("gcc");
 
     /* If toolchain is installed, loop on prefix-named test programs,
      * compile every test program, if it fails, throw error message. */
@@ -327,7 +326,7 @@ public class RiscVTest extends TemplateTest {
 
     for (final File program : tests) {
       skipRestPhases(false);
-      final File image = compile(program, auxFiles, asm, linker);
+      final File image = compile(program, auxFiles, compiler);
       emulate(image);
     }
   }
@@ -447,81 +446,32 @@ public class RiscVTest extends TemplateTest {
   private File compile(
       final File program,
       final Collection<File> auxFiles,
-      final File asm,
-      final File linker) {
+      final File compiler) {
 
     Logger.message(String.format("Start compilation of %s ...", program.getName()));
     setPhase(TestPhase.COMPILATION);
 
-    /* asm -> obj */
+    final List<String> args = new LinkedList<>();
+    args.add(program.getAbsolutePath());
+
+    for (final File auxFile : auxFiles) {
+      args.add(auxFile.getAbsolutePath());
+    }
+    args.add("-march=rv64gcv");
+    args.add("-nostdlib");
+    args.add("-nostartfiles");
+    args.add("-o");
+    args.add(getOutOption(getNameNoExt(program), "elf"));
+
     runCommand(
-        asm,
+        compiler,
         true,
-        program.getAbsolutePath(),
-        "-march=rv64gcv",
-        "-o",
-        getOutOption(getNameNoExt(program), "o"));
-
-    for (final File file : auxFiles) {
-      runCommand(
-          asm,
-          true,
-          file.getAbsolutePath(),
-          "-march=rv64gcv",
-          "-o",
-          getOutOption(getNameNoExt(file), "o"));
-    }
-
-    /* obj -> elf */
-    final String[] objPaths = getObjFiles(program, auxFiles);
-    final List<String> linkerArgs = new LinkedList<>();
-    Collections.addAll(linkerArgs, objPaths);
-
-    final String linkerScriptPath = getLinkerScript(new File(getTestDirPath()));
-    if (linkerScriptPath.length() > 0) {
-      linkerArgs.add("-T");
-      linkerArgs.add(linkerScriptPath);
-    } else {
-      linkerArgs.add("-Ttext");
-      linkerArgs.add("0x1000");
-    }
-
-    linkerArgs.add("-o");
-    linkerArgs.add(getOutOption(getNameNoExt(program), "elf"));
-    runCommand(linker, true, linkerArgs.toArray(new String[linkerArgs.size()]));
+        args.toArray(new String[0]));
 
     final File elfImage = new File(getElf(program));
 
     Logger.message("done.");
     return elfImage;
-  }
-
-  private String getLinkerScript(final File testDirPath) {
-
-    String path = "";
-
-    final File[] files = testDirPath.listFiles();
-    Assert.assertNotNull("No test programs are generated from this template.", files);
-
-    for (final File file : files) {
-
-      final String fileName = file.getName();
-      if (fileName.endsWith(LINKER_SCRIPT_EXT)) {
-        path = file.getPath();
-        break;
-      }
-    }
-
-    return path;
-  }
-
-  private String[] getObjFiles(final File program, final Collection<File> auxFiles) {
-
-    final List<File> files = new LinkedList<>();
-    files.add(program);
-    files.addAll(auxFiles);
-
-    return getFiles(".o", files.toArray(new File[files.size()]));
   }
 
   private String getElf(final File program) {

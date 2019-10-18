@@ -29,7 +29,7 @@ public final class RiscvEqDataGenerator extends RiscvBranchDataGenerator {
   public Iterator<TestData> generateThen(final TestBaseQuery query) {
     final long value = generateEqual(
         // rs1 is always unknown because it is chosen to be used as a stream register.
-        null, // getValue("rs1", query),
+        null,
         getValue("rs2", query));
     return generate(query, value, value);
   }
@@ -38,7 +38,7 @@ public final class RiscvEqDataGenerator extends RiscvBranchDataGenerator {
   public Iterator<TestData> generateElse(final TestBaseQuery query) {
     final Pair<Long, Long> values = generateDistinct(
         // rs1 is always unknown because it is chosen to be used as a stream register.
-        null, // getValue("rs1", query),
+        null,
         getValue("rs2", query));
     return generate(query, values.first, values.second);
   }

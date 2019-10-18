@@ -14,8 +14,6 @@
 
 package ru.ispras.microtesk.riscv.test.branch;
 
-import java.math.BigInteger;
-import ru.ispras.fortress.data.types.bitvector.BitVector;
 import ru.ispras.fortress.randomizer.Randomizer;
 import ru.ispras.testbase.TestBaseQuery;
 import ru.ispras.testbase.TestData;
@@ -27,37 +25,31 @@ import ru.ispras.testbase.knowledge.iterator.Iterator;
  * @author <a href="mailto:andrewt@ispras.ru">Andrei Tatarnikov</a>
  */
 public final class RiscvGeuDataGenerator extends RiscvBranchDataGenerator {
-  private static final BigInteger MAX = BigInteger.ONE.shiftLeft(64).subtract(BigInteger.ONE);
-
   @Override
   public Iterator<TestData> generateThen(final TestBaseQuery query) {
     // rs1 is always unknown because it is chosen to be used as a stream register.
-    // BitVector rs1BitVector = null; // getValueAsBitVector("rs1", query);
-    BitVector rs2BitVector = getValueAsBitVector("rs2", query);
+    Long rs1 = null;
+    Long rs2 = getValue("rs2", query);
 
-    final BigInteger rs2 = null != rs2BitVector
-        ? rs2BitVector.bigIntegerValue(false)
-        : Randomizer.get().nextBigIntegerRange(BigInteger.ZERO, MAX);
+    if (null == rs2) {
+      rs2 = Randomizer.get().nextLongRange(0, MAX_VALUE);
+    }
 
-    final BigInteger rs1 =
-        Randomizer.get().nextBigIntegerRange(rs2, MAX);
-
-    return generate(query, rs1.longValue(), rs2.longValue());
+    rs1 = Randomizer.get().nextLongRange(rs2, MAX_VALUE);
+    return generate(query, rs1, rs2);
   }
 
   @Override
   public Iterator<TestData> generateElse(final TestBaseQuery query) {
     // rs1 is always unknown because it is chosen to be used as a stream register.
-    // BitVector rs1BitVector = null; // getValueAsBitVector("rs1", query);
-    BitVector rs2BitVector = getValueAsBitVector("rs2", query);
+    Long rs1 = null;
+    Long rs2 = getValue("rs2", query);
 
-    final BigInteger rs2 = null != rs2BitVector
-        ? rs2BitVector.bigIntegerValue(false)
-        : Randomizer.get().nextBigIntegerRange(BigInteger.ONE, MAX);
+    if (null == rs2) {
+      rs2 = Randomizer.get().nextLongRange(1, MAX_VALUE);
+    }
 
-    final BigInteger rs1 =
-        Randomizer.get().nextBigIntegerRange(BigInteger.ZERO, rs2.subtract(BigInteger.ONE));
-
-    return generate(query, rs1.longValue(), rs2.longValue());
+    rs1 = Randomizer.get().nextLongRange(0, rs2 - 1);
+    return generate(query, rs1, rs2);
   }
 }

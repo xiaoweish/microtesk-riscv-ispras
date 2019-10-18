@@ -28,28 +28,28 @@ public final class RiscvGeDataGenerator extends RiscvBranchDataGenerator {
   @Override
   public Iterator<TestData> generateThen(final TestBaseQuery query) {
     // rs1 is always unknown because it is chosen to be used as a stream register.
-    Long rs1 = null; // getValue("rs1", query);
+    Long rs1 = null;
     Long rs2 = getValue("rs2", query);
 
     if (null == rs2) {
-      rs2 = Randomizer.get().nextLongRange(Long.MIN_VALUE, Long.MAX_VALUE);
+      rs2 = Randomizer.get().nextLongRange(MIN_VALUE, MAX_VALUE);
     }
 
-    rs1 = Randomizer.get().nextLongRange(rs2, Long.MAX_VALUE);
+    rs1 = Randomizer.get().nextLongRange(rs2, MAX_VALUE);
     return generate(query, rs1, rs2);
   }
 
   @Override
   public Iterator<TestData> generateElse(final TestBaseQuery query) {
     // rs1 is always unknown because it is chosen to be used as a stream register.
-    Long rs1 = null; // getValue("rs1", query);
+    Long rs1 = null;
     Long rs2 = getValue("rs2", query);
 
     if (null == rs2) {
-      rs2 = Randomizer.get().nextLongRange(Long.MIN_VALUE + 1, Long.MAX_VALUE);
+      rs2 = Randomizer.get().nextLongRange(MIN_VALUE + 1, MAX_VALUE);
     }
 
-    rs1 = Randomizer.get().nextLongRange(Long.MIN_VALUE, rs2 - 1);
+    rs1 = Randomizer.get().nextLongRange(MIN_VALUE, rs2 - 1);
     return generate(query, rs1, rs2);
   }
 }

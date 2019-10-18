@@ -38,21 +38,23 @@ import java.util.Map;
  * @author <a href="mailto:andrewt@ispras.ru">Andrei Tatarnikov</a>
  */
 public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
+  protected static final long MAX_VALUE = Integer.MAX_VALUE;
+  protected static final long MIN_VALUE = Integer.MIN_VALUE;
 
   protected static long positiveValue() {
-    return Randomizer.get().nextLongRange(1, Long.MAX_VALUE);
+    return Randomizer.get().nextLongRange(1, MAX_VALUE);
   }
 
   protected static long negativeValue() {
-    return Randomizer.get().nextLongRange(Long.MIN_VALUE, -1);
+    return Randomizer.get().nextLongRange(MIN_VALUE, -1);
   }
 
   protected static long nonPositiveValue() {
-    return Randomizer.get().nextLongRange(Long.MIN_VALUE, 0);
+    return Randomizer.get().nextLongRange(MIN_VALUE, 0);
   }
 
   protected static long nonNegativeValue() {
-    return Randomizer.get().nextLongRange(0, Long.MAX_VALUE);
+    return Randomizer.get().nextLongRange(0, MAX_VALUE);
   }
 
   protected static Long generateEqual(Long rs1, Long rs2) {
@@ -64,14 +66,14 @@ public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
       InvariantChecks.checkTrue(rs1.equals(rs2), "Incorrect values defined");
     }
     if (rs1 == null) {
-      return Randomizer.get().nextLong();
+      return Randomizer.get().nextLongRange(MIN_VALUE, MAX_VALUE);
     }
     return rs1;
   }
 
   protected static Pair<Long, Long> generateDistinct(Long rs1, Long rs2) {
     if (rs1 == null && rs2 == null) {
-      rs1 = Randomizer.get().nextLong();
+      rs1 = Randomizer.get().nextLongRange(MIN_VALUE, MAX_VALUE);
       rs2 = distinctValue(rs1);
     } else if (rs1 == null) {
       rs1 = distinctValue(rs2);
@@ -87,22 +89,12 @@ public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
   protected static long distinctValue(final long x) {
     long value = x;
     do {
-      value = Randomizer.get().nextLong();
+      value = Randomizer.get().nextLongRange(MIN_VALUE, MAX_VALUE);
     } while (value == x);
     return value;
   }
 
-  protected static Iterator<TestData> generate(final TestBaseQuery query, final long rs) {
-    final String op = getInstructionName(query);
-    return generate(query, Collections.singletonMap(op + ".rs", rs));
-  }
-
   protected static Long getValue(final String name, final TestBaseQuery query) {
-    final BitVector value = getValueAsBitVector(name, query);
-    return null != value ? value.longValue() : null;
-  }
-
-  protected static BitVector getValueAsBitVector(final String name, final TestBaseQuery query) {
     final String op = getInstructionName(query);
     final Node node = query.getBindings().get(op + "." + name);
 
@@ -111,15 +103,20 @@ public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
 
     if (ExprUtils.isValue(node)) {
       final NodeValue value = (NodeValue) node;
-      return value.getBitVector();
+      return value.getBitVector().longValue();
     }
 
     final NodeVariable var = (NodeVariable) node;
     if (var.getData().hasValue()) {
-      return var.getData().getValue(BitVector.class);
+      return var.getData().getValue(BitVector.class).longValue();
     }
 
     return null;
+  }
+
+  protected static Iterator<TestData> generate(final TestBaseQuery query, final long rs) {
+    final String op = getInstructionName(query);
+    return generate(query, Collections.singletonMap(op + ".rs", rs));
   }
 
   protected static Iterator<TestData> generate(

@@ -92,7 +92,7 @@ class BranchGenerationTemplate < RiscVBaseTemplate
         if is_rev('RV64I') then
           sd data_source, index_source, 0x0
         else
-          lw data_source, index_source, 0x0
+          sw data_source, index_source, 0x0
         end
         addi index_source, index_source, 8
       }

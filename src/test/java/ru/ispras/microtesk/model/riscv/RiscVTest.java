@@ -430,11 +430,6 @@ public class RiscVTest extends TemplateTest {
     Logger.message("done.");
   }
 
-  private static String getPkPath() {
-
-    return String.format("%s/%s/bin/pk", TCHAIN_PATH, TCHAIN_PREFIX);
-  }
-
   private static String compareResultFileName(final File first, final File second) {
     return String.format(
         "%s/%s-vs-%s.txt",

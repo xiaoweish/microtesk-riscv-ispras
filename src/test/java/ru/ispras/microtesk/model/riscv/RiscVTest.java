@@ -111,6 +111,8 @@ public class RiscVTest extends TemplateTest {
    */
   private static final String TCHAIN_PREFIX = "riscv64-unknown-linux-gnu";
 
+  private static final String LINKER_SCRIPT_EXT = "ld";
+
   /* QEMU for RISC-V parameters. */
 
   /**
@@ -378,9 +380,8 @@ public class RiscVTest extends TemplateTest {
     final String spikeLog = insertExt(image.getAbsolutePath(), "-spike.log");
 
     final String[] shellSpikeArgs = new String[] {
-        "-c", String.format("%s -l --isa=rv64imafdcv -p1 %s %s &>%s",
+        "-c", String.format("%s -l --isa=rv64imafdcv -p1 %s &>%s",
         spike,
-        getPkPath(),
         image.getAbsolutePath(),
         spikeLog)};
 
@@ -455,6 +456,16 @@ public class RiscVTest extends TemplateTest {
     args.add("-march=rv64gcv");
     args.add("-nostdlib");
     args.add("-nostartfiles");
+    final String linkerScriptPath = getLinkerScript(new File(getTestDirPath()));
+
+    if (linkerScriptPath.length() > 0) {
+      args.add("-T");
+      args.add(linkerScriptPath);
+    } else {
+
+      args.add("-Ttext");
+      args.add("0x1000");
+    }
     args.add("-o");
     args.add(getOutOption(getNameNoExt(program), "elf"));
 
@@ -467,6 +478,28 @@ public class RiscVTest extends TemplateTest {
 
     Logger.message("done.");
     return elfImage;
+  }
+
+  private String getLinkerScript(final File testDirPath) {
+
+    String path = "";
+
+    final File[] files = testDirPath.listFiles();
+
+    Assert.assertNotNull("No test programs are generated from this template.", files);
+
+    for (final File file : files) {
+
+      final String fileName = file.getName();
+
+      if (fileName.endsWith(LINKER_SCRIPT_EXT)) {
+
+        path = file.getPath();
+        break;
+      }
+    }
+
+    return path;
   }
 
   private String getElf(final File program) {
@@ -668,5 +701,4 @@ public class RiscVTest extends TemplateTest {
     }
     return false;
   }
-
 }

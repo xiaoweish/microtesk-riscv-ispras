@@ -94,11 +94,6 @@ public class RiscVTest extends TemplateTest {
    */
   private static final String EXT = "s";
 
-  /**
-   * Linker script file extension.
-   */
-  private static final String LINKER_SCRIPT_EXT = "ld";
-
   /* Toolchain parameters. */
 
   /**

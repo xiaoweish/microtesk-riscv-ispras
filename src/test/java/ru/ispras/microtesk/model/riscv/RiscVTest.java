@@ -385,7 +385,11 @@ public class RiscVTest extends TemplateTest {
         image.getAbsolutePath(),
         spikeLog)};
 
-    runCommand(SHELL, SPIKE_TIMEOUT_MILLIS, false, shellSpikeArgs);
+    final Collection<Integer> spikeRetValues = new LinkedList<>();
+    spikeRetValues.add(0);
+    spikeRetValues.add(156); // to mask "killed by test" situation
+
+    runCommand(SHELL, SPIKE_TIMEOUT_MILLIS, false, spikeRetValues, shellSpikeArgs);
     final File spikeLogFile = new File(spikeLog);
     if (!spikeLogFile.exists() || spikeLogFile.isDirectory()) {
       Assert.fail(

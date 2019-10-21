@@ -459,8 +459,7 @@ public class RiscVTest extends TemplateTest {
     final String linkerScriptPath = getLinkerScript(new File(getTestDirPath()));
 
     if (linkerScriptPath.length() > 0) {
-      args.add("-T");
-      args.add(linkerScriptPath);
+      args.add(String.format("-T%s", linkerScriptPath));
     } else {
 
       args.add("-Ttext");

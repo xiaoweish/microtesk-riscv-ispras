@@ -1,5 +1,5 @@
 Automatically Generated Test Templates
-=============================
+======================================
 
 ### About
 
@@ -10,4 +10,6 @@ on the basis of ISA formal specifications.
 
 To generate test programs for all test templates, run the following command:
 
-    make
+```
+$ make
+```

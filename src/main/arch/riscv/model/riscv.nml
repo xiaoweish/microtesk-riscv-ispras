@@ -197,6 +197,7 @@ mode X (i: card(5)) = XREG [i]
                         else "error" endif)
   image  = format("%5s", i)
 
+#ifdef RV32F
 // FP temporaries Caller
 mode FPTemporariesCaller (i: card(4))
   syntax = format("ft%d", i)
@@ -218,6 +219,7 @@ mode F (i: card(5)) = FPR[i]
                         elif i >= 28 && i <= 31 then FPTemporariesCaller(coerce(card(4), i-20)).syntax
                         else "error" endif)
   image  = format("%5s", i)
+#endif
 
 //==================================================================================================
 // Temporary Variables

@@ -165,6 +165,7 @@ class RiscVBaseTemplate < Template
     #
     # Preparator for double precision values.
     #
+    if is_rev('RV32F') then
     preparator(:target => 'F', :mask => 'XXXX_XXXX_XXXX_XXXX') {
       if is_rev('RV64D') then
         prepare sp, value(0, 63)
@@ -182,6 +183,7 @@ class RiscVBaseTemplate < Template
       prepare sp, value(0, 31)
       fmv_w_x target, sp
     }
+    end
 
     ################################################################################################
 
@@ -190,8 +192,10 @@ class RiscVBaseTemplate < Template
     # to the specified register (target) via the VR addressing mode.
     #
 
+    if is_rev('RV32V') then
     preparator(:target => 'VR') {
     }
+    end
 
     ################################################################################################
 
@@ -238,6 +242,7 @@ class RiscVBaseTemplate < Template
     # The code below specifies a comparator sequence to be used in self-checking tests
     # to test values in the specified register (target) accessed via the F addressing mode.
 
+    if is_rev('RV32F') then
     comparator(:target => 'F') {
       prepare sp, value
 
@@ -249,15 +254,18 @@ class RiscVBaseTemplate < Template
 
       bne sp, x31, :fail
     }
+    end
 
     ################################################################################################
 
     # The code below specifies a comparator sequence to be used in self-checking tests
     # to test values in the specified register (target) accessed via the VR addressing mode.
 
+    if is_rev('RV32V') then
     comparator(:target => 'VR') {
       # Empty
     }
+    end
 
     ################################################################################################
 
@@ -368,8 +376,8 @@ label :pass
   def ft11(&contents) F(31, &contents) end
 
   # Registers for Standard Extension for Compressed Instructions
-  def   s0c(&contents) CX(0,  &contents) end
-  def   s1c(&contents) CX(1,  &contents) end
+  def   s0c(&contents) CX(0, &contents) end
+  def   s1c(&contents) CX(1, &contents) end
   def   a0c(&contents) CX(2, &contents) end
   def   a1c(&contents) CX(3, &contents) end
   def   a2c(&contents) CX(4, &contents) end
@@ -377,8 +385,8 @@ label :pass
   def   a4c(&contents) CX(6, &contents) end
   def   a5c(&contents) CX(7, &contents) end
 
-  def  fs0c(&contents) CF(0,  &contents) end
-  def  fs1c(&contents) CF(1,  &contents) end
+  def  fs0c(&contents) CF(0, &contents) end
+  def  fs1c(&contents) CF(1, &contents) end
   def  fa0c(&contents) CF(2, &contents) end
   def  fa1c(&contents) CF(3, &contents) end
   def  fa2c(&contents) CF(4, &contents) end

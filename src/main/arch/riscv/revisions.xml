@@ -73,4 +73,9 @@
   <includes name="RV64"/>
   <excludes name="MEM_SV32"/>
  </revision>
+ <revision name="SCR1"/>
+  <includes name="RV32M"/>
+  <includes name="RV32C"/>
+  <includes name="RV32I"/>
+ </revision>
 </revisions>

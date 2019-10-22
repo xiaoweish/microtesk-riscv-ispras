@@ -47,7 +47,6 @@ mode DELTA = DELTA_LABEL | DELTA_IMM
   Format: la rd, symbol
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op la(rd: X, delta: DELTA)
   init   = { delta.init; }
   syntax = format("la %s, %s", rd.syntax, delta.syntax)
@@ -64,7 +63,6 @@ pseudo op la(rd: X, delta: DELTA)
   Format: lla rd, symbol + imm
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op lla(rd: X, delta: DELTA, imm: int(32))
   init   = { delta.init; }
   syntax = format("lla %s, %s%s%d", rd.syntax, delta.syntax, if imm >=0 then "+" else "" endif, imm)
@@ -79,7 +77,6 @@ pseudo op lla(rd: X, delta: DELTA, imm: int(32))
   Format: lb rd, symbol
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op lb_global(rd: X, delta: DELTA)
   init   = { delta.init; }
   syntax = format("lb %s, %s", rd.syntax, delta.syntax)
@@ -96,7 +93,6 @@ pseudo op lb_global(rd: X, delta: DELTA)
   Format: lh rd, symbol
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op lh_global(rd: X, delta: DELTA)
   init   = { delta.init; }
   syntax = format("lh %s, %s", rd.syntax, delta.syntax)
@@ -113,7 +109,6 @@ pseudo op lh_global(rd: X, delta: DELTA)
   Format: lh rd, symbol + imm
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op lh_global2(rd: X, delta: DELTA, imm: int(32))
   init   = {
     delta.init;
@@ -134,7 +129,6 @@ pseudo op lh_global2(rd: X, delta: DELTA, imm: int(32))
   Format: lw rd, symbol
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op lw_global(rd: X, delta: DELTA)
   init   = { delta.init; }
   syntax = format("lw %s, %s", rd.syntax, delta.syntax)
@@ -168,7 +162,6 @@ pseudo op ld_global(rd: X, delta: DELTA)
   Format: sb rd, symbol, rt
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op sb_global(rd: X, delta: DELTA, rt: X)
   init   = { delta.init; }
   syntax = format("sb %s, %s, %s", rd.syntax, delta.syntax, rt.syntax)
@@ -185,7 +178,6 @@ pseudo op sb_global(rd: X, delta: DELTA, rt: X)
   Format: sh rd, symbol, rt
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op sh_global(rd: X, delta: DELTA, rt: X)
   init   = { delta.init; }
   syntax = format("sh %s, %s, %s", rd.syntax, delta.syntax, rt.syntax)
@@ -202,7 +194,6 @@ pseudo op sh_global(rd: X, delta: DELTA, rt: X)
   Format: sh rd, symbol, rt
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op sh_global2(rd: X, delta: DELTA, imm: int(32), rt: X)
   init   = {
     delta.init;
@@ -223,7 +214,6 @@ pseudo op sh_global2(rd: X, delta: DELTA, imm: int(32), rt: X)
   Format: sw rd, symbol, rt
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op sw_global(rd: X, delta: DELTA, rt: X)
   init   = { delta.init; }
   syntax = format("sw %s, %s, %s", rd.syntax, delta.syntax, rt.syntax)
@@ -256,7 +246,6 @@ pseudo op sd_global(rd: X, delta: DELTA, rt: X)
 
   Format: li rd, immediate
 */
-@rev(RV32I)
 pseudo op li32(rd: X, imm: WORD)
   syntax = format("li %s, 0x%x", rd.syntax, imm)
   image = format(
@@ -302,7 +291,6 @@ pseudo op li64(rd: X, imm: DWORD)
 
   Format: li rd, immediate
 */
-@rev(RV32I)
 pseudo op li(rd : X, imm : XWORD)
   syntax = format("li %s, 0x%x", rd.syntax, imm)
   image  = format("%s",
@@ -406,7 +394,6 @@ pseudo op fsd_global(rd: F, delta: DELTA, rt: X)
   Format: call offset
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op call(delta: DELTA)
   init   = { delta.init; }
   syntax = format("call %s", delta.syntax)
@@ -423,7 +410,6 @@ pseudo op call(delta: DELTA)
   Format: tail offset
   Note: delta = symbol − pc
 */
-@rev(RV32I)
 pseudo op tail(delta: DELTA)
   init   = { delta.init; }
   syntax = format("tail %s", delta.syntax)
@@ -439,7 +425,6 @@ pseudo op tail(delta: DELTA)
 
   Format: ret
 */
-//@rev(RV32I)
 pseudo op ret()
   init   = {}
   syntax = format("ret")

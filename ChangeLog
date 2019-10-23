@@ -11,8 +11,11 @@
  - Specifications: Added system registers and the related modes
  - Specifications: Added sample specifications of some vector instructions
                    (consistent with RISC-V "V" Vector Extension Version 0.7.1)
+ - Specifications: Fixed bugs in RV64A instructions
+ - Specifications: Fixed bugs in RV32{F,D} instructions (FEQ, FLE, and FLT)
  - Test Templates: Added sample test templates for vector instructions
  - Test Templates: Changed structure of directories
+ - Test Templates: Fixed a Torture-like template ('synthetics/rvxxx')
 
  2019/02/06 MicroTESK RISC-V 0.0.8
 

@@ -66,6 +66,7 @@ label :amo_operand
   end
 
   def run
+    if is_rev('RV32A') then
     TEST_CASE( 2, a4, 0xffffffff80000000 ) do
       li a0, 0xffffffff80000000 
       li a1, 0xfffffffffffff800 
@@ -86,6 +87,7 @@ label :amo_operand
 
     TEST_CASE(5, a5, 0x0000000080000000 ) do 
       ld a5, a3, 0
+    end
     end
   end
 

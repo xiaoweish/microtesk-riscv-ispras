@@ -1,7 +1,7 @@
 ARCH=riscv
 
 all:
-	sh $(MICROTESK_HOME)/bin/compile.sh $(ARCH).nml --extension-dir ../extensions --rev-id RV64FULL
+	sh $(MICROTESK_HOME)/bin/compile.sh $(ARCH).nml --extension-dir ../extensions --rev-id SCR1
 	sh $(MICROTESK_HOME)/bin/autogen.sh riscv \
 	--output-dir $(MICROTESK_HOME)/arch/riscv/templates/autogen/ \
 	--base-template-name RiscVBaseTemplate --base-template-path '../riscv_base' \

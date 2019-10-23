@@ -52,6 +52,7 @@ class MulwTemplate < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV64U') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -98,6 +99,7 @@ class MulwTemplate < RiscVBaseTemplate
     TEST_RR_ZEROSRC2( 27, 'mulw', 0, 32 )
     TEST_RR_ZEROSRC12( 28, 'mulw', 0 )
     TEST_RR_ZERODEST( 29, 'mulw', 33, 34 )
+    end
   end
 
   def post

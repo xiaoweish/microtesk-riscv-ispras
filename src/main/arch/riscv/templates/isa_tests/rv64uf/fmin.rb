@@ -56,6 +56,7 @@ class FminTemplate < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV32F') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -84,6 +85,7 @@ class FminTemplate < RiscVBaseTemplate
     TEST_FP_OP2_S(31,  'fmin_s', 0,       -0.0,        0.0,       -0.0 )
     TEST_FP_OP2_S(32,  'fmax_s', 0,        0.0,       -0.0,        0.0 )
     TEST_FP_OP2_S(33,  'fmax_s', 0,        0.0,        0.0,       -0.0 )
+    end
 
   end
 

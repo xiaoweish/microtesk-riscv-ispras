@@ -5,7 +5,7 @@ out_dir="$MICROTESK_HOME/output/${cur_dir##*arch/riscv/templates}/$1"
 mkdir $out_dir -p
 
 sh $MICROTESK_HOME/bin/generate.sh riscv \
-   $1.rb --code-file-prefix $1 --code-file-extension s \
+   $1.rb --code-file-prefix $1 --code-file-extension S \
    --output-dir $out_dir \
    --verbose -debug-print \
    --asserts-enabled \

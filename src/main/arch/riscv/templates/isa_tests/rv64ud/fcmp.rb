@@ -65,6 +65,7 @@ class FcmpTemplate < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV32F') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -89,6 +90,7 @@ class FcmpTemplate < RiscVBaseTemplate
     TEST_FP_CMP_OP_D(14, 'fle_d', 0x10, 0, NAN, 0   )
     TEST_FP_CMP_OP_D(15, 'fle_d', 0x10, 0, NAN, NAN )
     TEST_FP_CMP_OP_D(16, 'fle_d', 0x10, 0, SNAN, 0  )
+    end
   end
 
   def post

@@ -56,7 +56,7 @@ class DivuwTemplate < RiscVBaseTemplate
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
-
+    if is_rev('RV64U') then
     TEST_RR_OP( 2, 'divuw',         3,  20,   6 )
     TEST_RR_OP( 3, 'divuw', 715827879, -20 << 32 >> 32,   6 )
     TEST_RR_OP( 4, 'divuw',         0,  20,  -6 )
@@ -68,6 +68,7 @@ class DivuwTemplate < RiscVBaseTemplate
     TEST_RR_OP( 8, 'divuw', -1, -1<<31, 0 )
     TEST_RR_OP( 9, 'divuw', -1,      1, 0 )
     TEST_RR_OP(10, 'divuw', -1,      0, 0 )
+    end
   end
 
   def post

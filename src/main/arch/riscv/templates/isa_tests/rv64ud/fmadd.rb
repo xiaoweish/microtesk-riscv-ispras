@@ -65,6 +65,7 @@ class FmaddTemplate < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV32F') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -84,6 +85,7 @@ class FmaddTemplate < RiscVBaseTemplate
     TEST_FP_OP3_D(11, 'fnmsub_d', 0,                -1.5,  1.0,        2.5,        1.0 )
     TEST_FP_OP3_D(12, 'fnmsub_d', 1,               -1234, -1.0,    -1235.1,        1.1 )
     TEST_FP_OP3_D(13, 'fnmsub_d', 0,                 8.0,  2.0,       -5.0,       -2.0 )
+    end
   end
 
   def post

@@ -38,12 +38,14 @@ class InstructionRVC < RiscVBaseTemplate
     c_addi4spn s1c, 4
 
     la a3, :data
+    if is_rev('RV32F') then
     if is_rev('RV64C') then
       c_fld fa2c, a3c, :data
       c_fsd fa2c, a3c, :data
     else
       c_flw fa2c, a3c, :data
       c_fsw fa2c, a3c, :data
+    end
     end
 
     c_sw a3c, a3c, :data

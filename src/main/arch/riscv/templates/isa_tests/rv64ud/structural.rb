@@ -80,6 +80,7 @@ label 2
   end
 
   def run
+    if is_rev('RV32F') then
     TEST(2)  do end
     TEST(4)  do nop end
     TEST(6)  do nop;nop end
@@ -87,6 +88,7 @@ label 2
     TEST(10) do nop;nop;nop;nop end
     TEST(12) do nop;nop;nop;nop;nop end
     TEST(14) do nop;nop;nop;nop;nop;nop end
+    end
   end
 
   def post

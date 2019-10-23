@@ -159,13 +159,6 @@ label 1
   end
 
   def DELEGATE_NO_TRAPS
-    la t0, label_f(1)
-    csrw mtvec, t0
-    csrwi medeleg, 0
-    csrwi mideleg, 0
-    csrwi mie, 0
-    align 2
-label 1
   end
 
   def RVTEST_ENABLE_SUPERVISOR
@@ -222,27 +215,23 @@ label 1
   end
 
   def RVTEST_CODE_BEGIN
-    align  6
+    text ".org 0xc0, 0x00"
+    align 6
     weak :stvec_handler
     weak :mtvec_handler
 
-global_label :_start
-    # reset vector
-    j :reset_vector
-
-    align 2
 label :trap_vector
     # test whether the test came from pass/fail
     csrr t5, mcause
 
     li t6, CAUSE_USER_ECALL
-    beq t5, t6, :write_tohost
+    beq t5, t6, :_report
 
     li t6, CAUSE_SUPERVISOR_ECALL
-    beq t5, t6, :write_tohost
+    beq t5, t6, :_report
 
     li t6, CAUSE_MACHINE_ECALL
-    beq t5, t6, :write_tohost
+    beq t5, t6, :_report
 
     # if an mtvec_handler is defined, jump to it
     la t5, :mtvec_handler
@@ -259,26 +248,17 @@ label :handle_exception
     # we don't know how to handle whatever the exception was
 label :other_exception
     # some unhandlable exception occurred
-
+    li a0, 1
 label 1
     ori TESTNUM(), TESTNUM(), 1337
 
-label :write_tohost
-# TODO: Temporary commented out because it causes the "HTIF tohost must be 8 bytes" error in QEMU.
-#    sw_global TESTNUM(), :tohost, t5
-# TODO: remove the nops when the above line is fixed.
+label :_report
     nop
-    text "sw gp, tohost, t5" # TODO: Fix me!!11
-    nop
-    j :write_tohost
-
-label :reset_vector
-
+    text "j sc_exit"
+    align 6
+global_label :_start
     RISCV_MULTICORE_DISABLE()
-    INIT_SATP()
-    INIT_PMP()
     DELEGATE_NO_TRAPS()
-
     li TESTNUM(), 0
     la t0, :trap_vector
     csrw mtvec, t0
@@ -306,11 +286,11 @@ label 1
     EXTRA_INIT()
     EXTRA_INIT_TIMER()
 
-    la t0, label_f(1)
+    la t0, :_run_test
     csrw mepc, t0
     csrr a0, mhartid
     mret
-label 1
+label :_run_test
   end
 
   ##################################################################################################
@@ -318,6 +298,9 @@ label 1
   ##################################################################################################
 
   def RVTEST_CODE_END
+    label :sc_exit
+    nop
+    text "j SIM_EXIT"
     pseudo 'unimp'
   end
 
@@ -328,6 +311,7 @@ label 1
   def RVTEST_PASS
     fence
     li TESTNUM(), 1
+    li a0, 0x0
     ecall
   end
 
@@ -342,6 +326,7 @@ label 1
     beqz TESTNUM(), label_b(1)
     sll TESTNUM(), TESTNUM(), 1
     Or TESTNUM(), TESTNUM(), 1
+    li a0, 0x1
     ecall
   end
 

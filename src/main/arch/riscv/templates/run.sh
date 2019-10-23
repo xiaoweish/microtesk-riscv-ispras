@@ -6,7 +6,7 @@ mkdir $out_dir -p
 
 sh $MICROTESK_HOME/bin/generate.sh riscv $1.rb \
    --code-file-prefix $1 \
-   --code-file-extension s \
+   --code-file-extension S \
    --output-dir $out_dir \
    --verbose -debug-print \
    --asserts-enabled \

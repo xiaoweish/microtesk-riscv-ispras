@@ -56,6 +56,7 @@ class FcvtTemplate < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV32F') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -72,6 +73,7 @@ class FcvtTemplate < RiscVBaseTemplate
 
       TEST_INT_FP_OP_S( 8, 'fcvt_s_lu',          2.0,  2)
       TEST_INT_FP_OP_S( 9, 'fcvt_s_lu', 1.8446744e19, -2)
+    end
     end
   end
 

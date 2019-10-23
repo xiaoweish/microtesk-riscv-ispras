@@ -96,12 +96,14 @@ label 1
       c_addi4spn a0c, 1020
     end
 
+    if is_rev('RV64C') then
     RVC_TEST_CASE( 4, sp, 0x1234 + 496 ) do
       c_addi16sp 496
     end
 
     RVC_TEST_CASE( 5, sp, 0x1234 + 496 - 512 ) do
       c_addi16sp -512
+    end
     end
 
     la a1, :data

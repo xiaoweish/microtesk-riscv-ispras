@@ -68,6 +68,7 @@ class MoveTemplate < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV32F') then
     TEST_CASE(2, a1, 1) do
       csrwi fcsr, 1
       li a0, 0x1234
@@ -112,6 +113,7 @@ class MoveTemplate < RiscVBaseTemplate
     TEST_FSGNJS(31, 'fsgnjx_s', 1, 0, 1)
     TEST_FSGNJS(32, 'fsgnjx_s', 1, 1, 0)
     TEST_FSGNJS(33, 'fsgnjx_s', 0, 1, 1)
+    end
   end
 
   def post

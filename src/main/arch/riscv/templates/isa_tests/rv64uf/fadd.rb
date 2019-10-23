@@ -56,6 +56,7 @@ class FaddTemplate < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV32F') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -74,6 +75,7 @@ class FaddTemplate < RiscVBaseTemplate
 
     # Is the canonical NaN generated for Inf - Inf?
     TEST_FP_OP2_S(11,  'fsub_s', 0x10, QNANF, INFF, INFF )
+    end
   end
 
   def post

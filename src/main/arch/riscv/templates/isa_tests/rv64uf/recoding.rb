@@ -73,6 +73,7 @@ label :three
   end
 
   def run
+    if is_rev('RV32F') then
     # Make sure infinities with different mantissas compare as equal.
     flw_global f0, :minf, a0
     flw_global f1, :three, a0
@@ -106,6 +107,7 @@ label :three
 
     TEST_CASE( 7, a0, 0 ) do
       flt_s a0, f0, f1
+    end
     end
   end
 

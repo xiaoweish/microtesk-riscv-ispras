@@ -81,6 +81,7 @@ label :fooTest3
   end
 
   def run
+    if is_rev('RV32A') then
     # get a unique core id
     la a0, :coreid
     li a1, 1
@@ -139,6 +140,7 @@ label 1
       sub a0, a0, a1
       addi a3, a3, -1
       bgez a3, label_b(1)
+    end
     end
   end
 

@@ -79,6 +79,7 @@ label :tiny
   end
 
   def run
+    if is_rev('RV32F') then
     # Make sure infinities with different mantissas compare as equal.
     fld_global f0, :minf, a0
     fld_global f1, :three, a0
@@ -114,6 +115,7 @@ label :tiny
     fsd_global f0, :tiny, a0
     fld_global f0, :tiny, a0
     TEST_CASE(20, a0, 1 ) do feq_s a0, f0, f1 end
+    end
   end
 
   def post

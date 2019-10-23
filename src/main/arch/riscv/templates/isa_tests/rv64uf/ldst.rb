@@ -75,6 +75,7 @@ label :tdat
   end
 
   def run
+    if is_rev('RV32F') then
     TEST_CASE( 2, a0, 0x40000000deadbeef ) do
       la a1, :tdat
       flw f1, a1, 4
@@ -87,6 +88,7 @@ label :tdat
       flw f1, a1, 0
       fsw f1, a1, 24
       ld a0, a1, 24
+    end
     end
   end
 

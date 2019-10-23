@@ -65,6 +65,7 @@ class FclassTemplate < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV32F') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -79,6 +80,7 @@ class FclassTemplate < RiscVBaseTemplate
     TEST_FCLASS_D( 9, 1 << 7, 0x7ff0000000000000 )
     TEST_FCLASS_D(10, 1 << 8, 0x7ff0000000000001 )
     TEST_FCLASS_D(11, 1 << 9, 0x7ff8000000000000 )
+    end
   end
 
   def post

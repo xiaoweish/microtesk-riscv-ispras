@@ -35,9 +35,9 @@ class RegisterAllocationTemplate < RiscVBaseTemplate
       newline
 
       # Frees the previously reserved registers
-      free_register reg1
-      free_register reg2
-      free_register reg3
+      set_free reg1, true
+      set_free reg2, true
+      set_free reg3, true
 
       # Randomly selects destination registers from free registers including
       # those that were previously freed

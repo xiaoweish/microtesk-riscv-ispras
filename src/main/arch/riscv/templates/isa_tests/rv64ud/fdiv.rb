@@ -83,6 +83,7 @@ class FdivTemplate < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV32F') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -98,6 +99,7 @@ class FdivTemplate < RiscVBaseTemplate
 
     TEST_FP_OP1_D( 7, 'fsqrt_d', 1,  13.076696830622021,                 171.0 )
     TEST_FP_OP1_D( 8, 'fsqrt_d', 1,  0.00040099251863345283320230749702, 1.60795e-7 )
+    end
   end
 
   def post

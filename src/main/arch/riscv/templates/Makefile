@@ -9,7 +9,7 @@ all:\
 	$(TESTS) \
 	$(SELFCHECK_TESTS)
 	make -C algorithm
-	make -C autogen
+#	make -C autogen
 	make -C branch
 	make -C instruction
 	make -C registers
@@ -17,11 +17,11 @@ all:\
 
 $(TESTS):
 	sh run.sh $@
-	sh run-toolchain.sh $@
+#	sh run-toolchain.sh $@
 
 $(SELFCHECK_TESTS):
 	sh run-selfchecks.sh $@
-	sh run-toolchain.sh $@
+#	sh run-toolchain.sh $@
 
 clean:
 	if [ -d $(MICROTESK_HOME)/output ]; then \

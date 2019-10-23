@@ -118,6 +118,7 @@ label 1
   end
 
   def run
+    if is_rev('RV32F') then
     TEST_FSGNJD(10, 'fsgnj_d', 0, 0, 0)
     TEST_FSGNJD(11, 'fsgnj_d', 1, 0, 1)
     TEST_FSGNJD(12, 'fsgnj_d', 0, 1, 0)
@@ -156,6 +157,7 @@ label 1
     TEST_FSGNJD_SP(75, 1, 0x7fffffff11111111, 0x7fffffff11111111, 0x7fffffff11111111)
     TEST_FSGNJD_SP(76, 0, 0xffffffff11111111, 0x7fffffff11111111, 0xffffffff91111111)
     TEST_FSGNJD_SP(77, 0, 0xffffffff11111111, 0x7fffffff11111111, 0x8000000000000000)
+    end
   end
 
   def post

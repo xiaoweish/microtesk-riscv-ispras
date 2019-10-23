@@ -75,6 +75,7 @@ label :tdat
   end
 
   def run
+    if is_rev('RV32F') then
     la s0, :tdat
 
     TEST_CASE(2, a0, 0x40000000bf800000) do
@@ -105,6 +106,7 @@ label :tdat
       flw f2, s0, 8
       fsd f2, s0, 16
       ld a0, s0, 16
+    end
     end
   end
 

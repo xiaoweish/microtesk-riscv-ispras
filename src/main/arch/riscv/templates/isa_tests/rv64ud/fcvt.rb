@@ -86,6 +86,7 @@ label :test_data_22
   end
 
   def run
+    if is_rev('RV32F') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -126,6 +127,7 @@ label :test_data_22
         lw a0, a1, 0
         lw a1, a1, 4
       end
+    end
     end
   end
 

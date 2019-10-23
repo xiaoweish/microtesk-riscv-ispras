@@ -53,6 +53,7 @@ class DivwTemplate < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV64U') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -68,6 +69,7 @@ class DivwTemplate < RiscVBaseTemplate
     TEST_RR_OP( 8, 'divw', -1, -1<<31, 0 )
     TEST_RR_OP( 9, 'divw', -1,      1, 0 )
     TEST_RR_OP(10, 'divw', -1,      0, 0 )
+    end
   end
 
   def post

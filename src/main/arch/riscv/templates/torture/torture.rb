@@ -139,11 +139,11 @@ label :test_end
           range(:bias => 10, :value => lambda do seq_alu_rvc end),
           range(:bias => 15, :value => lambda do seq_branch end),
           range(:bias =>  5, :value => lambda do seq_branch_rvc end),
-          range(:bias =>  5, :value => lambda do seq_fax end),
-          range(:bias =>  5, :value => lambda do seq_fdiv end),
-          range(:bias =>  5, :value => lambda do seq_fpmem(MEMSIZE) end),
-          range(:bias =>  5, :value => lambda do seq_fpmem_rvc(MEMSIZE) end),
-          range(:bias => 10, :value => lambda do seq_fpu end),
+          #range(:bias =>  5, :value => lambda do seq_fax end),
+          #range(:bias =>  5, :value => lambda do seq_fdiv end),
+          #range(:bias =>  5, :value => lambda do seq_fpmem(MEMSIZE) end),
+          #range(:bias =>  5, :value => lambda do seq_fpmem_rvc(MEMSIZE) end),
+          #range(:bias => 10, :value => lambda do seq_fpu end),
           range(:bias => 15, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end),
           range(:bias =>  5, :value => lambda do seq_mem_rvc(MEMSIZE) end)
       )

@@ -78,6 +78,7 @@ label :tdat_d
   end
 
   def run
+    if is_rev('RV64F') then
     #-------------------------------------------------------------
     # Arithmetic tests
     #-------------------------------------------------------------
@@ -219,6 +220,7 @@ label :tdat_d
        la x1, :tdat
        flw f1, x1, 12
        fcvt_lu_s2 x1, f1
+    end
     end
     end
   end

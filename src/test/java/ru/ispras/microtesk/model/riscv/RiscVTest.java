@@ -390,10 +390,10 @@ public class RiscVTest extends TemplateTest {
 
     runCommand(SHELL, SPIKE_TIMEOUT_MILLIS, false, spikeRetValues, shellSpikeArgs);
     final File spikeLogFile = new File(spikeLog);
-    if (!spikeLogFile.exists() || spikeLogFile.isDirectory()) {
-      Assert.fail(
-          String.format("Can't find Spike trace file: %s", spikeLogFile.getAbsolutePath()));
-    }
+
+    Assert.assertTrue(
+        String.format("Can't find Spike trace file: %s", spikeLogFile.getAbsolutePath()),
+        spikeLogFile.exists());
 
     Logger.message("done.");
 
@@ -403,10 +403,9 @@ public class RiscVTest extends TemplateTest {
 
     final File toolLog = new File(insertExt(image.getAbsolutePath(), ".log"));
 
-    if (!toolLog.exists() || toolLog.isDirectory()) {
-      Assert.fail(
-          String.format("Can't find MicroTESK Tracer log file: %s", toolLog.getAbsolutePath()));
-    }
+    Assert.assertTrue(
+        String.format("Can't find MicroTESK Tracer log file: %s", toolLog.getAbsolutePath()),
+        toolLog.exists());
 
     /* Use Trace Matcher for logs comparison. */
     checkExecutable(TRACER);

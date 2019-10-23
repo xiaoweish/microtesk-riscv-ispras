@@ -6,6 +6,14 @@
  2017/11/23 - 2019/MM/DD
 --------------------------------------------------------------------------------
 
+ 2019/XX/XX MicroTESK RISC-V 0.0.9
+
+ - Specifications: Added system registers and the related modes
+ - Specifications: Added sample specifications of some vector instructions
+                   (consistent with RISC-V "V" Vector Extension Version 0.7.1)
+ - Test Templates: Added sample test templates for vector instructions
+ - Test Templates: Changed structure of directories
+
  2019/02/06 MicroTESK RISC-V 0.0.8
 
  - Specifications: Address translation for the Sv32, Sv39, and Sv48 modes
@@ -14,7 +22,7 @@
 
  2018/11/30 MicroTESK RISC-V 0.0.7
 
- - Specifications: Vector extension
+ - Specifications: Added sketch specifications of the V extension
 
  2018/08/21 MicroTESK RISC-V 0.0.6
 

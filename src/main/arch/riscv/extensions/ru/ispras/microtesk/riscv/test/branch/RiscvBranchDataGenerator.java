@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 ISP RAS (http://www.ispras.ru)
+ * Copyright 2018-2019 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -26,6 +26,9 @@ import ru.ispras.microtesk.test.engine.branch.BranchDataGenerator;
 import ru.ispras.testbase.TestBaseContext;
 import ru.ispras.testbase.TestBaseQuery;
 import ru.ispras.testbase.TestData;
+import ru.ispras.testbase.knowledge.basis.GeneratorResult;
+import ru.ispras.testbase.knowledge.branch.IfThenElseGenerator;
+import ru.ispras.testbase.knowledge.integer.IntNumber;
 import ru.ispras.testbase.knowledge.iterator.Iterator;
 
 import java.util.Collections;
@@ -35,100 +38,65 @@ import java.util.Map;
 /**
  * {@link RiscvBranchDataGenerator} is a base class for the RISC-V branch instructions' generators.
  *
- * @author <a href="mailto:andrewt@ispras.ru">Andrei Tatarnikov</a>
+ * @author <a href="mailto:kamkin@ispras.ru">Alexander Kamkin</a>
  */
 public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
   protected static final long MAX_VALUE = Integer.MAX_VALUE;
   protected static final long MIN_VALUE = Integer.MIN_VALUE;
 
-  protected static long positiveValue() {
-    return Randomizer.get().nextLongRange(1, MAX_VALUE);
-  }
+  protected static IntNumber[] getOperands(
+      final TestBaseQuery query,
+      final int numberOfOperands) {
+    InvariantChecks.checkTrue(numberOfOperands == 1 || numberOfOperands == 2);
+    final IntNumber[] operands = new IntNumber[numberOfOperands];
 
-  protected static long negativeValue() {
-    return Randomizer.get().nextLongRange(MIN_VALUE, -1);
-  }
-
-  protected static long nonPositiveValue() {
-    return Randomizer.get().nextLongRange(MIN_VALUE, 0);
-  }
-
-  protected static long nonNegativeValue() {
-    return Randomizer.get().nextLongRange(0, MAX_VALUE);
-  }
-
-  protected static Long generateEqual(Long rs1, Long rs2) {
-    if (rs1 == null) {
-      rs1 = rs2;
-    } else if (rs2 == null) {
-      rs2 = rs1;
+    if (numberOfOperands == 1) {
+      operands[0] = getValue("rs", query);
     } else {
-      InvariantChecks.checkTrue(rs1.equals(rs2), "Incorrect values defined");
+      operands[1] = getValue("rs1", query);
+      operands[1] = getValue("rs2", query);
     }
-    if (rs1 == null) {
-      return Randomizer.get().nextLongRange(MIN_VALUE, MAX_VALUE);
-    }
-    return rs1;
+
+    return operands;
   }
 
-  protected static Pair<Long, Long> generateDistinct(Long rs1, Long rs2) {
-    if (rs1 == null && rs2 == null) {
-      rs1 = Randomizer.get().nextLongRange(MIN_VALUE, MAX_VALUE);
-      rs2 = distinctValue(rs1);
-    } else if (rs1 == null) {
-      rs1 = distinctValue(rs2);
-    } else if (rs2 == null) {
-      rs2 = distinctValue(rs1);
+  protected static Iterator<TestData> getTestData(
+      final TestBaseQuery query,
+      final GeneratorResult<IntNumber> result) {
+    final String op  = getInstructionName(query);
+    final Map<String, Long> values;
+
+    final IntNumber[] operands = result.operands;
+    if (operands.length == 1) {
+      values = Collections.singletonMap(op + ".rs", operands[0].getValue());
     } else {
-      InvariantChecks.checkFalse(rs1.equals(rs2), "Incorrect values defined");
+      values = new HashMap<>();
+      values.put(op + ".rs1", operands[0].getValue());
+      values.put(op + ".rs2", operands[1].getValue());
     }
-
-    return new Pair<>(rs1, rs2);
+    
+    return generate(query, values);
   }
 
-  protected static long distinctValue(final long x) {
-    long value = x;
-    do {
-      value = Randomizer.get().nextLongRange(MIN_VALUE, MAX_VALUE);
-    } while (value == x);
-    return value;
-  }
-
-  protected static Long getValue(final String name, final TestBaseQuery query) {
+  private static IntNumber getValue(final String name, final TestBaseQuery query) {
     final String op = getInstructionName(query);
     final Node node = query.getBindings().get(op + "." + name);
-
+    
     InvariantChecks.checkNotNull(node, name);
     InvariantChecks.checkTrue(ExprUtils.isVariable(node) || ExprUtils.isValue(node), name);
-
+    
     if (ExprUtils.isValue(node)) {
       final NodeValue value = (NodeValue) node;
-      return value.getBitVector().longValue();
+      return new IntNumber(IfThenElseGenerator.FORMAT, value.getBitVector().longValue());
     }
-
-    final NodeVariable var = (NodeVariable) node;
-    if (var.getData().hasValue()) {
-      return var.getData().getValue(BitVector.class).longValue();
+    
+    final NodeVariable variable = (NodeVariable) node;
+    if (variable.getData().hasValue()) {
+      final BitVector value = variable.getData().getValue(BitVector.class);
+      return new IntNumber(IfThenElseGenerator.FORMAT, value.longValue());
     }
-
+    
     return null;
-  }
-
-  protected static Iterator<TestData> generate(final TestBaseQuery query, final long rs) {
-    final String op = getInstructionName(query);
-    return generate(query, Collections.singletonMap(op + ".rs", rs));
-  }
-
-  protected static Iterator<TestData> generate(
-      final TestBaseQuery query,
-      final long rs,
-      final long rt) {
-    final String op  = getInstructionName(query);
-    final Map<String, Long> values = new HashMap<>();
-    values.put(op + ".rs1", rs);
-    values.put(op + ".rs2", rt);
-
-    return generate(query, values);
   }
 
   private static String getInstructionName(final TestBaseQuery query) {

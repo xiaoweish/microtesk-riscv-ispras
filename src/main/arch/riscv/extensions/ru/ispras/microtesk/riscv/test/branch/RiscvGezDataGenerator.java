@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 ISP RAS (http://www.ispras.ru)
+ * Copyright 2018-2019 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,21 +16,25 @@ package ru.ispras.microtesk.riscv.test.branch;
 
 import ru.ispras.testbase.TestBaseQuery;
 import ru.ispras.testbase.TestData;
+import ru.ispras.testbase.knowledge.branch.bgez.BgezThenElseGenerator;
+import ru.ispras.testbase.knowledge.integer.IntNumber;
 import ru.ispras.testbase.knowledge.iterator.Iterator;
 
 /**
- * {@link RiscvGezDataGenerator} is a test data generator for BGEZ-family instructions.
+ * {@link RiscvGezDataGenerator} is a test data generator for BGEZ instructions.
  *
- * @author <a href="mailto:andrewt@ispras.ru">Andrei Tatarnikov</a>
+ * @author <a href="mailto:kamkin@ispras.ru">Alexander Kamkin</a>
  */
 public final class RiscvGezDataGenerator extends RiscvBranchDataGenerator {
   @Override
   public Iterator<TestData> generateThen(final TestBaseQuery query) {
-    return generate(query, nonNegativeValue());
+    final IntNumber[] operands = getOperands(query, 1);
+    return getTestData(query, BgezThenElseGenerator.generateOperandsThen(operands));
   }
 
   @Override
   public Iterator<TestData> generateElse(final TestBaseQuery query) {
-    return generate(query, negativeValue());
+    final IntNumber[] operands = getOperands(query, 1);
+    return getTestData(query, BgezThenElseGenerator.generateOperandsElse(operands));
   }
 }

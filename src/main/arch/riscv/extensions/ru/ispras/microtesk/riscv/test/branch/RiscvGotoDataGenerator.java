@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 ISP RAS (http://www.ispras.ru)
+ * Copyright 2018-2019 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -21,7 +21,7 @@ import ru.ispras.testbase.knowledge.iterator.EmptyIterator;
 import ru.ispras.testbase.knowledge.iterator.Iterator;
 
 /**
- * {@link RiscvGotoDataGenerator} is a test data generator for BEQ-family instructions.
+ * {@link RiscvGotoDataGenerator} is a test data generator for BEQ instructions.
  *
  * @author <a href="mailto:andrewt@ispras.ru">Andrei Tatarnikov</a>
  */

@@ -111,7 +111,7 @@ label :test_start
         newline
         j :test_end
 label :crash_forward
-        j :fail
+        j :test_end # FIXME: :fail
 label :test_end
       }
     }.run SEQ_NUMBER

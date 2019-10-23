@@ -387,7 +387,6 @@ op feq_s(rd: X, rs1: F, rs2: F)
     if is_signaling_nan(temp_fps) && is_signaling_nan(temp_fps2) then
       FFLAGS_EXCEP<4> = 0b1;
       FCSR_EXCEP<4> = 0b1;
-      exception("Invalid Operation");
     else
       process_float_exception_flags().action;
     endif;
@@ -409,7 +408,6 @@ op flt_s(rd: X, rs1: F, rs2: F)
     if is_nan(temp_fps) && is_nan(temp_fps2) then
       FFLAGS_EXCEP<4> = 0b1;
       FCSR_EXCEP<4> = 0b1;
-      exception("Invalid Operation");
     else
       process_float_exception_flags().action;
     endif;
@@ -431,7 +429,6 @@ op fle_s(rd: X, rs1: F, rs2: F)
     if is_nan(temp_fps) && is_nan(temp_fps2) then
       FFLAGS_EXCEP<4> = 0b1;
       FCSR_EXCEP<4> = 0b1;
-      exception("Invalid Operation");
     else
       process_float_exception_flags().action;
     endif;

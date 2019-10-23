@@ -22,7 +22,7 @@ module SeqBranchRvc
   def seq_branch_rvc
     pick_random {
       seq_taken_j_rvc('C_J')
-      # seq_taken_j_rvc('C_JAL')
+      seq_taken_j_rvc('C_JAL')
 
       seq_taken_jr_rvc('C_JR')
       seq_taken_jr_rvc('C_JALR')
@@ -40,6 +40,7 @@ module SeqBranchRvc
   def seq_taken_j_rvc(op)
     atomic {
       instr op, label_f(1)
+      c_nop # FIXME: C_NOP is for 32-bit alignment
       ILLEGAL()
     }
   end
@@ -50,6 +51,7 @@ module SeqBranchRvc
       la reg_dst, :c_jr_label
       atomic {
         instr op, reg_dst
+        c_nop # FIXME: C_NOP is for 32-bit alignment
         ILLEGAL()
         label :c_jr_label
       }
@@ -58,17 +60,19 @@ module SeqBranchRvc
 
   def seq_nontaken_c_beqz
     reg_dst = reg_write_visible(:xregs_c)
-    sequence {
+    atomic {
       ori reg_dst, zero, rand_range(1, 63)
       c_beqz to_cx(reg_dst), CRASH_LABEL()
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
   def seq_nontaken_c_bnez
     reg_dst = reg_write_visible(:xregs_c)
-    sequence {
+    atomic {
       Or reg_dst, zero, zero
       c_bnez to_cx(reg_dst), CRASH_LABEL()
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
@@ -78,6 +82,7 @@ module SeqBranchRvc
       Or reg_dst, zero, zero
       atomic {
         c_beqz to_cx(reg_dst), label_f(1)
+        c_nop # FIXME: C_NOP is for 32-bit alignment
         ILLEGAL()
       }
     }
@@ -85,9 +90,10 @@ module SeqBranchRvc
 
   def seq_nontaken_c_bnez
     reg_dst = reg_write_visible(:xregs_c)
-    sequence {
+    atomic {
       Or reg_dst, zero, zero
       c_bnez to_cx(reg_dst), CRASH_LABEL()
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
@@ -97,6 +103,7 @@ module SeqBranchRvc
       ori reg_dst, zero, rand_range(1, 63)
       atomic {
         c_bnez to_cx(reg_dst), label_f(1)
+        c_nop # FIXME: C_NOP is for 32-bit alignment
         ILLEGAL()
       }
     }

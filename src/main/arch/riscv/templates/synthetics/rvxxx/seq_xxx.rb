@@ -29,8 +29,8 @@ require_relative 'seq_fpu'
 require_relative 'seq_mem'
 require_relative 'seq_mem_rvc'
 
-require_relative 'torture_data'
-require_relative 'torture_regs'
+require_relative 'seq_xxx_data'
+require_relative 'seq_xxx_regs'
 
 #
 # Description:
@@ -58,8 +58,9 @@ class TortureTemplate < RiscVBaseTemplate
   include TortureRegs
 
   # Configuration settings
-  NSEQS = 100
-  NMERGE = 20
+  SEQ_NUMBER = 256
+  SEQ_LENGTH = 64
+
   MEMSIZE = 1024
 
   USE_AMO = true
@@ -88,34 +89,19 @@ class TortureTemplate < RiscVBaseTemplate
     # Registers must be selected at random (taking into account existing reservations)
     set_default_allocator RANDOM
 
-    block(:combinator => 'diagonal',
-          :permutator => 'random') {
+    block {
       prologue {
         # This register must be excluded as it is used as temp by initializers and finalizers.
         set_reserved sp, true
 
         j :test_start
 label :crash_backward
-        j :fail
+        j :test_end # FIXME: :fail
 label :test_start
       }
 
-      count = 0
-      while count < NSEQS do
-        if count % NMERGE == 0 then
-          block(:combinator => 'diagonal',
-                :compositor => 'random',
-                :permutator => 'random') {
-             NMERGE.times do
-               if count >= NSEQS then
-                 break
-               end
-
-               next_random_sequence
-               count = count + 1
-             end
-          }
-        end
+      SEQ_LENGTH.times do
+        next_random_sequence
       end
 
       epilogue {
@@ -128,7 +114,7 @@ label :crash_forward
         j :fail
 label :test_end
       }
-    }.run
+    }.run SEQ_NUMBER
   end
 
   # Selects a random instruction sequence using the specified distribution.

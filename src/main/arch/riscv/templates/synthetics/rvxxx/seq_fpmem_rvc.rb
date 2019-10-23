@@ -55,6 +55,7 @@ module SeqFpmemRvc
     atomic {
       lla sp, :test_memory, _SUB(addr, imm)
       instr op, reg_dest, imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
@@ -63,6 +64,7 @@ module SeqFpmemRvc
     atomic {
       lla sp, :test_memory, _SUB(addr, imm)
       instr op, reg_src, imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
@@ -70,19 +72,24 @@ module SeqFpmemRvc
     reg_addr = reg_write_hidden(:xregs_c)
     reg_dest = reg_write_visible(fregpool)
 
-    sequence {
+    atomic {
       lla reg_addr, :test_memory, _SUB(addr, imm)
       instr op, reg_dest, to_cx(reg_addr), imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
   def seq_fpmem_load_addrfn_rvc_c(op, fregpool_c, addr, imm)
     reg_addr = reg_write_hidden(:xregs_c)
     reg_dest = reg_write_visible(fregpool_c)
+puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + reg_addr.to_s
+puts ">>>>>>>>>>>>>>>>>>>>>>> " + reg_addr.to_s
+puts ">>>>>>>>>>>>>>>>>>>>>>> " + reg_num(reg_addr).to_s
 
-    sequence {
+    atomic {
       lla reg_addr, :test_memory, _SUB(addr, imm)
       instr op, to_cf(reg_dest), to_cx(reg_addr), imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
@@ -90,9 +97,10 @@ module SeqFpmemRvc
     reg_addr = reg_write_hidden(:xregs_c)
     reg_src = reg_read_visible(fregpool)
 
-    sequence {
+    atomic {
       lla reg_addr, :test_memory, _SUB(addr, imm)
       instr op, reg_src, to_cx(reg_addr), imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
@@ -100,9 +108,10 @@ module SeqFpmemRvc
     reg_addr = reg_write_hidden(:xregs_c)
     reg_src = reg_read_visible(fregpool_c)
 
-    sequence {
+    atomic {
       lla reg_addr, :test_memory, _SUB(addr, imm)
       instr op, to_cf(reg_src), to_cx(reg_addr), imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 

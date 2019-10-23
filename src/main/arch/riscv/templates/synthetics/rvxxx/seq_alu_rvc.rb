@@ -56,44 +56,63 @@ module SeqAluRvc
   end
 
   def seq_alu_rvc_li
-    c_li reg_write_visible(:xregs, :exclude => [zero]), rand_range(0, 63)
+    atomic {
+      c_li reg_write_visible(:xregs, :exclude => [zero]), rand_range(0, 63)
+      c_nop # FIXME: C_NOP is for 32-bit alignment
+    }
   end
 
   def seq_alu_rvc_lui
-    # Positive immediate
-    c_lui reg_write_visible(:xregs, :exclude => [zero, sp]), rand_range(0, 31)
-
-    # Negative immediate
-    c_lui reg_write_visible(:xregs, :exclude => [zero, sp]), _OR(0xFFFE0, rand_range(0, 31))
+    atomic {
+      # Positive immediate
+      c_lui reg_write_visible(:xregs, :exclude => [zero, sp]), rand_range(1, 31)
+      # Negative immediate
+      c_lui reg_write_visible(:xregs, :exclude => [zero, sp]), _OR(0xFFFE0, rand_range(0, 31))
+    }
   end
 
   def seq_alu_rvc_addi4spn
-    c_addi16sp _SLL(rand_range(1, 63), 4)
+    atomic {
+      c_addi16sp _SLL(rand_range(1, 63), 4)
+      c_nop # FIXME: C_NOP is for 32-bit alignment
+    }
   end
 
   def seq_alu_rvc_addi16sp()
-    c_addi4spn to_cx(reg_write_hidden(:xregs_c)), _SLL(rand_range(1, 255), 2)
+    atomic {
+      c_addi4spn to_cx(reg_write_hidden(:xregs_c)), _SLL(rand_range(1, 255), 2)
+      c_nop # FIXME: C_NOP is for 32-bit alignment
+    }
   end
 
   def seq_alu_rvc_immfn(op, imm)
     src = reg_read_any(:xregs)
     dest = reg_write(:xregs, {:exclude => [zero]}, src)
 
-    instr op, dest, imm
+    atomic {
+      instr op, dest, imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
+    }
   end
 
   def seq_alu_rvc_immfn_c(op, imm)
     src = reg_read_any(:xregs_c)
     dest = reg_write(:xregs_c, src)
 
-    instr op, to_cx(dest), imm
+    atomic {
+      instr op, to_cx(dest), imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
+    }
   end
 
   def seq_alu_rvc_src(op)
     src = reg_read_any(:xregs)
     dest = reg_write(:xregs, {:exclude => [zero]}, src)
 
-    instr op, dest, src
+    atomic {
+      instr op, dest, src
+      c_nop # FIXME: C_NOP is for 32-bit alignment
+    }
   end
 
   def seq_alu_rvc_src_zero(op)
@@ -104,6 +123,7 @@ module SeqAluRvc
     atomic {
       addi tmp, reg_read_zero(:xregs), rand_imm
       instr op, dest, tmp
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
@@ -111,7 +131,10 @@ module SeqAluRvc
     src = reg_read_any(:xregs_c)
     dest = reg_write(:xregs_c, src)
 
-    instr op, to_cx(dest), to_cx(src)
+    atomic {
+      instr op, to_cx(dest), to_cx(src)
+      c_nop # FIXME: C_NOP is for 32-bit alignment
+    }
   end
 
   def seq_alu_rvc_src_zero_c(op)
@@ -122,6 +145,7 @@ module SeqAluRvc
     atomic {
       addi tmp, reg_read_zero(:xregs), rand_imm
       instr op, to_cx(dest), to_cx(tmp)
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 

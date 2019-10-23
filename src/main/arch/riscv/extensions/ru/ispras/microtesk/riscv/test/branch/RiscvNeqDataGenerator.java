@@ -24,7 +24,7 @@ import ru.ispras.testbase.knowledge.iterator.Iterator;
 /**
  * {@link RiscvNeqDataGenerator} is a test data generator for BNE instructions.
  *
- * @author <a href="mailto:andrewt@ispras.ru">Andrei Tatarnikov</a>
+ * @author <a href="mailto:kamkin@ispras.ru">Alexander Kamkin</a>
  */
 public final class RiscvNeqDataGenerator extends RiscvBranchDataGenerator {
   @Override

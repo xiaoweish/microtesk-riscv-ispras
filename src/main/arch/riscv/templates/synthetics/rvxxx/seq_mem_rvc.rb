@@ -43,6 +43,7 @@ module SeqMemRvc
     atomic {
       lla sp, :test_memory, _SUB(addr, imm)
       instr op, reg_dest, imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
@@ -51,6 +52,7 @@ module SeqMemRvc
     atomic {
       lla sp, :test_memory, _SUB(addr, imm)
       instr op, reg_src, imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
@@ -58,9 +60,10 @@ module SeqMemRvc
     reg_addr = reg_write_hidden(:xregs_c)
     reg_dest = reg_write_visible(:xregs_c)
 
-    sequence {
+    atomic {
       lla reg_addr, :test_memory, _SUB(addr, imm)
       instr op, to_cx(reg_dest), to_cx(reg_addr), imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
@@ -68,9 +71,10 @@ module SeqMemRvc
     reg_addr = reg_write_hidden(:xregs_c)
     reg_src = reg_read_visible(:xregs_c)
 
-    sequence {
+    atomic {
       lla reg_addr, :test_memory, _SUB(addr, imm)
       instr op, to_cx(reg_src), to_cx(reg_addr), imm
+      c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 

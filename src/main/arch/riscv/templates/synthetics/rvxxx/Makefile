@@ -1,4 +1,4 @@
-TESTS = torture
+TESTS = seq_xxx
 
 all: $(TESTS)
 

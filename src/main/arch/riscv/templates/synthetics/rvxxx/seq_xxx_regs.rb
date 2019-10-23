@@ -101,15 +101,15 @@ module TortureRegs
 
   # FIXME: Begin
   def reg_num(reg)
-    reg.getArguments.get('i').getValue.getValue.to_i
+    reg.getArguments.get('i').getValue
   end
 
   def to_cx(reg_x)
-    cx(reg_num(reg_x) - 8)
+    cx(_SUB(reg_num(reg_x), 8))
   end
 
   def to_cf(reg_f)
-    cf(reg_num(reg_f) - 8)
+    cf(_SUB(reg_num(reg_f), 8))
   end
   # FIXME: End
 

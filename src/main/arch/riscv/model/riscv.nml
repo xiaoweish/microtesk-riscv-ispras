@@ -553,6 +553,7 @@ internal op check_aligned(op_type: card(4), address: XWORD)
        (op_type == MEM_HWORD && address<0> != 0) then
       trace("For best performance, the effective address for all loads and stores should be");
       trace("naturally aligned for each data type");
+      trace("address(check_aligned): 0x%x", address);
       exception("Address Error: rv32a");
       tmp_bit = 1;
     endif;

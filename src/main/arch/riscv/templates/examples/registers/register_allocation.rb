@@ -34,10 +34,10 @@ class RegisterAllocationTemplate < RiscVBaseTemplate
       slt reg3=x(_ FREE), t4, t5
       newline
 
-      # Frees the previously reserved registers
-      free_register reg1
-      free_register reg2
-      free_register reg3
+      # Frees the previously allocated registers
+      set_free reg1, true
+      set_free reg2, true
+      set_free reg3, true
 
       # Randomly selects destination registers from free registers including
       # those that were previously freed

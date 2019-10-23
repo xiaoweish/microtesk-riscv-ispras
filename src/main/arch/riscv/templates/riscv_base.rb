@@ -466,14 +466,6 @@ label :pass
   end
 
   ##################################################################################################
-  # Utility method to remove the specified addressing mode from the list of used registers.
-  ##################################################################################################
-
-  def free_register(mode)
-    free_allocated_mode mode
-  end
-
-  ##################################################################################################
   # Additional logic to handle floating-point values in data sections differently depending
   # on whether they were specified as integer (typically hexadecimal) or floating-point constants.
   # This provides the "what you see is what you get" behavior for floating-point data values.

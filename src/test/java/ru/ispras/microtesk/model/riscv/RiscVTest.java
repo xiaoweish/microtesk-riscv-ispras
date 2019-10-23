@@ -365,10 +365,9 @@ public class RiscVTest extends TemplateTest {
     runCommand(qemu, QEMU_TIMEOUT_MILLIS, true, qemuArgs);
 
     final File qemuLogFile = new File(qemuLog);
-    if (!qemuLogFile.exists() || qemuLogFile.isDirectory()) {
-      Assert.fail(
-          String.format("Can't find QEMU trace file: %s", qemuLogFile.getAbsolutePath()));
-    }
+    Assert.assertTrue(
+        String.format("Can't find QEMU trace file: %s", qemuLogFile.getAbsolutePath()),
+        qemuLogFile.exists());
 
     Logger.message("done.");
 

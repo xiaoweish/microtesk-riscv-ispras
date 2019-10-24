@@ -77,9 +77,7 @@ class BranchGeneration3Template < RiscVBaseTemplate
           :branch_percentage => 20,
           :branch_exec_limit => 3,
           :block_exec_limit  => 1,
-          :trace_count_limit => 1
-        }
-      }) {
+          :trace_count_limit => 1 }}) {
       # Branches to be used in tests.
       branches {
         bgez s0, _label do situation('bgez-if-then', :engine => :branch, :stream => 'branch_data') end
@@ -113,7 +111,7 @@ class BranchGeneration3Template < RiscVBaseTemplate
         ori s8, s8, 8
         ori s9, s9, 9
       }
-    }.run 20 # Try several random compositions
+    }.run 20 # Try several random test cases
   end
 
 end

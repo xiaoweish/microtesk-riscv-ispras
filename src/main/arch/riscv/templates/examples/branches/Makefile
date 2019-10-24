@@ -1,7 +1,6 @@
-TESTS = branch\
-        branch1\
-        branch2\
-        branch3
+TESTS = branch_fixed\
+        branch_merge\
+        branch_specs\
 
 all: $(TESTS)
 

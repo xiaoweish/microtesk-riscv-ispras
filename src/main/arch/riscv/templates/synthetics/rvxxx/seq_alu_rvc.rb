@@ -73,14 +73,14 @@ module SeqAluRvc
 
   def seq_alu_rvc_addi4spn
     atomic {
-      c_addi16sp _SLL(rand_range(1, 63), 4)
+      c_addi4spn to_cx(reg_write_hidden(:xregs_c)), _SLL(rand_range(1, 255), 2)
       c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
   def seq_alu_rvc_addi16sp()
     atomic {
-      c_addi4spn to_cx(reg_write_hidden(:xregs_c)), _SLL(rand_range(1, 255), 2)
+      c_addi16sp _SLL(rand_range(1, 63), 4)
       c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end

@@ -102,23 +102,23 @@ class BranchGeneration2Template < RiscVBaseTemplate
 
   def run
     # Stream  Label            Data  Addr  Size
-    stream   :branch_data_0,   s0,   s4,   128
-    stream   :branch_data_1,   s1,   s5,   128
-    stream   :branch_data_2,   s2,   s6,   128
-    stream   :branch_data_3,   s3,   s7,   128
+    stream   :branch_data_0,   s0,   s4,   256
+    stream   :branch_data_1,   s1,   s5,   256
+    stream   :branch_data_2,   s2,   s6,   256
+    stream   :branch_data_3,   s3,   s7,   256
 
     # Parameter 'branch_exec_limit' bounds the number of executions of a single branch:
     #   the default value is 1.
     # Parameter 'trace_count_limit' bounds the number of execution traces to be created:
     #   the default value is -1 (no limitation).
     block(
-       :combinator => 'diagonal',
-       :compositor => 'catenation',
-       :engines => {
-           :branch => {:branch_exec_limit => 3,
-                       :block_exec_limit => 3,
-                       :trace_count_limit => 10}
-       }) {
+     :combinator => 'diagonal',
+     :compositor => 'catenation',
+     :engines => {
+       :branch => {
+         :branch_exec_limit => 3,
+         :block_exec_limit => 3,
+         :trace_count_limit => 10 }}) {
       sequence {
         label :labelA
         pseudo '# Start Label'
@@ -164,14 +164,14 @@ class BranchGeneration2Template < RiscVBaseTemplate
                 situation('blez-if-then', :engine => :branch, :stream => 'branch_data_2')
               end
               bltz s3, :labelZ do
-                situation('bltz-if-then', :engine => :branch,:stream => 'branch_data_3')
+                situation('bltz-if-then', :engine => :branch, :stream => 'branch_data_3')
               end
               j :labelA do
                 situation('j-goto', :engine => :branch)
               end
             }
 
-            # Injected Code placed in delay slot
+            # Code to be randomly injected between branches
             iterate {
               # The code must not modify registers s0-s7
               addi reg1=x(_ FREE), reg1, 1
@@ -188,7 +188,7 @@ class BranchGeneration2Template < RiscVBaseTemplate
         label :labelZ
         pseudo '# End Label'
       }
-    }.run 10 # Try several random compositions
+    }.run 10 # Try several random test cases
   end
 
 end

@@ -83,7 +83,7 @@ class InstructionLdSdSv39Template < RiscVBaseTemplate
       csrw satp, t0
       trace "CSR satp = 0x%x", satp
 
-      li s0, 0x00010000 # Address
+      li s0, 0x00007000 # Address
       prepare t0, 0xDEADBEEFDEADBEEF # Value being loaded/stored
 
       trace "Register s0 = 0x%x", s0

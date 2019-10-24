@@ -33,7 +33,7 @@ class BranchGeneration1Template < RiscVBaseTemplate
 
   def TEST_DATA
     data {
-      org 0x00010000
+      org 0x0007000
       align 8
       # Arrays to store test data for branch instructions.
 label :branch_data_0

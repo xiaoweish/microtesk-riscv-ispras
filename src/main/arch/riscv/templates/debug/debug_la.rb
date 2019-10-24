@@ -28,7 +28,7 @@ class InstructionLaTemplate < RiscVBaseTemplate
 
   def TEST_DATA
     data {
-      org 0x00010000
+      org 0x00007000
       label :data
       word 0x0, 0x0, 0x0, 0x0,
            0x0, 0x0, 0x0, 0x0

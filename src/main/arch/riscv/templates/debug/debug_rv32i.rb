@@ -53,7 +53,7 @@ class InstructionRV32I < RiscVBaseTemplate
     addi s0, s0, :jalr_label
 
     trace "s0 = %x", XREG(8)
-    jalr t0, s0, 0
+    #jalr t0, s0, 0
     nop
     label :jalr_label
     nop

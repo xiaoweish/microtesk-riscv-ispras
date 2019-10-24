@@ -309,7 +309,7 @@ label :_run_test
 
   def RVTEST_PASS
     fence
-    li TESTNUM(), 1
+    mv a1, TESTNUM()
     li a0, 0x0
     ecall
   end
@@ -321,10 +321,7 @@ label :_run_test
   def RVTEST_FAIL
     trace 'Error: Test failed (self check did not pass)!'
     fence
-label 1
-    beqz TESTNUM(), label_b(1)
-    sll TESTNUM(), TESTNUM(), 1
-    Or TESTNUM(), TESTNUM(), 1
+    mv a1, TESTNUM()
     li a0, 0x1
     ecall
   end

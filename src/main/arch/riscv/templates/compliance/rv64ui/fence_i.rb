@@ -96,8 +96,8 @@ label 1
     addi a3, a3, 555
     TEST_CASE( 3, a3, 777 ) do nop end
 
-    TEST_PASSFAIL()
-    RVTEST_CODE_END()
+#    TEST_PASSFAIL()
+#    RVTEST_CODE_END()
   end
 
 end

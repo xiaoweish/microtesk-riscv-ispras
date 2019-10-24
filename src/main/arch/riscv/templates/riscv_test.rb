@@ -215,33 +215,33 @@ label 1
   end
 
   def RVTEST_CODE_BEGIN
-    text ".org 0xc0, 0x00"
+    org 0xc0
     align 6
     weak :stvec_handler
     weak :mtvec_handler
 
 label :trap_vector
     # test whether the test came from pass/fail
-    csrr t5, mcause
+    csrr a4, mcause
 
-    li t6, CAUSE_USER_ECALL
-    beq t5, t6, :_report
+    li a5, CAUSE_USER_ECALL
+    beq a4, a5, :_report
 
-    li t6, CAUSE_SUPERVISOR_ECALL
-    beq t5, t6, :_report
+    li a5, CAUSE_SUPERVISOR_ECALL
+    beq a4, a5, :_report
 
-    li t6, CAUSE_MACHINE_ECALL
-    beq t5, t6, :_report
+    li a5, CAUSE_MACHINE_ECALL
+    beq a4, a5, :_report
 
     # if an mtvec_handler is defined, jump to it
-    la t5, :mtvec_handler
-    beqz t5, label_f(1)
-    jr t5
+    la a4, :mtvec_handler
+    beqz a4, label_f(1)
+    jr a4
 
     # was it an interrupt or an exception?
 label 1
-    csrr t5, mcause
-    bgez t5, :handle_exception
+    csrr a4, mcause
+    bgez a4, :handle_exception
 
     INTERRUPT_HANDLER()
 label :handle_exception
@@ -250,11 +250,10 @@ label :other_exception
     # some unhandlable exception occurred
     li a0, 1
 label 1
-    ori TESTNUM(), TESTNUM(), 1337
 
 label :_report
+    j :sc_exit
     nop
-    text "j sc_exit"
     align 6
 global_label :_start
     RISCV_MULTICORE_DISABLE()

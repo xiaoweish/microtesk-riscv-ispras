@@ -58,10 +58,10 @@ class TortureTemplate < RiscVBaseTemplate
   include TortureRegs
 
   # Configuration settings
-  SEQ_NUMBER = 256
-  SEQ_LENGTH = 64
+  SEQ_NUMBER = 128
+  SEQ_LENGTH = 32
 
-  MEMSIZE = 1024
+  MEMSIZE = 512
 
   USE_AMO = false
   USE_MUL = true

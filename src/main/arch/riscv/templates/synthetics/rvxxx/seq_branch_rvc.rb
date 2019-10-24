@@ -22,7 +22,10 @@ module SeqBranchRvc
   def seq_branch_rvc
     pick_random {
       seq_taken_j_rvc('C_J')
-      seq_taken_j_rvc('C_JAL')
+
+      if !is_rev('RV64C') then
+        seq_taken_j_rvc('C_JAL')
+      end
 
       seq_taken_jr_rvc('C_JR')
       seq_taken_jr_rvc('C_JALR')

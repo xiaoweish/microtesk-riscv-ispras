@@ -79,7 +79,7 @@ class SeqXxxTemplate < RiscVBaseTemplate
   end
 
   def pre_rvtest
-    RVTEST_RV64U()
+    RVTEST_RV64UF()
     RVTEST_CODE_BEGIN()
   end
 

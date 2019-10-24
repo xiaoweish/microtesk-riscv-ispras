@@ -401,14 +401,14 @@ op vsw(vs3: VR, rs1: X)
   action = {
   }*/
 
-op rv32v = vadd
+op rv32v = vsetvli
+         | vadd
          | vsub
          | vmul
          | vmulh
          | vdiv
          | vlw
          | vsw
-         | vsetvli
 
 /*
 op vadd(vd: VR, vs1: VR, vs2: VR)

@@ -94,6 +94,12 @@ class SeqXxxTemplate < RiscVBaseTemplate
         # This register must be excluded as it is used as temp by initializers and finalizers.
         set_reserved sp, true
 
+        if is_rev('RV32V') then
+          e32 = 0b010 # standard element width = 32
+          m4 = 0b10 # the number of vector registers in a group = 4
+          vsetvli t0, a0, e32, m4
+        end
+
         j :test_start
 label :crash_backward
         j :test_end # FIXME: :fail
@@ -120,18 +126,67 @@ label :test_end
   # Selects a random instruction sequence using the specified distribution.
   def next_random_sequence
     if not (defined? @sequence_distribution) then
+      if is_rev('RV64M') then
+        dist_seq_alu = range(:bias => 20, :value => lambda do seq_alu(USE_MUL, USE_DIV) end)
+      end
+
+      if is_rev('RV64C') then
+        dist_seq_alu_rvc = range(:bias => 10, :value => lambda do seq_alu_rvc end)
+      end
+
+      if is_rev('RV32I') then
+        dist_seq_branch = range(:bias => 15, :value => lambda do seq_branch end)
+      end
+
+      if is_rev('RV32C') then
+        dist_seq_branch_rvc = range(:bias =>  5, :value => lambda do seq_branch_rvc end)
+      end
+
+      if is_rev('RV64D') && is_rev('RV64F') then
+        dist_seq_fax = range(:bias =>  5, :value => lambda do seq_fax end)
+      end
+
+      if is_rev('RV64D') && is_rev('RV64F') then
+        dist_seq_fdiv = range(:bias =>  5, :value => lambda do seq_fdiv end)
+      end
+
+      if is_rev('RV32D') && is_rev('RV32F') then
+        dist_seq_fpmem = range(:bias =>  5, :value => lambda do seq_fpmem(MEMSIZE) end)
+      end
+
+      if is_rev('RV32FC') && is_rev('RV32DC') then
+        dist_seq_fpmem_rvc = range(:bias =>  5, :value => lambda do seq_fpmem_rvc(MEMSIZE) end)
+      end
+
+      if is_rev('RV32F') then
+        dist_seq_fpu = range(:bias => 10, :value => lambda do seq_fpu end)
+      end
+
+      if is_rev('RV64A') then
+        dist_seq_mem = range(:bias => 15, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end)
+      end
+
+      if is_rev('RV64C') then
+        dist_seq_mem_rvc = range(:bias =>  5, :value => lambda do seq_mem_rvc(MEMSIZE) end)
+      end
+
+      if is_rev('RV32V') then
+        #dist_seq_vector = range(:bias => 5, :value => lambda do seq_vector end)
+      end
+
       @sequence_distribution = dist(
-          range(:bias => 20, :value => lambda do seq_alu(USE_MUL, USE_DIV) end),
-          range(:bias => 10, :value => lambda do seq_alu_rvc end),
-          range(:bias => 15, :value => lambda do seq_branch end),
-          range(:bias =>  5, :value => lambda do seq_branch_rvc end),
-          range(:bias =>  5, :value => lambda do seq_fax end),
-          range(:bias =>  5, :value => lambda do seq_fdiv end),
-          range(:bias =>  5, :value => lambda do seq_fpmem(MEMSIZE) end),
-          range(:bias =>  5, :value => lambda do seq_fpmem_rvc(MEMSIZE) end),
-          range(:bias => 10, :value => lambda do seq_fpu end),
-          range(:bias => 15, :value => lambda do seq_mem(MEMSIZE, USE_AMO) end),
-          range(:bias =>  5, :value => lambda do seq_mem_rvc(MEMSIZE) end)
+          dist_seq_alu,
+          dist_seq_alu_rvc,
+          dist_seq_branch,
+          dist_seq_branch_rvc,
+          dist_seq_fax,
+          dist_seq_fdiv,
+          dist_seq_fpmem,
+          dist_seq_fpmem_rvc,
+          dist_seq_fpu,
+          dist_seq_mem,
+          dist_seq_mem_rvc#,
+          #dist_seq_vector
       )
     end
     @sequence_distribution.next_value.call

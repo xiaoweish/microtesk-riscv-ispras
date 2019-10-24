@@ -142,7 +142,7 @@ mode CX (i: card(3)) = XREG [coerce(card(5), i) + 8]
   syntax = format("%s", X(coerce(card(5), i) + 8).syntax)
   image  = format("%3s", i)
 
-#ifdef RV32CF
+#ifdef RV32FC
 mode CF (i: card(3)) = FPR [coerce(card(5), i) + 8]
   syntax = format("%s", F(coerce(card(5), i) + 8).syntax)
   image  = format("%3s", i)

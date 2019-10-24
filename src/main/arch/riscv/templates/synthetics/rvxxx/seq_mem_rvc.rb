@@ -19,16 +19,16 @@ module SeqMemRvc
   def seq_mem_rvc(memsize)
     pick_random {
       seq_mem_load_addrfn_sp_rvc('C_LWSP', rand_addr_w(memsize), _SLL(rand_range(0, 63), 2))
-      seq_mem_load_addrfn_sp_rvc('C_LDSP', rand_addr_d(memsize), _SLL(rand_range(0, 63), 3))
+      #seq_mem_load_addrfn_sp_rvc('C_LDSP', rand_addr_d(memsize), _SLL(rand_range(0, 63), 3))
 
       seq_mem_store_addrfn_sp_rvc('C_SWSP', rand_addr_w(memsize), _SLL(rand_range(0, 63), 2))
-      seq_mem_store_addrfn_sp_rvc('C_SDSP', rand_addr_d(memsize), _SLL(rand_range(0, 63), 3))
+      #seq_mem_store_addrfn_sp_rvc('C_SDSP', rand_addr_d(memsize), _SLL(rand_range(0, 63), 3))
 
       seq_mem_load_addrfn_rvc('C_LW', rand_addr_w(memsize), _SLL(rand_range(0, 31), 2))
-      seq_mem_load_addrfn_rvc('C_LD', rand_addr_d(memsize), _SLL(rand_range(0, 31), 3))
+      #seq_mem_load_addrfn_rvc('C_LD', rand_addr_d(memsize), _SLL(rand_range(0, 31), 3))
 
       seq_mem_store_addrfn_rvc('C_SW', rand_addr_w(memsize), _SLL(rand_range(0, 31), 2))
-      seq_mem_store_addrfn_rvc('C_SD', rand_addr_d(memsize), _SLL(rand_range(0, 31), 3))
+      #seq_mem_store_addrfn_rvc('C_SD', rand_addr_d(memsize), _SLL(rand_range(0, 31), 3))
     }
   end
 

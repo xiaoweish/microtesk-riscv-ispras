@@ -30,22 +30,22 @@ module SeqAlu
       seq_alu_src1_immfn('SRAI', rand_shamt)
       seq_alu_src1_immfn('ORI', rand_imm)
       seq_alu_src1_immfn('ANDI', rand_imm)
-      seq_alu_src1_immfn('ADDIW', rand_imm)
-      seq_alu_src1_immfn('SLLIW', rand_shamtw)
-      seq_alu_src1_immfn('SRLIW', rand_shamtw)
-      seq_alu_src1_immfn('SRAIW', rand_shamtw)
+      #seq_alu_src1_immfn('ADDIW', rand_imm)
+      #seq_alu_src1_immfn('SLLIW', rand_shamtw)
+      #seq_alu_src1_immfn('SRLIW', rand_shamtw)
+      #seq_alu_src1_immfn('SRAIW', rand_shamtw)
 
       ops = []
 
       ops += ['ADD', 'SUB', 'SLL', 'SLT', 'SLTU', 'XOR', 'SRL', 'SRA', 'OR', 'AND']
-      ops += ['ADDW', 'SUBW', 'SLLW', 'SRLW', 'SRAW']
+      #ops += ['ADDW', 'SUBW', 'SLLW', 'SRLW', 'SRAW']
 
       if use_mul then
-        ops += ['MUL', 'MULH', 'MULHSU', 'MULHU', 'MULW']
+        ops += ['MUL', 'MULH', 'MULHSU', 'MULHU'] #, 'MULW']
       end
 
       if use_div
-        ops += ['DIV', 'DIVU', 'REM', 'REMU', 'DIVW', 'DIVUW', 'REMW', 'REMUW']
+        ops += ['DIV', 'DIVU', 'REM', 'REMU'] #, 'DIVW', 'DIVUW', 'REMW', 'REMUW']
       end
 
       ops.each { |op|

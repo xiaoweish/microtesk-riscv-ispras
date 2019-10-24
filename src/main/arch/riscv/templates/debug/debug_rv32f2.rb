@@ -97,6 +97,7 @@ class InstructionRV32F2 < RiscVBaseTemplate
   end
 
   def run
+    if is_rev('RV32F') then
     trace "Run RV32F instruction:"
     nop
 
@@ -285,6 +286,9 @@ class InstructionRV32F2 < RiscVBaseTemplate
 
     nop
     nop
+    else
+      trace "RV32F is not supported in this core"
+    end
   end
 
 end

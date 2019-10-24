@@ -38,7 +38,7 @@ module TortureData
 label :xreg_init
     la x31, :xreg_init_data
     (0..31).each { |index|
-      ld x(index), x31, index * 8
+      lw x(index), x31, index * 8
     }
     newline
   end
@@ -48,7 +48,7 @@ label :xreg_init
 label :xreg_save
     la sp, :xreg_output_data
     (0..31).each { |index|
-      sd x(index), sp, index * 8 unless index == 2 # Not sp
+      sw x(index), sp, index * 8 unless index == 2 # Not sp
     }
   end
 

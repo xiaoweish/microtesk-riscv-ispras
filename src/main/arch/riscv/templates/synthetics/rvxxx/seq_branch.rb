@@ -131,15 +131,12 @@ label 1
 
   def seq_taken_jalr
     reg_x1 = reg_write_ra(:xregs)
-    reg_src1 = reg_read_zero(:xregs)
     reg_dst1 = reg_write_hidden(:xregs)
-    reg_dst2 = reg_write_hidden(:xregs)
 
     block(:combinator => 'diagonal', :compositor => 'catenation') {
-      la reg_dst1, :jalr_label
       atomic {
-label :jalr_label
-        jalr reg_dst2, reg_dst1, 8
+        la reg_dst1, label_f(1)
+        jalr reg_x1, reg_dst1, 0
         ILLEGAL()
       }
     }

@@ -23,10 +23,10 @@ module SeqAluRvc
       seq_alu_rvc_lui()
 
       seq_alu_rvc_addi4spn()
-      seq_alu_rvc_addi16sp()
+      #seq_alu_rvc_addi16sp()
 
       seq_alu_rvc_immfn('C_ADDI',  rand_range(0, 63))
-      seq_alu_rvc_immfn('C_ADDIW', rand_range(0, 63))
+      #seq_alu_rvc_immfn('C_ADDIW', rand_range(0, 63))
       seq_alu_rvc_immfn('C_SLLI',  rand_shift_imm)
 
       seq_alu_rvc_immfn_c('C_SRLI', rand_shift_imm)
@@ -38,7 +38,7 @@ module SeqAluRvc
         seq_alu_rvc_src_zero(op)
       }
 
-      ['C_AND', 'C_OR', 'C_XOR', 'C_SUB', 'C_ADDW', 'C_SUBW'].each { |op|
+      ['C_AND', 'C_OR', 'C_XOR', 'C_SUB'].each { |op| #, 'C_ADDW', 'C_SUBW'] 
         seq_alu_rvc_src_c(op)
         seq_alu_rvc_src_zero_c(op)
       }
@@ -71,14 +71,14 @@ module SeqAluRvc
     }
   end
 
-  def seq_alu_rvc_addi4spn
+  def seq_alu_rvc_addi16sp
     atomic {
       c_addi16sp _SLL(rand_range(1, 63), 4)
       c_nop # FIXME: C_NOP is for 32-bit alignment
     }
   end
 
-  def seq_alu_rvc_addi16sp()
+  def seq_alu_rvc_addi4spn()
     atomic {
       c_addi4spn to_cx(reg_write_hidden(:xregs_c)), _SLL(rand_range(1, 255), 2)
       c_nop # FIXME: C_NOP is for 32-bit alignment

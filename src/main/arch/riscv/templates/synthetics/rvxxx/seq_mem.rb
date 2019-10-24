@@ -23,13 +23,13 @@ module SeqMem
       seq_mem_load_addrfn('LH',  rand_addr_h(memsize))
       seq_mem_load_addrfn('LHU', rand_addr_h(memsize))
       seq_mem_load_addrfn('LW',  rand_addr_w(memsize))
-      seq_mem_load_addrfn('LWU', rand_addr_w(memsize))
-      seq_mem_load_addrfn('LD',  rand_addr_d(memsize))
+      #seq_mem_load_addrfn('LWU', rand_addr_w(memsize))
+      #seq_mem_load_addrfn('LD',  rand_addr_d(memsize))
 
       seq_mem_store_addrfn('SB', rand_addr_b(memsize))
       seq_mem_store_addrfn('SH', rand_addr_h(memsize))
       seq_mem_store_addrfn('SW', rand_addr_w(memsize))
-      seq_mem_store_addrfn('SD', rand_addr_d(memsize))
+      #seq_mem_store_addrfn('SD', rand_addr_d(memsize))
 
       if use_amo then
         seq_mem_amo_addrfn('AMOADD_W',  rand_addr_w(memsize))
@@ -126,14 +126,14 @@ module SeqMem
           lla l_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_w(8)), l_imm)
           lw l_reg_dest, l_reg_addr, l_imm
         }
-        sequence {
-          lla l_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_w(8)), l_imm)
-          lwu l_reg_dest, l_reg_addr, l_imm
-        }
-        sequence {
-          lla l_reg_addr, :test_memory, _SUB(dw_addr, l_imm)
-          ld l_reg_dest, l_reg_addr, l_imm
-        }
+        #sequence {
+        #  lla l_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_w(8)), l_imm)
+        #  lwu l_reg_dest, l_reg_addr, l_imm
+        #}
+        #sequence {
+        #  lla l_reg_addr, :test_memory, _SUB(dw_addr, l_imm)
+        #  ld l_reg_dest, l_reg_addr, l_imm
+        #}
       }
 
       iterate {
@@ -149,10 +149,10 @@ module SeqMem
           lla s_reg_addr, :test_memory, _SUB(_ADD(dw_addr, rand_addr_w(8)), s_imm)
           sw s_reg_src, s_reg_addr, s_imm
         }
-        sequence {
-          lla s_reg_addr, :test_memory, _SUB(dw_addr, s_imm)
-          sd s_reg_src, s_reg_addr, s_imm
-        }
+        #sequence {
+        #  lla s_reg_addr, :test_memory, _SUB(dw_addr, s_imm)
+        #  sd s_reg_src, s_reg_addr, s_imm
+        #}
       }
     }
   end

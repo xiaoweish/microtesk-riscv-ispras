@@ -229,6 +229,11 @@ task getCVC4(type: Copy) {
 test.dependsOn getCVC4
 
 test {
+  filter {
+    //include all test cases
+    includeTestsMatching "*TestCase"
+  }
+
   environment 'Z3_PATH', z3path
   environment 'CVC4_PATH', cvc4path
   environment 'QEMU_RISCV_PATH', "${project.projectDir}/build/tools/qemu/bin"

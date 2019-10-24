@@ -285,7 +285,7 @@ class RiscVBaseTemplate < Template
 
   # Prologue can be overridden in user templates.
   def pre_rvtest
-    RVTEST_RV64U()
+    RVTEST_RV32U()
     RVTEST_CODE_BEGIN()
   end
 

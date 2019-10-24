@@ -28,6 +28,7 @@ require_relative 'seq_fpmem_rvc'
 require_relative 'seq_fpu'
 require_relative 'seq_mem'
 require_relative 'seq_mem_rvc'
+require_relative 'seq_vector'
 
 require_relative 'seq_xxx_data'
 require_relative 'seq_xxx_regs'
@@ -53,6 +54,7 @@ class SeqXxxTemplate < RiscVBaseTemplate
   include SeqFpu
   include SeqMem
   include SeqMemRvc
+  include SeqVector
 
   include SeqXxxData
   include SeqXxxRegs
@@ -171,22 +173,22 @@ label :test_end
       end
 
       if is_rev('RV32V') then
-        #dist_seq_vector = range(:bias => 5, :value => lambda do seq_vector end)
+        dist_seq_vector = range(:bias => 5, :value => lambda do seq_vector end)
       end
 
       @sequence_distribution = dist(
-          dist_seq_alu,
-          dist_seq_alu_rvc,
-          dist_seq_branch,
-          dist_seq_branch_rvc,
-          dist_seq_fax,
-          dist_seq_fdiv,
-          dist_seq_fpmem,
-          dist_seq_fpmem_rvc,
-          dist_seq_fpu,
-          dist_seq_mem,
-          dist_seq_mem_rvc#,
-          #dist_seq_vector
+#          dist_seq_alu,
+#          dist_seq_alu_rvc,
+#          dist_seq_branch,
+#          dist_seq_branch_rvc,
+#          dist_seq_fax,
+#          dist_seq_fdiv,
+#          dist_seq_fpmem,
+#          dist_seq_fpmem_rvc,
+#          dist_seq_fpu,
+#          dist_seq_mem,
+#          dist_seq_mem_rvc,
+          dist_seq_vector
       )
     end
     @sequence_distribution.next_value.call

@@ -42,6 +42,8 @@ module SeqXxxRegs
       f(_ attrs) do situation('random_biased', :dist => rand_biased_dist, :size => 32) end
     elsif :fregs_s_c == regtype
       f(_ __FREGS_C(attrs)) do situation('random_biased', :dist => rand_biased_dist, :size => 32) end
+    elsif :vregs == regtype
+      vr(_ attrs) do situation('random_biased', :dist => rand_biased_dist) end
     else
       raise "Unsupported register type: #{regtype}"
     end
@@ -76,6 +78,8 @@ module SeqXxxRegs
       f(_ attrs)
     elsif :fregs_s_c == regtype
       f(_ __FREGS_C(attrs))
+    elsif :vregs == regtype
+      vr(_ __VRREGS(attrs))
     else
       raise "Unsupported register type: #{regtype}"
     end
@@ -134,6 +138,18 @@ module SeqXxxRegs
       attrs[:retain] + fregs_c
     else
       attrs[:retain] = fregs_c
+    end
+
+    attrs
+  end
+
+  def __VRREGS(attrs)
+    vregs = [v0, v4, v8, v12, v16, v20, v24, v28]
+
+    if attrs.has_key? :retain then
+      attrs[:retain] + vregs
+    else
+      attrs[:retain] = vregs
     end
 
     attrs

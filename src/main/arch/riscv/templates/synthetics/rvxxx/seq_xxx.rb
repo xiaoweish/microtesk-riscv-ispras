@@ -177,17 +177,17 @@ label :test_end
       end
 
       @sequence_distribution = dist(
-#          dist_seq_alu,
-#          dist_seq_alu_rvc,
-#          dist_seq_branch,
-#          dist_seq_branch_rvc,
-#          dist_seq_fax,
-#          dist_seq_fdiv,
-#          dist_seq_fpmem,
-#          dist_seq_fpmem_rvc,
-#          dist_seq_fpu,
-#          dist_seq_mem,
-#          dist_seq_mem_rvc,
+          dist_seq_alu,
+          dist_seq_alu_rvc,
+          dist_seq_branch,
+          dist_seq_branch_rvc,
+          dist_seq_fax,
+          dist_seq_fdiv,
+          dist_seq_fpmem,
+          dist_seq_fpmem_rvc,
+          dist_seq_fpu,
+          dist_seq_mem,
+          dist_seq_mem_rvc,
           dist_seq_vector
       )
     end

@@ -35,11 +35,11 @@ require_relative 'seq_xxx_regs'
 #
 # Description:
 #
-# This test template demonstrates how to generate random torture tests.
+# This test template demonstrates how to generate random tests.
 # It provides facilities that are similar to the ones of
 # RISC-V Torture Test Generator (https://github.com/ucb-bar/riscv-torture).
 #
-class TortureTemplate < RiscVBaseTemplate
+class SeqXxxTemplate < RiscVBaseTemplate
   include RiscvRand
 
   include SeqAlu
@@ -54,8 +54,8 @@ class TortureTemplate < RiscVBaseTemplate
   include SeqMem
   include SeqMemRvc
 
-  include TortureData
-  include TortureRegs
+  include SeqXxxData
+  include SeqXxxRegs
 
   # Configuration settings
   SEQ_NUMBER = 256
@@ -82,7 +82,7 @@ class TortureTemplate < RiscVBaseTemplate
   end
 
   def pre_testdata
-    TORTURE_DATA(MEMSIZE)
+    XXX_DATA(MEMSIZE)
   end
 
   def run

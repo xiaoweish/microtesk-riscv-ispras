@@ -16,7 +16,7 @@
 
 require_relative '../../riscv_rand'
 
-module TortureRegs
+module SeqXxxRegs
   include RiscvRand
 
   # returns register x0

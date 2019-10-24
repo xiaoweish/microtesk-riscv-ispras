@@ -1,5 +1,5 @@
-Torture Test Templates
-=============================
+Torture-like Test Templates
+===========================
 
 ### About
 

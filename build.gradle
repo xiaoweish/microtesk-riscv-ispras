@@ -42,7 +42,6 @@ apply plugin: 'os'
 apply plugin: 'java'
 apply plugin: 'java-library-distribution'
 apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
@@ -175,7 +174,6 @@ dependencies {
   checkstyle 'com.puppycrawl.tools:checkstyle:6.12.1'
   pmd 'net.sourceforge.pmd:pmd-core:5.4.0'
   pmd 'net.sourceforge.pmd:pmd-java:5.4.0'
-  findbugs 'com.google.code.findbugs:findbugs:3.0.1'
 }
 
 eclipse {
@@ -256,10 +254,6 @@ checkstyle {
   ignoreFailures = true
   showViolations = false
   configFile=file("${project.projectDir}/config/checkstyle/google_checks.xml")
-}
-
-findbugs {
-  ignoreFailures = true
 }
 
 pmd {

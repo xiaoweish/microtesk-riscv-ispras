@@ -117,7 +117,7 @@ class BranchGeneration2Template < RiscVBaseTemplate
      :engines => {
        :branch => {
          :branch_exec_limit => 3,
-         :block_exec_limit => 3,
+         :block_exec_limit  => 3,
          :trace_count_limit => 10 }}) {
       sequence {
         label :labelA

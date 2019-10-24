@@ -68,11 +68,11 @@ public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
 
     final IntNumber[] operands = result.operands;
     if (operands.length == 1) {
-      values = Collections.singletonMap(op + ".rs", operands[0].getValue());
+      values = Collections.singletonMap(op + ".rs", operands[0].getValue(true));
     } else {
       values = new HashMap<>();
-      values.put(op + ".rs1", operands[0].getValue());
-      values.put(op + ".rs2", operands[1].getValue());
+      values.put(op + ".rs1", operands[0].getValue(true));
+      values.put(op + ".rs2", operands[1].getValue(true));
     }
     
     return generate(query, values);

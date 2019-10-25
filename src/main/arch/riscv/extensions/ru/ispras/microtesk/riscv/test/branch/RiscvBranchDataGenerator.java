@@ -62,11 +62,10 @@ public abstract class RiscvBranchDataGenerator extends BranchDataGenerator {
 
   protected static Iterator<TestData> getTestData(
       final TestBaseQuery query,
-      final GeneratorResult<IntNumber> result) {
+      final IntNumber[] operands) {
     final String op  = getInstructionName(query);
     final Map<String, Long> values;
 
-    final IntNumber[] operands = result.operands;
     if (operands.length == 1) {
       values = Collections.singletonMap(op + ".rs", operands[0].getValue(true));
     } else {

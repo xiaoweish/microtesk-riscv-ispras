@@ -23,7 +23,7 @@ import ru.ispras.microtesk.test.Statistics;
 public final class SelfCheckTestCase extends RiscVTest {
   @Test
   public void test() {
-    final Statistics statistics = run("examples/selfcheck/selfchecks.rb");
+    final Statistics statistics = run("examples/selfcheck/selfcheck.rb");
     Assert.assertNotNull(statistics);
   }
 }

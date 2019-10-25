@@ -30,22 +30,17 @@ public final class BranchTestCase extends RiscVTest {
   }
 
   @Test
-  public void testBranch() {
-    test("branch.rb");
+  public void testBranchFixed() {
+    test("branch_fixed.rb");
   }
   
   @Test
-  public void testBranch1() {
-    test("branch1.rb");
+  public void testBranchMerge() {
+    test("branch_merge.rb");
   }
   
   @Test
-  public void testBranch2() {
-    test("branch2.rb");
-  }
-  
-  @Test
-  public void testBranch3() {
-    test("branch3.rb");
+  public void testBranchSpecs() {
+    test("branch_specs.rb");
   }
 }

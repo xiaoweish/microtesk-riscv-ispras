@@ -6,7 +6,7 @@
  2017/11/23 - 2019/MM/DD
 --------------------------------------------------------------------------------
 
- 2019/XX/XX MicroTESK RISC-V 0.0.9
+ 2019/10/25 MicroTESK RISC-V 0.0.9
 
  - Specifications: Added system registers and the related modes
  - Specifications: Added sample specifications of some vector instructions
@@ -16,6 +16,7 @@
  - Test Templates: Added sample test templates for vector instructions
  - Test Templates: Changed structure of directories
  - Test Templates: Fixed a Torture-like template ('synthetics/rvxxx')
+ - Tool Functions: Moved branch data generators to TestBase
  - Tests: Test suite uses QEMU4V 0.3.3
 
  2019/02/06 MicroTESK RISC-V 0.0.8

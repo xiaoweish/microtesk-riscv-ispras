@@ -16,6 +16,7 @@
  - Test Templates: Added sample test templates for vector instructions
  - Test Templates: Changed structure of directories
  - Test Templates: Fixed a Torture-like template ('synthetics/rvxxx')
+ - Tests: Test suite uses QEMU4V 0.3.3
 
  2019/02/06 MicroTESK RISC-V 0.0.8
 

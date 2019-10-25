@@ -35,6 +35,6 @@ public final class RiscvEqzDataGenerator extends RiscvBranchDataGenerator {
   @Override
   public Iterator<TestData> generateElse(final TestBaseQuery query) {
     final IntNumber[] operands = getOperands(query, 1);
-    return getTestData(query, BeqzThenElseGenerator.generateOperandsThen(operands));
+    return getTestData(query, BeqzThenElseGenerator.generateOperandsElse(operands));
   }
 }

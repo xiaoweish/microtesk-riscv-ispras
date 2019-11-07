@@ -1,0 +1,2 @@
+SAMPLE = memset
+include ../Makefrag

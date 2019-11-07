@@ -1,0 +1,36 @@
+C   = $(SAMPLE).c
+S   = $(SAMPLE).s
+LD  = $(SAMPLE).ld
+ELF = $(SAMPLE).elf
+LST = $(SAMPLE).lst
+BIN = $(SAMPLE).bin
+HEX = $(SAMPLE).hex
+
+TOOL    = riscv64-unknown-linux-gnu-XXX
+GCC     = $(TOOL:XXX=gcc)
+OBJDUMP = $(TOOL:XXX=objdump)
+OBJCOPY = $(TOOL:XXX=objcopy)
+
+all: $(LST) $(BIN) $(HEX)
+
+$(S): $(C)
+	$(GCC) -S $^
+
+$(LD):
+	echo "ENTRY($(SAMPLE)) SECTIONS { . = 0x00000000; }" > $@
+
+$(ELF): $(S) $(LD)
+	$(GCC) -nostartfiles -Wa,-march=rv64imafd -T$(LD) $(S) -o $@
+
+$(LST): $(ELF)
+	$(OBJDUMP) --endian=little --disassemble-all $^ > $@
+
+$(BIN): $(ELF)
+	$(OBJCOPY) -O binary --only-section=.text $^ $@
+
+$(HEX): $(BIN)
+	hexdump -v -e '/4 "%08x\n"' $^ > $@
+
+clean:
+	rm -rf $(S) $(LD) $(ELF) $(LST) $(BIN) $(HEX)
+

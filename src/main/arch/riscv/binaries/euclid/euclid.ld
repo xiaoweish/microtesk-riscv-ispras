@@ -1,0 +1,1 @@
+ENTRY(euclid) SECTIONS { . = 0x00000000; }

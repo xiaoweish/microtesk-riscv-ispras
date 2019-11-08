@@ -1,0 +1,5818 @@
+Analyzing file: euclid.bin...
+beq a0, a1, 10
+bge a1, a0, 10
+subw a0, a0, a1
+bne a1, a0, -4
+jalr zero, ra, 0
+jalr zero, ra, 0
+subw a1, a1, a0
+bne a0, a1, -12
+jal zero, 0xffffa
+COMPILE
+insn_0.action func void []
+bb0:
+call void instruction.action {func void [func void [i5], func void [i5], func void [i12]] {func void [i5] {i5 10} X, func void [i5] {i5 11} X, func void [i12] {i12 10} BRANCH_IMM} beq} instruction ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+insn_0.action func void []
+bb0:
+br label %bb5
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+br label %bb10
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb1
+bb4:
+br label %bb1
+bb5:
+%2 = Disclose func void [] of func void [func void [func void [i5], func void [i5], func void [i12]]] {func void [func void [i5], func void [i5], func void [i12]] {func void [i5] {i5 10} X, func void [i5] {i5 11} X, func void [i12] {i12 10} BRANCH_IMM} beq} instruction i32 0
+br label %bb2
+bb6:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb7:
+%18 = Disclose i5 of func i64 [i5] %9 i32 0
+%19 = load i64, [32, i64] XREG[%18]
+%20 = Disclose i5 of func i64 [i5] %10 i32 0
+%21 = load i64, [32, i64] XREG[%20]
+%12 = i1 Eq i64 %19, %21
+br i1 %12, label %bb8, label %bb9
+bb8:
+br label %bb13
+bb9:
+br label %bb6
+bb10:
+%9 = Disclose i64 of func void [] %2 i32 0
+%10 = Disclose func i64 [i5] of func void [] %2 i32 1
+%11 = Disclose func i64 [i5] of func void [] %2 i32 2
+br label %bb7
+bb11:
+%14 = Sext i12 %13 to i64
+%15 = i64 Shl i64 %14, 1
+%16 = load i64, i64 PC
+%17 = i64 Add i64 %16, %15
+store i64 %17, i64 PC
+br label %bb6
+bb12:
+%13 = i12 Use i12 %22
+br label %bb11
+bb13:
+%22 = Disclose void of func i12 [] %11 i32 0
+br label %bb12
+
+propagate
+insn_0.action func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+br label %bb3
+bb3:
+br label %bb4
+bb4:
+%13 = load i64, [32, i64] XREG[10]
+%14 = load i64, [32, i64] XREG[11]
+%8 = i1 Eq i64 %13, %14
+br i1 %8, label %bb5, label %bb6
+bb5:
+br label %bb7
+bb6:
+br label %bb8
+bb7:
+br label %bb9
+bb8:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb10, label %bb11
+bb9:
+br label %bb12
+bb10:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb13
+bb11:
+br label %bb13
+bb12:
+%9 = Sext i12 10 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb8
+bb13:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+insn_0.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%13 = load i64, [32, i64] XREG[10]
+%14 = load i64, [32, i64] XREG[11]
+%8 = i1 Eq i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 10 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+COMPILE
+insn_1.action func void []
+bb0:
+call void instruction.action {func void [func void [i5], func void [i5], func void [i12]] {func void [i5] {i5 11} X, func void [i5] {i5 10} X, func void [i12] {i12 10} BRANCH_IMM} bge} instruction ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+insn_1.action func void []
+bb0:
+br label %bb5
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+br label %bb10
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb1
+bb4:
+br label %bb1
+bb5:
+%2 = Disclose func void [] of func void [func void [func void [i5], func void [i5], func void [i12]]] {func void [func void [i5], func void [i5], func void [i12]] {func void [i5] {i5 11} X, func void [i5] {i5 10} X, func void [i12] {i12 10} BRANCH_IMM} bge} instruction i32 0
+br label %bb2
+bb6:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb7:
+%18 = Disclose i5 of func i64 [i5] %9 i32 0
+%19 = load i64, [32, i64] XREG[%18]
+%20 = Disclose i5 of func i64 [i5] %10 i32 0
+%21 = load i64, [32, i64] XREG[%20]
+%12 = i1 Sge i64 %19, %21
+br i1 %12, label %bb8, label %bb9
+bb8:
+br label %bb13
+bb9:
+br label %bb6
+bb10:
+%9 = Disclose i64 of func void [] %2 i32 0
+%10 = Disclose func i64 [i5] of func void [] %2 i32 1
+%11 = Disclose func i64 [i5] of func void [] %2 i32 2
+br label %bb7
+bb11:
+%14 = Sext i12 %13 to i64
+%15 = i64 Shl i64 %14, 1
+%16 = load i64, i64 PC
+%17 = i64 Add i64 %16, %15
+store i64 %17, i64 PC
+br label %bb6
+bb12:
+%13 = i12 Use i12 %22
+br label %bb11
+bb13:
+%22 = Disclose void of func i12 [] %11 i32 0
+br label %bb12
+
+propagate
+insn_1.action func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+br label %bb3
+bb3:
+br label %bb4
+bb4:
+%13 = load i64, [32, i64] XREG[11]
+%14 = load i64, [32, i64] XREG[10]
+%8 = i1 Sge i64 %13, %14
+br i1 %8, label %bb5, label %bb6
+bb5:
+br label %bb7
+bb6:
+br label %bb8
+bb7:
+br label %bb9
+bb8:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb10, label %bb11
+bb9:
+br label %bb12
+bb10:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb13
+bb11:
+br label %bb13
+bb12:
+%9 = Sext i12 10 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb8
+bb13:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+insn_1.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%13 = load i64, [32, i64] XREG[11]
+%14 = load i64, [32, i64] XREG[10]
+%8 = i1 Sge i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 10 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+COMPILE
+insn_2.action func void []
+bb0:
+call void instruction.action {func void [func void [i5], func void [i5], func void [i5]] {func void [i5] {i5 10} X, func void [i5] {i5 10} X, func void [i5] {i5 11} X} subw} instruction ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+insn_2.action func void []
+bb0:
+br label %bb5
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+br label %bb8
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb1
+bb4:
+br label %bb1
+bb5:
+%2 = Disclose func void [] of func void [func void [func void [i5], func void [i5], func void [i5]]] {func void [func void [i5], func void [i5], func void [i5]] {func void [i5] {i5 10} X, func void [i5] {i5 10} X, func void [i5] {i5 11} X} subw} instruction i32 0
+br label %bb2
+bb6:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb7:
+%16 = Disclose i5 of func i64 [i5] %10 i32 0
+%17 = load i64, [32, i64] XREG[%16]
+%12 = Extract i32 of i64 %17 <31, 0>
+%18 = Disclose i5 of func i64 [i5] %11 i32 0
+%19 = load i64, [32, i64] XREG[%18]
+%14 = Extract i32 of i64 %19 <31, 0>
+%13 = i32 Sub i32 %12, %14
+%15 = Sext i32 %13 to i64
+%20 = Disclose i5 of func i64 [i5] %9 i32 0
+store i64 %15, [32, i64] XREG[%20]
+br label %bb6
+bb8:
+%9 = Disclose i64 of func void [] %2 i32 0
+%10 = Disclose func i64 [i5] of func void [] %2 i32 1
+%11 = Disclose func i64 [i5] of func void [] %2 i32 2
+br label %bb7
+
+propagate
+insn_2.action func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+br label %bb3
+bb3:
+br label %bb4
+bb4:
+%12 = load i64, [32, i64] XREG[10]
+%8 = Extract i32 of i64 %12 <31, 0>
+%13 = load i64, [32, i64] XREG[11]
+%10 = Extract i32 of i64 %13 <31, 0>
+%9 = i32 Sub i32 %8, %10
+%11 = Sext i32 %9 to i64
+store i64 %11, [32, i64] XREG[10]
+br label %bb5
+bb5:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb6, label %bb7
+bb6:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+insn_2.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%12 = load i64, [32, i64] XREG[10]
+%8 = Extract i32 of i64 %12 <31, 0>
+%13 = load i64, [32, i64] XREG[11]
+%10 = Extract i32 of i64 %13 <31, 0>
+%9 = i32 Sub i32 %8, %10
+%11 = Sext i32 %9 to i64
+store i64 %11, [32, i64] XREG[10]
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+COMPILE
+insn_3.action func void []
+bb0:
+call void instruction.action {func void [func void [i5], func void [i5], func void [i12]] {func void [i5] {i5 11} X, func void [i5] {i5 10} X, func void [i12] {i12 4092} BRANCH_IMM} bne} instruction ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+insn_3.action func void []
+bb0:
+br label %bb5
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+br label %bb10
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb1
+bb4:
+br label %bb1
+bb5:
+%2 = Disclose func void [] of func void [func void [func void [i5], func void [i5], func void [i12]]] {func void [func void [i5], func void [i5], func void [i12]] {func void [i5] {i5 11} X, func void [i5] {i5 10} X, func void [i12] {i12 4092} BRANCH_IMM} bne} instruction i32 0
+br label %bb2
+bb6:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb7:
+%18 = Disclose i5 of func i64 [i5] %9 i32 0
+%19 = load i64, [32, i64] XREG[%18]
+%20 = Disclose i5 of func i64 [i5] %10 i32 0
+%21 = load i64, [32, i64] XREG[%20]
+%12 = i1 Ne i64 %19, %21
+br i1 %12, label %bb8, label %bb9
+bb8:
+br label %bb13
+bb9:
+br label %bb6
+bb10:
+%9 = Disclose i64 of func void [] %2 i32 0
+%10 = Disclose func i64 [i5] of func void [] %2 i32 1
+%11 = Disclose func i64 [i5] of func void [] %2 i32 2
+br label %bb7
+bb11:
+%14 = Sext i12 %13 to i64
+%15 = i64 Shl i64 %14, 1
+%16 = load i64, i64 PC
+%17 = i64 Add i64 %16, %15
+store i64 %17, i64 PC
+br label %bb6
+bb12:
+%13 = i12 Use i12 %22
+br label %bb11
+bb13:
+%22 = Disclose void of func i12 [] %11 i32 0
+br label %bb12
+
+propagate
+insn_3.action func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+br label %bb3
+bb3:
+br label %bb4
+bb4:
+%13 = load i64, [32, i64] XREG[11]
+%14 = load i64, [32, i64] XREG[10]
+%8 = i1 Ne i64 %13, %14
+br i1 %8, label %bb5, label %bb6
+bb5:
+br label %bb7
+bb6:
+br label %bb8
+bb7:
+br label %bb9
+bb8:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb10, label %bb11
+bb9:
+br label %bb12
+bb10:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb13
+bb11:
+br label %bb13
+bb12:
+%9 = Sext i12 4092 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb8
+bb13:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+insn_3.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%13 = load i64, [32, i64] XREG[11]
+%14 = load i64, [32, i64] XREG[10]
+%8 = i1 Ne i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 4092 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+COMPILE
+insn_4.action func void []
+bb0:
+call void instruction.action {func void [func void [i5], func void [i5], i12] {func void [i5] {i5 0} X, func void [i5] {i5 1} X, i12 0} jalr} instruction ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+insn_4.action func void []
+bb0:
+br label %bb5
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+br label %bb8
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb1
+bb4:
+br label %bb1
+bb5:
+%2 = Disclose func void [] of func void [func void [func void [i5], func void [i5], i12]] {func void [func void [i5], func void [i5], i12] {func void [i5] {i5 0} X, func void [i5] {i5 1} X, i12 0} jalr} instruction i32 0
+br label %bb2
+bb6:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb7:
+%12 = load i64, i64 PC
+%13 = i64 Add i64 %12, 4
+%18 = Disclose i5 of func i64 [i5] %9 i32 0
+store i64 %13, [32, i64] XREG[%18]
+%14 = Sext i12 %11 to i64
+%15 = i64 Lshr i64 %14, 1
+%16 = i64 Shl i64 %15, 1
+%19 = Disclose i5 of func i64 [i5] %10 i32 0
+%20 = load i64, [32, i64] XREG[%19]
+%17 = i64 Add i64 %20, %16
+store i64 %17, i64 PC
+br label %bb6
+bb8:
+%9 = Disclose i64 of func void [] %2 i32 0
+%10 = Disclose func i64 [i5] of func void [] %2 i32 1
+%11 = Disclose func i64 [i5] of func void [] %2 i32 2
+br label %bb7
+
+propagate
+insn_4.action func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+br label %bb3
+bb3:
+br label %bb4
+bb4:
+%8 = load i64, i64 PC
+%9 = i64 Add i64 %8, 4
+store i64 %9, [32, i64] XREG[0]
+%10 = Sext i12 0 to i64
+%11 = i64 Lshr i64 %10, 1
+%12 = i64 Shl i64 %11, 1
+%14 = load i64, [32, i64] XREG[1]
+%13 = i64 Add i64 %14, %12
+store i64 %13, i64 PC
+br label %bb5
+bb5:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb6, label %bb7
+bb6:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+insn_4.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%8 = load i64, i64 PC
+%9 = i64 Add i64 %8, 4
+store i64 %9, [32, i64] XREG[0]
+%10 = Sext i12 0 to i64
+%11 = i64 Lshr i64 %10, 1
+%12 = i64 Shl i64 %11, 1
+%14 = load i64, [32, i64] XREG[1]
+%13 = i64 Add i64 %14, %12
+store i64 %13, i64 PC
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+COMPILE
+insn_5.action func void []
+bb0:
+call void instruction.action {func void [func void [i5], func void [i5], i12] {func void [i5] {i5 0} X, func void [i5] {i5 1} X, i12 0} jalr} instruction ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+insn_5.action func void []
+bb0:
+br label %bb5
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+br label %bb8
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb1
+bb4:
+br label %bb1
+bb5:
+%2 = Disclose func void [] of func void [func void [func void [i5], func void [i5], i12]] {func void [func void [i5], func void [i5], i12] {func void [i5] {i5 0} X, func void [i5] {i5 1} X, i12 0} jalr} instruction i32 0
+br label %bb2
+bb6:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb7:
+%12 = load i64, i64 PC
+%13 = i64 Add i64 %12, 4
+%18 = Disclose i5 of func i64 [i5] %9 i32 0
+store i64 %13, [32, i64] XREG[%18]
+%14 = Sext i12 %11 to i64
+%15 = i64 Lshr i64 %14, 1
+%16 = i64 Shl i64 %15, 1
+%19 = Disclose i5 of func i64 [i5] %10 i32 0
+%20 = load i64, [32, i64] XREG[%19]
+%17 = i64 Add i64 %20, %16
+store i64 %17, i64 PC
+br label %bb6
+bb8:
+%9 = Disclose i64 of func void [] %2 i32 0
+%10 = Disclose func i64 [i5] of func void [] %2 i32 1
+%11 = Disclose func i64 [i5] of func void [] %2 i32 2
+br label %bb7
+
+propagate
+insn_5.action func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+br label %bb3
+bb3:
+br label %bb4
+bb4:
+%8 = load i64, i64 PC
+%9 = i64 Add i64 %8, 4
+store i64 %9, [32, i64] XREG[0]
+%10 = Sext i12 0 to i64
+%11 = i64 Lshr i64 %10, 1
+%12 = i64 Shl i64 %11, 1
+%14 = load i64, [32, i64] XREG[1]
+%13 = i64 Add i64 %14, %12
+store i64 %13, i64 PC
+br label %bb5
+bb5:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb6, label %bb7
+bb6:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+insn_5.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%8 = load i64, i64 PC
+%9 = i64 Add i64 %8, 4
+store i64 %9, [32, i64] XREG[0]
+%10 = Sext i12 0 to i64
+%11 = i64 Lshr i64 %10, 1
+%12 = i64 Shl i64 %11, 1
+%14 = load i64, [32, i64] XREG[1]
+%13 = i64 Add i64 %14, %12
+store i64 %13, i64 PC
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+COMPILE
+insn_6.action func void []
+bb0:
+call void instruction.action {func void [func void [i5], func void [i5], func void [i5]] {func void [i5] {i5 11} X, func void [i5] {i5 11} X, func void [i5] {i5 10} X} subw} instruction ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+insn_6.action func void []
+bb0:
+br label %bb5
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+br label %bb8
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb1
+bb4:
+br label %bb1
+bb5:
+%2 = Disclose func void [] of func void [func void [func void [i5], func void [i5], func void [i5]]] {func void [func void [i5], func void [i5], func void [i5]] {func void [i5] {i5 11} X, func void [i5] {i5 11} X, func void [i5] {i5 10} X} subw} instruction i32 0
+br label %bb2
+bb6:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb7:
+%16 = Disclose i5 of func i64 [i5] %10 i32 0
+%17 = load i64, [32, i64] XREG[%16]
+%12 = Extract i32 of i64 %17 <31, 0>
+%18 = Disclose i5 of func i64 [i5] %11 i32 0
+%19 = load i64, [32, i64] XREG[%18]
+%14 = Extract i32 of i64 %19 <31, 0>
+%13 = i32 Sub i32 %12, %14
+%15 = Sext i32 %13 to i64
+%20 = Disclose i5 of func i64 [i5] %9 i32 0
+store i64 %15, [32, i64] XREG[%20]
+br label %bb6
+bb8:
+%9 = Disclose i64 of func void [] %2 i32 0
+%10 = Disclose func i64 [i5] of func void [] %2 i32 1
+%11 = Disclose func i64 [i5] of func void [] %2 i32 2
+br label %bb7
+
+propagate
+insn_6.action func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+br label %bb3
+bb3:
+br label %bb4
+bb4:
+%12 = load i64, [32, i64] XREG[11]
+%8 = Extract i32 of i64 %12 <31, 0>
+%13 = load i64, [32, i64] XREG[10]
+%10 = Extract i32 of i64 %13 <31, 0>
+%9 = i32 Sub i32 %8, %10
+%11 = Sext i32 %9 to i64
+store i64 %11, [32, i64] XREG[11]
+br label %bb5
+bb5:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb6, label %bb7
+bb6:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+insn_6.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%12 = load i64, [32, i64] XREG[11]
+%8 = Extract i32 of i64 %12 <31, 0>
+%13 = load i64, [32, i64] XREG[10]
+%10 = Extract i32 of i64 %13 <31, 0>
+%9 = i32 Sub i32 %8, %10
+%11 = Sext i32 %9 to i64
+store i64 %11, [32, i64] XREG[11]
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+COMPILE
+insn_7.action func void []
+bb0:
+call void instruction.action {func void [func void [i5], func void [i5], func void [i12]] {func void [i5] {i5 10} X, func void [i5] {i5 11} X, func void [i12] {i12 4084} BRANCH_IMM} bne} instruction ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+insn_7.action func void []
+bb0:
+br label %bb5
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+br label %bb10
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb1
+bb4:
+br label %bb1
+bb5:
+%2 = Disclose func void [] of func void [func void [func void [i5], func void [i5], func void [i12]]] {func void [func void [i5], func void [i5], func void [i12]] {func void [i5] {i5 10} X, func void [i5] {i5 11} X, func void [i12] {i12 4084} BRANCH_IMM} bne} instruction i32 0
+br label %bb2
+bb6:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb7:
+%18 = Disclose i5 of func i64 [i5] %9 i32 0
+%19 = load i64, [32, i64] XREG[%18]
+%20 = Disclose i5 of func i64 [i5] %10 i32 0
+%21 = load i64, [32, i64] XREG[%20]
+%12 = i1 Ne i64 %19, %21
+br i1 %12, label %bb8, label %bb9
+bb8:
+br label %bb13
+bb9:
+br label %bb6
+bb10:
+%9 = Disclose i64 of func void [] %2 i32 0
+%10 = Disclose func i64 [i5] of func void [] %2 i32 1
+%11 = Disclose func i64 [i5] of func void [] %2 i32 2
+br label %bb7
+bb11:
+%14 = Sext i12 %13 to i64
+%15 = i64 Shl i64 %14, 1
+%16 = load i64, i64 PC
+%17 = i64 Add i64 %16, %15
+store i64 %17, i64 PC
+br label %bb6
+bb12:
+%13 = i12 Use i12 %22
+br label %bb11
+bb13:
+%22 = Disclose void of func i12 [] %11 i32 0
+br label %bb12
+
+propagate
+insn_7.action func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+br label %bb3
+bb3:
+br label %bb4
+bb4:
+%13 = load i64, [32, i64] XREG[10]
+%14 = load i64, [32, i64] XREG[11]
+%8 = i1 Ne i64 %13, %14
+br i1 %8, label %bb5, label %bb6
+bb5:
+br label %bb7
+bb6:
+br label %bb8
+bb7:
+br label %bb9
+bb8:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb10, label %bb11
+bb9:
+br label %bb12
+bb10:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb13
+bb11:
+br label %bb13
+bb12:
+%9 = Sext i12 4084 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb8
+bb13:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+insn_7.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%13 = load i64, [32, i64] XREG[10]
+%14 = load i64, [32, i64] XREG[11]
+%8 = i1 Ne i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 4084 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+COMPILE
+insn_8.action func void []
+bb0:
+call void instruction.action {func void [func void [i5], func void [i20]] {func void [i5] {i5 0} X, func void [i20] {i20 1048570} JUMP_IMM} jal} instruction ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+insn_8.action func void []
+bb0:
+br label %bb5
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+br label %bb8
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb1
+bb4:
+br label %bb1
+bb5:
+%2 = Disclose func void [] of func void [func void [func void [i5], func void [i20]]] {func void [func void [i5], func void [i20]] {func void [i5] {i5 0} X, func void [i20] {i20 1048570} JUMP_IMM} jal} instruction i32 0
+br label %bb2
+bb6:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb7:
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, 4
+%18 = Disclose i5 of func i64 [i5] %9 i32 0
+store i64 %12, [32, i64] XREG[%18]
+br label %bb11
+bb8:
+%9 = Disclose i64 of func void [] %2 i32 0
+%10 = Disclose func i64 [i5] of func void [] %2 i32 1
+br label %bb7
+bb9:
+%14 = Sext i20 %13 to i64
+%15 = i64 Shl i64 %14, 1
+%16 = load i64, i64 PC
+%17 = i64 Add i64 %16, %15
+store i64 %17, i64 PC
+br label %bb6
+bb10:
+%13 = i20 Use i20 %19
+br label %bb9
+bb11:
+%19 = Disclose i64 of func i20 [] %10 i32 0
+br label %bb10
+
+propagate
+insn_8.action func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+br label %bb3
+bb3:
+br label %bb4
+bb4:
+%8 = load i64, i64 PC
+%9 = i64 Add i64 %8, 4
+store i64 %9, [32, i64] XREG[0]
+br label %bb5
+bb5:
+br label %bb6
+bb6:
+br label %bb7
+bb7:
+%10 = Sext i20 1048570 to i64
+%11 = i64 Shl i64 %10, 1
+%12 = load i64, i64 PC
+%13 = i64 Add i64 %12, %11
+store i64 %13, i64 PC
+br label %bb8
+bb8:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb9, label %bb10
+bb9:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb11
+bb10:
+br label %bb11
+bb11:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+insn_8.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%8 = load i64, i64 PC
+%9 = i64 Add i64 %8, 4
+store i64 %9, [32, i64] XREG[0]
+%10 = Sext i20 1048570 to i64
+%11 = i64 Shl i64 %10, 1
+%12 = load i64, i64 PC
+%13 = i64 Add i64 %12, %11
+store i64 %13, i64 PC
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+COMPILE
+insn_0.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%13 = load i64, [32, i64] XREG[10]
+%14 = load i64, [32, i64] XREG[11]
+%8 = i1 Eq i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 10 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+insn_0.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%2 = load i64, i64 PC!1
+prev_pc!2 = store i64 %2, i64 prev_pc!1
+%13 = load i64, [32, i64] XREG!2[10]
+%14 = load i64, [32, i64] XREG!2[11]
+%8 = i1 Eq i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 10 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC!1
+%12 = i64 Add i64 %11, %10
+PC!6 = store i64 %12, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %8 PC!6 PC!1
+%3 = load i64, i64 PC!2
+%5 = load i64, i64 prev_pc!2
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC!2
+%7 = i64 Add i64 %6, 4
+PC!3 = store i64 %7, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %4 PC!3 PC!2
+%1 = load i64, i64 PC!4
+PC!5 = store i64 %1, i64 PC!4
+ret void
+
+SSA forward
+insn_0.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%4 = load i64, [32, i64] XREG!2[10]
+%5 = load i64, [32, i64] XREG!2[11]
+%3 = i1 Eq i64 %4, %5
+br i1 %3, label %bb1, label %bb2
+bb1:
+PC!6 = store i64 20, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 20 0
+%1 = i1 Eq i64 PC!2, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!3 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %1 %2 PC!2
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+Nested SCCP
+insn_0.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%4 = load i64, [32, i64] XREG!2[10]
+%5 = load i64, [32, i64] XREG!2[11]
+%3 = i1 Eq i64 %4, %5
+br i1 %3, label %bb1, label %bb2
+bb1:
+PC!6 = store i64 20, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 20 0
+%1 = i1 Eq i64 PC!2, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 0, 4
+PC!3 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %3 20 %2
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+SCCP forward
+insn_0.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[10]
+%4 = load i64, [32, i64] XREG!2[11]
+%2 = i1 Eq i64 %3, %4
+br i1 %2, label %bb1, label %bb2
+bb1:
+PC!6 = store i64 20, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %2 20 0
+%1 = i1 Eq i64 PC!2, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+PC!3 = store i64 4, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %2 20 4
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+cherry
+insn_0.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[10]
+%4 = load i64, [32, i64] XREG!2[11]
+%2 = i1 Eq i64 %3, %4
+br i1 %2, label %bb1, label %bb2
+bb1:
+PC!6 = store i64 20, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %2 20 0
+%1 = i1 Eq i64 PC!2, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+PC!3 = store i64 4, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %2 20 4
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+COMPILE
+insn_1.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%13 = load i64, [32, i64] XREG[11]
+%14 = load i64, [32, i64] XREG[10]
+%8 = i1 Sge i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 10 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+insn_1.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%2 = load i64, i64 PC!1
+prev_pc!2 = store i64 %2, i64 prev_pc!1
+%13 = load i64, [32, i64] XREG!2[11]
+%14 = load i64, [32, i64] XREG!2[10]
+%8 = i1 Sge i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 10 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC!1
+%12 = i64 Add i64 %11, %10
+PC!6 = store i64 %12, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %8 PC!6 PC!1
+%3 = load i64, i64 PC!2
+%5 = load i64, i64 prev_pc!2
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC!2
+%7 = i64 Add i64 %6, 4
+PC!3 = store i64 %7, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %4 PC!3 PC!2
+%1 = load i64, i64 PC!4
+PC!5 = store i64 %1, i64 PC!4
+ret void
+
+SSA forward
+insn_1.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%4 = load i64, [32, i64] XREG!2[11]
+%5 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %4, %5
+br i1 %3, label %bb1, label %bb2
+bb1:
+PC!6 = store i64 20, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 20 0
+%1 = i1 Eq i64 PC!2, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!3 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %1 %2 PC!2
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+Nested SCCP
+insn_1.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%4 = load i64, [32, i64] XREG!2[11]
+%5 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %4, %5
+br i1 %3, label %bb1, label %bb2
+bb1:
+PC!6 = store i64 20, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 20 0
+%1 = i1 Eq i64 PC!2, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 0, 4
+PC!3 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %3 20 %2
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+SCCP forward
+insn_1.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[11]
+%4 = load i64, [32, i64] XREG!2[10]
+%2 = i1 Sge i64 %3, %4
+br i1 %2, label %bb1, label %bb2
+bb1:
+PC!6 = store i64 20, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %2 20 0
+%1 = i1 Eq i64 PC!2, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+PC!3 = store i64 4, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %2 20 4
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+cherry
+insn_1.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[11]
+%4 = load i64, [32, i64] XREG!2[10]
+%2 = i1 Sge i64 %3, %4
+br i1 %2, label %bb1, label %bb2
+bb1:
+PC!6 = store i64 20, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %2 20 0
+%1 = i1 Eq i64 PC!2, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+PC!3 = store i64 4, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %2 20 4
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+COMPILE
+insn_2.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%12 = load i64, [32, i64] XREG[10]
+%8 = Extract i32 of i64 %12 <31, 0>
+%13 = load i64, [32, i64] XREG[11]
+%10 = Extract i32 of i64 %13 <31, 0>
+%9 = i32 Sub i32 %8, %10
+%11 = Sext i32 %9 to i64
+store i64 %11, [32, i64] XREG[10]
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+insn_2.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%2 = load i64, i64 PC!1
+prev_pc!2 = store i64 %2, i64 prev_pc!1
+%12 = load i64, [32, i64] XREG!2[10]
+%8 = Extract i32 of i64 %12 <31, 0>
+%13 = load i64, [32, i64] XREG!2[11]
+%10 = Extract i32 of i64 %13 <31, 0>
+%9 = i32 Sub i32 %8, %10
+%11 = Sext i32 %9 to i64
+XREG!3 = store i64 %11, [32, i64] XREG!2[10]
+%3 = load i64, i64 PC!1
+%5 = load i64, i64 prev_pc!2
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC!1
+%7 = i64 Add i64 %6, 4
+PC!2 = store i64 %7, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %4 PC!2 PC!1
+%1 = load i64, i64 PC!3
+PC!4 = store i64 %1, i64 PC!3
+ret void
+
+SSA forward
+insn_2.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[10]
+%1 = Extract i32 of i64 %5 <31, 0>
+%6 = load i64, [32, i64] XREG!2[11]
+%3 = Extract i32 of i64 %6 <31, 0>
+%2 = i32 Sub i32 %1, %3
+%4 = Sext i32 %2 to i64
+XREG!3 = store i64 %4, [32, i64] XREG!2[10]
+br label %bb1
+bb1:
+PC!2 = store i64 4, i64 PC!1
+br label %bb2
+bb2:
+store i64 4, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+Nested SCCP
+insn_2.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[10]
+%1 = Extract i32 of i64 %5 <31, 0>
+%6 = load i64, [32, i64] XREG!2[11]
+%3 = Extract i32 of i64 %6 <31, 0>
+%2 = i32 Sub i32 %1, %3
+%4 = Sext i32 %2 to i64
+XREG!3 = store i64 %4, [32, i64] XREG!2[10]
+br label %bb1
+bb1:
+PC!2 = store i64 4, i64 PC!1
+br label %bb2
+bb2:
+store i64 4, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+SCCP forward
+insn_2.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[10]
+%1 = Extract i32 of i64 %5 <31, 0>
+%6 = load i64, [32, i64] XREG!2[11]
+%3 = Extract i32 of i64 %6 <31, 0>
+%2 = i32 Sub i32 %1, %3
+%4 = Sext i32 %2 to i64
+XREG!3 = store i64 %4, [32, i64] XREG!2[10]
+br label %bb1
+bb1:
+PC!2 = store i64 4, i64 PC!1
+br label %bb2
+bb2:
+store i64 4, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+cherry
+insn_2.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[10]
+%1 = Extract i32 of i64 %5 <31, 0>
+%6 = load i64, [32, i64] XREG!2[11]
+%3 = Extract i32 of i64 %6 <31, 0>
+%2 = i32 Sub i32 %1, %3
+%4 = Sext i32 %2 to i64
+XREG!3 = store i64 %4, [32, i64] XREG!2[10]
+PC!2 = store i64 4, i64 PC!1
+store i64 4, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+COMPILE
+insn_3.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%13 = load i64, [32, i64] XREG[11]
+%14 = load i64, [32, i64] XREG[10]
+%8 = i1 Ne i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 4092 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+insn_3.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%2 = load i64, i64 PC!1
+prev_pc!2 = store i64 %2, i64 prev_pc!1
+%13 = load i64, [32, i64] XREG!2[11]
+%14 = load i64, [32, i64] XREG!2[10]
+%8 = i1 Ne i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 4092 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC!1
+%12 = i64 Add i64 %11, %10
+PC!2 = store i64 %12, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %8 PC!2 PC!1
+%3 = load i64, i64 PC!3
+%5 = load i64, i64 prev_pc!2
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC!3
+%7 = i64 Add i64 %6, 4
+PC!6 = store i64 %7, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %4 PC!6 PC!3
+%1 = load i64, i64 PC!4
+PC!5 = store i64 %1, i64 PC!4
+ret void
+
+SSA forward
+insn_3.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%4 = load i64, [32, i64] XREG!2[11]
+%5 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Ne i64 %4, %5
+br i1 %3, label %bb1, label %bb2
+bb1:
+PC!2 = store i64 -8, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %3 -8 0
+%1 = i1 Eq i64 PC!3, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!3, 4
+PC!6 = store i64 %2, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %1 %2 PC!3
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+Nested SCCP
+insn_3.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%4 = load i64, [32, i64] XREG!2[11]
+%5 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Ne i64 %4, %5
+br i1 %3, label %bb1, label %bb2
+bb1:
+PC!2 = store i64 -8, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %3 -8 0
+%1 = i1 Eq i64 PC!3, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 0, 4
+PC!6 = store i64 %2, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %3 -8 %2
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+SCCP forward
+insn_3.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[11]
+%4 = load i64, [32, i64] XREG!2[10]
+%2 = i1 Ne i64 %3, %4
+br i1 %2, label %bb1, label %bb2
+bb1:
+PC!2 = store i64 -8, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %2 -8 0
+%1 = i1 Eq i64 PC!3, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+PC!6 = store i64 4, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %2 -8 4
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+cherry
+insn_3.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[11]
+%4 = load i64, [32, i64] XREG!2[10]
+%2 = i1 Ne i64 %3, %4
+br i1 %2, label %bb1, label %bb2
+bb1:
+PC!2 = store i64 -8, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %2 -8 0
+%1 = i1 Eq i64 PC!3, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+PC!6 = store i64 4, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %2 -8 4
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+COMPILE
+insn_4.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%8 = load i64, i64 PC
+%9 = i64 Add i64 %8, 4
+store i64 %9, [32, i64] XREG[0]
+%10 = Sext i12 0 to i64
+%11 = i64 Lshr i64 %10, 1
+%12 = i64 Shl i64 %11, 1
+%14 = load i64, [32, i64] XREG[1]
+%13 = i64 Add i64 %14, %12
+store i64 %13, i64 PC
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+insn_4.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%2 = load i64, i64 PC!1
+prev_pc!2 = store i64 %2, i64 prev_pc!1
+%8 = load i64, i64 PC!1
+%9 = i64 Add i64 %8, 4
+XREG!3 = store i64 %9, [32, i64] XREG!2[0]
+%10 = Sext i12 0 to i64
+%11 = i64 Lshr i64 %10, 1
+%12 = i64 Shl i64 %11, 1
+%14 = load i64, [32, i64] XREG!3[1]
+%13 = i64 Add i64 %14, %12
+PC!2 = store i64 %13, i64 PC!1
+%3 = load i64, i64 PC!2
+%5 = load i64, i64 prev_pc!2
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC!2
+%7 = i64 Add i64 %6, 4
+PC!3 = store i64 %7, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!4 = phi ite %4 PC!3 PC!2
+%1 = load i64, i64 PC!4
+PC!5 = store i64 %1, i64 PC!4
+ret void
+
+SSA forward
+insn_4.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+%4 = load i64, [32, i64] XREG!3[1]
+%3 = i64 Add i64 %4, 0
+PC!2 = store i64 %3, i64 PC!1
+%1 = i1 Eq i64 %3, 0
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %3, 4
+PC!3 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!4 = phi ite %1 %2 %3
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+Nested SCCP
+insn_4.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+%4 = load i64, [32, i64] XREG!3[1]
+%3 = i64 Add i64 %4, 0
+PC!2 = store i64 %3, i64 PC!1
+%1 = i1 Eq i64 %3, 0
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 0, 4
+PC!3 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!4 = phi ite %1 %2 %3
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+SCCP forward
+insn_4.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+%3 = load i64, [32, i64] XREG!3[1]
+%2 = i64 Add i64 %3, 0
+PC!2 = store i64 %2, i64 PC!1
+%1 = i1 Eq i64 %2, 0
+br i1 %1, label %bb1, label %bb2
+bb1:
+PC!3 = store i64 4, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!4 = phi ite %1 4 %2
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+cherry
+insn_4.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+%3 = load i64, [32, i64] XREG!3[1]
+%2 = i64 Add i64 %3, 0
+PC!2 = store i64 %2, i64 PC!1
+%1 = i1 Eq i64 %2, 0
+br i1 %1, label %bb1, label %bb2
+bb1:
+PC!3 = store i64 4, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!4 = phi ite %1 4 %2
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+COMPILE
+insn_5.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%8 = load i64, i64 PC
+%9 = i64 Add i64 %8, 4
+store i64 %9, [32, i64] XREG[0]
+%10 = Sext i12 0 to i64
+%11 = i64 Lshr i64 %10, 1
+%12 = i64 Shl i64 %11, 1
+%14 = load i64, [32, i64] XREG[1]
+%13 = i64 Add i64 %14, %12
+store i64 %13, i64 PC
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+insn_5.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%2 = load i64, i64 PC!1
+prev_pc!2 = store i64 %2, i64 prev_pc!1
+%8 = load i64, i64 PC!1
+%9 = i64 Add i64 %8, 4
+XREG!3 = store i64 %9, [32, i64] XREG!2[0]
+%10 = Sext i12 0 to i64
+%11 = i64 Lshr i64 %10, 1
+%12 = i64 Shl i64 %11, 1
+%14 = load i64, [32, i64] XREG!3[1]
+%13 = i64 Add i64 %14, %12
+PC!2 = store i64 %13, i64 PC!1
+%3 = load i64, i64 PC!2
+%5 = load i64, i64 prev_pc!2
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC!2
+%7 = i64 Add i64 %6, 4
+PC!5 = store i64 %7, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %4 PC!5 PC!2
+%1 = load i64, i64 PC!3
+PC!4 = store i64 %1, i64 PC!3
+ret void
+
+SSA forward
+insn_5.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+%4 = load i64, [32, i64] XREG!3[1]
+%3 = i64 Add i64 %4, 0
+PC!2 = store i64 %3, i64 PC!1
+%1 = i1 Eq i64 %3, 0
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %3, 4
+PC!5 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %3
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+Nested SCCP
+insn_5.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+%4 = load i64, [32, i64] XREG!3[1]
+%3 = i64 Add i64 %4, 0
+PC!2 = store i64 %3, i64 PC!1
+%1 = i1 Eq i64 %3, 0
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 0, 4
+PC!5 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %3
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+SCCP forward
+insn_5.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+%3 = load i64, [32, i64] XREG!3[1]
+%2 = i64 Add i64 %3, 0
+PC!2 = store i64 %2, i64 PC!1
+%1 = i1 Eq i64 %2, 0
+br i1 %1, label %bb1, label %bb2
+bb1:
+PC!5 = store i64 4, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+cherry
+insn_5.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+%3 = load i64, [32, i64] XREG!3[1]
+%2 = i64 Add i64 %3, 0
+PC!2 = store i64 %2, i64 PC!1
+%1 = i1 Eq i64 %2, 0
+br i1 %1, label %bb1, label %bb2
+bb1:
+PC!5 = store i64 4, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+COMPILE
+insn_6.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%12 = load i64, [32, i64] XREG[11]
+%8 = Extract i32 of i64 %12 <31, 0>
+%13 = load i64, [32, i64] XREG[10]
+%10 = Extract i32 of i64 %13 <31, 0>
+%9 = i32 Sub i32 %8, %10
+%11 = Sext i32 %9 to i64
+store i64 %11, [32, i64] XREG[11]
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+insn_6.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%2 = load i64, i64 PC!1
+prev_pc!2 = store i64 %2, i64 prev_pc!1
+%12 = load i64, [32, i64] XREG!2[11]
+%8 = Extract i32 of i64 %12 <31, 0>
+%13 = load i64, [32, i64] XREG!2[10]
+%10 = Extract i32 of i64 %13 <31, 0>
+%9 = i32 Sub i32 %8, %10
+%11 = Sext i32 %9 to i64
+XREG!3 = store i64 %11, [32, i64] XREG!2[11]
+%3 = load i64, i64 PC!1
+%5 = load i64, i64 prev_pc!2
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC!1
+%7 = i64 Add i64 %6, 4
+PC!4 = store i64 %7, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %4 PC!4 PC!1
+%1 = load i64, i64 PC!2
+PC!3 = store i64 %1, i64 PC!2
+ret void
+
+SSA forward
+insn_6.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%1 = Extract i32 of i64 %5 <31, 0>
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = Extract i32 of i64 %6 <31, 0>
+%2 = i32 Sub i32 %1, %3
+%4 = Sext i32 %2 to i64
+XREG!3 = store i64 %4, [32, i64] XREG!2[11]
+br label %bb1
+bb1:
+PC!4 = store i64 4, i64 PC!1
+br label %bb2
+bb2:
+store i64 4, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+ret void
+
+Nested SCCP
+insn_6.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%1 = Extract i32 of i64 %5 <31, 0>
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = Extract i32 of i64 %6 <31, 0>
+%2 = i32 Sub i32 %1, %3
+%4 = Sext i32 %2 to i64
+XREG!3 = store i64 %4, [32, i64] XREG!2[11]
+br label %bb1
+bb1:
+PC!4 = store i64 4, i64 PC!1
+br label %bb2
+bb2:
+store i64 4, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+ret void
+
+SCCP forward
+insn_6.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%1 = Extract i32 of i64 %5 <31, 0>
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = Extract i32 of i64 %6 <31, 0>
+%2 = i32 Sub i32 %1, %3
+%4 = Sext i32 %2 to i64
+XREG!3 = store i64 %4, [32, i64] XREG!2[11]
+br label %bb1
+bb1:
+PC!4 = store i64 4, i64 PC!1
+br label %bb2
+bb2:
+store i64 4, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+ret void
+
+cherry
+insn_6.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%1 = Extract i32 of i64 %5 <31, 0>
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = Extract i32 of i64 %6 <31, 0>
+%2 = i32 Sub i32 %1, %3
+%4 = Sext i32 %2 to i64
+XREG!3 = store i64 %4, [32, i64] XREG!2[11]
+PC!4 = store i64 4, i64 PC!1
+store i64 4, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+ret void
+
+COMPILE
+insn_7.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%13 = load i64, [32, i64] XREG[10]
+%14 = load i64, [32, i64] XREG[11]
+%8 = i1 Ne i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 4084 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, %10
+store i64 %12, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+insn_7.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%2 = load i64, i64 PC!1
+prev_pc!2 = store i64 %2, i64 prev_pc!1
+%13 = load i64, [32, i64] XREG!2[10]
+%14 = load i64, [32, i64] XREG!2[11]
+%8 = i1 Ne i64 %13, %14
+br i1 %8, label %bb1, label %bb2
+bb1:
+%9 = Sext i12 4084 to i64
+%10 = i64 Shl i64 %9, 1
+%11 = load i64, i64 PC!1
+%12 = i64 Add i64 %11, %10
+PC!2 = store i64 %12, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %8 PC!2 PC!1
+%3 = load i64, i64 PC!3
+%5 = load i64, i64 prev_pc!2
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb4, label %bb5
+bb4:
+%6 = load i64, i64 PC!3
+%7 = i64 Add i64 %6, 4
+PC!6 = store i64 %7, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %4 PC!6 PC!3
+%1 = load i64, i64 PC!4
+PC!5 = store i64 %1, i64 PC!4
+ret void
+
+SSA forward
+insn_7.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%4 = load i64, [32, i64] XREG!2[10]
+%5 = load i64, [32, i64] XREG!2[11]
+%3 = i1 Ne i64 %4, %5
+br i1 %3, label %bb1, label %bb2
+bb1:
+PC!2 = store i64 -24, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %3 -24 0
+%1 = i1 Eq i64 PC!3, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!3, 4
+PC!6 = store i64 %2, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %1 %2 PC!3
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+Nested SCCP
+insn_7.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%4 = load i64, [32, i64] XREG!2[10]
+%5 = load i64, [32, i64] XREG!2[11]
+%3 = i1 Ne i64 %4, %5
+br i1 %3, label %bb1, label %bb2
+bb1:
+PC!2 = store i64 -24, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %3 -24 0
+%1 = i1 Eq i64 PC!3, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 0, 4
+PC!6 = store i64 %2, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %3 -24 %2
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+SCCP forward
+insn_7.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[10]
+%4 = load i64, [32, i64] XREG!2[11]
+%2 = i1 Ne i64 %3, %4
+br i1 %2, label %bb1, label %bb2
+bb1:
+PC!2 = store i64 -24, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %2 -24 0
+%1 = i1 Eq i64 PC!3, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+PC!6 = store i64 4, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %2 -24 4
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+cherry
+insn_7.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[10]
+%4 = load i64, [32, i64] XREG!2[11]
+%2 = i1 Ne i64 %3, %4
+br i1 %2, label %bb1, label %bb2
+bb1:
+PC!2 = store i64 -24, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %2 -24 0
+%1 = i1 Eq i64 PC!3, 0
+br i1 %1, label %bb4, label %bb5
+bb4:
+PC!6 = store i64 4, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %2 -24 4
+PC!5 = store i64 PC!4, i64 PC!4
+ret void
+
+COMPILE
+insn_8.action func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%2 = load i64, i64 PC
+store i64 %2, i64 prev_pc
+%8 = load i64, i64 PC
+%9 = i64 Add i64 %8, 4
+store i64 %9, [32, i64] XREG[0]
+%10 = Sext i20 1048570 to i64
+%11 = i64 Shl i64 %10, 1
+%12 = load i64, i64 PC
+%13 = i64 Add i64 %12, %11
+store i64 %13, i64 PC
+%3 = load i64, i64 PC
+%5 = load i64, i64 prev_pc
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC
+%7 = i64 Add i64 %6, 4
+store i64 %7, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+insn_8.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%2 = load i64, i64 PC!1
+prev_pc!2 = store i64 %2, i64 prev_pc!1
+%8 = load i64, i64 PC!1
+%9 = i64 Add i64 %8, 4
+XREG!3 = store i64 %9, [32, i64] XREG!2[0]
+%10 = Sext i20 1048570 to i64
+%11 = i64 Shl i64 %10, 1
+%12 = load i64, i64 PC!1
+%13 = i64 Add i64 %12, %11
+PC!2 = store i64 %13, i64 PC!1
+%3 = load i64, i64 PC!2
+%5 = load i64, i64 prev_pc!2
+%4 = i1 Eq i64 %3, %5
+br i1 %4, label %bb1, label %bb2
+bb1:
+%6 = load i64, i64 PC!2
+%7 = i64 Add i64 %6, 4
+PC!5 = store i64 %7, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %4 PC!5 PC!2
+%1 = load i64, i64 PC!3
+PC!4 = store i64 %1, i64 PC!3
+ret void
+
+SSA forward
+insn_8.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+PC!2 = store i64 -12, i64 PC!1
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 -12, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+Nested SCCP
+insn_8.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+PC!2 = store i64 -12, i64 PC!1
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 -12, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+SCCP forward
+insn_8.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+PC!2 = store i64 -12, i64 PC!1
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 -12, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+cherry
+insn_8.action func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 0, i64 prev_pc!1
+XREG!3 = store i64 4, [32, i64] XREG!2[0]
+PC!2 = store i64 -12, i64 PC!1
+store i64 -12, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+ret void
+
+COMPILE
+bb_0 func void []
+bb0:
+call void insn_0.action %0 ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+bb_0 func void []
+bb0:
+br label %bb9
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%14 = load i64, [32, i64] XREG[10]
+%15 = load i64, [32, i64] XREG[11]
+%9 = i1 Eq i64 %14, %15
+br i1 %9, label %bb3, label %bb4
+bb3:
+%10 = Sext i12 10 to i64
+%11 = i64 Shl i64 %10, 1
+%12 = load i64, i64 PC
+%13 = i64 Add i64 %12, %11
+store i64 %13, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb6, label %bb7
+bb6:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb1
+bb9:
+br label %bb2
+
+propagate
+bb_0 func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%12 = load i64, [32, i64] XREG[10]
+%13 = load i64, [32, i64] XREG[11]
+%9 = i1 Eq i64 %12, %13
+br i1 %9, label %bb3, label %bb4
+bb3:
+%10 = load i64, i64 PC
+%11 = i64 Add i64 %10, 20
+store i64 %11, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb6, label %bb7
+bb6:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb9
+bb9:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+bb_0 func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%12 = load i64, [32, i64] XREG[10]
+%13 = load i64, [32, i64] XREG[11]
+%9 = i1 Eq i64 %12, %13
+br i1 %9, label %bb1, label %bb2
+bb1:
+%10 = load i64, i64 PC
+%11 = i64 Add i64 %10, 20
+store i64 %11, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb4, label %bb5
+bb4:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+bb_0 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%3 = load i64, i64 PC!1
+prev_pc!2 = store i64 %3, i64 prev_pc!1
+%12 = load i64, [32, i64] XREG!2[10]
+%13 = load i64, [32, i64] XREG!2[11]
+%9 = i1 Eq i64 %12, %13
+br i1 %9, label %bb1, label %bb2
+bb1:
+%10 = load i64, i64 PC!1
+%11 = i64 Add i64 %10, 20
+PC!2 = store i64 %11, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %9 PC!2 PC!1
+%4 = load i64, i64 PC!3
+%6 = load i64, i64 prev_pc!2
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb4, label %bb5
+bb4:
+%7 = load i64, i64 PC!3
+%8 = i64 Add i64 %7, 4
+PC!4 = store i64 %8, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!5 = phi ite %5 PC!4 PC!3
+%2 = load i64, i64 PC!5
+PC!6 = store i64 %2, i64 PC!5
+%1 = load i64, i64 PC!6
+PC!7 = store i64 %1, i64 PC!6
+ret void
+
+SSA forward
+bb_0 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[10]
+%6 = load i64, [32, i64] XREG!2[11]
+%3 = i1 Eq i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!2 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!3, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!3, 4
+PC!4 = store i64 %2, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!5 = phi ite %1 %2 PC!3
+PC!6 = store i64 PC!5, i64 PC!5
+PC!7 = store i64 PC!5, i64 PC!6
+ret void
+
+Nested SCCP
+bb_0 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[10]
+%6 = load i64, [32, i64] XREG!2[11]
+%3 = i1 Eq i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!2 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!3, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!3, 4
+PC!4 = store i64 %2, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!5 = phi ite %3 %4 %2
+PC!6 = store i64 PC!5, i64 PC!5
+PC!7 = store i64 PC!5, i64 PC!6
+ret void
+
+SCCP forward
+bb_0 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[10]
+%6 = load i64, [32, i64] XREG!2[11]
+%3 = i1 Eq i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!2 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!3, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!3, 4
+PC!4 = store i64 %2, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!5 = phi ite %3 %4 %2
+PC!6 = store i64 PC!5, i64 PC!5
+PC!7 = store i64 PC!5, i64 PC!6
+ret void
+
+cherry
+bb_0 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[10]
+%6 = load i64, [32, i64] XREG!2[11]
+%3 = i1 Eq i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!2 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!3, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!3, 4
+PC!4 = store i64 %2, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!5 = phi ite %3 %4 %2
+PC!6 = store i64 PC!5, i64 PC!5
+PC!7 = store i64 PC!5, i64 PC!6
+ret void
+
+bb_0 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[10]
+%6 = load i64, [32, i64] XREG!2[11]
+%3 = i1 Eq i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!2 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!3, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!3, 4
+PC!4 = store i64 %2, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!5 = phi ite %3 %4 %2
+PC!6 = store i64 PC!5, i64 PC!5
+PC!7 = store i64 PC!5, i64 PC!6
+ret void
+
+COMPILE
+bb_1 func void []
+bb0:
+call void insn_1.action %0 ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+bb_1 func void []
+bb0:
+br label %bb9
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%14 = load i64, [32, i64] XREG[11]
+%15 = load i64, [32, i64] XREG[10]
+%9 = i1 Sge i64 %14, %15
+br i1 %9, label %bb3, label %bb4
+bb3:
+%10 = Sext i12 10 to i64
+%11 = i64 Shl i64 %10, 1
+%12 = load i64, i64 PC
+%13 = i64 Add i64 %12, %11
+store i64 %13, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb6, label %bb7
+bb6:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb1
+bb9:
+br label %bb2
+
+propagate
+bb_1 func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%12 = load i64, [32, i64] XREG[11]
+%13 = load i64, [32, i64] XREG[10]
+%9 = i1 Sge i64 %12, %13
+br i1 %9, label %bb3, label %bb4
+bb3:
+%10 = load i64, i64 PC
+%11 = i64 Add i64 %10, 20
+store i64 %11, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb6, label %bb7
+bb6:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb9
+bb9:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+bb_1 func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%12 = load i64, [32, i64] XREG[11]
+%13 = load i64, [32, i64] XREG[10]
+%9 = i1 Sge i64 %12, %13
+br i1 %9, label %bb1, label %bb2
+bb1:
+%10 = load i64, i64 PC
+%11 = i64 Add i64 %10, 20
+store i64 %11, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb4, label %bb5
+bb4:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+bb_1 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%3 = load i64, i64 PC!1
+prev_pc!2 = store i64 %3, i64 prev_pc!1
+%12 = load i64, [32, i64] XREG!2[11]
+%13 = load i64, [32, i64] XREG!2[10]
+%9 = i1 Sge i64 %12, %13
+br i1 %9, label %bb1, label %bb2
+bb1:
+%10 = load i64, i64 PC!1
+%11 = i64 Add i64 %10, 20
+PC!7 = store i64 %11, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %9 PC!7 PC!1
+%4 = load i64, i64 PC!2
+%6 = load i64, i64 prev_pc!2
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb4, label %bb5
+bb4:
+%7 = load i64, i64 PC!2
+%8 = i64 Add i64 %7, 4
+PC!6 = store i64 %8, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %5 PC!6 PC!2
+%2 = load i64, i64 PC!3
+PC!4 = store i64 %2, i64 PC!3
+%1 = load i64, i64 PC!4
+PC!5 = store i64 %1, i64 PC!4
+ret void
+
+SSA forward
+bb_1 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %1 %2 PC!2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+Nested SCCP
+bb_1 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+SCCP forward
+bb_1 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+cherry
+bb_1 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+bb_1 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+COMPILE
+bb_2 func void []
+bb0:
+call void insn_1.action %0 ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+bb_2 func void []
+bb0:
+br label %bb9
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%14 = load i64, [32, i64] XREG[11]
+%15 = load i64, [32, i64] XREG[10]
+%9 = i1 Sge i64 %14, %15
+br i1 %9, label %bb3, label %bb4
+bb3:
+%10 = Sext i12 10 to i64
+%11 = i64 Shl i64 %10, 1
+%12 = load i64, i64 PC
+%13 = i64 Add i64 %12, %11
+store i64 %13, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb6, label %bb7
+bb6:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb1
+bb9:
+br label %bb2
+
+propagate
+bb_2 func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%12 = load i64, [32, i64] XREG[11]
+%13 = load i64, [32, i64] XREG[10]
+%9 = i1 Sge i64 %12, %13
+br i1 %9, label %bb3, label %bb4
+bb3:
+%10 = load i64, i64 PC
+%11 = i64 Add i64 %10, 20
+store i64 %11, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb6, label %bb7
+bb6:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb9
+bb9:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+bb_2 func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%12 = load i64, [32, i64] XREG[11]
+%13 = load i64, [32, i64] XREG[10]
+%9 = i1 Sge i64 %12, %13
+br i1 %9, label %bb1, label %bb2
+bb1:
+%10 = load i64, i64 PC
+%11 = i64 Add i64 %10, 20
+store i64 %11, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb4, label %bb5
+bb4:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+bb_2 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%3 = load i64, i64 PC!1
+prev_pc!2 = store i64 %3, i64 prev_pc!1
+%12 = load i64, [32, i64] XREG!2[11]
+%13 = load i64, [32, i64] XREG!2[10]
+%9 = i1 Sge i64 %12, %13
+br i1 %9, label %bb1, label %bb2
+bb1:
+%10 = load i64, i64 PC!1
+%11 = i64 Add i64 %10, 20
+PC!7 = store i64 %11, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %9 PC!7 PC!1
+%4 = load i64, i64 PC!2
+%6 = load i64, i64 prev_pc!2
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb4, label %bb5
+bb4:
+%7 = load i64, i64 PC!2
+%8 = i64 Add i64 %7, 4
+PC!6 = store i64 %8, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %5 PC!6 PC!2
+%2 = load i64, i64 PC!3
+PC!4 = store i64 %2, i64 PC!3
+%1 = load i64, i64 PC!4
+PC!5 = store i64 %1, i64 PC!4
+ret void
+
+SSA forward
+bb_2 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %1 %2 PC!2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+Nested SCCP
+bb_2 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+SCCP forward
+bb_2 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+cherry
+bb_2 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+bb_2 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+COMPILE
+bb_3 func void []
+bb0:
+call void insn_1.action %0 ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+bb_3 func void []
+bb0:
+br label %bb9
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%14 = load i64, [32, i64] XREG[11]
+%15 = load i64, [32, i64] XREG[10]
+%9 = i1 Sge i64 %14, %15
+br i1 %9, label %bb3, label %bb4
+bb3:
+%10 = Sext i12 10 to i64
+%11 = i64 Shl i64 %10, 1
+%12 = load i64, i64 PC
+%13 = i64 Add i64 %12, %11
+store i64 %13, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb6, label %bb7
+bb6:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb1
+bb9:
+br label %bb2
+
+propagate
+bb_3 func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%12 = load i64, [32, i64] XREG[11]
+%13 = load i64, [32, i64] XREG[10]
+%9 = i1 Sge i64 %12, %13
+br i1 %9, label %bb3, label %bb4
+bb3:
+%10 = load i64, i64 PC
+%11 = i64 Add i64 %10, 20
+store i64 %11, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb6, label %bb7
+bb6:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb9
+bb9:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+bb_3 func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%12 = load i64, [32, i64] XREG[11]
+%13 = load i64, [32, i64] XREG[10]
+%9 = i1 Sge i64 %12, %13
+br i1 %9, label %bb1, label %bb2
+bb1:
+%10 = load i64, i64 PC
+%11 = i64 Add i64 %10, 20
+store i64 %11, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb4, label %bb5
+bb4:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+bb_3 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%3 = load i64, i64 PC!1
+prev_pc!2 = store i64 %3, i64 prev_pc!1
+%12 = load i64, [32, i64] XREG!2[11]
+%13 = load i64, [32, i64] XREG!2[10]
+%9 = i1 Sge i64 %12, %13
+br i1 %9, label %bb1, label %bb2
+bb1:
+%10 = load i64, i64 PC!1
+%11 = i64 Add i64 %10, 20
+PC!7 = store i64 %11, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %9 PC!7 PC!1
+%4 = load i64, i64 PC!2
+%6 = load i64, i64 prev_pc!2
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb4, label %bb5
+bb4:
+%7 = load i64, i64 PC!2
+%8 = i64 Add i64 %7, 4
+PC!6 = store i64 %8, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %5 PC!6 PC!2
+%2 = load i64, i64 PC!3
+PC!4 = store i64 %2, i64 PC!3
+%1 = load i64, i64 PC!4
+PC!5 = store i64 %1, i64 PC!4
+ret void
+
+SSA forward
+bb_3 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %1 %2 PC!2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+Nested SCCP
+bb_3 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+SCCP forward
+bb_3 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+cherry
+bb_3 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+bb_3 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb1, label %bb2
+bb1:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb4, label %bb5
+bb4:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+COMPILE
+bb_4 func void []
+bb0:
+call void insn_2.action %0 ()
+call void insn_3.action %0 ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+bb_4 func void []
+bb0:
+br label %bb6
+bb1:
+br label %bb15
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%13 = load i64, [32, i64] XREG[10]
+%9 = Extract i32 of i64 %13 <31, 0>
+%14 = load i64, [32, i64] XREG[11]
+%11 = Extract i32 of i64 %14 <31, 0>
+%10 = i32 Sub i32 %9, %11
+%12 = Sext i32 %10 to i64
+store i64 %12, [32, i64] XREG[10]
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb1
+bb6:
+br label %bb2
+bb7:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb8:
+store i64 0, [32, i64] XREG[0]
+%16 = load i64, i64 PC
+store i64 %16, i64 prev_pc
+%27 = load i64, [32, i64] XREG[11]
+%28 = load i64, [32, i64] XREG[10]
+%22 = i1 Ne i64 %27, %28
+br i1 %22, label %bb9, label %bb10
+bb9:
+%23 = Sext i12 4092 to i64
+%24 = i64 Shl i64 %23, 1
+%25 = load i64, i64 PC
+%26 = i64 Add i64 %25, %24
+store i64 %26, i64 PC
+br label %bb11
+bb10:
+br label %bb11
+bb11:
+%17 = load i64, i64 PC
+%19 = load i64, i64 prev_pc
+%18 = i1 Eq i64 %17, %19
+br i1 %18, label %bb12, label %bb13
+bb12:
+%20 = load i64, i64 PC
+%21 = i64 Add i64 %20, 4
+store i64 %21, i64 PC
+br label %bb14
+bb13:
+br label %bb14
+bb14:
+%15 = load i64, i64 PC
+store i64 %15, i64 PC
+br label %bb7
+bb15:
+br label %bb8
+
+propagate
+bb_4 func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%13 = load i64, [32, i64] XREG[10]
+%9 = Extract i32 of i64 %13 <31, 0>
+%14 = load i64, [32, i64] XREG[11]
+%11 = Extract i32 of i64 %14 <31, 0>
+%10 = i32 Sub i32 %9, %11
+%12 = Sext i32 %10 to i64
+store i64 %12, [32, i64] XREG[10]
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb6
+bb6:
+br label %bb7
+bb7:
+br label %bb8
+bb8:
+store i64 0, [32, i64] XREG[0]
+%16 = load i64, i64 PC
+store i64 %16, i64 prev_pc
+%25 = load i64, [32, i64] XREG[11]
+%26 = load i64, [32, i64] XREG[10]
+%22 = i1 Ne i64 %25, %26
+br i1 %22, label %bb9, label %bb10
+bb9:
+%23 = load i64, i64 PC
+%24 = i64 Add i64 %23, -8
+store i64 %24, i64 PC
+br label %bb11
+bb10:
+br label %bb11
+bb11:
+%17 = load i64, i64 PC
+%19 = load i64, i64 prev_pc
+%18 = i1 Eq i64 %17, %19
+br i1 %18, label %bb12, label %bb13
+bb12:
+%20 = load i64, i64 PC
+%21 = i64 Add i64 %20, 4
+store i64 %21, i64 PC
+br label %bb14
+bb13:
+br label %bb14
+bb14:
+%15 = load i64, i64 PC
+store i64 %15, i64 PC
+br label %bb15
+bb15:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+bb_4 func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%13 = load i64, [32, i64] XREG[10]
+%9 = Extract i32 of i64 %13 <31, 0>
+%14 = load i64, [32, i64] XREG[11]
+%11 = Extract i32 of i64 %14 <31, 0>
+%10 = i32 Sub i32 %9, %11
+%12 = Sext i32 %10 to i64
+store i64 %12, [32, i64] XREG[10]
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb1, label %bb2
+bb1:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+store i64 0, [32, i64] XREG[0]
+%16 = load i64, i64 PC
+store i64 %16, i64 prev_pc
+%25 = load i64, [32, i64] XREG[11]
+%26 = load i64, [32, i64] XREG[10]
+%22 = i1 Ne i64 %25, %26
+br i1 %22, label %bb4, label %bb5
+bb4:
+%23 = load i64, i64 PC
+%24 = i64 Add i64 %23, -8
+store i64 %24, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%17 = load i64, i64 PC
+%19 = load i64, i64 prev_pc
+%18 = i1 Eq i64 %17, %19
+br i1 %18, label %bb7, label %bb8
+bb7:
+%20 = load i64, i64 PC
+%21 = i64 Add i64 %20, 4
+store i64 %21, i64 PC
+br label %bb9
+bb8:
+br label %bb9
+bb9:
+%15 = load i64, i64 PC
+store i64 %15, i64 PC
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+bb_4 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%3 = load i64, i64 PC!1
+prev_pc!2 = store i64 %3, i64 prev_pc!1
+%13 = load i64, [32, i64] XREG!2[10]
+%9 = Extract i32 of i64 %13 <31, 0>
+%14 = load i64, [32, i64] XREG!2[11]
+%11 = Extract i32 of i64 %14 <31, 0>
+%10 = i32 Sub i32 %9, %11
+%12 = Sext i32 %10 to i64
+XREG!3 = store i64 %12, [32, i64] XREG!2[10]
+%4 = load i64, i64 PC!1
+%6 = load i64, i64 prev_pc!2
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb1, label %bb2
+bb1:
+%7 = load i64, i64 PC!1
+%8 = i64 Add i64 %7, 4
+PC!10 = store i64 %8, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %5 PC!10 PC!1
+%2 = load i64, i64 PC!2
+PC!3 = store i64 %2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+%16 = load i64, i64 PC!3
+prev_pc!3 = store i64 %16, i64 prev_pc!2
+%25 = load i64, [32, i64] XREG!4[11]
+%26 = load i64, [32, i64] XREG!4[10]
+%22 = i1 Ne i64 %25, %26
+br i1 %22, label %bb4, label %bb5
+bb4:
+%23 = load i64, i64 PC!3
+%24 = i64 Add i64 %23, -8
+PC!4 = store i64 %24, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!5 = phi ite %22 PC!4 PC!3
+%17 = load i64, i64 PC!5
+%19 = load i64, i64 prev_pc!3
+%18 = i1 Eq i64 %17, %19
+br i1 %18, label %bb7, label %bb8
+bb7:
+%20 = load i64, i64 PC!5
+%21 = i64 Add i64 %20, 4
+PC!6 = store i64 %21, i64 PC!5
+br label %bb9
+bb8:
+br label %bb9
+bb9:
+PC!7 = phi ite %18 PC!6 PC!5
+%15 = load i64, i64 PC!7
+PC!8 = store i64 %15, i64 PC!7
+%1 = load i64, i64 PC!8
+PC!9 = store i64 %1, i64 PC!8
+ret void
+
+SSA forward
+bb_4 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[10]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[11]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[10]
+br label %bb1
+bb1:
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+br label %bb2
+bb2:
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[11]
+%13 = load i64, [32, i64] XREG!4[10]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb3, label %bb4
+bb3:
+%11 = i64 Add i64 PC!2, -8
+PC!4 = store i64 %11, i64 PC!3
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+PC!5 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!5, PC!2
+br i1 %8, label %bb6, label %bb7
+bb6:
+%9 = i64 Add i64 PC!5, 4
+PC!6 = store i64 %9, i64 PC!5
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+PC!7 = phi ite %8 %9 PC!5
+PC!8 = store i64 PC!7, i64 PC!7
+PC!9 = store i64 PC!7, i64 PC!8
+ret void
+
+Nested SCCP
+bb_4 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[10]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[11]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[10]
+br label %bb1
+bb1:
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+br label %bb2
+bb2:
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[11]
+%13 = load i64, [32, i64] XREG!4[10]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb3, label %bb4
+bb3:
+%11 = i64 Add i64 PC!2, -8
+PC!4 = store i64 %11, i64 PC!3
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+PC!5 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!5, PC!2
+br i1 %8, label %bb6, label %bb7
+bb6:
+%9 = i64 Add i64 PC!5, 4
+PC!6 = store i64 %9, i64 PC!5
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+PC!7 = phi ite %10 %11 %9
+PC!8 = store i64 PC!7, i64 PC!7
+PC!9 = store i64 PC!7, i64 PC!8
+ret void
+
+SCCP forward
+bb_4 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[10]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[11]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[10]
+br label %bb1
+bb1:
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+br label %bb2
+bb2:
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[11]
+%13 = load i64, [32, i64] XREG!4[10]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb3, label %bb4
+bb3:
+%11 = i64 Add i64 PC!2, -8
+PC!4 = store i64 %11, i64 PC!3
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+PC!5 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!5, PC!2
+br i1 %8, label %bb6, label %bb7
+bb6:
+%9 = i64 Add i64 PC!5, 4
+PC!6 = store i64 %9, i64 PC!5
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+PC!7 = phi ite %10 %11 %9
+PC!8 = store i64 PC!7, i64 PC!7
+PC!9 = store i64 PC!7, i64 PC!8
+ret void
+
+cherry
+bb_4 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[10]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[11]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[10]
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[11]
+%13 = load i64, [32, i64] XREG!4[10]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb1, label %bb2
+bb1:
+%11 = i64 Add i64 PC!2, -8
+PC!4 = store i64 %11, i64 PC!3
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!5 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!5, PC!2
+br i1 %8, label %bb4, label %bb5
+bb4:
+%9 = i64 Add i64 PC!5, 4
+PC!6 = store i64 %9, i64 PC!5
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!7 = phi ite %10 %11 %9
+PC!8 = store i64 PC!7, i64 PC!7
+PC!9 = store i64 PC!7, i64 PC!8
+ret void
+
+bb_4 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[10]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[11]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[10]
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[11]
+%13 = load i64, [32, i64] XREG!4[10]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb1, label %bb2
+bb1:
+%11 = i64 Add i64 PC!2, -8
+PC!4 = store i64 %11, i64 PC!3
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!5 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!5, PC!2
+br i1 %8, label %bb4, label %bb5
+bb4:
+%9 = i64 Add i64 PC!5, 4
+PC!6 = store i64 %9, i64 PC!5
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!7 = phi ite %10 %11 %9
+PC!8 = store i64 PC!7, i64 PC!7
+PC!9 = store i64 PC!7, i64 PC!8
+ret void
+
+COMPILE
+bb_5 func void []
+bb0:
+call void insn_4.action %0 ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+bb_5 func void []
+bb0:
+br label %bb6
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%9 = load i64, i64 PC
+%10 = i64 Add i64 %9, 4
+store i64 %10, [32, i64] XREG[0]
+%11 = Sext i12 0 to i64
+%12 = i64 Lshr i64 %11, 1
+%13 = i64 Shl i64 %12, 1
+%15 = load i64, [32, i64] XREG[1]
+%14 = i64 Add i64 %15, %13
+store i64 %14, i64 PC
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb1
+bb6:
+br label %bb2
+
+propagate
+bb_5 func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%9 = load i64, i64 PC
+%10 = i64 Add i64 %9, 4
+store i64 %10, [32, i64] XREG[0]
+%12 = load i64, [32, i64] XREG[1]
+%11 = i64 Add i64 %12, 0
+store i64 %11, i64 PC
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+bb_5 func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%9 = load i64, i64 PC
+%10 = i64 Add i64 %9, 4
+store i64 %10, [32, i64] XREG[0]
+%12 = load i64, [32, i64] XREG[1]
+%11 = i64 Add i64 %12, 0
+store i64 %11, i64 PC
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb1, label %bb2
+bb1:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+bb_5 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%3 = load i64, i64 PC!1
+prev_pc!2 = store i64 %3, i64 prev_pc!1
+%9 = load i64, i64 PC!1
+%10 = i64 Add i64 %9, 4
+XREG!3 = store i64 %10, [32, i64] XREG!2[0]
+%12 = load i64, [32, i64] XREG!3[1]
+%11 = i64 Add i64 %12, 0
+PC!2 = store i64 %11, i64 PC!1
+%4 = load i64, i64 PC!2
+%6 = load i64, i64 prev_pc!2
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb1, label %bb2
+bb1:
+%7 = load i64, i64 PC!2
+%8 = i64 Add i64 %7, 4
+PC!6 = store i64 %8, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %5 PC!6 PC!2
+%2 = load i64, i64 PC!3
+PC!4 = store i64 %2, i64 PC!3
+%1 = load i64, i64 PC!4
+PC!5 = store i64 %1, i64 PC!4
+ret void
+
+SSA forward
+bb_5 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+Nested SCCP
+bb_5 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+SCCP forward
+bb_5 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+cherry
+bb_5 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+bb_5 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+COMPILE
+bb_6 func void []
+bb0:
+call void insn_5.action %0 ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+bb_6 func void []
+bb0:
+br label %bb6
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%9 = load i64, i64 PC
+%10 = i64 Add i64 %9, 4
+store i64 %10, [32, i64] XREG[0]
+%11 = Sext i12 0 to i64
+%12 = i64 Lshr i64 %11, 1
+%13 = i64 Shl i64 %12, 1
+%15 = load i64, [32, i64] XREG[1]
+%14 = i64 Add i64 %15, %13
+store i64 %14, i64 PC
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb1
+bb6:
+br label %bb2
+
+propagate
+bb_6 func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%9 = load i64, i64 PC
+%10 = i64 Add i64 %9, 4
+store i64 %10, [32, i64] XREG[0]
+%12 = load i64, [32, i64] XREG[1]
+%11 = i64 Add i64 %12, 0
+store i64 %11, i64 PC
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+bb_6 func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%9 = load i64, i64 PC
+%10 = i64 Add i64 %9, 4
+store i64 %10, [32, i64] XREG[0]
+%12 = load i64, [32, i64] XREG[1]
+%11 = i64 Add i64 %12, 0
+store i64 %11, i64 PC
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb1, label %bb2
+bb1:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+bb_6 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%3 = load i64, i64 PC!1
+prev_pc!2 = store i64 %3, i64 prev_pc!1
+%9 = load i64, i64 PC!1
+%10 = i64 Add i64 %9, 4
+XREG!3 = store i64 %10, [32, i64] XREG!2[0]
+%12 = load i64, [32, i64] XREG!3[1]
+%11 = i64 Add i64 %12, 0
+PC!2 = store i64 %11, i64 PC!1
+%4 = load i64, i64 PC!2
+%6 = load i64, i64 prev_pc!2
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb1, label %bb2
+bb1:
+%7 = load i64, i64 PC!2
+%8 = i64 Add i64 %7, 4
+PC!6 = store i64 %8, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %5 PC!6 PC!2
+%2 = load i64, i64 PC!3
+PC!4 = store i64 %2, i64 PC!3
+%1 = load i64, i64 PC!4
+PC!5 = store i64 %1, i64 PC!4
+ret void
+
+SSA forward
+bb_6 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+Nested SCCP
+bb_6 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+SCCP forward
+bb_6 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+cherry
+bb_6 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+bb_6 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb1, label %bb2
+bb1:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+ret void
+
+COMPILE
+bb_7 func void []
+bb0:
+call void insn_6.action %0 ()
+call void insn_7.action %0 ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+bb_7 func void []
+bb0:
+br label %bb6
+bb1:
+br label %bb15
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%13 = load i64, [32, i64] XREG[11]
+%9 = Extract i32 of i64 %13 <31, 0>
+%14 = load i64, [32, i64] XREG[10]
+%11 = Extract i32 of i64 %14 <31, 0>
+%10 = i32 Sub i32 %9, %11
+%12 = Sext i32 %10 to i64
+store i64 %12, [32, i64] XREG[11]
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb1
+bb6:
+br label %bb2
+bb7:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb8:
+store i64 0, [32, i64] XREG[0]
+%16 = load i64, i64 PC
+store i64 %16, i64 prev_pc
+%27 = load i64, [32, i64] XREG[10]
+%28 = load i64, [32, i64] XREG[11]
+%22 = i1 Ne i64 %27, %28
+br i1 %22, label %bb9, label %bb10
+bb9:
+%23 = Sext i12 4084 to i64
+%24 = i64 Shl i64 %23, 1
+%25 = load i64, i64 PC
+%26 = i64 Add i64 %25, %24
+store i64 %26, i64 PC
+br label %bb11
+bb10:
+br label %bb11
+bb11:
+%17 = load i64, i64 PC
+%19 = load i64, i64 prev_pc
+%18 = i1 Eq i64 %17, %19
+br i1 %18, label %bb12, label %bb13
+bb12:
+%20 = load i64, i64 PC
+%21 = i64 Add i64 %20, 4
+store i64 %21, i64 PC
+br label %bb14
+bb13:
+br label %bb14
+bb14:
+%15 = load i64, i64 PC
+store i64 %15, i64 PC
+br label %bb7
+bb15:
+br label %bb8
+
+propagate
+bb_7 func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%13 = load i64, [32, i64] XREG[11]
+%9 = Extract i32 of i64 %13 <31, 0>
+%14 = load i64, [32, i64] XREG[10]
+%11 = Extract i32 of i64 %14 <31, 0>
+%10 = i32 Sub i32 %9, %11
+%12 = Sext i32 %10 to i64
+store i64 %12, [32, i64] XREG[11]
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb6
+bb6:
+br label %bb7
+bb7:
+br label %bb8
+bb8:
+store i64 0, [32, i64] XREG[0]
+%16 = load i64, i64 PC
+store i64 %16, i64 prev_pc
+%25 = load i64, [32, i64] XREG[10]
+%26 = load i64, [32, i64] XREG[11]
+%22 = i1 Ne i64 %25, %26
+br i1 %22, label %bb9, label %bb10
+bb9:
+%23 = load i64, i64 PC
+%24 = i64 Add i64 %23, -24
+store i64 %24, i64 PC
+br label %bb11
+bb10:
+br label %bb11
+bb11:
+%17 = load i64, i64 PC
+%19 = load i64, i64 prev_pc
+%18 = i1 Eq i64 %17, %19
+br i1 %18, label %bb12, label %bb13
+bb12:
+%20 = load i64, i64 PC
+%21 = i64 Add i64 %20, 4
+store i64 %21, i64 PC
+br label %bb14
+bb13:
+br label %bb14
+bb14:
+%15 = load i64, i64 PC
+store i64 %15, i64 PC
+br label %bb15
+bb15:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+bb_7 func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%13 = load i64, [32, i64] XREG[11]
+%9 = Extract i32 of i64 %13 <31, 0>
+%14 = load i64, [32, i64] XREG[10]
+%11 = Extract i32 of i64 %14 <31, 0>
+%10 = i32 Sub i32 %9, %11
+%12 = Sext i32 %10 to i64
+store i64 %12, [32, i64] XREG[11]
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb1, label %bb2
+bb1:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+store i64 0, [32, i64] XREG[0]
+%16 = load i64, i64 PC
+store i64 %16, i64 prev_pc
+%25 = load i64, [32, i64] XREG[10]
+%26 = load i64, [32, i64] XREG[11]
+%22 = i1 Ne i64 %25, %26
+br i1 %22, label %bb4, label %bb5
+bb4:
+%23 = load i64, i64 PC
+%24 = i64 Add i64 %23, -24
+store i64 %24, i64 PC
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+%17 = load i64, i64 PC
+%19 = load i64, i64 prev_pc
+%18 = i1 Eq i64 %17, %19
+br i1 %18, label %bb7, label %bb8
+bb7:
+%20 = load i64, i64 PC
+%21 = i64 Add i64 %20, 4
+store i64 %21, i64 PC
+br label %bb9
+bb8:
+br label %bb9
+bb9:
+%15 = load i64, i64 PC
+store i64 %15, i64 PC
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+bb_7 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%3 = load i64, i64 PC!1
+prev_pc!2 = store i64 %3, i64 prev_pc!1
+%13 = load i64, [32, i64] XREG!2[11]
+%9 = Extract i32 of i64 %13 <31, 0>
+%14 = load i64, [32, i64] XREG!2[10]
+%11 = Extract i32 of i64 %14 <31, 0>
+%10 = i32 Sub i32 %9, %11
+%12 = Sext i32 %10 to i64
+XREG!3 = store i64 %12, [32, i64] XREG!2[11]
+%4 = load i64, i64 PC!1
+%6 = load i64, i64 prev_pc!2
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb1, label %bb2
+bb1:
+%7 = load i64, i64 PC!1
+%8 = i64 Add i64 %7, 4
+PC!10 = store i64 %8, i64 PC!1
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!2 = phi ite %5 PC!10 PC!1
+%2 = load i64, i64 PC!2
+PC!3 = store i64 %2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+%16 = load i64, i64 PC!3
+prev_pc!3 = store i64 %16, i64 prev_pc!2
+%25 = load i64, [32, i64] XREG!4[10]
+%26 = load i64, [32, i64] XREG!4[11]
+%22 = i1 Ne i64 %25, %26
+br i1 %22, label %bb4, label %bb5
+bb4:
+%23 = load i64, i64 PC!3
+%24 = i64 Add i64 %23, -24
+PC!9 = store i64 %24, i64 PC!3
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!4 = phi ite %22 PC!9 PC!3
+%17 = load i64, i64 PC!4
+%19 = load i64, i64 prev_pc!3
+%18 = i1 Eq i64 %17, %19
+br i1 %18, label %bb7, label %bb8
+bb7:
+%20 = load i64, i64 PC!4
+%21 = i64 Add i64 %20, 4
+PC!5 = store i64 %21, i64 PC!4
+br label %bb9
+bb8:
+br label %bb9
+bb9:
+PC!6 = phi ite %18 PC!5 PC!4
+%15 = load i64, i64 PC!6
+PC!7 = store i64 %15, i64 PC!6
+%1 = load i64, i64 PC!7
+PC!8 = store i64 %1, i64 PC!7
+ret void
+
+SSA forward
+bb_7 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[11]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[10]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[11]
+br label %bb1
+bb1:
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+br label %bb2
+bb2:
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[10]
+%13 = load i64, [32, i64] XREG!4[11]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb3, label %bb4
+bb3:
+%11 = i64 Add i64 PC!2, -24
+PC!9 = store i64 %11, i64 PC!3
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+PC!4 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!4, PC!2
+br i1 %8, label %bb6, label %bb7
+bb6:
+%9 = i64 Add i64 PC!4, 4
+PC!5 = store i64 %9, i64 PC!4
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+PC!6 = phi ite %8 %9 PC!4
+PC!7 = store i64 PC!6, i64 PC!6
+PC!8 = store i64 PC!6, i64 PC!7
+ret void
+
+Nested SCCP
+bb_7 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[11]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[10]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[11]
+br label %bb1
+bb1:
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+br label %bb2
+bb2:
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[10]
+%13 = load i64, [32, i64] XREG!4[11]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb3, label %bb4
+bb3:
+%11 = i64 Add i64 PC!2, -24
+PC!9 = store i64 %11, i64 PC!3
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+PC!4 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!4, PC!2
+br i1 %8, label %bb6, label %bb7
+bb6:
+%9 = i64 Add i64 PC!4, 4
+PC!5 = store i64 %9, i64 PC!4
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+PC!6 = phi ite %10 %11 %9
+PC!7 = store i64 PC!6, i64 PC!6
+PC!8 = store i64 PC!6, i64 PC!7
+ret void
+
+SCCP forward
+bb_7 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[11]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[10]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[11]
+br label %bb1
+bb1:
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+br label %bb2
+bb2:
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[10]
+%13 = load i64, [32, i64] XREG!4[11]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb3, label %bb4
+bb3:
+%11 = i64 Add i64 PC!2, -24
+PC!9 = store i64 %11, i64 PC!3
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+PC!4 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!4, PC!2
+br i1 %8, label %bb6, label %bb7
+bb6:
+%9 = i64 Add i64 PC!4, 4
+PC!5 = store i64 %9, i64 PC!4
+br label %bb8
+bb7:
+br label %bb8
+bb8:
+PC!6 = phi ite %10 %11 %9
+PC!7 = store i64 PC!6, i64 PC!6
+PC!8 = store i64 PC!6, i64 PC!7
+ret void
+
+cherry
+bb_7 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[11]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[10]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[11]
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[10]
+%13 = load i64, [32, i64] XREG!4[11]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb1, label %bb2
+bb1:
+%11 = i64 Add i64 PC!2, -24
+PC!9 = store i64 %11, i64 PC!3
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!4 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!4, PC!2
+br i1 %8, label %bb4, label %bb5
+bb4:
+%9 = i64 Add i64 PC!4, 4
+PC!5 = store i64 %9, i64 PC!4
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!6 = phi ite %10 %11 %9
+PC!7 = store i64 PC!6, i64 PC!6
+PC!8 = store i64 PC!6, i64 PC!7
+ret void
+
+bb_7 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[11]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[10]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[11]
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[10]
+%13 = load i64, [32, i64] XREG!4[11]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb1, label %bb2
+bb1:
+%11 = i64 Add i64 PC!2, -24
+PC!9 = store i64 %11, i64 PC!3
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!4 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!4, PC!2
+br i1 %8, label %bb4, label %bb5
+bb4:
+%9 = i64 Add i64 PC!4, 4
+PC!5 = store i64 %9, i64 PC!4
+br label %bb6
+bb5:
+br label %bb6
+bb6:
+PC!6 = phi ite %10 %11 %9
+PC!7 = store i64 PC!6, i64 PC!6
+PC!8 = store i64 PC!6, i64 PC!7
+ret void
+
+COMPILE
+bb_8 func void []
+bb0:
+call void insn_8.action %0 ()
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+bb_8 func void []
+bb0:
+br label %bb6
+bb1:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%9 = load i64, i64 PC
+%10 = i64 Add i64 %9, 4
+store i64 %10, [32, i64] XREG[0]
+%11 = Sext i20 1048570 to i64
+%12 = i64 Shl i64 %11, 1
+%13 = load i64, i64 PC
+%14 = i64 Add i64 %13, %12
+store i64 %14, i64 PC
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb1
+bb6:
+br label %bb2
+
+propagate
+bb_8 func void []
+bb0:
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%9 = load i64, i64 PC
+%10 = i64 Add i64 %9, 4
+store i64 %10, [32, i64] XREG[0]
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, -12
+store i64 %12, i64 PC
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb3, label %bb4
+bb3:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb5
+bb4:
+br label %bb5
+bb5:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+br label %bb6
+bb6:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+bb_8 func void []
+bb0:
+store i64 0, [32, i64] XREG[0]
+%3 = load i64, i64 PC
+store i64 %3, i64 prev_pc
+%9 = load i64, i64 PC
+%10 = i64 Add i64 %9, 4
+store i64 %10, [32, i64] XREG[0]
+%11 = load i64, i64 PC
+%12 = i64 Add i64 %11, -12
+store i64 %12, i64 PC
+%4 = load i64, i64 PC
+%6 = load i64, i64 prev_pc
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb1, label %bb2
+bb1:
+%7 = load i64, i64 PC
+%8 = i64 Add i64 %7, 4
+store i64 %8, i64 PC
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+%2 = load i64, i64 PC
+store i64 %2, i64 PC
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+bb_8 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+%3 = load i64, i64 PC!1
+prev_pc!2 = store i64 %3, i64 prev_pc!1
+%9 = load i64, i64 PC!1
+%10 = i64 Add i64 %9, 4
+XREG!3 = store i64 %10, [32, i64] XREG!2[0]
+%11 = load i64, i64 PC!1
+%12 = i64 Add i64 %11, -12
+PC!2 = store i64 %12, i64 PC!1
+%4 = load i64, i64 PC!2
+%6 = load i64, i64 prev_pc!2
+%5 = i1 Eq i64 %4, %6
+br i1 %5, label %bb1, label %bb2
+bb1:
+%7 = load i64, i64 PC!2
+%8 = i64 Add i64 %7, 4
+PC!3 = store i64 %8, i64 PC!2
+br label %bb3
+bb2:
+br label %bb3
+bb3:
+PC!4 = phi ite %5 PC!3 PC!2
+%2 = load i64, i64 PC!4
+PC!5 = store i64 %2, i64 PC!4
+%1 = load i64, i64 PC!5
+PC!6 = store i64 %1, i64 PC!5
+ret void
+
+SSA forward
+bb_8 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%1 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %1, [32, i64] XREG!2[0]
+%2 = i64 Add i64 PC!1, -12
+PC!2 = store i64 %2, i64 PC!1
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 %2, i64 PC!4
+PC!5 = store i64 PC!4, i64 PC!4
+PC!6 = store i64 PC!4, i64 PC!5
+ret void
+
+Nested SCCP
+bb_8 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%1 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %1, [32, i64] XREG!2[0]
+%2 = i64 Add i64 PC!1, -12
+PC!2 = store i64 %2, i64 PC!1
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 %2, i64 PC!4
+PC!5 = store i64 PC!4, i64 PC!4
+PC!6 = store i64 PC!4, i64 PC!5
+ret void
+
+SCCP forward
+bb_8 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%1 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %1, [32, i64] XREG!2[0]
+%2 = i64 Add i64 PC!1, -12
+PC!2 = store i64 %2, i64 PC!1
+br label %bb1
+bb1:
+br label %bb2
+bb2:
+store i64 %2, i64 PC!4
+PC!5 = store i64 PC!4, i64 PC!4
+PC!6 = store i64 PC!4, i64 PC!5
+ret void
+
+cherry
+bb_8 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%1 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %1, [32, i64] XREG!2[0]
+%2 = i64 Add i64 PC!1, -12
+PC!2 = store i64 %2, i64 PC!1
+store i64 %2, i64 PC!4
+PC!5 = store i64 PC!4, i64 PC!4
+PC!6 = store i64 PC!4, i64 PC!5
+ret void
+
+bb_8 func void []
+bb0:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%1 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %1, [32, i64] XREG!2[0]
+%2 = i64 Add i64 PC!1, -12
+PC!2 = store i64 %2, i64 PC!1
+store i64 %2, i64 PC!4
+PC!5 = store i64 PC!4, i64 PC!4
+PC!6 = store i64 PC!4, i64 PC!5
+ret void
+
+COMPILE
+bb_9 func void []
+bb0:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline calls
+bb_9 func void []
+bb0:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+propagate
+bb_9 func void []
+bb0:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+inline blocks
+bb_9 func void []
+bb0:
+%1 = load i64, i64 PC
+store i64 %1, i64 PC
+ret void
+
+build SSA
+bb_9 func void []
+bb0:
+%1 = load i64, i64 PC!1
+PC!2 = store i64 %1, i64 PC!1
+ret void
+
+SSA forward
+bb_9 func void []
+bb0:
+PC!2 = store i64 PC!1, i64 PC!1
+ret void
+
+Nested SCCP
+bb_9 func void []
+bb0:
+PC!2 = store i64 PC!1, i64 PC!1
+ret void
+
+SCCP forward
+bb_9 func void []
+bb0:
+PC!2 = store i64 PC!1, i64 PC!1
+ret void
+
+cherry
+bb_9 func void []
+bb0:
+PC!2 = store i64 PC!1, i64 PC!1
+ret void
+
+bb_9 func void []
+bb0:
+PC!2 = store i64 PC!1, i64 PC!1
+ret void
+
+Created file: euclid.bin.smt2

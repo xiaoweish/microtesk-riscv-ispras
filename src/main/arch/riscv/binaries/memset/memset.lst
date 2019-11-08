@@ -1,0 +1,184 @@
+
+memset.elf:     file format elf64-littleriscv
+
+
+Disassembly of section .text:
+
+0000000000000000 <memset>:
+   0:	ff010113          	addi	sp,sp,-16
+   4:	00813023          	sd	s0,0(sp)
+   8:	00113423          	sd	ra,8(sp)
+   c:	00050413          	mv	s0,a0
+  10:	00060663          	beqz	a2,1c <memset+0x1c>
+  14:	0ff5f593          	andi	a1,a1,255
+  18:	fe9ff0ef          	jal	ra,0 <memset>
+  1c:	00813083          	ld	ra,8(sp)
+  20:	00040513          	mv	a0,s0
+  24:	00013403          	ld	s0,0(sp)
+  28:	01010113          	addi	sp,sp,16
+  2c:	00008067          	ret
+
+Disassembly of section .interp:
+
+0000000000000030 <.interp>:
+  30:	62696c2f          	0x62696c2f
+  34:	2d646c2f          	0x2d646c2f
+  38:	696c                	ld	a1,208(a0)
+  3a:	756e                	ld	a0,248(sp)
+  3c:	2d78                	fld	fa4,216(a0)
+  3e:	6972                	ld	s2,280(sp)
+  40:	36766373          	csrrsi	t1,0x367,12
+  44:	2d34                	fld	fa3,88(a0)
+  46:	706c                	ld	a1,224(s0)
+  48:	3436                	fld	fs0,360(sp)
+  4a:	2e64                	fld	fs1,216(a2)
+  4c:	312e6f73          	csrrsi	t5,0x312,28
+	...
+
+Disassembly of section .dynsym:
+
+0000000000000058 <.dynsym>:
+	...
+  70:	0000000b          	0xb
+  74:	0012                	c.slli	zero,0x4
+  76:	0001                	nop
+	...
+  80:	0030                	addi	a2,sp,8
+  82:	0000                	unimp
+  84:	0000                	unimp
+	...
+
+Disassembly of section .dynstr:
+
+0000000000000088 <.dynstr>:
+  88:	6c00                	ld	s0,24(s0)
+  8a:	6269                	lui	tp,0x1a
+  8c:	6f732e63          	0x6f732e63
+  90:	362e                	fld	fa2,232(sp)
+  92:	6d00                	ld	s0,24(a0)
+  94:	6d65                	lui	s10,0x19
+  96:	00746573          	csrrsi	a0,0x7,8
+
+Disassembly of section .hash:
+
+00000000000000a0 <.hash>:
+  a0:	0001                	nop
+  a2:	0000                	unimp
+  a4:	0002                	c.slli64	zero
+  a6:	0000                	unimp
+  a8:	0001                	nop
+	...
+
+Disassembly of section .gnu.hash:
+
+00000000000000b8 <.gnu.hash>:
+  b8:	0002                	c.slli64	zero
+  ba:	0000                	unimp
+  bc:	0001                	nop
+  be:	0000                	unimp
+  c0:	0001                	nop
+  c2:	0000                	unimp
+  c4:	0006                	c.slli	zero,0x1
+  c6:	0000                	unimp
+  c8:	0000                	unimp
+  ca:	0000                	unimp
+  cc:	0001                	nop
+  ce:	0001                	nop
+  d0:	0001                	nop
+  d2:	0000                	unimp
+  d4:	0000                	unimp
+  d6:	0000                	unimp
+  d8:	b831                	j	fffffffffffff8f4 <_GLOBAL_OFFSET_TABLE_+0xfffffffffffff704>
+  da:	0d82                	c.slli64	s11
+
+Disassembly of section .dynamic:
+
+00000000000000e0 <_DYNAMIC>:
+  e0:	0001                	nop
+  e2:	0000                	unimp
+  e4:	0000                	unimp
+  e6:	0000                	unimp
+  e8:	0001                	nop
+  ea:	0000                	unimp
+  ec:	0000                	unimp
+  ee:	0000                	unimp
+  f0:	0004                	0x4
+  f2:	0000                	unimp
+  f4:	0000                	unimp
+  f6:	0000                	unimp
+  f8:	00a0                	addi	s0,sp,72
+  fa:	0000                	unimp
+  fc:	0000                	unimp
+  fe:	0000                	unimp
+ 100:	fef5                	bnez	a3,fc <_DYNAMIC+0x1c>
+ 102:	6fff                	0x6fff
+ 104:	0000                	unimp
+ 106:	0000                	unimp
+ 108:	00b8                	addi	a4,sp,72
+ 10a:	0000                	unimp
+ 10c:	0000                	unimp
+ 10e:	0000                	unimp
+ 110:	0005                	c.nop	1
+ 112:	0000                	unimp
+ 114:	0000                	unimp
+ 116:	0000                	unimp
+ 118:	0088                	addi	a0,sp,64
+ 11a:	0000                	unimp
+ 11c:	0000                	unimp
+ 11e:	0000                	unimp
+ 120:	0006                	c.slli	zero,0x1
+ 122:	0000                	unimp
+ 124:	0000                	unimp
+ 126:	0000                	unimp
+ 128:	0058                	addi	a4,sp,4
+ 12a:	0000                	unimp
+ 12c:	0000                	unimp
+ 12e:	0000                	unimp
+ 130:	000a                	c.slli	zero,0x2
+ 132:	0000                	unimp
+ 134:	0000                	unimp
+ 136:	0000                	unimp
+ 138:	0012                	c.slli	zero,0x4
+ 13a:	0000                	unimp
+ 13c:	0000                	unimp
+ 13e:	0000                	unimp
+ 140:	0000000b          	0xb
+ 144:	0000                	unimp
+ 146:	0000                	unimp
+ 148:	0018                	0x18
+ 14a:	0000                	unimp
+ 14c:	0000                	unimp
+ 14e:	0000                	unimp
+ 150:	0015                	c.nop	5
+	...
+ 15e:	0000                	unimp
+ 160:	00000007          	0x7
+	...
+ 170:	0008                	0x8
+	...
+ 17e:	0000                	unimp
+ 180:	0009                	c.nop	2
+ 182:	0000                	unimp
+ 184:	0000                	unimp
+ 186:	0000                	unimp
+ 188:	0018                	0x18
+	...
+
+Disassembly of section .got:
+
+00000000000001f0 <_GLOBAL_OFFSET_TABLE_>:
+ 1f0:	00e0                	addi	s0,sp,76
+ 1f2:	0000                	unimp
+ 1f4:	0000                	unimp
+	...
+
+Disassembly of section .comment:
+
+0000000000000000 <.comment>:
+   0:	3a434347          	fmsub.d	ft6,ft6,ft4,ft7,rmm
+   4:	2820                	fld	fs0,80(s0)
+   6:	29554e47          	fmsub.s	ft8,fa0,fs5,ft5,rmm
+   a:	3920                	fld	fs0,112(a0)
+   c:	322e                	fld	ft4,232(sp)
+   e:	302e                	fld	ft0,232(sp)
+	...

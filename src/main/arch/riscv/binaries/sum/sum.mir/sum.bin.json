@@ -1,0 +1,170 @@
+
+{
+    "blocks": [
+        {
+            "range": [
+                0,
+                0
+            ],
+            "target_taken": 4,
+            "target_other": 1,
+            "condition_smt": "%3",
+            "hwstate_mod_smt": [
+                {
+                    "asm": {
+                        "name": "XREG",
+                        "kind": "reg",
+                        "type": "[32, i64]"
+                    },
+                    "smt_in": "XREG!1",
+                    "smt_out": "XREG!2",
+                    "smt_type": "(Array (_ BitVec 5) (_ BitVec 64))"
+                },
+                {
+                    "asm": {
+                        "name": "PC",
+                        "kind": "reg",
+                        "type": "i64"
+                    },
+                    "smt_in": "PC!1",
+                    "smt_out": "PC!7",
+                    "smt_type": "(_ BitVec 64)"
+                }
+            ]
+        },
+        {
+            "range": [
+                1,
+                7
+            ],
+            "target_taken": 2,
+            "target_other": 2,
+            "condition_smt": "true",
+            "hwstate_mod_smt": [
+                {
+                    "asm": {
+                        "name": "XREG",
+                        "kind": "reg",
+                        "type": "[32, i64]"
+                    },
+                    "smt_in": "XREG!3",
+                    "smt_out": "XREG!17",
+                    "smt_type": "(Array (_ BitVec 5) (_ BitVec 64))"
+                },
+                {
+                    "asm": {
+                        "name": "PC",
+                        "kind": "reg",
+                        "type": "i64"
+                    },
+                    "smt_in": "PC!8",
+                    "smt_out": "PC!26",
+                    "smt_type": "(_ BitVec 64)"
+                }
+            ]
+        },
+        {
+            "range": [
+                8,
+                11
+            ],
+            "target_taken": 2,
+            "target_other": 3,
+            "condition_smt": "%73",
+            "hwstate_mod_smt": [
+                {
+                    "asm": {
+                        "name": "XREG",
+                        "kind": "reg",
+                        "type": "[32, i64]"
+                    },
+                    "smt_in": "XREG!18",
+                    "smt_out": "XREG!25",
+                    "smt_type": "(Array (_ BitVec 5) (_ BitVec 64))"
+                },
+                {
+                    "asm": {
+                        "name": "PC",
+                        "kind": "reg",
+                        "type": "i64"
+                    },
+                    "smt_in": "PC!31",
+                    "smt_out": "PC!43",
+                    "smt_type": "(_ BitVec 64)"
+                },
+                {
+                    "asm": {
+                        "name": "MEM",
+                        "kind": "mem",
+                        "type": "[9007199254740992, i64]"
+                    },
+                    "smt_in": "MEM!1",
+                    "smt_out": "MEM!1",
+                    "smt_type": "(Array (_ BitVec 53) (_ BitVec 64))"
+                }
+            ]
+        },
+        {
+            "range": [
+                12,
+                12
+            ],
+            "target_taken": 4,
+            "target_other": 4,
+            "condition_smt": "true",
+            "hwstate_mod_smt": [
+                {
+                    "asm": {
+                        "name": "XREG",
+                        "kind": "reg",
+                        "type": "[32, i64]"
+                    },
+                    "smt_in": "XREG!26",
+                    "smt_out": "XREG!28",
+                    "smt_type": "(Array (_ BitVec 5) (_ BitVec 64))"
+                },
+                {
+                    "asm": {
+                        "name": "PC",
+                        "kind": "reg",
+                        "type": "i64"
+                    },
+                    "smt_in": "PC!47",
+                    "smt_out": "PC!51",
+                    "smt_type": "(_ BitVec 64)"
+                }
+            ]
+        },
+        {
+            "range": [
+                13,
+                14
+            ],
+            "target_taken": -1,
+            "target_other": -1,
+            "condition_smt": "true",
+            "hwstate_mod_smt": [
+                {
+                    "asm": {
+                        "name": "XREG",
+                        "kind": "reg",
+                        "type": "[32, i64]"
+                    },
+                    "smt_in": "XREG!29",
+                    "smt_out": "XREG!33",
+                    "smt_type": "(Array (_ BitVec 5) (_ BitVec 64))"
+                },
+                {
+                    "asm": {
+                        "name": "PC",
+                        "kind": "reg",
+                        "type": "i64"
+                    },
+                    "smt_in": "PC!53",
+                    "smt_out": "PC!61",
+                    "smt_type": "(_ BitVec 64)"
+                }
+            ]
+        }
+    ]
+}

@@ -166,13 +166,12 @@ let OP_V = 0b1010111 // The vector arithmetic instructions use a new major opcod
 
 op vsetvli(rd: X, rs1: X, elements: card(3), vlmul: card(2))
   init = {
-    v_funct6 = 0b1010111;
-    v_funct5 = 0b00000; // TODO:
+    v_funct6 = 0b000000; // TODO:
     v_funct3 = 0b111;
   }
   syntax = format("vsetvli %s, %s, %s, %s", rd.syntax, rs1.syntax, "e32", "m4") // TODO: zimm[10:0]
-  image  = format("0%5s%3s%2s%5s%3s%5s%7s",
-                 v_funct5, elements, vlmul, rs1.image, v_funct3, rd.image, coerce(card(7), OP_V))
+  image  = format("0%6s%3s%2s%5s%3s%5s%7s",
+                 v_funct6, elements, vlmul, rs1.image, v_funct3, rd.image, coerce(card(7), OP_V))
   action = {
     VTYPE_VSEW  = elements;
     VTYPE_VLMUL = vlmul;

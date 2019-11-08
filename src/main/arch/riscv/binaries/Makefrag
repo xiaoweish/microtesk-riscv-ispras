@@ -5,13 +5,16 @@ ELF = $(SAMPLE).elf
 LST = $(SAMPLE).lst
 BIN = $(SAMPLE).bin
 HEX = $(SAMPLE).hex
+ASM = $(SAMPLE).asm
+MIR = $(SAMPLE).mir
 
+ARCH    = riscv
 TOOL    = riscv64-unknown-linux-gnu-XXX
 GCC     = $(TOOL:XXX=gcc)
 OBJDUMP = $(TOOL:XXX=objdump)
 OBJCOPY = $(TOOL:XXX=objcopy)
 
-all: $(LST) $(BIN) $(HEX)
+all: $(LST) $(BIN) $(HEX) $(ASM) $(MIR)
 
 $(S): $(C)
 	$(GCC) -S $^
@@ -31,6 +34,14 @@ $(BIN): $(ELF)
 $(HEX): $(BIN)
 	hexdump -v -e '/4 "%08x\n"' $^ > $@
 
+$(ASM): $(BIN)
+	sh $(MICROTESK_HOME)/bin/disassemble.sh $(ARCH) $^ -od . -cfe asm
+
+$(MIR): $(BIN)
+	mkdir -p $@
+	sh $(MICROTESK_HOME)/bin/symexecute.sh --verbose $(ARCH) $^ > $@/$@
+	mv *.json *.smt2 $@
+
 clean:
-	rm -rf $(S) $(LD) $(ELF) $(LST) $(BIN) $(HEX)
+	rm -rf $(S) $(LD) $(ELF) $(LST) $(BIN) $(HEX) $(ASM) $(MIR)
 

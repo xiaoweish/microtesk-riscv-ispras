@@ -11,13 +11,14 @@ MIR = $(SAMPLE).mir
 ARCH    = riscv
 TOOL    = riscv64-unknown-linux-gnu-XXX
 GCC     = $(TOOL:XXX=gcc)
+CFLAGS  = -O3
 OBJDUMP = $(TOOL:XXX=objdump)
 OBJCOPY = $(TOOL:XXX=objcopy)
 
 all: $(LST) $(BIN) $(HEX) $(ASM) $(MIR)
 
 $(S): $(C)
-	$(GCC) -S $^
+	$(GCC) $(CFLAGS) -S $^
 
 $(LD):
 	echo "ENTRY($(SAMPLE)) SECTIONS { . = 0x00000000; }" > $@

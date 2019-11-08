@@ -1,0 +1,2 @@
+SAMPLE = euclid
+include ../Makefrag

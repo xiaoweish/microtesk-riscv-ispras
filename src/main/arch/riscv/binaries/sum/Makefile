@@ -1,0 +1,2 @@
+SAMPLE = sum
+include ../Makefrag

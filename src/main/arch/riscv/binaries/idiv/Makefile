@@ -1,0 +1,2 @@
+SAMPLE = idiv
+include ../Makefrag

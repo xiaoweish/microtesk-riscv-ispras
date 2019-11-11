@@ -1,0 +1,2 @@
+SAMPLE = fibonacci
+include ../Makefrag

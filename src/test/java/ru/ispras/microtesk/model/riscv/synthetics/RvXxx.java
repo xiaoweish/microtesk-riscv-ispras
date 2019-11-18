@@ -21,12 +21,12 @@ import ru.ispras.microtesk.model.riscv.RiscVTest;
 import ru.ispras.microtesk.options.Option;
 import ru.ispras.microtesk.test.Statistics;
 
-public final class TortureTestCase extends RiscVTest {
+public final class RvXxx extends RiscVTest {
   @Test
   public void test() {
     setCommandLineOption(Option.VERBOSE);
 
-    final Statistics statistics = run("synthetics/torture/torture.rb");
+    final Statistics statistics = run("synthetics/rvxxx/seq_xxx.rb");
     Assert.assertNotNull(statistics);
   }
 }

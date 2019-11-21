@@ -78,4 +78,10 @@
   <includes name="RV32M"/>
   <includes name="RV32C"/>
  </revision>
+ <revision name="RISCY">
+  <includes name="RV32I"/>
+  <includes name="RV32M"/>
+  <includes name="RV32C"/>
+  <includes name="RV32F"/>
+ </revision>
 </revisions>

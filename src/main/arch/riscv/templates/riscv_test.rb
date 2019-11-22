@@ -297,10 +297,10 @@ label :_run_test
   ##################################################################################################
 
   def RVTEST_CODE_END
-    label :sc_exit
-    nop
-    text "j SIM_EXIT"
-    pseudo 'unimp'
+    #label :sc_exit
+    #nop
+    #text "j SIM_EXIT"
+    #pseudo 'unimp'
   end
 
   ##################################################################################################
@@ -308,21 +308,31 @@ label :_run_test
   ##################################################################################################
 
   def RVTEST_PASS
-    fence
-    mv a1, TESTNUM()
-    li a0, 0x0
-    ecall
+    lui a0, 0x10000000 >> 12
+    addi a1, zero, 'O'
+    addi a2, zero, 'K'
+    addi a3, zero, '\n'
+    sw a1, a0, 0x0
+    sw a2, a0, 0x0
+    sw a3, a0, 0x0
+    text "jal zero, TEST_FUNC_RET"
   end
 
   def TESTNUM
-    gp
+    t3
   end
 
   def RVTEST_FAIL
+    lui a0, 0x10000000 >> 12
+    addi a1, zero, 'E'
+    addi a2, zero, 'R'
+    addi a3, zero, 'O'
+    addi a4, zero, '\n'
+    sw a1, a0, 0x0
+    sw a2, a0, 0x0
+    sw a3, a0, 0x0
+    sw a4, a0, 0x0
     trace 'Error: Test failed (self check did not pass)!'
-    fence
-    mv a1, TESTNUM()
-    li a0, 0x1
     ecall
   end
 
@@ -330,11 +340,11 @@ label :_run_test
   # Data Section Macro
   ##################################################################################################
 
-  def EXTRA_DATA
-  end
+  #def EXTRA_DATA
+  #end
 
   def RVTEST_DATA_BEGIN
-    EXTRA_DATA()
+    #EXTRA_DATA()
 
 # TODO: Temporary commented out because it causes the "HTIF tohost must be 8 bytes" error in QEMU.
 #     # .pushsection .tohost,"aw",@progbits
@@ -352,32 +362,33 @@ label :_run_test
 #     # .popsection
 
 
-    data {
-      text '.align 4'
+    text ".balign 4"
+    #data {
+    #  text '.align 4'
       # TODO: Fix me!
-      text '.pushsection .tohost,"aw",@progbits'
-      text '.align 8; .global tohost; tohost: .dword 0;'
-      text '.align 8; .global fromhost; fromhost: .dword 0;'
-      text '.popsection;'
+    #  text '.pushsection .tohost,"aw",@progbits'
+    #  text '.align 8; .global tohost; tohost: .dword 0;'
+    #  text '.align 8; .global fromhost; fromhost: .dword 0;'
+    #  text '.popsection;'
       # TODO: end Fix me!
 
-      align 4
-      global_label :begin_signature
-    }
+    #  align 4
+    #  global_label :begin_signature
+    #}
   end
 
   def RVTEST_DATA_END
-    data {
-      align 4
-      global_label :end_signature
+    #data {
+    #  align 4
+    #  global_label :end_signature
 
       # TODO: Fix me!
-      text '.align 8; .global begin_regstate; begin_regstate:'
-      text '.word 128;'
-      text '.align 8; .global end_regstate; end_regstate:'
-      text '.word 4;'
-      # TODO: end Fix me!
-    }
+    #  text '.align 8; .global begin_regstate; begin_regstate:'
+    #  text '.word 128;'
+    #  text '.align 8; .global end_regstate; end_regstate:'
+    #  text '.word 4;'
+    #  # TODO: end Fix me!
+    #}
   end
 
 end

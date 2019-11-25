@@ -215,81 +215,104 @@ label 1
   end
 
   def RVTEST_CODE_BEGIN
-    org 0xc0
-    align 6
-    weak :stvec_handler
-    weak :mtvec_handler
+    text ".text"
+    text ".globl TEST_FUNC_RET"
 
-label :trap_vector
+    global_label :TEST_FUNC_NAME
+    la a0, :test_name
+    lui a2, 0x10000000 >> 12
+
+    label :prname_next
+    lb a1, a0, 0
+    beq a1, zero, :prname_done
+    sw a1, a2, 0
+    addi a0, a0, 1
+    jal zero, :prname_next
+
+    label :test_name
+    text ".ascii TEST_FUNC_TXT"
+    text ".byte 0x0"
+    text ".balign 4, 0"
+
+    label :prname_done
+    addi a1, zero, ".".ord
+    sw a1, a2, 0
+
+    #org 0xc0
+    #align 6
+    #weak :stvec_handler
+    #weak :mtvec_handler
+
+#label :trap_vector
     # test whether the test came from pass/fail
-    csrr a4, mcause
+    #csrr a4, mcause
 
-    li a5, CAUSE_USER_ECALL
-    beq a4, a5, :_report
+    #li a5, CAUSE_USER_ECALL
+    #beq a4, a5, :_report
 
-    li a5, CAUSE_SUPERVISOR_ECALL
-    beq a4, a5, :_report
+    #li a5, CAUSE_SUPERVISOR_ECALL
+    #beq a4, a5, :_report
 
-    li a5, CAUSE_MACHINE_ECALL
-    beq a4, a5, :_report
+    #li a5, CAUSE_MACHINE_ECALL
+    #beq a4, a5, :_report
 
     # if an mtvec_handler is defined, jump to it
-    la a4, :mtvec_handler
-    beqz a4, label_f(1)
-    jr a4
+    #la a4, :mtvec_handler
+    #beqz a4, label_f(1)
+    #jr a4
 
     # was it an interrupt or an exception?
-label 1
-    csrr a4, mcause
-    bgez a4, :handle_exception
+#label 1
+#    csrr a4, mcause
+#    bgez a4, :handle_exception
 
-    INTERRUPT_HANDLER()
-label :handle_exception
+#    INTERRUPT_HANDLER()
+#label :handle_exception
     # we don't know how to handle whatever the exception was
-label :other_exception
+#label :other_exception
     # some unhandlable exception occurred
-    li a0, 1
-label 1
+#    li a0, 1
+#label 1
 
-label :_report
-    j :sc_exit
-    nop
-    align 6
-global_label :_start
-    RISCV_MULTICORE_DISABLE()
-    DELEGATE_NO_TRAPS()
-    li TESTNUM(), 0
-    la t0, :trap_vector
-    csrw mtvec, t0
-    CHECK_XLEN()
+#label :_report
+#    j :sc_exit
+#    nop
+#    align 6
+#global_label :_start
+#    RISCV_MULTICORE_DISABLE()
+#    DELEGATE_NO_TRAPS()
+#    li TESTNUM(), 0
+#    la t0, :trap_vector
+#    csrw mtvec, t0
+#    CHECK_XLEN()
 
     # if an stvec_handler is defined, delegate exceptions to it
-    la t0, :stvec_handler
-    beqz t0, label_f(1)
-    csrw stvec, t0
+ #   la t0, :stvec_handler
+#    beqz t0, label_f(1)
+#    csrw stvec, t0
 
-    li t0, (1 << CAUSE_LOAD_PAGE_FAULT)  |
-           (1 << CAUSE_STORE_PAGE_FAULT) |
-           (1 << CAUSE_FETCH_PAGE_FAULT) |
-           (1 << CAUSE_MISALIGNED_FETCH) |
-           (1 << CAUSE_USER_ECALL)       |
-           (1 << CAUSE_BREAKPOINT)
-    csrw medeleg, t0
-    csrr t1, medeleg
-    bne t0, t1, :other_exception
+#    li t0, (1 << CAUSE_LOAD_PAGE_FAULT)  |
+#           (1 << CAUSE_STORE_PAGE_FAULT) |
+#           (1 << CAUSE_FETCH_PAGE_FAULT) |
+#           (1 << CAUSE_MISALIGNED_FETCH) |
+#           (1 << CAUSE_USER_ECALL)       |
+#           (1 << CAUSE_BREAKPOINT)
+#    csrw medeleg, t0
+#    csrr t1, medeleg
+#    bne t0, t1, :other_exception
 
-label 1
-    csrwi mstatus, 0
-    RVTEST_INIT()
+#label 1
+#    csrwi mstatus, 0
+#    RVTEST_INIT()
 
-    EXTRA_INIT()
-    EXTRA_INIT_TIMER()
+#    EXTRA_INIT()
+#    EXTRA_INIT_TIMER()
 
-    la t0, :_run_test
-    csrw mepc, t0
-    csrr a0, mhartid
-    mret
-label :_run_test
+#    la t0, :_run_test
+#    csrw mepc, t0
+#    csrr a0, mhartid
+#    mret
+#label :_run_test
   end
 
   ##################################################################################################
@@ -309,9 +332,9 @@ label :_run_test
 
   def RVTEST_PASS
     lui a0, 0x10000000 >> 12
-    addi a1, zero, 'O'
-    addi a2, zero, 'K'
-    addi a3, zero, '\n'
+    addi a1, zero, "O".ord
+    addi a2, zero, "K".ord
+    addi a3, zero, "\n".ord
     sw a1, a0, 0x0
     sw a2, a0, 0x0
     sw a3, a0, 0x0
@@ -324,10 +347,10 @@ label :_run_test
 
   def RVTEST_FAIL
     lui a0, 0x10000000 >> 12
-    addi a1, zero, 'E'
-    addi a2, zero, 'R'
-    addi a3, zero, 'O'
-    addi a4, zero, '\n'
+    addi a1, zero, "E".ord
+    addi a2, zero, "R".ord
+    addi a3, zero, "O".ord
+    addi a4, zero, "\n".ord
     sw a1, a0, 0x0
     sw a2, a0, 0x0
     sw a3, a0, 0x0

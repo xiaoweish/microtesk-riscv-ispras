@@ -1,6 +1,7 @@
 bin/
 build/
 out/
+output/
 tools/
 .*
 !.gitignore

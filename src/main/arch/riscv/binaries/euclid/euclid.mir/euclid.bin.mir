@@ -1,0 +1,311 @@
+euclid.bin func void []
+bb0:
+PC!1 = i64 Use i64 PC
+XREG!1 = [32, i64] Use [32, i64] XREG
+br label %bb1
+bb1:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[10]
+%6 = load i64, [32, i64] XREG!2[11]
+%3 = i1 Eq i64 %5, %6
+br i1 %3, label %bb2, label %bb3
+bb2:
+%4 = i64 Add i64 PC!1, 20
+PC!2 = store i64 %4, i64 PC!1
+br label %bb4
+bb3:
+br label %bb4
+bb4:
+PC!3 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!3, PC!1
+br i1 %1, label %bb5, label %bb6
+bb5:
+%2 = i64 Add i64 PC!3, 4
+PC!4 = store i64 %2, i64 PC!3
+br label %bb7
+bb6:
+br label %bb7
+bb7:
+PC!5 = phi ite %3 %4 %2
+PC!6 = store i64 PC!5, i64 PC!5
+PC!7 = store i64 PC!5, i64 PC!6
+br label %bb8
+bb8:
+PC = i64 Use i64 PC!7
+XREG = [32, i64] Use [32, i64] XREG!2
+PC!8 = i64 Use i64 PC
+XREG!3 = [32, i64] Use [32, i64] XREG
+br label %bb9
+bb9:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb10, label %bb11
+bb10:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb12
+bb11:
+br label %bb12
+bb12:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb13, label %bb14
+bb13:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb15
+bb14:
+br label %bb15
+bb15:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+br label %bb16
+bb16:
+PC = i64 Use i64 PC!12
+XREG = [32, i64] Use [32, i64] XREG!4
+PC!15 = i64 Use i64 PC
+XREG!5 = [32, i64] Use [32, i64] XREG
+br label %bb17
+bb17:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb18, label %bb19
+bb18:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb20
+bb19:
+br label %bb20
+bb20:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb21, label %bb22
+bb21:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb23
+bb22:
+br label %bb23
+bb23:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+br label %bb24
+bb24:
+PC = i64 Use i64 PC!19
+XREG = [32, i64] Use [32, i64] XREG!6
+PC!22 = i64 Use i64 PC
+XREG!7 = [32, i64] Use [32, i64] XREG
+br label %bb25
+bb25:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%5 = load i64, [32, i64] XREG!2[11]
+%6 = load i64, [32, i64] XREG!2[10]
+%3 = i1 Sge i64 %5, %6
+br i1 %3, label %bb26, label %bb27
+bb26:
+%4 = i64 Add i64 PC!1, 20
+PC!7 = store i64 %4, i64 PC!1
+br label %bb28
+bb27:
+br label %bb28
+bb28:
+PC!2 = phi ite %3 %4 PC!1
+%1 = i1 Eq i64 PC!2, PC!1
+br i1 %1, label %bb29, label %bb30
+bb29:
+%2 = i64 Add i64 PC!2, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb31
+bb30:
+br label %bb31
+bb31:
+PC!3 = phi ite %3 %4 %2
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+br label %bb32
+bb32:
+PC = i64 Use i64 PC!26
+XREG = [32, i64] Use [32, i64] XREG!8
+PC!29 = i64 Use i64 PC
+XREG!9 = [32, i64] Use [32, i64] XREG
+br label %bb33
+bb33:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[10]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[11]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[10]
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[11]
+%13 = load i64, [32, i64] XREG!4[10]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb34, label %bb35
+bb34:
+%11 = i64 Add i64 PC!2, -8
+PC!4 = store i64 %11, i64 PC!3
+br label %bb36
+bb35:
+br label %bb36
+bb36:
+PC!5 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!5, PC!2
+br i1 %8, label %bb37, label %bb38
+bb37:
+%9 = i64 Add i64 PC!5, 4
+PC!6 = store i64 %9, i64 PC!5
+br label %bb39
+bb38:
+br label %bb39
+bb39:
+PC!7 = phi ite %10 %11 %9
+PC!8 = store i64 PC!7, i64 PC!7
+PC!9 = store i64 PC!7, i64 PC!8
+br label %bb40
+bb40:
+PC = i64 Use i64 PC!37
+XREG = [32, i64] Use [32, i64] XREG!12
+PC!39 = i64 Use i64 PC
+XREG!13 = [32, i64] Use [32, i64] XREG
+br label %bb41
+bb41:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb42, label %bb43
+bb42:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb44
+bb43:
+br label %bb44
+bb44:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+br label %bb45
+bb45:
+PC = i64 Use i64 PC!43
+XREG = [32, i64] Use [32, i64] XREG!15
+PC!45 = i64 Use i64 PC
+XREG!16 = [32, i64] Use [32, i64] XREG
+br label %bb46
+bb46:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb47, label %bb48
+bb47:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb49
+bb48:
+br label %bb49
+bb49:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+br label %bb50
+bb50:
+PC = i64 Use i64 PC!49
+XREG = [32, i64] Use [32, i64] XREG!18
+PC!51 = i64 Use i64 PC
+XREG!19 = [32, i64] Use [32, i64] XREG
+br label %bb51
+bb51:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%6 = load i64, [32, i64] XREG!2[11]
+%2 = Extract i32 of i64 %6 <31, 0>
+%7 = load i64, [32, i64] XREG!2[10]
+%4 = Extract i32 of i64 %7 <31, 0>
+%3 = i32 Sub i32 %2, %4
+%5 = Sext i32 %3 to i64
+XREG!3 = store i64 %5, [32, i64] XREG!2[11]
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%12 = load i64, [32, i64] XREG!4[10]
+%13 = load i64, [32, i64] XREG!4[11]
+%10 = i1 Ne i64 %12, %13
+br i1 %10, label %bb52, label %bb53
+bb52:
+%11 = i64 Add i64 PC!2, -24
+PC!9 = store i64 %11, i64 PC!3
+br label %bb54
+bb53:
+br label %bb54
+bb54:
+PC!4 = phi ite %10 %11 PC!2
+%8 = i1 Eq i64 PC!4, PC!2
+br i1 %8, label %bb55, label %bb56
+bb55:
+%9 = i64 Add i64 PC!4, 4
+PC!5 = store i64 %9, i64 PC!4
+br label %bb57
+bb56:
+br label %bb57
+bb57:
+PC!6 = phi ite %10 %11 %9
+PC!7 = store i64 PC!6, i64 PC!6
+PC!8 = store i64 PC!6, i64 PC!7
+br label %bb58
+bb58:
+PC = i64 Use i64 PC!58
+XREG = [32, i64] Use [32, i64] XREG!22
+PC!61 = i64 Use i64 PC
+XREG!23 = [32, i64] Use [32, i64] XREG
+br label %bb59
+bb59:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%1 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %1, [32, i64] XREG!2[0]
+%2 = i64 Add i64 PC!1, -12
+PC!2 = store i64 %2, i64 PC!1
+store i64 %2, i64 PC!4
+PC!5 = store i64 PC!4, i64 PC!4
+PC!6 = store i64 PC!4, i64 PC!5
+br label %bb60
+bb60:
+PC = i64 Use i64 PC!66
+XREG = [32, i64] Use [32, i64] XREG!25
+PC!67 = i64 Use i64 PC
+br label %bb61
+bb61:
+PC!2 = store i64 PC!1, i64 PC!1
+br label %bb62
+bb62:
+PC = i64 Use i64 PC!68
+ret void

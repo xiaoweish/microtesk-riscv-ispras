@@ -40,8 +40,8 @@ $(ASM): $(BIN)
 
 $(MIR): $(BIN)
 	mkdir -p $@
-	sh $(MICROTESK_HOME)/bin/symexecute.sh --verbose $(ARCH) $^ > $@/$@
-	mv $(BIN).json $(BIN).*.smt2 $(BIN).mir $@
+	sh $(MICROTESK_HOME)/bin/symexecute.sh $(ARCH) $^
+	mv $(BIN)*.json $(BIN)*.smt2 $(BIN)*.mir $@
 
 clean:
 	rm -rf $(S) $(LD) $(ELF) $(LST) $(BIN) $(HEX) $(ASM) $(MIR)

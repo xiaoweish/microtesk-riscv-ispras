@@ -1,0 +1,221 @@
+strlen.bin func void []
+bb0:
+MEM!1 = [9007199254740992, i64] Use [9007199254740992, i64] MEM
+PC!1 = i64 Use i64 PC
+XREG!1 = [32, i64] Use [32, i64] XREG
+br label %bb1
+bb1:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[10]
+%2 = i64 Add i64 %3, 0
+tmp_address!2 = store i64 %2, i64 tmp_address!1
+%4 = i64 Lshr i64 %2, 3
+%5 = Extract i53 of i64 %4 <52, 0>
+mem_index!2 = store i53 %5, i53 mem_index!1
+%6 = Extract i3 of i64 %2 <2, 0>
+%7 = Zext i3 %6 to i6
+%8 = i6 Mul i6 %7, 8
+tmp_bit_offset!2 = store i6 %8, i6 tmp_bit_offset!1
+%9 = i6 Add i6 %8, 7
+%10 = load i64, [9007199254740992, i64] MEM!1[%5]
+%11 = Extract i8 of i64 %10 <%9, %8>
+tmp_byte!2 = store i8 %11, i8 tmp_byte!1
+%12 = Zext i8 %11 to i64
+rd_var!2 = store i64 %12, i64 rd_var!1
+XREG!3 = store i64 %12, [32, i64] XREG!2[15]
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%17 = load i64, [32, i64] XREG!4[15]
+%18 = load i64, [32, i64] XREG!4[0]
+%15 = i1 Eq i64 %17, %18
+br i1 %15, label %bb2, label %bb3
+bb2:
+%16 = i64 Add i64 PC!2, 28
+PC!9 = store i64 %16, i64 PC!3
+br label %bb4
+bb3:
+br label %bb4
+bb4:
+PC!4 = phi ite %15 %16 PC!2
+%13 = i1 Eq i64 PC!4, PC!2
+br i1 %13, label %bb5, label %bb6
+bb5:
+%14 = i64 Add i64 PC!4, 4
+PC!5 = store i64 %14, i64 PC!4
+br label %bb7
+bb6:
+br label %bb7
+bb7:
+PC!6 = phi ite %15 %16 %14
+PC!7 = store i64 PC!6, i64 PC!6
+PC!8 = store i64 PC!6, i64 PC!7
+br label %bb8
+bb8:
+MEM = [9007199254740992, i64] Use [9007199254740992, i64] MEM!1
+PC = i64 Use i64 PC!8
+XREG = [32, i64] Use [32, i64] XREG!4
+PC!11 = i64 Use i64 PC
+XREG!5 = [32, i64] Use [32, i64] XREG
+br label %bb9
+bb9:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[10]
+%2 = i64 Add i64 %3, 0
+XREG!3 = store i64 %2, [32, i64] XREG!2[15]
+%1 = i64 Add i64 PC!1, 4
+PC!2 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+br label %bb10
+bb10:
+PC = i64 Use i64 PC!15
+XREG = [32, i64] Use [32, i64] XREG!7
+MEM!2 = [9007199254740992, i64] Use [9007199254740992, i64] MEM
+PC!16 = i64 Use i64 PC
+XREG!8 = [32, i64] Use [32, i64] XREG
+br label %bb11
+bb11:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[15]
+%2 = i64 Add i64 %3, 1
+tmp_address!2 = store i64 %2, i64 tmp_address!1
+%4 = i64 Lshr i64 %2, 3
+%5 = Extract i53 of i64 %4 <52, 0>
+mem_index!2 = store i53 %5, i53 mem_index!1
+%6 = Extract i3 of i64 %2 <2, 0>
+%7 = Zext i3 %6 to i6
+%8 = i6 Mul i6 %7, 8
+tmp_bit_offset!2 = store i6 %8, i6 tmp_bit_offset!1
+%9 = i6 Add i6 %8, 7
+%10 = load i64, [9007199254740992, i64] MEM!1[%5]
+%11 = Extract i8 of i64 %10 <%9, %8>
+tmp_byte!2 = store i8 %11, i8 tmp_byte!1
+%12 = Zext i8 %11 to i64
+rd_var!2 = store i64 %12, i64 rd_var!1
+XREG!3 = store i64 %12, [32, i64] XREG!2[14]
+%1 = i64 Add i64 PC!1, 4
+PC!2 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!3, i64 prev_pc!2
+%15 = load i64, [32, i64] XREG!4[15]
+%14 = i64 Add i64 %15, 1
+XREG!5 = store i64 %14, [32, i64] XREG!4[15]
+%13 = i64 Add i64 PC!3, 4
+PC!13 = store i64 %13, i64 PC!4
+store i64 %13, i64 PC!5
+PC!6 = store i64 PC!5, i64 PC!5
+XREG!6 = store i64 0, [32, i64] XREG!5[0]
+prev_pc!4 = store i64 PC!5, i64 prev_pc!3
+%20 = load i64, [32, i64] XREG!6[14]
+%21 = load i64, [32, i64] XREG!6[0]
+%18 = i1 Ne i64 %20, %21
+br i1 %18, label %bb12, label %bb13
+bb12:
+%19 = i64 Add i64 PC!5, -8
+PC!12 = store i64 %19, i64 PC!6
+br label %bb14
+bb13:
+br label %bb14
+bb14:
+PC!7 = phi ite %18 %19 PC!5
+%16 = i1 Eq i64 PC!7, PC!5
+br i1 %16, label %bb15, label %bb16
+bb15:
+%17 = i64 Add i64 PC!7, 4
+PC!8 = store i64 %17, i64 PC!7
+br label %bb17
+bb16:
+br label %bb17
+bb17:
+PC!9 = phi ite %18 %19 %17
+PC!10 = store i64 PC!9, i64 PC!9
+PC!11 = store i64 PC!9, i64 PC!10
+br label %bb18
+bb18:
+MEM = [9007199254740992, i64] Use [9007199254740992, i64] MEM!2
+PC = i64 Use i64 PC!26
+XREG = [32, i64] Use [32, i64] XREG!13
+PC!29 = i64 Use i64 PC
+XREG!14 = [32, i64] Use [32, i64] XREG
+br label %bb19
+bb19:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[15]
+%4 = load i64, [32, i64] XREG!2[10]
+%2 = i64 Sub i64 %3, %4
+XREG!3 = store i64 %2, [32, i64] XREG!2[10]
+%1 = i64 Add i64 PC!1, 4
+PC!9 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%7 = i64 Add i64 PC!2, 4
+XREG!5 = store i64 %7, [32, i64] XREG!4[0]
+%9 = load i64, [32, i64] XREG!5[1]
+%8 = i64 Add i64 %9, 0
+PC!4 = store i64 %8, i64 PC!3
+%5 = i1 Eq i64 %8, PC!2
+br i1 %5, label %bb20, label %bb21
+bb20:
+%6 = i64 Add i64 %8, 4
+PC!5 = store i64 %6, i64 PC!4
+br label %bb22
+bb21:
+br label %bb22
+bb22:
+PC!6 = phi ite %5 %6 %8
+PC!7 = store i64 PC!6, i64 PC!6
+PC!8 = store i64 PC!6, i64 PC!7
+br label %bb23
+bb23:
+PC = i64 Use i64 PC!36
+XREG = [32, i64] Use [32, i64] XREG!18
+PC!38 = i64 Use i64 PC
+XREG!19 = [32, i64] Use [32, i64] XREG
+br label %bb24
+bb24:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[0]
+%2 = i64 Add i64 %3, 0
+XREG!3 = store i64 %2, [32, i64] XREG!2[10]
+%1 = i64 Add i64 PC!1, 4
+PC!9 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%6 = i64 Add i64 PC!2, 4
+XREG!5 = store i64 %6, [32, i64] XREG!4[0]
+%8 = load i64, [32, i64] XREG!5[1]
+%7 = i64 Add i64 %8, 0
+PC!4 = store i64 %7, i64 PC!3
+%4 = i1 Eq i64 %7, PC!2
+br i1 %4, label %bb25, label %bb26
+bb25:
+%5 = i64 Add i64 %7, 4
+PC!5 = store i64 %5, i64 PC!4
+br label %bb27
+bb26:
+br label %bb27
+bb27:
+PC!6 = phi ite %4 %5 %7
+PC!7 = store i64 PC!6, i64 PC!6
+PC!8 = store i64 PC!6, i64 PC!7
+br label %bb28
+bb28:
+PC = i64 Use i64 PC!45
+XREG = [32, i64] Use [32, i64] XREG!23
+ret void

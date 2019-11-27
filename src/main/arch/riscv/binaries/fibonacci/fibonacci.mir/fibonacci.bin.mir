@@ -1,0 +1,1450 @@
+fibonacci.bin func void []
+bb0:
+MEM!1 = [9007199254740992, i64] Use [9007199254740992, i64] MEM
+PC!1 = i64 Use i64 PC
+XREG!1 = [32, i64] Use [32, i64] XREG
+br label %bb1
+bb1:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[0]
+%2 = i64 Add i64 %3, 1
+XREG!3 = store i64 %2, [32, i64] XREG!2[15]
+%1 = i64 Add i64 PC!1, 4
+PC!2 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!3, i64 prev_pc!2
+%6 = load i64, [32, i64] XREG!4[10]
+%5 = i64 Add i64 %6, 0
+tmp_address!2 = store i64 %5, i64 tmp_address!1
+%7 = load i64, [32, i64] XREG!4[15]
+rs2_var!2 = store i64 %7, i64 rs2_var!1
+%8 = i64 Lshr i64 %5, 3
+%9 = Extract i53 of i64 %8 <52, 0>
+mem_index!2 = store i53 %9, i53 mem_index!1
+%10 = Extract i3 of i64 %5 <2, 0>
+%11 = i1 Eq i3 %10, 0
+br i1 %11, label %bb2, label %bb3
+bb2:
+MEM!2 = store i64 %7, [9007199254740992, i64] MEM!1[%9]
+br label %bb4
+bb3:
+%12 = i53 Add i53 %9, 1
+%13 = load i64, [9007199254740992, i64] MEM!1[%12]
+tmp_dword1!13 = store i64 %13, i64 tmp_dword1!1
+%14 = load i64, [9007199254740992, i64] MEM!1[%9]
+tmp_dword2!13 = store i64 %14, i64 tmp_dword2!1
+%15 = Extract i3 of i64 %5 <2, 0>
+%16 = i1 Eq i3 %15, 1
+br i1 %16, label %bb5, label %bb6
+bb4:
+MEM!3 = phi ite %11 MEM!2 MEM!9
+tmp_dword2!2 = phi ite %11 tmp_dword2!1 tmp_dword2!14
+tmp_dword1!2 = phi ite %11 tmp_dword1!1 tmp_dword1!14
+%4 = i64 Add i64 PC!3, 4
+PC!19 = store i64 %4, i64 PC!4
+store i64 %4, i64 PC!5
+PC!6 = store i64 PC!5, i64 PC!5
+XREG!5 = store i64 0, [32, i64] XREG!4[0]
+prev_pc!4 = store i64 PC!5, i64 prev_pc!3
+%114 = load i64, [32, i64] XREG!5[10]
+%113 = i64 Add i64 %114, 8
+tmp_address!3 = store i64 %113, i64 tmp_address!2
+%115 = load i64, [32, i64] XREG!5[15]
+rs2_var!3 = store i64 %115, i64 rs2_var!2
+%116 = i64 Lshr i64 %113, 3
+%117 = Extract i53 of i64 %116 <52, 0>
+mem_index!3 = store i53 %117, i53 mem_index!2
+%118 = Extract i3 of i64 %113 <2, 0>
+%119 = i1 Eq i3 %118, 0
+br i1 %119, label %bb12, label %bb13
+bb5:
+%17 = i64 Lshr i64 %7, 56
+%18 = Extract i8 of i64 %17 <7, 0>
+%20 = Zext i8 %18 to i64
+%21 = i64 And i64 %13, -256
+%22 = i64 Shl i64 %20, 0
+%19 = i64 Or i64 %21, %22
+tmp_dword1!15 = store i64 %19, i64 tmp_dword1!13
+%23 = i64 Lshr i64 %7, 0
+%24 = Extract i56 of i64 %23 <55, 0>
+%26 = Zext i56 %24 to i64
+%27 = i64 And i64 %14, 255
+%28 = i64 Shl i64 %26, 8
+%25 = i64 Or i64 %27, %28
+tmp_dword2!15 = store i64 %25, i64 tmp_dword2!13
+br label %bb7
+bb6:
+%29 = Extract i3 of i64 %5 <2, 0>
+%30 = i1 Eq i3 %29, 2
+br i1 %30, label %bb8, label %bb9
+bb7:
+tmp_dword2!14 = phi ite %16 %25 ite %30 %39 ite %44 %53 ite %58 %67 ite %72 %81 ite %86 %95 %107
+tmp_dword1!14 = phi ite %16 %19 ite %30 %33 ite %44 %47 ite %58 %61 ite %72 %75 ite %86 %89 %101
+%111 = i53 Add i53 %9, 1
+MEM!8 = store i64 tmp_dword1!14, [9007199254740992, i64] MEM!1[%111]
+MEM!9 = store i64 tmp_dword2!14, [9007199254740992, i64] MEM!8[%9]
+br label %bb4
+bb8:
+%31 = i64 Lshr i64 %7, 48
+%32 = Extract i16 of i64 %31 <15, 0>
+%34 = Zext i16 %32 to i64
+%35 = i64 And i64 %13, -65536
+%36 = i64 Shl i64 %34, 0
+%33 = i64 Or i64 %35, %36
+tmp_dword1!21 = store i64 %33, i64 tmp_dword1!13
+%37 = i64 Lshr i64 %7, 0
+%38 = Extract i48 of i64 %37 <47, 0>
+%40 = Zext i48 %38 to i64
+%41 = i64 And i64 %14, 65535
+%42 = i64 Shl i64 %40, 16
+%39 = i64 Or i64 %41, %42
+tmp_dword2!21 = store i64 %39, i64 tmp_dword2!13
+br label %bb7
+bb9:
+%43 = Extract i3 of i64 %5 <2, 0>
+%44 = i1 Eq i3 %43, 3
+br i1 %44, label %bb10, label %bb11
+bb10:
+%45 = i64 Lshr i64 %7, 40
+%46 = Extract i24 of i64 %45 <23, 0>
+%48 = Zext i24 %46 to i64
+%49 = i64 And i64 %13, -16777216
+%50 = i64 Shl i64 %48, 0
+%47 = i64 Or i64 %49, %50
+tmp_dword1!20 = store i64 %47, i64 tmp_dword1!13
+%51 = i64 Lshr i64 %7, 0
+%52 = Extract i40 of i64 %51 <39, 0>
+%54 = Zext i40 %52 to i64
+%55 = i64 And i64 %14, 16777215
+%56 = i64 Shl i64 %54, 24
+%53 = i64 Or i64 %55, %56
+tmp_dword2!20 = store i64 %53, i64 tmp_dword2!13
+br label %bb7
+bb11:
+%57 = Extract i3 of i64 %5 <2, 0>
+%58 = i1 Eq i3 %57, -4
+br i1 %58, label %bb14, label %bb15
+bb12:
+MEM!7 = store i64 %115, [9007199254740992, i64] MEM!3[%117]
+br label %bb16
+bb13:
+%120 = i53 Add i53 %117, 1
+%121 = load i64, [9007199254740992, i64] MEM!3[%120]
+tmp_dword1!3 = store i64 %121, i64 tmp_dword1!2
+%122 = load i64, [9007199254740992, i64] MEM!3[%117]
+tmp_dword2!3 = store i64 %122, i64 tmp_dword2!2
+%123 = Extract i3 of i64 %113 <2, 0>
+%124 = i1 Eq i3 %123, 1
+br i1 %124, label %bb17, label %bb18
+bb14:
+%59 = i64 Lshr i64 %7, 32
+%60 = Extract i32 of i64 %59 <31, 0>
+%62 = Zext i32 %60 to i64
+%63 = i64 And i64 %13, -4294967296
+%64 = i64 Shl i64 %62, 0
+%61 = i64 Or i64 %63, %64
+tmp_dword1!19 = store i64 %61, i64 tmp_dword1!13
+%65 = i64 Lshr i64 %7, 0
+%66 = Extract i32 of i64 %65 <31, 0>
+%68 = Zext i32 %66 to i64
+%69 = i64 And i64 %14, 4294967295
+%70 = i64 Shl i64 %68, 32
+%67 = i64 Or i64 %69, %70
+tmp_dword2!19 = store i64 %67, i64 tmp_dword2!13
+br label %bb7
+bb15:
+%71 = Extract i3 of i64 %5 <2, 0>
+%72 = i1 Eq i3 %71, -3
+br i1 %72, label %bb19, label %bb20
+bb16:
+MEM!6 = phi ite %119 MEM!7 MEM!5
+tmp_dword2!12 = phi ite %119 tmp_dword2!2 tmp_dword2!5
+tmp_dword1!12 = phi ite %119 tmp_dword1!2 tmp_dword1!5
+%112 = i64 Add i64 PC!5, 4
+PC!18 = store i64 %112, i64 PC!6
+store i64 %112, i64 PC!7
+PC!8 = store i64 PC!7, i64 PC!7
+XREG!6 = store i64 0, [32, i64] XREG!5[0]
+prev_pc!5 = store i64 PC!7, i64 prev_pc!4
+%222 = load i64, [32, i64] XREG!6[0]
+%221 = i64 Add i64 %222, 2
+XREG!7 = store i64 %221, [32, i64] XREG!6[15]
+%220 = i64 Add i64 PC!7, 4
+PC!17 = store i64 %220, i64 PC!8
+store i64 %220, i64 PC!9
+PC!10 = store i64 PC!9, i64 PC!9
+XREG!8 = store i64 0, [32, i64] XREG!7[0]
+prev_pc!6 = store i64 PC!9, i64 prev_pc!5
+%227 = load i64, [32, i64] XREG!8[15]
+%228 = load i64, [32, i64] XREG!8[11]
+%225 = i1 Uge i64 %227, %228
+br i1 %225, label %bb32, label %bb33
+bb17:
+%125 = i64 Lshr i64 %115, 56
+%126 = Extract i8 of i64 %125 <7, 0>
+%128 = Zext i8 %126 to i64
+%129 = i64 And i64 %121, -256
+%130 = i64 Shl i64 %128, 0
+%127 = i64 Or i64 %129, %130
+tmp_dword1!4 = store i64 %127, i64 tmp_dword1!3
+%131 = i64 Lshr i64 %115, 0
+%132 = Extract i56 of i64 %131 <55, 0>
+%134 = Zext i56 %132 to i64
+%135 = i64 And i64 %122, 255
+%136 = i64 Shl i64 %134, 8
+%133 = i64 Or i64 %135, %136
+tmp_dword2!4 = store i64 %133, i64 tmp_dword2!3
+br label %bb21
+bb18:
+%137 = Extract i3 of i64 %113 <2, 0>
+%138 = i1 Eq i3 %137, 2
+br i1 %138, label %bb22, label %bb23
+bb19:
+%73 = i64 Lshr i64 %7, 24
+%74 = Extract i40 of i64 %73 <39, 0>
+%76 = Zext i40 %74 to i64
+%77 = i64 And i64 %13, -1099511627776
+%78 = i64 Shl i64 %76, 0
+%75 = i64 Or i64 %77, %78
+tmp_dword1!16 = store i64 %75, i64 tmp_dword1!13
+%79 = i64 Lshr i64 %7, 0
+%80 = Extract i24 of i64 %79 <23, 0>
+%82 = Zext i24 %80 to i64
+%83 = i64 And i64 %14, 1099511627775
+%84 = i64 Shl i64 %82, 40
+%81 = i64 Or i64 %83, %84
+tmp_dword2!16 = store i64 %81, i64 tmp_dword2!13
+br label %bb7
+bb20:
+%85 = Extract i3 of i64 %5 <2, 0>
+%86 = i1 Eq i3 %85, -2
+br i1 %86, label %bb24, label %bb25
+bb21:
+tmp_dword2!5 = phi ite %124 %133 ite %138 %147 ite %152 %161 ite %166 %175 ite %180 %189 ite %194 %203 %215
+tmp_dword1!5 = phi ite %124 %127 ite %138 %141 ite %152 %155 ite %166 %169 ite %180 %183 ite %194 %197 %209
+%219 = i53 Add i53 %117, 1
+MEM!4 = store i64 tmp_dword1!5, [9007199254740992, i64] MEM!3[%219]
+MEM!5 = store i64 tmp_dword2!5, [9007199254740992, i64] MEM!4[%117]
+br label %bb16
+bb22:
+%139 = i64 Lshr i64 %115, 48
+%140 = Extract i16 of i64 %139 <15, 0>
+%142 = Zext i16 %140 to i64
+%143 = i64 And i64 %121, -65536
+%144 = i64 Shl i64 %142, 0
+%141 = i64 Or i64 %143, %144
+tmp_dword1!6 = store i64 %141, i64 tmp_dword1!3
+%145 = i64 Lshr i64 %115, 0
+%146 = Extract i48 of i64 %145 <47, 0>
+%148 = Zext i48 %146 to i64
+%149 = i64 And i64 %122, 65535
+%150 = i64 Shl i64 %148, 16
+%147 = i64 Or i64 %149, %150
+tmp_dword2!6 = store i64 %147, i64 tmp_dword2!3
+br label %bb21
+bb23:
+%151 = Extract i3 of i64 %113 <2, 0>
+%152 = i1 Eq i3 %151, 3
+br i1 %152, label %bb26, label %bb27
+bb24:
+%87 = i64 Lshr i64 %7, 16
+%88 = Extract i48 of i64 %87 <47, 0>
+%90 = Zext i48 %88 to i64
+%91 = i64 And i64 %13, -281474976710656
+%92 = i64 Shl i64 %90, 0
+%89 = i64 Or i64 %91, %92
+tmp_dword1!17 = store i64 %89, i64 tmp_dword1!13
+%93 = i64 Lshr i64 %7, 0
+%94 = Extract i16 of i64 %93 <15, 0>
+%96 = Zext i16 %94 to i64
+%97 = i64 And i64 %14, 281474976710655
+%98 = i64 Shl i64 %96, 48
+%95 = i64 Or i64 %97, %98
+tmp_dword2!17 = store i64 %95, i64 tmp_dword2!13
+br label %bb7
+bb25:
+%99 = i64 Lshr i64 %7, 8
+%100 = Extract i56 of i64 %99 <55, 0>
+%102 = Zext i56 %100 to i64
+%103 = i64 And i64 %13, -72057594037927936
+%104 = i64 Shl i64 %102, 0
+%101 = i64 Or i64 %103, %104
+tmp_dword1!18 = store i64 %101, i64 tmp_dword1!13
+%105 = i64 Lshr i64 %7, 0
+%106 = Extract i8 of i64 %105 <7, 0>
+%108 = Zext i8 %106 to i64
+%109 = i64 And i64 %14, 72057594037927935
+%110 = i64 Shl i64 %108, 56
+%107 = i64 Or i64 %109, %110
+tmp_dword2!18 = store i64 %107, i64 tmp_dword2!13
+br label %bb7
+bb26:
+%153 = i64 Lshr i64 %115, 40
+%154 = Extract i24 of i64 %153 <23, 0>
+%156 = Zext i24 %154 to i64
+%157 = i64 And i64 %121, -16777216
+%158 = i64 Shl i64 %156, 0
+%155 = i64 Or i64 %157, %158
+tmp_dword1!7 = store i64 %155, i64 tmp_dword1!3
+%159 = i64 Lshr i64 %115, 0
+%160 = Extract i40 of i64 %159 <39, 0>
+%162 = Zext i40 %160 to i64
+%163 = i64 And i64 %122, 16777215
+%164 = i64 Shl i64 %162, 24
+%161 = i64 Or i64 %163, %164
+tmp_dword2!7 = store i64 %161, i64 tmp_dword2!3
+br label %bb21
+bb27:
+%165 = Extract i3 of i64 %113 <2, 0>
+%166 = i1 Eq i3 %165, -4
+br i1 %166, label %bb28, label %bb29
+bb28:
+%167 = i64 Lshr i64 %115, 32
+%168 = Extract i32 of i64 %167 <31, 0>
+%170 = Zext i32 %168 to i64
+%171 = i64 And i64 %121, -4294967296
+%172 = i64 Shl i64 %170, 0
+%169 = i64 Or i64 %171, %172
+tmp_dword1!8 = store i64 %169, i64 tmp_dword1!3
+%173 = i64 Lshr i64 %115, 0
+%174 = Extract i32 of i64 %173 <31, 0>
+%176 = Zext i32 %174 to i64
+%177 = i64 And i64 %122, 4294967295
+%178 = i64 Shl i64 %176, 32
+%175 = i64 Or i64 %177, %178
+tmp_dword2!8 = store i64 %175, i64 tmp_dword2!3
+br label %bb21
+bb29:
+%179 = Extract i3 of i64 %113 <2, 0>
+%180 = i1 Eq i3 %179, -3
+br i1 %180, label %bb30, label %bb31
+bb30:
+%181 = i64 Lshr i64 %115, 24
+%182 = Extract i40 of i64 %181 <39, 0>
+%184 = Zext i40 %182 to i64
+%185 = i64 And i64 %121, -1099511627776
+%186 = i64 Shl i64 %184, 0
+%183 = i64 Or i64 %185, %186
+tmp_dword1!9 = store i64 %183, i64 tmp_dword1!3
+%187 = i64 Lshr i64 %115, 0
+%188 = Extract i24 of i64 %187 <23, 0>
+%190 = Zext i24 %188 to i64
+%191 = i64 And i64 %122, 1099511627775
+%192 = i64 Shl i64 %190, 40
+%189 = i64 Or i64 %191, %192
+tmp_dword2!9 = store i64 %189, i64 tmp_dword2!3
+br label %bb21
+bb31:
+%193 = Extract i3 of i64 %113 <2, 0>
+%194 = i1 Eq i3 %193, -2
+br i1 %194, label %bb34, label %bb35
+bb32:
+%226 = i64 Add i64 PC!9, 104
+PC!16 = store i64 %226, i64 PC!10
+br label %bb36
+bb33:
+br label %bb36
+bb34:
+%195 = i64 Lshr i64 %115, 16
+%196 = Extract i48 of i64 %195 <47, 0>
+%198 = Zext i48 %196 to i64
+%199 = i64 And i64 %121, -281474976710656
+%200 = i64 Shl i64 %198, 0
+%197 = i64 Or i64 %199, %200
+tmp_dword1!11 = store i64 %197, i64 tmp_dword1!3
+%201 = i64 Lshr i64 %115, 0
+%202 = Extract i16 of i64 %201 <15, 0>
+%204 = Zext i16 %202 to i64
+%205 = i64 And i64 %122, 281474976710655
+%206 = i64 Shl i64 %204, 48
+%203 = i64 Or i64 %205, %206
+tmp_dword2!11 = store i64 %203, i64 tmp_dword2!3
+br label %bb21
+bb35:
+%207 = i64 Lshr i64 %115, 8
+%208 = Extract i56 of i64 %207 <55, 0>
+%210 = Zext i56 %208 to i64
+%211 = i64 And i64 %121, -72057594037927936
+%212 = i64 Shl i64 %210, 0
+%209 = i64 Or i64 %211, %212
+tmp_dword1!10 = store i64 %209, i64 tmp_dword1!3
+%213 = i64 Lshr i64 %115, 0
+%214 = Extract i8 of i64 %213 <7, 0>
+%216 = Zext i8 %214 to i64
+%217 = i64 And i64 %122, 72057594037927935
+%218 = i64 Shl i64 %216, 56
+%215 = i64 Or i64 %217, %218
+tmp_dword2!10 = store i64 %215, i64 tmp_dword2!3
+br label %bb21
+bb36:
+PC!11 = phi ite %225 %226 PC!9
+%223 = i1 Eq i64 PC!11, PC!9
+br i1 %223, label %bb37, label %bb38
+bb37:
+%224 = i64 Add i64 PC!11, 4
+PC!15 = store i64 %224, i64 PC!11
+br label %bb39
+bb38:
+br label %bb39
+bb39:
+PC!12 = phi ite %225 %226 %224
+PC!13 = store i64 PC!12, i64 PC!12
+PC!14 = store i64 PC!12, i64 PC!13
+br label %bb40
+bb40:
+MEM = [9007199254740992, i64] Use [9007199254740992, i64] MEM!6
+PC = i64 Use i64 PC!14
+XREG = [32, i64] Use [32, i64] XREG!8
+PC!20 = i64 Use i64 PC
+XREG!9 = [32, i64] Use [32, i64] XREG
+br label %bb41
+bb41:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[0]
+%2 = i64 Add i64 %3, 4
+XREG!3 = store i64 %2, [32, i64] XREG!2[15]
+%1 = i64 Add i64 PC!1, 4
+PC!10 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%8 = load i64, [32, i64] XREG!4[15]
+%9 = load i64, [32, i64] XREG!4[11]
+%6 = i1 Uge i64 %8, %9
+br i1 %6, label %bb42, label %bb43
+bb42:
+%7 = i64 Add i64 PC!2, 100
+PC!4 = store i64 %7, i64 PC!3
+br label %bb44
+bb43:
+br label %bb44
+bb44:
+PC!5 = phi ite %6 %7 PC!2
+%4 = i1 Eq i64 PC!5, PC!2
+br i1 %4, label %bb45, label %bb46
+bb45:
+%5 = i64 Add i64 PC!5, 4
+PC!6 = store i64 %5, i64 PC!5
+br label %bb47
+bb46:
+br label %bb47
+bb47:
+PC!7 = phi ite %6 %7 %5
+PC!8 = store i64 PC!7, i64 PC!7
+PC!9 = store i64 PC!7, i64 PC!8
+br label %bb48
+bb48:
+PC = i64 Use i64 PC!28
+XREG = [32, i64] Use [32, i64] XREG!12
+PC!30 = i64 Use i64 PC
+XREG!13 = [32, i64] Use [32, i64] XREG
+br label %bb49
+bb49:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[11]
+%2 = i64 Add i64 %3, -5
+XREG!3 = store i64 %2, [32, i64] XREG!2[13]
+%1 = i64 Add i64 PC!1, 4
+PC!2 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!3, i64 prev_pc!2
+%6 = load i64, [32, i64] XREG!4[13]
+%5 = i64 And i64 %6, -2
+XREG!5 = store i64 %5, [32, i64] XREG!4[13]
+%4 = i64 Add i64 PC!3, 4
+PC!23 = store i64 %4, i64 PC!4
+store i64 %4, i64 PC!5
+PC!6 = store i64 PC!5, i64 PC!5
+XREG!6 = store i64 0, [32, i64] XREG!5[0]
+prev_pc!4 = store i64 PC!5, i64 prev_pc!3
+%9 = load i64, [32, i64] XREG!6[10]
+%8 = i64 Add i64 %9, 16
+XREG!7 = store i64 %8, [32, i64] XREG!6[12]
+%7 = i64 Add i64 PC!5, 4
+PC!7 = store i64 %7, i64 PC!6
+store i64 %7, i64 PC!8
+PC!9 = store i64 PC!8, i64 PC!8
+XREG!8 = store i64 0, [32, i64] XREG!7[0]
+prev_pc!5 = store i64 PC!8, i64 prev_pc!4
+%12 = load i64, [32, i64] XREG!8[13]
+%11 = i64 Add i64 %12, 4
+XREG!9 = store i64 %11, [32, i64] XREG!8[13]
+%10 = i64 Add i64 PC!8, 4
+PC!22 = store i64 %10, i64 PC!9
+store i64 %10, i64 PC!10
+PC!11 = store i64 PC!10, i64 PC!10
+XREG!10 = store i64 0, [32, i64] XREG!9[0]
+prev_pc!6 = store i64 PC!10, i64 prev_pc!5
+%15 = load i64, [32, i64] XREG!10[0]
+%14 = i64 Add i64 %15, 1
+XREG!11 = store i64 %14, [32, i64] XREG!10[14]
+%13 = i64 Add i64 PC!10, 4
+PC!12 = store i64 %13, i64 PC!11
+store i64 %13, i64 PC!13
+PC!14 = store i64 PC!13, i64 PC!13
+XREG!12 = store i64 0, [32, i64] XREG!11[0]
+prev_pc!7 = store i64 PC!13, i64 prev_pc!6
+%18 = load i64, [32, i64] XREG!12[0]
+%17 = i64 Add i64 %18, 1
+XREG!13 = store i64 %17, [32, i64] XREG!12[15]
+%16 = i64 Add i64 PC!13, 4
+PC!21 = store i64 %16, i64 PC!14
+store i64 %16, i64 PC!15
+PC!16 = store i64 PC!15, i64 PC!15
+XREG!14 = store i64 0, [32, i64] XREG!13[0]
+prev_pc!8 = store i64 PC!15, i64 prev_pc!7
+%21 = load i64, [32, i64] XREG!14[0]
+%20 = i64 Add i64 %21, 2
+XREG!15 = store i64 %20, [32, i64] XREG!14[16]
+%19 = i64 Add i64 PC!15, 4
+PC!20 = store i64 %19, i64 PC!16
+store i64 %19, i64 PC!17
+PC!18 = store i64 PC!17, i64 PC!17
+PC!19 = store i64 PC!17, i64 PC!18
+br label %bb50
+bb50:
+PC = i64 Use i64 PC!48
+XREG = [32, i64] Use [32, i64] XREG!27
+MEM!10 = [9007199254740992, i64] Use [9007199254740992, i64] MEM
+PC!53 = i64 Use i64 PC
+XREG!28 = [32, i64] Use [32, i64] XREG
+br label %bb51
+bb51:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[15]
+%4 = load i64, [32, i64] XREG!2[14]
+%2 = i64 Add i64 %3, %4
+XREG!3 = store i64 %2, [32, i64] XREG!2[15]
+%1 = i64 Add i64 PC!1, 4
+PC!25 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%7 = load i64, [32, i64] XREG!4[14]
+%8 = load i64, [32, i64] XREG!4[15]
+%6 = i64 Add i64 %7, %8
+XREG!5 = store i64 %6, [32, i64] XREG!4[14]
+%5 = i64 Add i64 PC!2, 4
+PC!24 = store i64 %5, i64 PC!3
+store i64 %5, i64 PC!4
+PC!5 = store i64 PC!4, i64 PC!4
+XREG!6 = store i64 0, [32, i64] XREG!5[0]
+prev_pc!4 = store i64 PC!4, i64 prev_pc!3
+%11 = load i64, [32, i64] XREG!6[12]
+%10 = i64 Add i64 %11, 0
+tmp_address!2 = store i64 %10, i64 tmp_address!1
+%12 = load i64, [32, i64] XREG!6[15]
+rs2_var!2 = store i64 %12, i64 rs2_var!1
+%13 = i64 Lshr i64 %10, 3
+%14 = Extract i53 of i64 %13 <52, 0>
+mem_index!2 = store i53 %14, i53 mem_index!1
+%15 = Extract i3 of i64 %10 <2, 0>
+%16 = i1 Eq i3 %15, 0
+br i1 %16, label %bb52, label %bb53
+bb52:
+MEM!2 = store i64 %12, [9007199254740992, i64] MEM!1[%14]
+br label %bb54
+bb53:
+%17 = i53 Add i53 %14, 1
+%18 = load i64, [9007199254740992, i64] MEM!1[%17]
+tmp_dword1!2 = store i64 %18, i64 tmp_dword1!1
+%19 = load i64, [9007199254740992, i64] MEM!1[%14]
+tmp_dword2!2 = store i64 %19, i64 tmp_dword2!1
+%20 = Extract i3 of i64 %10 <2, 0>
+%21 = i1 Eq i3 %20, 1
+br i1 %21, label %bb55, label %bb56
+bb54:
+MEM!5 = phi ite %16 MEM!2 MEM!4
+tmp_dword2!11 = phi ite %16 tmp_dword2!1 tmp_dword2!3
+tmp_dword1!11 = phi ite %16 tmp_dword1!1 tmp_dword1!3
+%9 = i64 Add i64 PC!4, 4
+PC!6 = store i64 %9, i64 PC!5
+store i64 %9, i64 PC!7
+PC!8 = store i64 PC!7, i64 PC!7
+XREG!7 = store i64 0, [32, i64] XREG!6[0]
+prev_pc!5 = store i64 PC!7, i64 prev_pc!4
+%119 = load i64, [32, i64] XREG!7[12]
+%118 = i64 Add i64 %119, 8
+tmp_address!3 = store i64 %118, i64 tmp_address!2
+%120 = load i64, [32, i64] XREG!7[14]
+rs2_var!3 = store i64 %120, i64 rs2_var!2
+%121 = i64 Lshr i64 %118, 3
+%122 = Extract i53 of i64 %121 <52, 0>
+mem_index!3 = store i53 %122, i53 mem_index!2
+%123 = Extract i3 of i64 %118 <2, 0>
+%124 = i1 Eq i3 %123, 0
+br i1 %124, label %bb62, label %bb63
+bb55:
+%22 = i64 Lshr i64 %12, 56
+%23 = Extract i8 of i64 %22 <7, 0>
+%25 = Zext i8 %23 to i64
+%26 = i64 And i64 %18, -256
+%27 = i64 Shl i64 %25, 0
+%24 = i64 Or i64 %26, %27
+tmp_dword1!4 = store i64 %24, i64 tmp_dword1!2
+%28 = i64 Lshr i64 %12, 0
+%29 = Extract i56 of i64 %28 <55, 0>
+%31 = Zext i56 %29 to i64
+%32 = i64 And i64 %19, 255
+%33 = i64 Shl i64 %31, 8
+%30 = i64 Or i64 %32, %33
+tmp_dword2!4 = store i64 %30, i64 tmp_dword2!2
+br label %bb57
+bb56:
+%34 = Extract i3 of i64 %10 <2, 0>
+%35 = i1 Eq i3 %34, 2
+br i1 %35, label %bb58, label %bb59
+bb57:
+tmp_dword2!3 = phi ite %21 %30 ite %35 %44 ite %49 %58 ite %63 %72 ite %77 %86 ite %91 %100 %112
+tmp_dword1!3 = phi ite %21 %24 ite %35 %38 ite %49 %52 ite %63 %66 ite %77 %80 ite %91 %94 %106
+%116 = i53 Add i53 %14, 1
+MEM!3 = store i64 tmp_dword1!3, [9007199254740992, i64] MEM!1[%116]
+MEM!4 = store i64 tmp_dword2!3, [9007199254740992, i64] MEM!3[%14]
+br label %bb54
+bb58:
+%36 = i64 Lshr i64 %12, 48
+%37 = Extract i16 of i64 %36 <15, 0>
+%39 = Zext i16 %37 to i64
+%40 = i64 And i64 %18, -65536
+%41 = i64 Shl i64 %39, 0
+%38 = i64 Or i64 %40, %41
+tmp_dword1!5 = store i64 %38, i64 tmp_dword1!2
+%42 = i64 Lshr i64 %12, 0
+%43 = Extract i48 of i64 %42 <47, 0>
+%45 = Zext i48 %43 to i64
+%46 = i64 And i64 %19, 65535
+%47 = i64 Shl i64 %45, 16
+%44 = i64 Or i64 %46, %47
+tmp_dword2!5 = store i64 %44, i64 tmp_dword2!2
+br label %bb57
+bb59:
+%48 = Extract i3 of i64 %10 <2, 0>
+%49 = i1 Eq i3 %48, 3
+br i1 %49, label %bb60, label %bb61
+bb60:
+%50 = i64 Lshr i64 %12, 40
+%51 = Extract i24 of i64 %50 <23, 0>
+%53 = Zext i24 %51 to i64
+%54 = i64 And i64 %18, -16777216
+%55 = i64 Shl i64 %53, 0
+%52 = i64 Or i64 %54, %55
+tmp_dword1!6 = store i64 %52, i64 tmp_dword1!2
+%56 = i64 Lshr i64 %12, 0
+%57 = Extract i40 of i64 %56 <39, 0>
+%59 = Zext i40 %57 to i64
+%60 = i64 And i64 %19, 16777215
+%61 = i64 Shl i64 %59, 24
+%58 = i64 Or i64 %60, %61
+tmp_dword2!6 = store i64 %58, i64 tmp_dword2!2
+br label %bb57
+bb61:
+%62 = Extract i3 of i64 %10 <2, 0>
+%63 = i1 Eq i3 %62, -4
+br i1 %63, label %bb64, label %bb65
+bb62:
+MEM!6 = store i64 %120, [9007199254740992, i64] MEM!5[%122]
+br label %bb66
+bb63:
+%125 = i53 Add i53 %122, 1
+%126 = load i64, [9007199254740992, i64] MEM!5[%125]
+tmp_dword1!12 = store i64 %126, i64 tmp_dword1!11
+%127 = load i64, [9007199254740992, i64] MEM!5[%122]
+tmp_dword2!12 = store i64 %127, i64 tmp_dword2!11
+%128 = Extract i3 of i64 %118 <2, 0>
+%129 = i1 Eq i3 %128, 1
+br i1 %129, label %bb67, label %bb68
+bb64:
+%64 = i64 Lshr i64 %12, 32
+%65 = Extract i32 of i64 %64 <31, 0>
+%67 = Zext i32 %65 to i64
+%68 = i64 And i64 %18, -4294967296
+%69 = i64 Shl i64 %67, 0
+%66 = i64 Or i64 %68, %69
+tmp_dword1!7 = store i64 %66, i64 tmp_dword1!2
+%70 = i64 Lshr i64 %12, 0
+%71 = Extract i32 of i64 %70 <31, 0>
+%73 = Zext i32 %71 to i64
+%74 = i64 And i64 %19, 4294967295
+%75 = i64 Shl i64 %73, 32
+%72 = i64 Or i64 %74, %75
+tmp_dword2!7 = store i64 %72, i64 tmp_dword2!2
+br label %bb57
+bb65:
+%76 = Extract i3 of i64 %10 <2, 0>
+%77 = i1 Eq i3 %76, -3
+br i1 %77, label %bb69, label %bb70
+bb66:
+MEM!9 = phi ite %124 MEM!6 MEM!8
+tmp_dword2!21 = phi ite %124 tmp_dword2!11 tmp_dword2!20
+tmp_dword1!21 = phi ite %124 tmp_dword1!11 tmp_dword1!20
+%117 = i64 Add i64 PC!7, 4
+PC!9 = store i64 %117, i64 PC!8
+store i64 %117, i64 PC!10
+PC!11 = store i64 PC!10, i64 PC!10
+XREG!8 = store i64 0, [32, i64] XREG!7[0]
+prev_pc!6 = store i64 PC!10, i64 prev_pc!5
+%227 = load i64, [32, i64] XREG!8[16]
+%226 = i64 Add i64 %227, 2
+XREG!9 = store i64 %226, [32, i64] XREG!8[16]
+%225 = i64 Add i64 PC!10, 4
+PC!23 = store i64 %225, i64 PC!11
+store i64 %225, i64 PC!12
+PC!13 = store i64 PC!12, i64 PC!12
+XREG!10 = store i64 0, [32, i64] XREG!9[0]
+prev_pc!7 = store i64 PC!12, i64 prev_pc!6
+%230 = load i64, [32, i64] XREG!10[12]
+%229 = i64 Add i64 %230, 16
+XREG!11 = store i64 %229, [32, i64] XREG!10[12]
+%228 = i64 Add i64 PC!12, 4
+PC!14 = store i64 %228, i64 PC!13
+store i64 %228, i64 PC!15
+PC!16 = store i64 PC!15, i64 PC!15
+XREG!12 = store i64 0, [32, i64] XREG!11[0]
+prev_pc!8 = store i64 PC!15, i64 prev_pc!7
+%235 = load i64, [32, i64] XREG!12[16]
+%236 = load i64, [32, i64] XREG!12[13]
+%233 = i1 Ne i64 %235, %236
+br i1 %233, label %bb84, label %bb85
+bb67:
+%130 = i64 Lshr i64 %120, 56
+%131 = Extract i8 of i64 %130 <7, 0>
+%133 = Zext i8 %131 to i64
+%134 = i64 And i64 %126, -256
+%135 = i64 Shl i64 %133, 0
+%132 = i64 Or i64 %134, %135
+tmp_dword1!13 = store i64 %132, i64 tmp_dword1!12
+%136 = i64 Lshr i64 %120, 0
+%137 = Extract i56 of i64 %136 <55, 0>
+%139 = Zext i56 %137 to i64
+%140 = i64 And i64 %127, 255
+%141 = i64 Shl i64 %139, 8
+%138 = i64 Or i64 %140, %141
+tmp_dword2!13 = store i64 %138, i64 tmp_dword2!12
+br label %bb71
+bb68:
+%142 = Extract i3 of i64 %118 <2, 0>
+%143 = i1 Eq i3 %142, 2
+br i1 %143, label %bb72, label %bb73
+bb69:
+%78 = i64 Lshr i64 %12, 24
+%79 = Extract i40 of i64 %78 <39, 0>
+%81 = Zext i40 %79 to i64
+%82 = i64 And i64 %18, -1099511627776
+%83 = i64 Shl i64 %81, 0
+%80 = i64 Or i64 %82, %83
+tmp_dword1!8 = store i64 %80, i64 tmp_dword1!2
+%84 = i64 Lshr i64 %12, 0
+%85 = Extract i24 of i64 %84 <23, 0>
+%87 = Zext i24 %85 to i64
+%88 = i64 And i64 %19, 1099511627775
+%89 = i64 Shl i64 %87, 40
+%86 = i64 Or i64 %88, %89
+tmp_dword2!8 = store i64 %86, i64 tmp_dword2!2
+br label %bb57
+bb70:
+%90 = Extract i3 of i64 %10 <2, 0>
+%91 = i1 Eq i3 %90, -2
+br i1 %91, label %bb74, label %bb75
+bb71:
+tmp_dword2!20 = phi ite %129 %138 ite %143 %152 ite %157 %166 ite %171 %180 ite %185 %194 ite %199 %208 %220
+tmp_dword1!20 = phi ite %129 %132 ite %143 %146 ite %157 %160 ite %171 %174 ite %185 %188 ite %199 %202 %214
+%224 = i53 Add i53 %122, 1
+MEM!7 = store i64 tmp_dword1!20, [9007199254740992, i64] MEM!5[%224]
+MEM!8 = store i64 tmp_dword2!20, [9007199254740992, i64] MEM!7[%122]
+br label %bb66
+bb72:
+%144 = i64 Lshr i64 %120, 48
+%145 = Extract i16 of i64 %144 <15, 0>
+%147 = Zext i16 %145 to i64
+%148 = i64 And i64 %126, -65536
+%149 = i64 Shl i64 %147, 0
+%146 = i64 Or i64 %148, %149
+tmp_dword1!14 = store i64 %146, i64 tmp_dword1!12
+%150 = i64 Lshr i64 %120, 0
+%151 = Extract i48 of i64 %150 <47, 0>
+%153 = Zext i48 %151 to i64
+%154 = i64 And i64 %127, 65535
+%155 = i64 Shl i64 %153, 16
+%152 = i64 Or i64 %154, %155
+tmp_dword2!14 = store i64 %152, i64 tmp_dword2!12
+br label %bb71
+bb73:
+%156 = Extract i3 of i64 %118 <2, 0>
+%157 = i1 Eq i3 %156, 3
+br i1 %157, label %bb76, label %bb77
+bb74:
+%92 = i64 Lshr i64 %12, 16
+%93 = Extract i48 of i64 %92 <47, 0>
+%95 = Zext i48 %93 to i64
+%96 = i64 And i64 %18, -281474976710656
+%97 = i64 Shl i64 %95, 0
+%94 = i64 Or i64 %96, %97
+tmp_dword1!9 = store i64 %94, i64 tmp_dword1!2
+%98 = i64 Lshr i64 %12, 0
+%99 = Extract i16 of i64 %98 <15, 0>
+%101 = Zext i16 %99 to i64
+%102 = i64 And i64 %19, 281474976710655
+%103 = i64 Shl i64 %101, 48
+%100 = i64 Or i64 %102, %103
+tmp_dword2!9 = store i64 %100, i64 tmp_dword2!2
+br label %bb57
+bb75:
+%104 = i64 Lshr i64 %12, 8
+%105 = Extract i56 of i64 %104 <55, 0>
+%107 = Zext i56 %105 to i64
+%108 = i64 And i64 %18, -72057594037927936
+%109 = i64 Shl i64 %107, 0
+%106 = i64 Or i64 %108, %109
+tmp_dword1!10 = store i64 %106, i64 tmp_dword1!2
+%110 = i64 Lshr i64 %12, 0
+%111 = Extract i8 of i64 %110 <7, 0>
+%113 = Zext i8 %111 to i64
+%114 = i64 And i64 %19, 72057594037927935
+%115 = i64 Shl i64 %113, 56
+%112 = i64 Or i64 %114, %115
+tmp_dword2!10 = store i64 %112, i64 tmp_dword2!2
+br label %bb57
+bb76:
+%158 = i64 Lshr i64 %120, 40
+%159 = Extract i24 of i64 %158 <23, 0>
+%161 = Zext i24 %159 to i64
+%162 = i64 And i64 %126, -16777216
+%163 = i64 Shl i64 %161, 0
+%160 = i64 Or i64 %162, %163
+tmp_dword1!19 = store i64 %160, i64 tmp_dword1!12
+%164 = i64 Lshr i64 %120, 0
+%165 = Extract i40 of i64 %164 <39, 0>
+%167 = Zext i40 %165 to i64
+%168 = i64 And i64 %127, 16777215
+%169 = i64 Shl i64 %167, 24
+%166 = i64 Or i64 %168, %169
+tmp_dword2!19 = store i64 %166, i64 tmp_dword2!12
+br label %bb71
+bb77:
+%170 = Extract i3 of i64 %118 <2, 0>
+%171 = i1 Eq i3 %170, -4
+br i1 %171, label %bb78, label %bb79
+bb78:
+%172 = i64 Lshr i64 %120, 32
+%173 = Extract i32 of i64 %172 <31, 0>
+%175 = Zext i32 %173 to i64
+%176 = i64 And i64 %126, -4294967296
+%177 = i64 Shl i64 %175, 0
+%174 = i64 Or i64 %176, %177
+tmp_dword1!15 = store i64 %174, i64 tmp_dword1!12
+%178 = i64 Lshr i64 %120, 0
+%179 = Extract i32 of i64 %178 <31, 0>
+%181 = Zext i32 %179 to i64
+%182 = i64 And i64 %127, 4294967295
+%183 = i64 Shl i64 %181, 32
+%180 = i64 Or i64 %182, %183
+tmp_dword2!15 = store i64 %180, i64 tmp_dword2!12
+br label %bb71
+bb79:
+%184 = Extract i3 of i64 %118 <2, 0>
+%185 = i1 Eq i3 %184, -3
+br i1 %185, label %bb80, label %bb81
+bb80:
+%186 = i64 Lshr i64 %120, 24
+%187 = Extract i40 of i64 %186 <39, 0>
+%189 = Zext i40 %187 to i64
+%190 = i64 And i64 %126, -1099511627776
+%191 = i64 Shl i64 %189, 0
+%188 = i64 Or i64 %190, %191
+tmp_dword1!18 = store i64 %188, i64 tmp_dword1!12
+%192 = i64 Lshr i64 %120, 0
+%193 = Extract i24 of i64 %192 <23, 0>
+%195 = Zext i24 %193 to i64
+%196 = i64 And i64 %127, 1099511627775
+%197 = i64 Shl i64 %195, 40
+%194 = i64 Or i64 %196, %197
+tmp_dword2!18 = store i64 %194, i64 tmp_dword2!12
+br label %bb71
+bb81:
+%198 = Extract i3 of i64 %118 <2, 0>
+%199 = i1 Eq i3 %198, -2
+br i1 %199, label %bb82, label %bb83
+bb82:
+%200 = i64 Lshr i64 %120, 16
+%201 = Extract i48 of i64 %200 <47, 0>
+%203 = Zext i48 %201 to i64
+%204 = i64 And i64 %126, -281474976710656
+%205 = i64 Shl i64 %203, 0
+%202 = i64 Or i64 %204, %205
+tmp_dword1!17 = store i64 %202, i64 tmp_dword1!12
+%206 = i64 Lshr i64 %120, 0
+%207 = Extract i16 of i64 %206 <15, 0>
+%209 = Zext i16 %207 to i64
+%210 = i64 And i64 %127, 281474976710655
+%211 = i64 Shl i64 %209, 48
+%208 = i64 Or i64 %210, %211
+tmp_dword2!17 = store i64 %208, i64 tmp_dword2!12
+br label %bb71
+bb83:
+%212 = i64 Lshr i64 %120, 8
+%213 = Extract i56 of i64 %212 <55, 0>
+%215 = Zext i56 %213 to i64
+%216 = i64 And i64 %126, -72057594037927936
+%217 = i64 Shl i64 %215, 0
+%214 = i64 Or i64 %216, %217
+tmp_dword1!16 = store i64 %214, i64 tmp_dword1!12
+%218 = i64 Lshr i64 %120, 0
+%219 = Extract i8 of i64 %218 <7, 0>
+%221 = Zext i8 %219 to i64
+%222 = i64 And i64 %127, 72057594037927935
+%223 = i64 Shl i64 %221, 56
+%220 = i64 Or i64 %222, %223
+tmp_dword2!16 = store i64 %220, i64 tmp_dword2!12
+br label %bb71
+bb84:
+%234 = i64 Add i64 PC!15, -24
+PC!22 = store i64 %234, i64 PC!16
+br label %bb86
+bb85:
+br label %bb86
+bb86:
+PC!17 = phi ite %233 %234 PC!15
+%231 = i1 Eq i64 PC!17, PC!15
+br i1 %231, label %bb87, label %bb88
+bb87:
+%232 = i64 Add i64 PC!17, 4
+PC!18 = store i64 %232, i64 PC!17
+br label %bb89
+bb88:
+br label %bb89
+bb89:
+PC!19 = phi ite %233 %234 %232
+PC!20 = store i64 PC!19, i64 PC!19
+PC!21 = store i64 PC!19, i64 PC!20
+br label %bb90
+bb90:
+MEM = [9007199254740992, i64] Use [9007199254740992, i64] MEM!18
+PC = i64 Use i64 PC!73
+XREG = [32, i64] Use [32, i64] XREG!39
+PC!78 = i64 Use i64 PC
+XREG!40 = [32, i64] Use [32, i64] XREG
+br label %bb91
+bb91:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[13]
+%2 = i64 Shl i64 %3, 3
+XREG!3 = store i64 %2, [32, i64] XREG!2[15]
+%1 = i64 Add i64 PC!1, 4
+PC!2 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!3
+PC!4 = store i64 PC!3, i64 PC!3
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!3, i64 prev_pc!2
+%6 = load i64, [32, i64] XREG!4[10]
+%7 = load i64, [32, i64] XREG!4[15]
+%5 = i64 Add i64 %6, %7
+XREG!5 = store i64 %5, [32, i64] XREG!4[15]
+%4 = i64 Add i64 PC!3, 4
+PC!8 = store i64 %4, i64 PC!4
+store i64 %4, i64 PC!5
+PC!6 = store i64 PC!5, i64 PC!5
+PC!7 = store i64 PC!5, i64 PC!6
+br label %bb92
+bb92:
+PC = i64 Use i64 PC!84
+XREG = [32, i64] Use [32, i64] XREG!44
+MEM!19 = [9007199254740992, i64] Use [9007199254740992, i64] MEM
+PC!86 = i64 Use i64 PC
+XREG!45 = [32, i64] Use [32, i64] XREG
+br label %bb93
+bb93:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[15]
+%2 = i64 Add i64 %3, -16
+tmp_address!2 = store i64 %2, i64 tmp_address!1
+%4 = i64 Lshr i64 %2, 3
+%5 = Extract i53 of i64 %4 <52, 0>
+mem_index!2 = store i53 %5, i53 mem_index!1
+%6 = Extract i3 of i64 %2 <2, 0>
+%7 = i1 Eq i3 %6, 0
+br i1 %7, label %bb94, label %bb95
+bb94:
+%8 = load i64, [9007199254740992, i64] MEM!1[%5]
+tmp_dword!19 = store i64 %8, i64 tmp_dword!1
+br label %bb96
+bb95:
+%9 = i53 Add i53 %5, 1
+%10 = load i64, [9007199254740992, i64] MEM!1[%9]
+tmp_dword1!15 = store i64 %10, i64 tmp_dword1!1
+%11 = load i64, [9007199254740992, i64] MEM!1[%5]
+tmp_dword2!15 = store i64 %11, i64 tmp_dword2!1
+%12 = Extract i3 of i64 %2 <2, 0>
+%13 = i1 Eq i3 %12, 1
+br i1 %13, label %bb97, label %bb98
+bb96:
+tmp_dword!2 = phi ite %7 %8 ite %13 %14 ite %18 %19 ite %23 %24 ite %28 %29 ite %33 %34 ite %38 %39 %42
+tmp_dword2!2 = phi ite %7 tmp_dword2!1 %11
+tmp_dword1!2 = phi ite %7 tmp_dword1!1 %10
+rd_var!2 = store i64 tmp_dword!2, i64 rd_var!1
+XREG!3 = store i64 tmp_dword!2, [32, i64] XREG!2[14]
+%1 = i64 Add i64 PC!1, 4
+PC!25 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%47 = load i64, [32, i64] XREG!4[15]
+%46 = i64 Add i64 %47, -8
+tmp_address!3 = store i64 %46, i64 tmp_address!2
+%48 = i64 Lshr i64 %46, 3
+%49 = Extract i53 of i64 %48 <52, 0>
+mem_index!3 = store i53 %49, i53 mem_index!2
+%50 = Extract i3 of i64 %46 <2, 0>
+%51 = i1 Eq i3 %50, 0
+br i1 %51, label %bb103, label %bb104
+bb97:
+%15 = Extract i8 of i64 %10 <7, 0>
+%16 = Extract i56 of i64 %11 <63, 8>
+%14 = Concat i64 i8 %15, i56 %16
+tmp_dword!12 = store i64 %14, i64 tmp_dword!1
+br label %bb96
+bb98:
+%17 = Extract i3 of i64 %2 <2, 0>
+%18 = i1 Eq i3 %17, 2
+br i1 %18, label %bb99, label %bb100
+bb99:
+%20 = Extract i16 of i64 %10 <15, 0>
+%21 = Extract i48 of i64 %11 <63, 16>
+%19 = Concat i64 i16 %20, i48 %21
+tmp_dword!18 = store i64 %19, i64 tmp_dword!1
+br label %bb96
+bb100:
+%22 = Extract i3 of i64 %2 <2, 0>
+%23 = i1 Eq i3 %22, 3
+br i1 %23, label %bb101, label %bb102
+bb101:
+%25 = Extract i24 of i64 %10 <23, 0>
+%26 = Extract i40 of i64 %11 <63, 24>
+%24 = Concat i64 i24 %25, i40 %26
+tmp_dword!17 = store i64 %24, i64 tmp_dword!1
+br label %bb96
+bb102:
+%27 = Extract i3 of i64 %2 <2, 0>
+%28 = i1 Eq i3 %27, -4
+br i1 %28, label %bb105, label %bb106
+bb103:
+%52 = load i64, [9007199254740992, i64] MEM!1[%49]
+tmp_dword!3 = store i64 %52, i64 tmp_dword!2
+br label %bb107
+bb104:
+%53 = i53 Add i53 %49, 1
+%54 = load i64, [9007199254740992, i64] MEM!1[%53]
+tmp_dword1!3 = store i64 %54, i64 tmp_dword1!2
+%55 = load i64, [9007199254740992, i64] MEM!1[%49]
+tmp_dword2!3 = store i64 %55, i64 tmp_dword2!2
+%56 = Extract i3 of i64 %46 <2, 0>
+%57 = i1 Eq i3 %56, 1
+br i1 %57, label %bb108, label %bb109
+bb105:
+%30 = Extract i32 of i64 %10 <31, 0>
+%31 = Extract i32 of i64 %11 <63, 32>
+%29 = Concat i64 i32 %30, i32 %31
+tmp_dword!16 = store i64 %29, i64 tmp_dword!1
+br label %bb96
+bb106:
+%32 = Extract i3 of i64 %2 <2, 0>
+%33 = i1 Eq i3 %32, -3
+br i1 %33, label %bb110, label %bb111
+bb107:
+tmp_dword!11 = phi ite %51 %52 ite %57 %58 ite %62 %63 ite %67 %68 ite %72 %73 ite %77 %78 ite %82 %83 %86
+tmp_dword2!4 = phi ite %51 tmp_dword2!2 %55
+tmp_dword1!4 = phi ite %51 tmp_dword1!2 %54
+rd_var!3 = store i64 tmp_dword!11, i64 rd_var!2
+XREG!5 = store i64 tmp_dword!11, [32, i64] XREG!4[12]
+%45 = i64 Add i64 PC!2, 4
+PC!24 = store i64 %45, i64 PC!3
+store i64 %45, i64 PC!4
+PC!5 = store i64 PC!4, i64 PC!4
+XREG!6 = store i64 0, [32, i64] XREG!5[0]
+prev_pc!4 = store i64 PC!4, i64 prev_pc!3
+%91 = load i64, [32, i64] XREG!6[15]
+%90 = i64 Add i64 %91, 8
+XREG!7 = store i64 %90, [32, i64] XREG!6[15]
+%89 = i64 Add i64 PC!4, 4
+PC!6 = store i64 %89, i64 PC!5
+store i64 %89, i64 PC!7
+PC!8 = store i64 PC!7, i64 PC!7
+XREG!8 = store i64 0, [32, i64] XREG!7[0]
+prev_pc!5 = store i64 PC!7, i64 prev_pc!4
+%94 = load i64, [32, i64] XREG!8[13]
+%93 = i64 Add i64 %94, 1
+XREG!9 = store i64 %93, [32, i64] XREG!8[13]
+%92 = i64 Add i64 PC!7, 4
+PC!9 = store i64 %92, i64 PC!8
+store i64 %92, i64 PC!10
+PC!11 = store i64 PC!10, i64 PC!10
+XREG!10 = store i64 0, [32, i64] XREG!9[0]
+prev_pc!6 = store i64 PC!10, i64 prev_pc!5
+%97 = load i64, [32, i64] XREG!10[14]
+%98 = load i64, [32, i64] XREG!10[12]
+%96 = i64 Add i64 %97, %98
+XREG!11 = store i64 %96, [32, i64] XREG!10[14]
+%95 = i64 Add i64 PC!10, 4
+PC!12 = store i64 %95, i64 PC!11
+store i64 %95, i64 PC!13
+PC!14 = store i64 PC!13, i64 PC!13
+XREG!12 = store i64 0, [32, i64] XREG!11[0]
+prev_pc!7 = store i64 PC!13, i64 prev_pc!6
+%101 = load i64, [32, i64] XREG!12[15]
+%100 = i64 Add i64 %101, -8
+tmp_address!4 = store i64 %100, i64 tmp_address!3
+%102 = load i64, [32, i64] XREG!12[14]
+rs2_var!2 = store i64 %102, i64 rs2_var!1
+%103 = i64 Lshr i64 %100, 3
+%104 = Extract i53 of i64 %103 <52, 0>
+mem_index!4 = store i53 %104, i53 mem_index!3
+%105 = Extract i3 of i64 %100 <2, 0>
+%106 = i1 Eq i3 %105, 0
+br i1 %106, label %bb124, label %bb125
+bb108:
+%59 = Extract i8 of i64 %54 <7, 0>
+%60 = Extract i56 of i64 %55 <63, 8>
+%58 = Concat i64 i8 %59, i56 %60
+tmp_dword!10 = store i64 %58, i64 tmp_dword!2
+br label %bb107
+bb109:
+%61 = Extract i3 of i64 %46 <2, 0>
+%62 = i1 Eq i3 %61, 2
+br i1 %62, label %bb112, label %bb113
+bb110:
+%35 = Extract i40 of i64 %10 <39, 0>
+%36 = Extract i24 of i64 %11 <63, 40>
+%34 = Concat i64 i40 %35, i24 %36
+tmp_dword!15 = store i64 %34, i64 tmp_dword!1
+br label %bb96
+bb111:
+%37 = Extract i3 of i64 %2 <2, 0>
+%38 = i1 Eq i3 %37, -2
+br i1 %38, label %bb114, label %bb115
+bb112:
+%64 = Extract i16 of i64 %54 <15, 0>
+%65 = Extract i48 of i64 %55 <63, 16>
+%63 = Concat i64 i16 %64, i48 %65
+tmp_dword!9 = store i64 %63, i64 tmp_dword!2
+br label %bb107
+bb113:
+%66 = Extract i3 of i64 %46 <2, 0>
+%67 = i1 Eq i3 %66, 3
+br i1 %67, label %bb116, label %bb117
+bb114:
+%40 = Extract i48 of i64 %10 <47, 0>
+%41 = Extract i16 of i64 %11 <63, 48>
+%39 = Concat i64 i48 %40, i16 %41
+tmp_dword!13 = store i64 %39, i64 tmp_dword!1
+br label %bb96
+bb115:
+%43 = Extract i56 of i64 %10 <55, 0>
+%44 = Extract i8 of i64 %11 <63, 56>
+%42 = Concat i64 i56 %43, i8 %44
+tmp_dword!14 = store i64 %42, i64 tmp_dword!1
+br label %bb96
+bb116:
+%69 = Extract i24 of i64 %54 <23, 0>
+%70 = Extract i40 of i64 %55 <63, 24>
+%68 = Concat i64 i24 %69, i40 %70
+tmp_dword!8 = store i64 %68, i64 tmp_dword!2
+br label %bb107
+bb117:
+%71 = Extract i3 of i64 %46 <2, 0>
+%72 = i1 Eq i3 %71, -4
+br i1 %72, label %bb118, label %bb119
+bb118:
+%74 = Extract i32 of i64 %54 <31, 0>
+%75 = Extract i32 of i64 %55 <63, 32>
+%73 = Concat i64 i32 %74, i32 %75
+tmp_dword!7 = store i64 %73, i64 tmp_dword!2
+br label %bb107
+bb119:
+%76 = Extract i3 of i64 %46 <2, 0>
+%77 = i1 Eq i3 %76, -3
+br i1 %77, label %bb120, label %bb121
+bb120:
+%79 = Extract i40 of i64 %54 <39, 0>
+%80 = Extract i24 of i64 %55 <63, 40>
+%78 = Concat i64 i40 %79, i24 %80
+tmp_dword!4 = store i64 %78, i64 tmp_dword!2
+br label %bb107
+bb121:
+%81 = Extract i3 of i64 %46 <2, 0>
+%82 = i1 Eq i3 %81, -2
+br i1 %82, label %bb122, label %bb123
+bb122:
+%84 = Extract i48 of i64 %54 <47, 0>
+%85 = Extract i16 of i64 %55 <63, 48>
+%83 = Concat i64 i48 %84, i16 %85
+tmp_dword!6 = store i64 %83, i64 tmp_dword!2
+br label %bb107
+bb123:
+%87 = Extract i56 of i64 %54 <55, 0>
+%88 = Extract i8 of i64 %55 <63, 56>
+%86 = Concat i64 i56 %87, i8 %88
+tmp_dword!5 = store i64 %86, i64 tmp_dword!2
+br label %bb107
+bb124:
+MEM!3 = store i64 %102, [9007199254740992, i64] MEM!1[%104]
+br label %bb126
+bb125:
+%107 = i53 Add i53 %104, 1
+%108 = load i64, [9007199254740992, i64] MEM!1[%107]
+tmp_dword1!6 = store i64 %108, i64 tmp_dword1!4
+%109 = load i64, [9007199254740992, i64] MEM!1[%104]
+tmp_dword2!6 = store i64 %109, i64 tmp_dword2!4
+%110 = Extract i3 of i64 %100 <2, 0>
+%111 = i1 Eq i3 %110, 1
+br i1 %111, label %bb127, label %bb128
+bb126:
+MEM!2 = phi ite %106 MEM!3 MEM!5
+tmp_dword2!5 = phi ite %106 tmp_dword2!4 tmp_dword2!8
+tmp_dword1!5 = phi ite %106 tmp_dword1!4 tmp_dword1!8
+%99 = i64 Add i64 PC!13, 4
+PC!15 = store i64 %99, i64 PC!14
+store i64 %99, i64 PC!16
+PC!17 = store i64 PC!16, i64 PC!16
+XREG!13 = store i64 0, [32, i64] XREG!12[0]
+prev_pc!8 = store i64 PC!16, i64 prev_pc!7
+%211 = load i64, [32, i64] XREG!13[13]
+%212 = load i64, [32, i64] XREG!13[11]
+%209 = i1 Ult i64 %211, %212
+br i1 %209, label %bb134, label %bb135
+bb127:
+%112 = i64 Lshr i64 %102, 56
+%113 = Extract i8 of i64 %112 <7, 0>
+%115 = Zext i8 %113 to i64
+%116 = i64 And i64 %108, -256
+%117 = i64 Shl i64 %115, 0
+%114 = i64 Or i64 %116, %117
+tmp_dword1!7 = store i64 %114, i64 tmp_dword1!6
+%118 = i64 Lshr i64 %102, 0
+%119 = Extract i56 of i64 %118 <55, 0>
+%121 = Zext i56 %119 to i64
+%122 = i64 And i64 %109, 255
+%123 = i64 Shl i64 %121, 8
+%120 = i64 Or i64 %122, %123
+tmp_dword2!7 = store i64 %120, i64 tmp_dword2!6
+br label %bb129
+bb128:
+%124 = Extract i3 of i64 %100 <2, 0>
+%125 = i1 Eq i3 %124, 2
+br i1 %125, label %bb130, label %bb131
+bb129:
+tmp_dword2!8 = phi ite %111 %120 ite %125 %134 ite %139 %148 ite %153 %162 ite %167 %176 ite %181 %190 %202
+tmp_dword1!8 = phi ite %111 %114 ite %125 %128 ite %139 %142 ite %153 %156 ite %167 %170 ite %181 %184 %196
+%206 = i53 Add i53 %104, 1
+MEM!4 = store i64 tmp_dword1!8, [9007199254740992, i64] MEM!1[%206]
+MEM!5 = store i64 tmp_dword2!8, [9007199254740992, i64] MEM!4[%104]
+br label %bb126
+bb130:
+%126 = i64 Lshr i64 %102, 48
+%127 = Extract i16 of i64 %126 <15, 0>
+%129 = Zext i16 %127 to i64
+%130 = i64 And i64 %108, -65536
+%131 = i64 Shl i64 %129, 0
+%128 = i64 Or i64 %130, %131
+tmp_dword1!14 = store i64 %128, i64 tmp_dword1!6
+%132 = i64 Lshr i64 %102, 0
+%133 = Extract i48 of i64 %132 <47, 0>
+%135 = Zext i48 %133 to i64
+%136 = i64 And i64 %109, 65535
+%137 = i64 Shl i64 %135, 16
+%134 = i64 Or i64 %136, %137
+tmp_dword2!14 = store i64 %134, i64 tmp_dword2!6
+br label %bb129
+bb131:
+%138 = Extract i3 of i64 %100 <2, 0>
+%139 = i1 Eq i3 %138, 3
+br i1 %139, label %bb132, label %bb133
+bb132:
+%140 = i64 Lshr i64 %102, 40
+%141 = Extract i24 of i64 %140 <23, 0>
+%143 = Zext i24 %141 to i64
+%144 = i64 And i64 %108, -16777216
+%145 = i64 Shl i64 %143, 0
+%142 = i64 Or i64 %144, %145
+tmp_dword1!13 = store i64 %142, i64 tmp_dword1!6
+%146 = i64 Lshr i64 %102, 0
+%147 = Extract i40 of i64 %146 <39, 0>
+%149 = Zext i40 %147 to i64
+%150 = i64 And i64 %109, 16777215
+%151 = i64 Shl i64 %149, 24
+%148 = i64 Or i64 %150, %151
+tmp_dword2!13 = store i64 %148, i64 tmp_dword2!6
+br label %bb129
+bb133:
+%152 = Extract i3 of i64 %100 <2, 0>
+%153 = i1 Eq i3 %152, -4
+br i1 %153, label %bb136, label %bb137
+bb134:
+%210 = i64 Add i64 PC!16, -24
+PC!18 = store i64 %210, i64 PC!17
+br label %bb138
+bb135:
+br label %bb138
+bb136:
+%154 = i64 Lshr i64 %102, 32
+%155 = Extract i32 of i64 %154 <31, 0>
+%157 = Zext i32 %155 to i64
+%158 = i64 And i64 %108, -4294967296
+%159 = i64 Shl i64 %157, 0
+%156 = i64 Or i64 %158, %159
+tmp_dword1!12 = store i64 %156, i64 tmp_dword1!6
+%160 = i64 Lshr i64 %102, 0
+%161 = Extract i32 of i64 %160 <31, 0>
+%163 = Zext i32 %161 to i64
+%164 = i64 And i64 %109, 4294967295
+%165 = i64 Shl i64 %163, 32
+%162 = i64 Or i64 %164, %165
+tmp_dword2!12 = store i64 %162, i64 tmp_dword2!6
+br label %bb129
+bb137:
+%166 = Extract i3 of i64 %100 <2, 0>
+%167 = i1 Eq i3 %166, -3
+br i1 %167, label %bb139, label %bb140
+bb138:
+PC!19 = phi ite %209 %210 PC!16
+%207 = i1 Eq i64 PC!19, PC!16
+br i1 %207, label %bb141, label %bb142
+bb139:
+%168 = i64 Lshr i64 %102, 24
+%169 = Extract i40 of i64 %168 <39, 0>
+%171 = Zext i40 %169 to i64
+%172 = i64 And i64 %108, -1099511627776
+%173 = i64 Shl i64 %171, 0
+%170 = i64 Or i64 %172, %173
+tmp_dword1!9 = store i64 %170, i64 tmp_dword1!6
+%174 = i64 Lshr i64 %102, 0
+%175 = Extract i24 of i64 %174 <23, 0>
+%177 = Zext i24 %175 to i64
+%178 = i64 And i64 %109, 1099511627775
+%179 = i64 Shl i64 %177, 40
+%176 = i64 Or i64 %178, %179
+tmp_dword2!9 = store i64 %176, i64 tmp_dword2!6
+br label %bb129
+bb140:
+%180 = Extract i3 of i64 %100 <2, 0>
+%181 = i1 Eq i3 %180, -2
+br i1 %181, label %bb143, label %bb144
+bb141:
+%208 = i64 Add i64 PC!19, 4
+PC!23 = store i64 %208, i64 PC!19
+br label %bb145
+bb142:
+br label %bb145
+bb143:
+%182 = i64 Lshr i64 %102, 16
+%183 = Extract i48 of i64 %182 <47, 0>
+%185 = Zext i48 %183 to i64
+%186 = i64 And i64 %108, -281474976710656
+%187 = i64 Shl i64 %185, 0
+%184 = i64 Or i64 %186, %187
+tmp_dword1!11 = store i64 %184, i64 tmp_dword1!6
+%188 = i64 Lshr i64 %102, 0
+%189 = Extract i16 of i64 %188 <15, 0>
+%191 = Zext i16 %189 to i64
+%192 = i64 And i64 %109, 281474976710655
+%193 = i64 Shl i64 %191, 48
+%190 = i64 Or i64 %192, %193
+tmp_dword2!11 = store i64 %190, i64 tmp_dword2!6
+br label %bb129
+bb144:
+%194 = i64 Lshr i64 %102, 8
+%195 = Extract i56 of i64 %194 <55, 0>
+%197 = Zext i56 %195 to i64
+%198 = i64 And i64 %108, -72057594037927936
+%199 = i64 Shl i64 %197, 0
+%196 = i64 Or i64 %198, %199
+tmp_dword1!10 = store i64 %196, i64 tmp_dword1!6
+%200 = i64 Lshr i64 %102, 0
+%201 = Extract i8 of i64 %200 <7, 0>
+%203 = Zext i8 %201 to i64
+%204 = i64 And i64 %109, 72057594037927935
+%205 = i64 Shl i64 %203, 56
+%202 = i64 Or i64 %204, %205
+tmp_dword2!10 = store i64 %202, i64 tmp_dword2!6
+br label %bb129
+bb145:
+PC!20 = phi ite %209 %210 %208
+PC!21 = store i64 PC!20, i64 PC!20
+PC!22 = store i64 PC!20, i64 PC!21
+br label %bb146
+bb146:
+MEM = [9007199254740992, i64] Use [9007199254740992, i64] MEM!20
+PC = i64 Use i64 PC!107
+XREG = [32, i64] Use [32, i64] XREG!57
+PC!111 = i64 Use i64 PC
+XREG!58 = [32, i64] Use [32, i64] XREG
+br label %bb147
+bb147:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = i64 Add i64 PC!1, 4
+XREG!3 = store i64 %3, [32, i64] XREG!2[0]
+%5 = load i64, [32, i64] XREG!3[1]
+%4 = i64 Add i64 %5, 0
+PC!2 = store i64 %4, i64 PC!1
+%1 = i1 Eq i64 %4, PC!1
+br i1 %1, label %bb148, label %bb149
+bb148:
+%2 = i64 Add i64 %4, 4
+PC!6 = store i64 %2, i64 PC!2
+br label %bb150
+bb149:
+br label %bb150
+bb150:
+PC!3 = phi ite %1 %2 %4
+PC!4 = store i64 PC!3, i64 PC!3
+PC!5 = store i64 PC!3, i64 PC!4
+br label %bb151
+bb151:
+PC = i64 Use i64 PC!115
+XREG = [32, i64] Use [32, i64] XREG!60
+PC!117 = i64 Use i64 PC
+XREG!61 = [32, i64] Use [32, i64] XREG
+br label %bb152
+bb152:
+XREG!2 = store i64 0, [32, i64] XREG!1[0]
+prev_pc!2 = store i64 PC!1, i64 prev_pc!1
+%3 = load i64, [32, i64] XREG!2[0]
+%2 = i64 Add i64 %3, 2
+XREG!3 = store i64 %2, [32, i64] XREG!2[13]
+%1 = i64 Add i64 PC!1, 4
+PC!9 = store i64 %1, i64 PC!1
+store i64 %1, i64 PC!2
+PC!3 = store i64 PC!2, i64 PC!2
+XREG!4 = store i64 0, [32, i64] XREG!3[0]
+prev_pc!3 = store i64 PC!2, i64 prev_pc!2
+%4 = i64 Add i64 PC!2, 4
+XREG!5 = store i64 %4, [32, i64] XREG!4[0]
+%5 = i64 Add i64 PC!2, -44
+PC!4 = store i64 %5, i64 PC!3
+store i64 %5, i64 PC!5
+PC!6 = store i64 PC!5, i64 PC!5
+PC!7 = store i64 PC!5, i64 PC!6
+br label %bb153
+bb153:
+PC = i64 Use i64 PC!123
+XREG = [32, i64] Use [32, i64] XREG!65
+PC!126 = i64 Use i64 PC
+br label %bb154
+bb154:
+PC!2 = store i64 PC!1, i64 PC!1
+br label %bb155
+bb155:
+PC = i64 Use i64 PC!127
+ret void

@@ -1,0 +1,2 @@
+SAMPLE = strlen
+include ../Makefrag

@@ -6,6 +6,10 @@
  2017/11/23 - 2019/MM/DD
 --------------------------------------------------------------------------------
 
+ 2019/mm/dd MicroTESK RISC-V 0.0.10
+
+ - Binaries: Added binaries samples (w/ C sources)
+
  2019/10/25 MicroTESK RISC-V 0.0.9
 
  - Specifications: Added system registers and the related modes

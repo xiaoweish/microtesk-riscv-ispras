@@ -3,5 +3,6 @@ build/
 out/
 output/
 tools/
+gradle-local.properties
 .*
 !.gitignore

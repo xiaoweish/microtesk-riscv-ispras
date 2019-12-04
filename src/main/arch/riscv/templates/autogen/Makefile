@@ -1,6 +1,6 @@
-TESTS = simple_autogentemplate\
-        boundary_autogentemplate\
-        group_autogentemplate
+TESTS = simple_auto\
+        boundary_auto\
+        group_auto
 
 all: $(TESTS)
 

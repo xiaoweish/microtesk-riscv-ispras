@@ -583,12 +583,14 @@ public class RiscVTest extends TemplateTest {
         } catch (IllegalThreadStateException e) {
 
           Logger.message("Timeout is expired for: \"%s\"", command);
-          process.destroy();
           exitCode = 0;
+
+        } finally {
+          process.destroyForcibly();
         }
       } else {
         exitCode = process.waitFor();
-        process.destroy();
+        process.destroyForcibly();
       }
 
       if (!returnCodes.contains(exitCode) || !isEmpty(errorLog)) {

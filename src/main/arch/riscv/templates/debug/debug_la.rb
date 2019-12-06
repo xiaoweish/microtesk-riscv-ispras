@@ -48,9 +48,9 @@ class InstructionLaTemplate < RiscVBaseTemplate
     nop
 
     (1..COUNT).each { |index|
-      label :"label_#{index}"
       org :delta => 0x180
 
+      label :"label_#{index}"
       nop
       nop
       nop

@@ -71,25 +71,24 @@ class RiscVBaseTemplate < Template
     # Information on data types to be used in data sections.
     #
     data_config(:target => 'MEM') {
-      define_type :id => :byte,   :text => '.byte',   :type => type('card', 8)
-      define_type :id => :half,   :text => '.half',   :type => type('card', 16)
-      define_type :id => :word,   :text => '.word',   :type => type('card', 32)
-      define_type :id => :dword,  :text => '.dword',  :type => type('card', 64)
-
-      define_type :id => :floatx,  :text => '.float',  :type => type('float', 23, 8),
-                  :format => '0f:%08X'
-      define_type :id => :doublex, :text => '.double', :type => type('float', 52, 11),
-                  :format => '0d:%016X'
-
-      define_type :id => :float,  :text => '.float',  :type => type('float', 23, 8),
-                  :format => '%s'
-      define_type :id => :double, :text => '.double', :type => type('float', 52, 11),
-                  :format => '%s'
-
-      define_space        :id => :space,  :text => '.space',  :fill_with => 0
-      define_space        :id => :skip,   :text => '.skip',   :fill_with => 0
-      define_ascii_string :id => :ascii,  :text => '.ascii',  :zero_term => false
-      define_ascii_string :id => :asciiz, :text => '.asciiz', :zero_term => true
+      define_type   :id => :byte,    :text => '.byte',   :type => type('card', 8),
+      define_type   :id => :half,    :text => '.half',   :type => type('card', 16),
+      define_type   :id => :word,    :text => '.word',   :type => type('card', 32),
+      define_type   :id => :dword,   :text => '.dword',  :type => type('card', 64),
+      define_type   :id => :byte2,   :text => '.2byte',  :type => type('card', 16),      :align => false
+      define_type   :id => :byte4,   :text => '.4byte',  :type => type('card', 32),      :align => false
+      define_type   :id => :byte8,   :text => '.8byte',  :type => type('card', 64),      :align => false
+      define_type   :id => :float,   :text => '.float',  :type => type('float', 23, 8),  :format => '%s'
+      define_type   :id => :double,  :text => '.double', :type => type('float', 52, 11), :format => '%s'
+      define_type   :id => :floatx,  :text => '.float',  :type => type('float', 23, 8),  :format => '0f:%08X'
+      define_type   :id => :doublex, :text => '.double', :type => type('float', 52, 11), :format => '0d:%016X'
+      define_space  :id => :space,   :text => '.space',  :fill_with => 0
+      define_space  :id => :zero,    :text => '.zero',   :fill_with => 0
+      define_space  :id => :skip,    :text => '.skip',   :fill_with => 0
+      define_string :id => :ascii,   :text => '.ascii',  :zero_term => false
+      define_string :id => :asciz,   :text => '.asciz',  :zero_term => true
+      define_string :id => :asciiz,  :text => '.asciiz', :zero_term => true
+      define_string :id => :string,  :text => '.string', :zero_term => true
     }
 
     #

@@ -87,7 +87,9 @@ class SimpleGenTemplate < RiscVBaseTemplate
     fmv_x_s x(_), f(_)
     
     fmv_s_x f(_), x(_)
-    
+    end
+
+    if is_rev('RV32D') then    
     la x(5), :data
     fld f(_), x(5), :data
     

@@ -6,13 +6,14 @@ TESTS = debug_jalr\
         debug_lw_sw_sv32\
         debug_rv32i\
         debug_rv32m\
-        debug_rvc
+        debug_rvc\
+	debug_rv32f\
+	debug_rv32f2\
+	debug_rv32d\
+        debug_ld_sd_sv39\
+        debug_ld_sd_sv48
 
 #not supported in this core
-#        debug_ld_sd_sv39\
-#        debug_ld_sd_sv48\
-#        debug_rv32f\
-#        debug_rv32f2\
 #        debug_rv64a\
 #        debug_rv64d\
 #        debug_rv64f\
@@ -20,7 +21,6 @@ TESTS = debug_jalr\
 #        debug_rv64m\
 #        debug_rv32v\
 #        debug_rv32a\
-#        debug_rv32d\
  
 all: $(TESTS)
 

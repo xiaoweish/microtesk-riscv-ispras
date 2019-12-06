@@ -32,6 +32,12 @@ class InstructionRVC < RiscVBaseTemplate
     }
   end
 
+  def pre
+    super
+    option "norelax"
+    option "norvc"
+  end
+
   def run
     trace "Compressed Instructions:"
 

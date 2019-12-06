@@ -259,7 +259,7 @@ class InstructionRV32F2 < RiscVBaseTemplate
     trace "a0 => %x == 1", XREG(10)
 
     # --- Test for fadd ---
-	li64 gp, 0x2
+	li gp, 0x2
 	la a0, :operan1_1
 	flw ft0, a0, 0
 	flw ft1, a0, 4

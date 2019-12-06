@@ -26,6 +26,13 @@ class InstructionRV32I < RiscVBaseTemplate
   def run
     trace "RV32I instructions:"
 
+    j :test_label
+    data {
+       label :test_label
+       word 0x0
+    }
+
+
     la s1, :jal_label
     trace "s1 = %x", XREG(9)
 
@@ -41,6 +48,7 @@ class InstructionRV32I < RiscVBaseTemplate
     j :j_label
     nop
     nop
+
     nop
     label :j_label
     nop

@@ -230,9 +230,9 @@ label 1
     jal zero, :prname_next
 
     label :test_name
-    text ".ascii TEST_FUNC_TXT"
-    text ".byte 0x0"
-    text ".balign 4, 0"
+    ascii "TEST_FUNC_TXT"
+    byte 0x0
+    balign 4
 
     label :prname_done
     addi a1, zero, ".".ord

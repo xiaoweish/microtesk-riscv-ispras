@@ -19,10 +19,8 @@ require_relative '../../riscv_base'
 #
 # Description:
 #
-# This test template demonstrates how to generate test cases with branch instructions
-# including instruction with two parameters such as beq and bne. Currently, there is
-# a limitation: only one parameter is stored and loaded from the stream. Consequently,
-# the second parameter must be a register with a predefined value such as $zero.
+# This test template demonstrates how to generate test cases with branch instructions. If a branch
+# has two arguments (e.g., beq or bne) only one of them is stored and loaded from the stream.
 #
 class BranchGeneration1Template < RiscVBaseTemplate
 
@@ -33,7 +31,7 @@ class BranchGeneration1Template < RiscVBaseTemplate
 
   def TEST_DATA
     data {
-      org 0x0007000
+      org 0x00010000
       align 8
       # Arrays to store test data for branch instructions.
 label :branch_data_0
@@ -105,10 +103,10 @@ label :branch_data_3
 
   def run
     # Stream  Label            Data  Addr  Size
-    stream   :branch_data_0,   s0,   s4,   128
-    stream   :branch_data_1,   s1,   s5,   128
-    stream   :branch_data_2,   s2,   s6,   128
-    stream   :branch_data_3,   s3,   s7,   128
+    stream   :branch_data_0,   s0,   s4,   256
+    stream   :branch_data_1,   s1,   s5,   256
+    stream   :branch_data_2,   s2,   s6,   256
+    stream   :branch_data_3,   s3,   s7,   256
 
     # A branch structure is as follows:
     #
@@ -129,10 +127,11 @@ label :branch_data_3
     # Parameter 'trace_count_limit' bounds the number of execution traces to be created:
     #   the default value is -1 (no limitation).
     sequence(
-          :engines => {
-              :branch => {:branch_exec_limit => 3,
-                          :block_exec_limit => 3,
-                          :trace_count_limit => -1}}) {
+      :engines => {
+        :branch => {
+          :branch_exec_limit => 3,
+          :block_exec_limit  => 3,
+          :trace_count_limit => -1 }}) {
       label :label0
         nop
         bgtz s0, :label0 do

@@ -374,31 +374,23 @@ public class RiscVTest extends TemplateTest {
     Logger.message("Start simulation on Spike ...");
 
     final File spike = new File(String.format("%s/bin/%s", TCHAIN_PATH, SPIKE_BIN));
-    checkExecutable(qemu);
+    checkExecutable(spike);
 
-    final String spikeLog = insertExt(image.getAbsolutePath(), "-spike.log");
-
-    final String[] shellSpikeArgs = new String[] {
-        "-c", String.format("%s -l --isa=rv64imafdcv -p1 %s &>%s",
-        spike,
-        image.getAbsolutePath(),
-        spikeLog)};
+    final String[] spikeArgs = new String[] {
+        "-l",
+        "--isa=rv64imafdcv",
+        "-p1",
+        image.getAbsolutePath()};
 
     final Collection<Integer> spikeRetValues = new LinkedList<>();
     spikeRetValues.add(0);
     spikeRetValues.add(156); // to mask "killed by test" situation
 
-    runCommand(SHELL, SPIKE_TIMEOUT_MILLIS, false, spikeRetValues, shellSpikeArgs);
-    final File spikeLogFile = new File(spikeLog);
-
-    Assert.assertTrue(
-        String.format("Can't find Spike trace file: %s", spikeLogFile.getAbsolutePath()),
-        spikeLogFile.exists());
+    runCommand(spike, SPIKE_TIMEOUT_MILLIS, false, spikeRetValues, spikeArgs);
 
     Logger.message("done.");
 
-
-    Logger.message("Check traces ...");
+    Logger.message("Check MicroTESK and QEMU4V traces ...");
     setPhase(TestPhase.CHECK_TRACES);
 
     final File toolLog = new File(insertExt(image.getAbsolutePath(), ".log"));

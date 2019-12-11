@@ -143,9 +143,9 @@ public class RiscVTest extends TemplateTest {
   private static final String SPIKE_BIN = "spike";
 
   /**
-   * Timeout for Spike execution (in milliseconds).
+   * Timeout for Spike execution (in seconds).
    */
-  private static final int SPIKE_TIMEOUT_MILLIS = 1000;
+  private static final int SPIKE_TIMEOUT_SEC = 1;
 
   /* Trace utils parameters. */
 
@@ -330,6 +330,35 @@ public class RiscVTest extends TemplateTest {
 
   private void emulate(final File image) {
 
+    Logger.message("Start simulation on Spike ...");
+
+    /* Check if Spike is installed. */
+    checkExecutable(new File(String.format("%s/bin/%s", TCHAIN_PATH, SPIKE_BIN)));
+
+    final String spikeLog = insertExt(image.getAbsolutePath(), "-spike.log");
+    final String spikeRunScript =
+        Paths.get(System.getenv("MICROTESK_HOME"), "bash", "run-on-spike.sh").toString();
+
+    final String[] shellSpikeArgs = new String[] {
+        "-c", String.format("%s %s %d %s",
+        spikeRunScript,
+        image.getAbsolutePath(),
+        SPIKE_TIMEOUT_SEC,
+        spikeLog)};
+
+    final Collection<Integer> spikeRetValues = new LinkedList<>();
+    spikeRetValues.add(0);
+    spikeRetValues.add(156); // to mask "killed by test" situation
+
+    runCommand(SHELL, false, spikeRetValues, shellSpikeArgs);
+    final File spikeLogFile = new File(spikeLog);
+
+    Assert.assertTrue(
+        String.format("Can't find Spike trace file: %s", spikeLogFile.getAbsolutePath()),
+        spikeLogFile.exists());
+
+    Logger.message("done.");
+
     /* If QEMU is installed, run the binary image on it. */
 
     if (QEMU_PATH == null || QEMU_PATH.isEmpty()) {
@@ -344,7 +373,7 @@ public class RiscVTest extends TemplateTest {
     final File qemu = new File(String.format("%s/%s", QEMU_PATH, QEMU_BIN));
     checkExecutable(qemu);
 
-    Logger.message("Start emulation ...");
+    Logger.message("Start simulation on QEMU ...");
     setPhase(TestPhase.EMULATION);
     final String qemuLog = insertExt(image.getAbsolutePath(), "-qemu.log");
 
@@ -371,26 +400,7 @@ public class RiscVTest extends TemplateTest {
 
     Logger.message("done.");
 
-    Logger.message("Start simulation on Spike ...");
-
-    final File spike = new File(String.format("%s/bin/%s", TCHAIN_PATH, SPIKE_BIN));
-    checkExecutable(spike);
-
-    final String[] spikeArgs = new String[] {
-        "-l",
-        "--isa=rv64imafdcv",
-        "-p1",
-        image.getAbsolutePath()};
-
-    final Collection<Integer> spikeRetValues = new LinkedList<>();
-    spikeRetValues.add(0);
-    spikeRetValues.add(156); // to mask "killed by test" situation
-
-    runCommand(spike, SPIKE_TIMEOUT_MILLIS, false, spikeRetValues, spikeArgs);
-
-    Logger.message("done.");
-
-    Logger.message("Check MicroTESK and QEMU4V traces ...");
+    Logger.message("Check traces ...");
     setPhase(TestPhase.CHECK_TRACES);
 
     final File toolLog = new File(insertExt(image.getAbsolutePath(), ".log"));

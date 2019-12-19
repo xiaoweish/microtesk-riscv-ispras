@@ -27,10 +27,10 @@ class InstructionRV32I < RiscVBaseTemplate
     trace "RV32I instructions:"
 
     j :test_label
-    data {
-       label :test_label
-       word 0x0
-    }
+    #data {
+    label :test_label
+    word 0x0
+    #}
 
 
     la s1, :jal_label

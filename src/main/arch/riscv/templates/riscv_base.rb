@@ -41,8 +41,8 @@ class RiscVBaseTemplate < Template
     # Sets the token used in separator lines printed into test programs
     set_option_value 'separator-token', "="
 
-    # Changes the name of the .text section to .text.init
-    set_option_value 'text-section-keyword', '.text.init'
+    # Do not change the name of the .text section to .text.init
+    set_option_value 'text-section-keyword', '.text'
 
     # Defines alias methods for X registers
     (0..31).each do |i|

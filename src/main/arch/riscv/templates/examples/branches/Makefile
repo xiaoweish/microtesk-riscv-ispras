@@ -1,6 +1,6 @@
-TESTS = branch_fixed\
-        branch_merge\
+TESTS = branch_merge\
         branch_specs
+#branch_fixed\ there's not enough space in memory for all tests
 
 all: $(TESTS)
 

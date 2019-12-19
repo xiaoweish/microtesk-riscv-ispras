@@ -215,7 +215,7 @@ label 1
   end
 
   def RVTEST_CODE_BEGIN
-    text ".text"
+    option "norelax"
     text ".globl TEST_FUNC_RET"
 
     global_label :TEST_FUNC_NAME
@@ -230,7 +230,7 @@ label 1
     jal zero, :prname_next
 
     label :test_name
-    ascii "TEST_FUNC_TXT"
+    ascii "#{self.class.name}" #'TEST_FUNC_TXT'
     byte 0x0
     balign 4
 

@@ -88,6 +88,7 @@ class TortureTemplate < RiscVBaseTemplate
   def run
     # Registers must be selected at random (taking into account existing reservations)
     set_default_allocator RANDOM
+    option "rvc"
 
     block {
       prologue {

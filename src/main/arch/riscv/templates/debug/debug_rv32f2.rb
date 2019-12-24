@@ -275,12 +275,12 @@ class InstructionRV32F2 < RiscVBaseTemplate
 
 	fsflags a1, zero
 	li a2, 0x0
-	bne a0, a3, :fail
+	bne a0, a3, :debug_fail
     trace "a1 => %x == 1", XREG(11)
     trace "a2 => %x == 1", XREG(12)
-	bne a1, a2, :fail
+	bne a1, a2, :debug_fail
 
-    label :fail
+    label :debug_fail
     nop
 
     nop

@@ -213,7 +213,7 @@ label 2
       j :fail
 label 1
       c_nop # FIXME: Jump to 0x000000008000033a --> No executable code at 0x000000008000033a
-    end
+   end
 
     RVC_TEST_CASE( 31, x0, 0 ) do
       li a0, 0
@@ -224,6 +224,7 @@ label 1
 label 2
       j :fail
 label 1
+      c_nop # FIXME: Jump to 0x000000008000033a --> No executable code at 0x000000008000033a
     end
 
     RVC_TEST_CASE( 32, x0, 0 ) do
@@ -235,6 +236,7 @@ label 1
 label 2
       j :fail
 label 1
+      c_nop # FIXME: Jump to 0x000000008000033a --> No executable code at 0x000000008000033a
     end
 
     RVC_TEST_CASE( 33, x0, 0 ) do
@@ -244,6 +246,7 @@ label 1
 label 1
       c_j :fail
 label 2
+      c_nop # FIXME: Jump to 0x000000008000033a --> No executable code at 0x000000008000033a
     end
 
     RVC_TEST_CASE( 34, x0, 0 ) do
@@ -253,6 +256,7 @@ label 2
 label 1
       c_j :fail
 label 2
+      c_nop # FIXME: Jump to 0x000000008000033a --> No executable code at 0x000000008000033a
     end
 
     RVC_TEST_CASE( 35, ra, 0 ) do
@@ -265,6 +269,7 @@ label 1
 label 2
       j :fail
 label 1
+      c_nop # FIXME: Jump to 0x000000008000033a --> No executable code at 0x000000008000033a
     end
 
     RVC_TEST_CASE( 36, ra, -2 ) do

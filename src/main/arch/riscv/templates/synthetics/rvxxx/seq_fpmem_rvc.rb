@@ -82,9 +82,6 @@ module SeqFpmemRvc
   def seq_fpmem_load_addrfn_rvc_c(op, fregpool_c, addr, imm)
     reg_addr = reg_write_hidden(:xregs_c)
     reg_dest = reg_write_visible(fregpool_c)
-puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + reg_addr.to_s
-puts ">>>>>>>>>>>>>>>>>>>>>>> " + reg_addr.to_s
-puts ">>>>>>>>>>>>>>>>>>>>>>> " + reg_num(reg_addr).to_s
 
     atomic {
       lla reg_addr, :test_memory, _SUB(addr, imm)

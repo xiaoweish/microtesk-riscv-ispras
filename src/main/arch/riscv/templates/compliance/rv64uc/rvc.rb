@@ -212,6 +212,7 @@ label 1
 label 2
       j :fail
 label 1
+      c_nop # FIXME: Jump to 0x000000008000033a --> No executable code at 0x000000008000033a
     end
 
     RVC_TEST_CASE( 31, x0, 0 ) do

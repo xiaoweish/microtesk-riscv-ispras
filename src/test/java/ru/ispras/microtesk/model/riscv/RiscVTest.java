@@ -217,6 +217,7 @@ public class RiscVTest extends TemplateTest {
     setTestDirPath(testDirPath);
 
     setCommandLineOption(Option.TRACER_LOG);
+    setCommandLineOption(ru.ispras.microtesk.options.Option.COVERAGE_TRACKING);
     setCommandLineOption(Option.OUTPUT_DIR, getTestDirPath());
     setCommandLineOption(Option.CODE_FILE_EXTENSION, EXT);
     setCommandLineOption(Option.DATA_FILE_EXTENSION, EXT);

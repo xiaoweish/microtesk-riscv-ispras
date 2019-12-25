@@ -186,6 +186,13 @@ class DebugCsrsTemplate < RiscVBaseTemplate
   end
 
   def run
+    csrs_user = [ustatus, uie, utvec, uscratch, uepc, ucause, utval, uip, fflags, frm, fcsr, cycle,
+                 time, instret, hpmcounter3, hpmcounter4, hpmcounter5, hpmcounter6, hpmcounter7,
+                 hpmcounter8, hpmcounter9, hpmcounter10, hpmcounter11, hpmcounter12, hpmcounter13,
+                 hpmcounter14, hpmcounter15, hpmcounter16, hpmcounter17, hpmcounter18, hpmcounter19,
+                 hpmcounter20, hpmcounter21, hpmcounter22, hpmcounter23, hpmcounter24, hpmcounter25,
+                 hpmcounter26, hpmcounter27, hpmcounter28, hpmcounter29, hpmcounter30, hpmcounter31]
+
     csrs_list = [ustatus, uie, utvec, uscratch, uepc, ucause, utval, uip, fflags, frm, fcsr, cycle,
                  time, instret, hpmcounter3, hpmcounter4, hpmcounter5, hpmcounter6, hpmcounter7,
                  hpmcounter8, hpmcounter9, hpmcounter10, hpmcounter11, hpmcounter12, hpmcounter13,
@@ -210,12 +217,21 @@ class DebugCsrsTemplate < RiscVBaseTemplate
                  mhpmevent26, mhpmevent27, mhpmevent28, mhpmevent29, mhpmevent30, mhpmevent31,
                  tselect, tdata1, tdata2, tdata3, dcsr, dpc, dscratch]
 
-    csrs_list.each { |i|
+    csrs_user.each { |i|
       atomic {
         csrrs t0, i, zero
         csrrw t1, i, t0
       }.run
     }
+
+    if 1!=1 then
+      csrs_list.each { |i|
+        atomic {
+          csrrs t0, i, zero
+          csrrw t1, i, t0
+        }.run
+      }
+    end
   end
 
 end

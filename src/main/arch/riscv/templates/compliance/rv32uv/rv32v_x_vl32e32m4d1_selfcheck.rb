@@ -23,6 +23,11 @@ require_relative '../../riscv_base'
 # This tests use 32bit boundary values.
 #
 class InstructionX < RiscVBaseTemplate
+  def pre
+    section_data(:pa => 0x8002_8000, :va => 0x8002_8000) {}
+    super()
+  end
+
   def TEST_DATA
     data {
       label :data

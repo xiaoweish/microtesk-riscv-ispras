@@ -122,7 +122,7 @@ class RiscVBaseTemplate < Template
     # pa: base physical address (used for memory allocation).
     # va: base virtual address (used for encoding instructions that refer to labels).
     #
-    section_data(:pa => 0x8002_4000, :va => 0x8002_4000) {}
+    section_data(:pa => 0x8002_2000, :va => 0x8002_2000) {}
 
     ################################################################################################
 

@@ -8,7 +8,7 @@ sh $MICROTESK_HOME/bin/generate.sh riscv $1.rb \
    --code-file-prefix $1 \
    --code-file-extension s \
    --tracer-log \
-   --coverage-tracking \
+   --coverage-log \
    --output-dir $out_dir \
    --verbose -debug-print \
    --asserts-enabled \

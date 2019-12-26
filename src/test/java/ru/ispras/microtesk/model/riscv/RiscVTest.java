@@ -390,7 +390,7 @@ public class RiscVTest extends TemplateTest {
         "-trace-log",
         "-D",
         qemuLog,
-        "-kernel",
+        "-bios",
         image.getAbsolutePath()};
     runCommand(qemu, QEMU_TIMEOUT_MILLIS, true, qemuArgs);
 

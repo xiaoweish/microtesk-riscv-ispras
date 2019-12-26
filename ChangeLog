@@ -9,6 +9,7 @@
  2019/mm/dd MicroTESK RISC-V 0.0.10
 
  - Binaries: Added binaries samples (w/ C sources)
+ - Tests: Test suite uses QEMU4V 0.3.4
 
  2019/10/25 MicroTESK RISC-V 0.0.9
 

@@ -293,7 +293,7 @@ public class RiscVTest extends TemplateTest {
       return;
     }
 
-    final File compiler = getToolchainBinary("gcc");
+    final File compiler = getToolchainBinary();
 
     /* If toolchain is installed, loop on prefix-named test programs,
      * compile every test program, if it fails, throw error message. */
@@ -351,7 +351,7 @@ public class RiscVTest extends TemplateTest {
     spikeRetValues.add(0);
     spikeRetValues.add(156); // to mask "killed by test" situation
 
-    runCommand(SHELL, false, spikeRetValues, shellSpikeArgs);
+    runShell(spikeRetValues, shellSpikeArgs);
     final File spikeLogFile = new File(spikeLog);
 
     Assert.assertTrue(
@@ -392,7 +392,7 @@ public class RiscVTest extends TemplateTest {
         qemuLog,
         "-bios",
         image.getAbsolutePath()};
-    runCommand(qemu, QEMU_TIMEOUT_MILLIS, true, qemuArgs);
+    runQemu(qemu, qemuArgs);
 
     final File qemuLogFile = new File(qemuLog);
     Assert.assertTrue(
@@ -426,7 +426,7 @@ public class RiscVTest extends TemplateTest {
     diffReturnValues.add(0);
     diffReturnValues.add(1); // to mask "files are not equal" situation
 
-    runCommand(SHELL, false, diffReturnValues, args);
+    runShell(diffReturnValues, args);
 
     Logger.message("done.");
   }
@@ -466,12 +466,10 @@ public class RiscVTest extends TemplateTest {
       args.add("0x1000");
     }
     args.add("-o");
-    args.add(getOutOption(getNameNoExt(program), "elf"));
+    args.add(getOutElf(getNameNoExt(program)));
 
     runCommand(
-        compiler,
-        true,
-        args.toArray(new String[0]));
+        compiler, args.toArray(new String[0]));
 
     final File elfImage = new File(getElf(program));
 
@@ -502,17 +500,17 @@ public class RiscVTest extends TemplateTest {
   }
 
   private String getElf(final File program) {
-    final String[] elfFiles = getFiles(".elf", program);
+    final String[] elfFiles = getElfFiles(program);
     return elfFiles[0];
   }
 
-  private String[] getFiles(final String ext, final File ... files) {
+  private String[] getElfFiles(final File... files) {
 
     final String[] result = new String[files.length];
 
     for (int i = 0; i < files.length; i++) {
       final File file = files[i];
-      final String pathWithExt = insertExt(file.getAbsolutePath(), ext);
+      final String pathWithExt = insertExt(file.getAbsolutePath(), ".elf");
 
       final File fileWithExt = new File(pathWithExt);
       if (!fileWithExt.exists() || fileWithExt.isDirectory()) {
@@ -531,25 +529,17 @@ public class RiscVTest extends TemplateTest {
         ext);
   }
 
-  private void runCommand(final File cmd, final boolean redirectErr, final String ... args) {
-    runCommand(cmd, 0, redirectErr, Collections.singletonList(0), args);
+  private void runCommand(final File cmd, final String... args) {
+    runCommand(cmd, 0, true, Collections.singletonList(0), args);
   }
 
-  private void runCommand(
-      final File cmd,
-      final long timeout,
-      final boolean redirectErr,
-      final String ... args) {
-    runCommand(cmd, timeout, redirectErr, Collections.singletonList(0), args);
+  private void runQemu(final File cmd, final String... args) {
+    runCommand(cmd, RiscVTest.QEMU_TIMEOUT_MILLIS, true, Collections.singletonList(0), args);
   }
 
-  private void runCommand(
-      final File cmd,
-      final boolean redirectErr,
-      final Collection<Integer> returnValues,
-      final String ... args) {
+  private void runShell(final Collection<Integer> returnValues, final String... args) {
 
-    runCommand(cmd, 0, redirectErr, returnValues, args);
+    runCommand(RiscVTest.SHELL, 0, false, returnValues, args);
   }
 
   private void runCommand(
@@ -650,23 +640,21 @@ public class RiscVTest extends TemplateTest {
     commands.add(command.getAbsolutePath());
     Collections.addAll(commands, args);
 
-    return commands.toArray(new String[commands.size()]);
+    return commands.toArray(new String[0]);
   }
 
-  private String getOutOption(
-      final String fileNamePrefix,
-      final String ext) {
+  private String getOutElf(final String fileNamePrefix) {
 
-    return String.format("%s/%s.%s", getTestDirPath(), fileNamePrefix, ext);
+    return String.format("%s/%s.elf", getTestDirPath(), fileNamePrefix);
   }
 
   private static String getNameNoExt(final File file) {
     return FileUtils.getShortFileNameNoExt(file.getName());
   }
 
-  private static File getToolchainBinary(final String suffix) {
+  private static File getToolchainBinary() {
 
-    final String fullPath = String.format("%s/bin/%s-%s", TCHAIN_PATH, TCHAIN_PREFIX, suffix);
+    final String fullPath = String.format("%s/bin/%s-gcc", TCHAIN_PATH, TCHAIN_PREFIX);
     final File binary = new File(fullPath);
 
     checkExecutable(binary);

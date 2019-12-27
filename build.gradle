@@ -312,7 +312,7 @@ task copyDistribution(type: Copy) {
   eachFile {FileCopyDetails details ->
     details.path = (details.path - details.getPath().split('/')[0])
   }
-  rename("ChangeLog", "ChangeLog.core")
+  rename("ChangeLog.md", "ChangeLog.core.md")
   exclude "LICENSE"
   exclude "models.jar"
 }
@@ -338,9 +338,9 @@ task copySettings(type: Copy) {
 copySettings.dependsOn copyDistribution
 
 task copyChangeLog(type: Copy) {
-  from "${project.projectDir}/ChangeLog"
+  from "${project.projectDir}/ChangeLog.md"
   into "${project.projectDir}/build/target"
-  rename "ChangeLog", "ChangeLog.RISCV"
+  rename "ChangeLog.md", "ChangeLog.riscv.md"
 }
 
 copyChangeLog.dependsOn copyDistribution

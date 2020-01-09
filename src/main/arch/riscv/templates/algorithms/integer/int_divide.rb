@@ -1,5 +1,5 @@
 #
-# Copyright 2017-2019 ISP RAS (http://www.ispras.ru)
+# Copyright 2017-2020 ISP RAS (http://www.ispras.ru)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,14 +35,14 @@ class IntDivideTemplate < RiscVBaseTemplate
     addi s1, zero, divisor
 
     trace "\nInput parameter values: dividend x8(s0) = %d, divisor x9(s1) = %d\n",
-      XREG(8), XREG(9)
+          XREG(8), XREG(9)
 
     add t0, zero, zero
     add t1, zero, s0
 
     label :cycle
     trace "\nCurrent register values: x5(t0) = %d, x6(t1) = %d, x7(t2) = %d\n",
-      XREG(5), XREG(6), XREG(7)
+          XREG(5), XREG(6), XREG(7)
 
     sub t2, t1, s1
     slt t3, t2, zero
@@ -56,7 +56,7 @@ class IntDivideTemplate < RiscVBaseTemplate
 
     label :done
     trace "\nResult: quotient x5(t0) = %d, remainder x6(t1) = %d\n",
-      XREG(5), XREG(6)
+          XREG(5), XREG(6)
   end
 
 end

@@ -1,5 +1,5 @@
 #
-# Copyright 2017-2019 ISP RAS (http://www.ispras.ru)
+# Copyright 2017-2020 ISP RAS (http://www.ispras.ru)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class IntSqrtTemplate < RiscVBaseTemplate
 
     label :cycle
     trace "\nCurrent register values: x5(t0) = %d, x6(t1) = %d, x7(t2) = %d\n",
-      XREG(5), XREG(6), XREG(7)
+          XREG(5), XREG(6), XREG(7)
 
     slt t4, zero, t0
     beq t4, zero, :done

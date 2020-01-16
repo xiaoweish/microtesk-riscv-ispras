@@ -2,6 +2,10 @@
 
 ## MicroTESK for RISC-V 0.1
 
+### 2020/XX/XX - MicroTESK for RISC-V 0.1.1
+
+* **Test and Debug:** Used QEMU4V 0.3.5 for running tests
+
 ### 2019/12/27 - MicroTESK for RISC-V 0.1.0
 
 * **Tool Functions:** Updated the MicroTESK core to 2.5.0

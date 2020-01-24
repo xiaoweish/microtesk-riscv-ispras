@@ -254,6 +254,14 @@ compileJava {
   options.encoding = "UTF-8"
   sourceCompatibility = JavaVersion.VERSION_11
   targetCompatibility = JavaVersion.VERSION_11
+  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+compileTestJava {
+  options.encoding = "UTF-8"
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 checkstyle {
@@ -377,6 +385,7 @@ task compileModels(type: JavaCompile) {
   destinationDir = file('build/classes/models')
   classpath = files("${project.projectDir}/build/target/lib/jars/microtesk.jar")
   classpath += sourceSets.main.runtimeClasspath
+  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 compileModels.dependsOn translateRISCV

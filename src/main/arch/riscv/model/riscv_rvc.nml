@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 ISP RAS (http://www.ispras.ru)
+ * Copyright 2018-2020 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -165,7 +165,7 @@ op c_addi4spn(rd: CX, nzuimm: card(10))
   action = {
     addi(
       X(zero_extend(card(5), rd.i) + 8),
-      X(2), zero_extend(card(12), nzuimm<9..2>) << 2).action;
+      X(2), zero_extend(int(12), nzuimm<9..2>) << 2).action;
   }
 
 /*
@@ -195,7 +195,7 @@ op c_flw(rd: CF, rs1: CX, offset: card(5))
     flw(
       F(zero_extend(card(5), rd.i) + 8),
       X(zero_extend(card(5), rs1.i) + 8),
-      zero_extend(card(12), offset) << 2).action;
+      zero_extend(int(12), offset) << 2).action;
   }
 
 /*
@@ -212,7 +212,7 @@ op c_fld(rd: CF, rs1: CX, offset: card(8))
     fld(
       F(zero_extend(card(5), rd.i) + 8),
       X(zero_extend(card(5), rs1.i) + 8),
-      zero_extend(card(12), offset<7..3>) << 3).action;
+      zero_extend(int(12), offset<7..3>) << 3).action;
   }
 
 /*
@@ -230,7 +230,7 @@ op c_sw(rs2: CX, rs1: CX, offset: card(7))
     sw(
       X(zero_extend(card(5), rs2.i) + 8),
       X(zero_extend(card(5), rs1.i) + 8),
-      zero_extend(card(12), offset<6..2>) << 2).action;
+      zero_extend(int(12), offset<6..2>) << 2).action;
   }
 
 /*
@@ -249,7 +249,7 @@ op c_sd(rs2: CX, rs1: CX, offset: card(8))
     sd(
       X(zero_extend(card(5), rs2.i) + 8),
       X(zero_extend(card(5), rs1.i) + 8),
-      zero_extend(card(12), offset<7..3>) << 3).action;
+      zero_extend(int(12), offset<7..3>) << 3).action;
   }
 
 /*
@@ -279,7 +279,7 @@ op c_fsw(rs2: CF, rs1: CX, offset: card(5))
     fsw(
       F(zero_extend(card(5), rs2.i) + 8),
       X(zero_extend(card(5), rs1.i) + 8),
-      zero_extend(card(12), offset) << 2).action;
+      zero_extend(int(12), offset) << 2).action;
   }
 
 /*
@@ -299,7 +299,7 @@ op c_fsd(rs2: CF, rs1: CX, offset: card(8))
     fsd(
       F(zero_extend(card(5), rs2.i) + 8),
       X(zero_extend(card(5), rs1.i) + 8),
-      zero_extend(card(12), offset<7..3>) << 3).action;
+      zero_extend(int(12), offset<7..3>) << 3).action;
   }
 
 /*
@@ -310,7 +310,7 @@ op c_nop()
   syntax = format("c.nop")
   image  = format("0000%5s0000000", X(0).image)
   action = {
-    addi(X(0), X(0), 0).action;
+    addi(X(0), X(0), zero_extend(int(12), 0)).action;
   }
 
 /*
@@ -324,7 +324,7 @@ op c_addi(rd: X /* not CX */, imm: int(6))
   syntax = format("c.addi %s, %d", rd.syntax, imm)
   image  = format("000%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
   action = {
-    addi(rd, rd, sign_extend(card(12), imm)).action;
+    addi(rd, rd, sign_extend(int(12), imm)).action;
   }
 
 /*
@@ -340,7 +340,7 @@ op c_addiw(rd: X /* not CX */, imm: int(6))
   syntax = format("c.addiw %s, %d", rd.syntax, imm)
   image  = format("001%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
   action = {
-    addiw(rd, rd, sign_extend(card(12), imm)).action;
+    addiw(rd, rd, sign_extend(int(12), imm)).action;
   }
 
 /*
@@ -359,7 +359,7 @@ op c_addi16sp(nzimm: int(10))
   syntax = format("c.addi16sp %s, %d", X(2).syntax, nzimm)
   image  = format("011%1s%5s%1s%1s%2s%1s01", nzimm<9>, X(2).image, nzimm<4>, nzimm<6>, nzimm<8..7>, nzimm<5>)
   action = {
-    addiw(X(2), X(2), sign_extend(card(12), nzimm<9..4>) << 4).action;
+    addiw(X(2), X(2), sign_extend(int(12), nzimm<9..4>) << 4).action;
   }
 
 /*
@@ -373,7 +373,7 @@ op c_li(rd: X /* not CX */, imm: int(6))
   syntax = format("c.li %s, %d", rd.syntax, imm)
   image  = format("010%1s%5s%5s01", imm<5>, rd.image, imm<4..0>)
   action = {
-    addi(rd, X(0), sign_extend(card(12), imm)).action;
+    addi(rd, X(0), sign_extend(int(12), imm)).action;
   }
 
 /*
@@ -518,7 +518,7 @@ op c_lwsp(rd: X /* not CX */, offset: card(8))
   syntax = format("c.lwsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("010%1s%5s%3s%2s10", offset<5>, rd.image, offset<4..2>, offset<7..6>)
   action = {
-    lw(rd, X(2), zero_extend(card(12), offset<7..2>) << 2).action;
+    lw(rd, X(2), zero_extend(int(12), offset<7..2>) << 2).action;
   }
 
 /*
@@ -539,7 +539,7 @@ op c_ldsp(rd: X /* not CX */, offset: card(9))
   syntax = format("c.ldsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("011%1s%5s%2s%3s10", offset<5>, rd.image, offset<4..3>, offset<8..6>)
   action = {
-    ld(rd, X(2), zero_extend(card(12), offset<8..3>) << 3).action;
+    ld(rd, X(2), zero_extend(int(12), offset<8..3>) << 3).action;
   }
 
 /*
@@ -557,7 +557,7 @@ op c_swsp(rs2: X /* not CX */, offset: card(8))
   syntax = format("c.swsp %s, %d(%s)", rs2.syntax, offset, X(2).syntax)
   image  = format("110%4s%2s%5s10", offset<5..2>, offset<7..6>, rs2.image)
   action = {
-    sw(rs2, X(2), zero_extend(card(12), offset<7..2>) << 2).action;
+    sw(rs2, X(2), zero_extend(int(12), offset<7..2>) << 2).action;
   }
 
 /*
@@ -576,7 +576,7 @@ op c_sdsp(rs2: X, offset: card(9))
   syntax = format("c.sdsp %s, %d(%s)", rs2.syntax, offset, X(2).syntax)
   image  = format("111%3s%3s%5s10", offset<5..3>, offset<8..6>, rs2.image)
   action = {
-    sw(rs2, X(2), zero_extend(card(12), offset<8..3>) << 3).action;
+    sw(rs2, X(2), zero_extend(int(12), offset<8..3>) << 3).action;
   }
 
 /*
@@ -597,7 +597,7 @@ op c_lw(rd: CX, rs1: CX, offset: card(7))
     lw(
       X(zero_extend(card(5), rd.i) + 8),
       X(zero_extend(card(5), rs1.i) + 8),
-      zero_extend(card(12), offset<6..2>) << 2).action;
+      zero_extend(int(12), offset<6..2>) << 2).action;
   }
 
 /*
@@ -620,7 +620,7 @@ op c_ld(rd: CX, rs1: CX, offset: card(8))
     ld(
       X(zero_extend(card(5), rd.i) + 8),
       X(zero_extend(card(5), rs1.i) + 8),
-      zero_extend(card(12), offset<7..3>) << 3).action;
+      zero_extend(int(12), offset<7..3>) << 3).action;
   }
 
 /*
@@ -635,7 +635,7 @@ op c_andi(rd: CX, imm: int(6))
     andi(
       X(zero_extend(card(5), rd.i) + 8),
       X(zero_extend(card(5), rd.i) + 8),
-      sign_extend(card(12), imm)).action;
+      sign_extend(int(12), imm)).action;
   }
 
 /*
@@ -965,7 +965,7 @@ op c_flwsp(rd: F /* not CF */, offset: card(6))
   syntax = format("c.flwsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("011%1s%5s%3s%2s10", offset<3>, rd.image, offset<2..0>, offset<5..4>)
   action = {
-    flw(rd, X(2), zero_extend(card(12), offset) << 2).action;
+    flw(rd, X(2), zero_extend(int(12), offset) << 2).action;
   }
 
 /*
@@ -982,7 +982,7 @@ op c_fldsp(rd: F /* not CF */, offset: card(9))
   syntax = format("c.fldsp %s, %d(%s)", rd.syntax, offset, X(2).syntax)
   image  = format("001%1s%5s%2s%3s10", offset<5>, rd.image, offset<4..3>, offset<8..6>)
   action = {
-    fld(rd, X(2), zero_extend(card(12), offset<8..3>) << 3).action;
+    fld(rd, X(2), zero_extend(int(12), offset<8..3>) << 3).action;
   }
 
 /*
@@ -1036,7 +1036,7 @@ op c_fswsp(rs2: F /* not CF */, offset: card(6))
   syntax = format("c.fswsp %s, %d", rs2.syntax, offset)
   image  = format("111%4s%2s%5s10", offset<3..0>, offset<5..4>, rs2.image)
   action = {
-    fsw(rs2, X(2), zero_extend(card(12), offset) << 2).action;
+    fsw(rs2, X(2), zero_extend(int(12), offset) << 2).action;
   }
 
 /*
@@ -1052,7 +1052,7 @@ op c_fsdsp(rs2: F /* not CF */, offset: card(9))
   syntax = format("c.fsdsp %s, %d(%s)", rs2.syntax, offset, X(2).syntax)
   image  = format("101%3s%3s%5s10", offset<5..3>, offset<8..6>, rs2.image)
   action = {
-    fsd(rs2, X(2), zero_extend(card(12), offset<8..3>) << 3).action;
+    fsd(rs2, X(2), zero_extend(int(12), offset<8..3>) << 3).action;
   }
 
 //==================================================================================================

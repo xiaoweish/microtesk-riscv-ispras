@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 ISP RAS (http://www.ispras.ru)
+ * Copyright 2017-2020 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -181,8 +181,8 @@ op jal(rd: X, imm: JUMP_ADDR_JAL)
   The JALR instructions can generate a misaligned instruction fetch exception if the target
   address is not aligned to a four-byte boundary.
 */
-op jalr(rd: X, rs1: X, imm: card(12))
-  syntax = format("jalr %s, %s, %s", rd.syntax, rs1.syntax, print_imm12(imm).syntax)
+op jalr(rd: X, rs1: X, imm: int(12))
+  syntax = format("jalr %s, %s, %d", rd.syntax, rs1.syntax, imm)
   image  = format("%s%s000%s1100111", imm, rs1.image, rd.image)
   action = {
     rd = PC + 4;
@@ -341,8 +341,8 @@ op bgeu(rs1: X, rs2: X, imm: BRANCH_OFFSET)
   naturally aligned loads and stores are guaranteed to execute atomically, whereas misaligned
   loads and stores might not, and hence require additional synchronization to ensure atomicity.
 */
-op lw(rd: X, rs1: X, imm: card(12))
-  syntax = format("lw %s, %s(%s)", rd.syntax, print_imm12(imm).syntax, rs1.syntax)
+op lw(rd: X, rs1: X, imm: int(12))
+  syntax = format("lw %s, %d(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s010%s0000011", imm, rs1.image, rd.image)
   action = {
     trace("op lw");
@@ -350,32 +350,32 @@ op lw(rd: X, rs1: X, imm: card(12))
     load_rvi(tmp_address, rd, MEM_WORD, SIGN_EXTEND_VALUE).action;
   }
 
-op lh(rd: X, rs1: X, imm: card(12))
-  syntax = format("lh %s, %s(%s)", rd.syntax, print_imm12(imm).syntax, rs1.syntax)
+op lh(rd: X, rs1: X, imm: int(12))
+  syntax = format("lh %s, %d(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%5s001%5s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
     load_rvi(tmp_address, rd, MEM_HWORD, SIGN_EXTEND_VALUE).action;
   }
 
-op lhu(rd: X, rs1: X, imm: card(12))
-  syntax = format("lhu %s, %s(%s)", rd.syntax, print_imm12(imm).syntax, rs1.syntax)
+op lhu(rd: X, rs1: X, imm: int(12))
+  syntax = format("lhu %s, %d(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s101%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
     load_rvi(tmp_address, rd, MEM_HWORD, ZERO_EXTEND_VALUE).action;
   }
 
-op lb(rd: X, rs1: X, imm: card(12))
-  syntax = format("lb %s, %s(%s)", rd.syntax, print_imm12(imm).syntax, rs1.syntax)
+op lb(rd: X, rs1: X, imm: int(12))
+  syntax = format("lb %s, %d(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s000%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
     load_rvi(tmp_address, rd, MEM_BYTE, SIGN_EXTEND_VALUE).action;
   }
 
-op lbu(rd: X, rs1: X, imm: card(12))
-  syntax = format("lbu %s, %s(%s)", rd.syntax, print_imm12(imm).syntax, rs1.syntax)
+op lbu(rd: X, rs1: X, imm: int(12))
+  syntax = format("lbu %s, %d(%s)", rd.syntax, imm, rs1.syntax)
   image  = format("%12s%s100%s0000011", imm, rs1.image, rd.image)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
@@ -395,24 +395,24 @@ op lbu(rd: X, rs1: X, imm: card(12))
   the low bits of register rs2 to memory.
 */
 
-op sw(rs2: X, rs1: X, imm: card(12))
-  syntax = format("sw %s, %s(%s)", rs2.syntax, print_imm12(imm).syntax, rs1.syntax)
+op sw(rs2: X, rs1: X, imm: int(12))
+  syntax = format("sw %s, %d(%s)", rs2.syntax, imm, rs1.syntax)
   image  = format("%7s%s%s010%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
     store_rvi(tmp_address, rs2, MEM_WORD).action;
   }
 
-op sh(rs2: X, rs1: X, imm: card(12))
-  syntax = format("sh %s, %s(%s)", rs2.syntax, print_imm12(imm).syntax, rs1.syntax)
+op sh(rs2: X, rs1: X, imm: int(12))
+  syntax = format("sh %s, %d(%s)", rs2.syntax, imm, rs1.syntax)
   image  = format("%7s%s%s001%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
     store_rvi(tmp_address, rs2, MEM_HWORD).action;
   }
 
-op sb(rs2: X, rs1: X, imm: card(12))
-  syntax = format("sb %s, %s(%s)", rs2.syntax, print_imm12(imm).syntax, rs1.syntax)
+op sb(rs2: X, rs1: X, imm: int(12))
+  syntax = format("sb %s, %d(%s)", rs2.syntax, imm, rs1.syntax)
   image  = format("%7s%5s%5s000%5s0100011", imm<11..5>, rs2.image, rs1.image, imm<4..0>)
   action = {
     tmp_address = rs1 + sign_extend(XWORD, imm);
@@ -437,8 +437,8 @@ op rv32i_mmu = lb
   ignored and the result is simply the low XLEN bits of the result. ADDI rd, rs1, 0
   is used to implement the MV rd, rs1 assembler pseudo-instruction.
 */
-op addi(rd: X, rs1: X, imm: card(12))
-  syntax = format("addi %s, %s, %s", rd.syntax, rs1.syntax, print_imm12(imm).syntax)
+op addi(rd: X, rs1: X, imm: int(12))
+  syntax = format("addi %s, %s, %d", rd.syntax, rs1.syntax, imm)
   image  = format("%12s%5s000%5s0010011", imm, rs1.image, rd.image)
   action = {
     rd = rs1 + sign_extend(XWORD, imm);
@@ -453,8 +453,8 @@ op addi(rd: X, rs1: X, imm: card(12))
   less than the sign-extended immediate when both are treated as signed numbers,
   else 0 is written to rd.
 */
-op slti(rd: X, rs1: X, imm: card(12))
-  syntax = format("slti %s, %s, %s", rd.syntax, rs1.syntax, print_imm12(imm).syntax)
+op slti(rd: X, rs1: X, imm: int(12))
+  syntax = format("slti %s, %s, %d", rd.syntax, rs1.syntax, imm)
   image  = format("%12s%s010%s0010011", imm, rs1.image, rd.image)
   action = {
     if cast(XINT, rs1) < sign_extend(XINT, imm) then
@@ -474,8 +474,8 @@ op slti(rd: X, rs1: X, imm: card(12))
   Note, SLTIU rd, rs1, 1 sets rd to 1 if rs1 equals zero, otherwise sets rd to 0
   (assembler pseudo-op SEQZ rd, rs).
 */
-op sltiu(rd: X, rs1: X, imm: card(12))
-  syntax = format("sltiu %s, %s, %s", rd.syntax, rs1.syntax, print_imm12(imm).syntax)
+op sltiu(rd: X, rs1: X, imm: int(12))
+  syntax = format("sltiu %s, %s, %d", rd.syntax, rs1.syntax, imm)
   image  = format("%12s%s011%s0010011", imm, rs1.image, rd.image)
   action = {
     if rs1 < sign_extend(XWORD, imm) then
@@ -495,8 +495,8 @@ op sltiu(rd: X, rs1: X, imm: card(12))
   Note, XORI rd, rs1, -1 performs a bitwise logical inversion of register rs1
   (assembler pseudo-instruction NOT rd, rs).
 */
-op xori(rd: X, rs1: X, imm: card(12))
-  syntax = format("xori %s, %s, %s", rd.syntax, rs1.syntax, print_imm12(imm).syntax)
+op xori(rd: X, rs1: X, imm: int(12))
+  syntax = format("xori %s, %s, %d", rd.syntax, rs1.syntax, imm)
   image  = format("%12s%s100%s0010011", imm, rs1.image, rd.image)
   action = {
     rd = rs1 ^ sign_extend(XWORD, imm);
@@ -510,8 +510,8 @@ op xori(rd: X, rs1: X, imm: card(12))
   ORI is a logical operation that performs bitwise OR on register rs1
   and the sign-extended 12-bit immediate and place the result in rd.
 */
-op ori(rd: X, rs1: X, imm: card(12))
-  syntax = format("ori %s, %s, %s", rd.syntax, rs1.syntax, print_imm12(imm).syntax) // TODO 0x%x
+op ori(rd: X, rs1: X, imm: int(12))
+  syntax = format("ori %s, %s, %d", rd.syntax, rs1.syntax, imm) // TODO 0x%x
   image  = format("%12s%s110%s0010011", imm, rs1.image, rd.image)
   action = {
     rd = rs1 | sign_extend(XWORD, imm);
@@ -525,8 +525,8 @@ op ori(rd: X, rs1: X, imm: card(12))
   ANDI is a logical operation that performs bitwise AND on register rs1
   and the sign-extended 12-bit immediate and place the result in rd.
 */
-op andi(rd: X, rs1: X, imm: card(12))
-  syntax = format("andi %s, %s, %s", rd.syntax, rs1.syntax, print_imm12(imm).syntax)
+op andi(rd: X, rs1: X, imm: int(12))
+  syntax = format("andi %s, %s, %d", rd.syntax, rs1.syntax, imm)
   image  = format("%12s%s111%s0010011", imm, rs1.image, rd.image)
   action = {
     rd = rs1 & sign_extend(XWORD, imm);

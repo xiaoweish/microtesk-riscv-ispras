@@ -30,7 +30,7 @@ class IntEuclidTemplate < RiscVBaseTemplate
   def run
     trace "Euclidean algorithm: debug output"
 
-    # Values from [1..63], zero is excluded because there is no solution
+    # Values from [1..63] (zero is excluded)
     val1 = rand(1, 63)
     val2 = rand(1, 63)
 

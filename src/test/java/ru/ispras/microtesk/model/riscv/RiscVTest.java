@@ -458,12 +458,11 @@ public class RiscVTest extends TemplateTest {
     args.add("-nostartfiles");
     final String linkerScriptPath = getLinkerScript(new File(getTestDirPath()));
 
-    if (linkerScriptPath.length() > 0) {
-      args.add(String.format("-T%s", linkerScriptPath));
-    } else {
-
+    if (linkerScriptPath.isEmpty()) {
       args.add("-Ttext");
       args.add("0x1000");
+    } else {
+      args.add(String.format("-T%s", linkerScriptPath));
     }
     args.add("-o");
     args.add(getOutElf(getNameNoExt(program)));

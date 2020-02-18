@@ -72,6 +72,7 @@ class RiscVBaseTemplate < Template
     #
     data_config(:target => 'MEM') {
       define_type   :id => :byte,    :text => '.byte',   :type => type('card', 8)
+      define_type   :id => :half,    :text => '.half',   :type => type('card', 16)
       define_type   :id => :hword,   :text => '.hword',  :type => type('card', 16)
       define_type   :id => :word,    :text => '.word',   :type => type('card', 32)
       define_type   :id => :dword,   :text => '.dword',  :type => type('card', 64)

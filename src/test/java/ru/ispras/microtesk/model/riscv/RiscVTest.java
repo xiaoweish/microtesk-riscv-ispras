@@ -301,7 +301,7 @@ public class RiscVTest extends TemplateTest {
     final File qemu = new File(String.format("%s/%s", QEMU_PATH, QEMU_BIN));
     checkExecutable(qemu);
 
-    Logger.message("Start simulation on QEMU ...");
+    Logger.message("Start emulation ...");
     final String qemuLog = insertExt(image.getAbsolutePath(), "-qemu.log");
 
     final String[] qemuArgs = new String[] {
@@ -322,7 +322,7 @@ public class RiscVTest extends TemplateTest {
 
     final File qemuLogFile = new File(qemuLog);
     Assert.assertTrue(
-        String.format("Can't find QEMU trace file: %s", qemuLogFile.getAbsolutePath()),
+        String.format("Can't find QEMU4V trace file: %s", qemuLogFile.getAbsolutePath()),
         qemuLogFile.exists());
 
     Logger.message("done.");

@@ -100,7 +100,7 @@ public class RiscVTest extends TemplateTest {
   /**
    * Timeout for QEMU execution (in milliseconds).
    */
-  private static final int QEMU_TIMEOUT_MILLIS = 1000;
+  private static final int QEMU_TIMEOUT_MILLIS = 5000;
 
   /* Spike parameters. */
 

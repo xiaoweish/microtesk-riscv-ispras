@@ -4,7 +4,7 @@
 
 ### 2020/XX/XX - MicroTESK for RISC-V 0.1.1
 
-* **Test and Debug:** Used QEMU4V 0.3.5 for running tests
+* **Test and Debug:** Used QEMU4V 0.3.6 for running tests
 * **Test and Debug:** Used Trace Matcher 0.1.9 for traces comparison
 
 ### 2019/12/27 - MicroTESK for RISC-V 0.1.0

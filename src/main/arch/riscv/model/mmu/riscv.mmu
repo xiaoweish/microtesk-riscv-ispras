@@ -102,22 +102,22 @@ struct VASv32 (
 )
 
 address VA(
-#ifdef MEM_SV32
-  value  : 32,
-#else
+#ifdef MEM_V64
   value  : 53,
+#else // MEM_SV32
+  value  : 32,
 #endif
   type   : 1,
   is_pa  : 1,
   i_flag : 1,
-#ifdef MEM_SV32
-  i      : 1,
-  ppn    : 22,
-  pa     : 34
-#else
+#ifdef MEM_V64
   i      : 2,
   ppn    : 44,
   pa     : 56
+#else // MEM_SV32
+  i      : 1,
+  ppn    : 22,
+  pa     : 34
 #endif
 )
 
@@ -130,18 +130,18 @@ struct PASv32 (
 )
 
 address PA(
-#ifdef MEM_SV32
-  value: 34
-#else
+#ifdef MEM_V64
   value: 56
+#else // MEM_SV32
+  value: 34
 #endif
 )
 
 address PTAddress(
-#ifdef MEM_SV32
-  value: 34
-#else
+#ifdef MEM_V64
   value: 56
+#else // MEM_SV32
+  value: 34
 #endif
 )
 
@@ -155,9 +155,9 @@ init = {
   va.is_pa = 0;
   va.pa = 0;
   va.ppn = 0;
-#ifdef MEM_SV32
-  va.i = 1; // Sv32
+#ifdef MEM_V64
 #else
+  va.i = 1; // Sv32
 #endif
 } */
 
@@ -191,17 +191,6 @@ struct PTEntry (
   d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1
 )
 
-#ifdef MEM_SV32
-// Sv32 Page Table Entry
-memory buffer PT (va: VA)
-  ways = 1
-  sets = PTE_SIZE
-  entry  = (ppn1: 12, ppn0: 10, rsw: 2, d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1)
-  index  = 0
-  match  = 0
-  policy = NONE
-#endif
-
 #ifdef MEM_V64
 // Sv39 Page Table Entry
 memory buffer PT39 (va: VA)
@@ -217,6 +206,16 @@ memory buffer PT48 (va: VA)
   ways = 1
   sets = PTE_SIZE
   entry  = (reserved: 10, ppn3: 17, ppn2: 9, ppn1: 9, ppn0: 9, rsw: 2, d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1)
+  index  = 0
+  match  = 0
+  policy = NONE
+
+#else // MEM_SV32
+// Sv32 Page Table Entry
+memory buffer PT (va: VA)
+  ways = 1
+  sets = PTE_SIZE
+  entry  = (ppn1: 12, ppn0: 10, rsw: 2, d: 1, a: 1, g: 1, u: 1, x: 1, w: 1, r: 1, v: 1)
   index  = 0
   match  = 0
   policy = NONE
@@ -237,7 +236,7 @@ field.
 // Sv32
 //==================================================================================================
 
-#ifdef MEM_SV32
+#ifndef MEM_V64
 // Sv32: step 2-4
 function SV32TranslateCycle (va: VA): PT.entry
   var pte: PT.entry;
@@ -657,9 +656,7 @@ function TranslateAddress(va: VA): PA
     if va.is_pa == 1 then
       pa.value = va.pa;
     else
-#ifdef MEM_SV32
-      pa = SV32Translate(va);
-#else // MEM_V64
+#ifdef MEM_V64
       if SATP_MODE == 8 then
         // Page-based 39-bit virtual addressing
         pa = SV39Translate(va);
@@ -672,6 +669,8 @@ function TranslateAddress(va: VA): PA
         // 11 Sv64    Reserved for page-based 64-bit virtual addressing.
         trace("Mmu.TranslateAddress: Error. satp.mode=%x.", SATP_MODE);
       endif;
+#else // MEM_SV32
+      pa = SV32Translate(va);
 #endif
     endif;
     //trace("TranslateAddress: va=%x, pa=%x", va.value, pa.value);
@@ -684,10 +683,11 @@ function TranslateAddress(va: VA): PA
 //==================================================================================================
 
 // A word of memory is defined as 32 bits (4 bytes).
-#ifdef MEM_SV32
-  let DATA_SIZE = 32
-#else // Sv39 & Sv48
+#ifdef MEM_V64
+  // Sv39 & Sv48
   let DATA_SIZE = 64
+#else // MEM_SV32
+  let DATA_SIZE = 32
 #endif
 
 // A RISC-V hart has a single byte-addressable address space of 2XLEN bytes for all memory accesses.
@@ -702,10 +702,11 @@ buffer MEM (pa: PA)
   ways  = 1
   sets  = MEM_SIZE_IN_WORDS
   entry = (DATA: DATA_SIZE)
-#ifdef MEM_SV32
-  index = pa.value<33..2>
-#else // Sv39 & Sv48
+#ifdef MEM_V64
+  // Sv39 & Sv48
   index = pa.value<56..3>
+#else // MEM_SV32
+  index = pa.value<33..2>
 #endif
 //  index = pa.value >> 2
   match = 0
@@ -721,14 +722,14 @@ function PreTranslateAddress(va: VA): PA
     // Index Initialization
     if va.i_flag == 0 then
       va.i_flag = 1; // Sv32
-#ifdef MEM_SV32
-      va.i = 1; // Sv32
-#else // V64
+#ifdef MEM_V64
       if SATP_MODE == 8 then
         va.i = 2; // Sv39
       else
         va.i = 3; // Sv48
       endif;
+#else // MEM_SV32
+      va.i = 1; // Sv32
 #endif
     endif;
 
@@ -737,10 +738,11 @@ function PreTranslateAddress(va: VA): PA
     if SATP_MODE != 0 then
       pa = TranslateAddress(va);
     else
-#ifdef MEM_SV32
-      pa.value<31..0> = va.value;
-#else // Sv39 & Sv48
+#ifdef MEM_V64
+      // Sv39 & Sv48
       pa.value<52..0> = va.value;
+#else // MEM_SV32
+      pa.value<31..0> = va.value;
 #endif
       trace("Mmu.PreTranslateAddress: satp.mode=%x. No translation or protection.", SATP_MODE);
     endif;

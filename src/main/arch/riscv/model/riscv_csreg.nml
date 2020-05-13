@@ -669,13 +669,15 @@ mode SATP() = CSR[0x180]
 
 reg SATP_CSR[CSR_TYPE] alias = CSR[0x180]
 
-@rev(RV32) reg SATP_MODE [BIT]      alias = SATP_CSR<31>
-@rev(RV32) reg SATP_ASID [card(9)]  alias = SATP_CSR<30..22>
-@rev(RV32) reg SATP_PPN  [card(22)] alias = SATP_CSR<21..0>
-
-@rev(RV64) reg SATP_MODE [card(4)]  alias = SATP_CSR<63..60>
-@rev(RV64) reg SATP_ASID [card(16)] alias = SATP_CSR<59..44>
-@rev(RV64) reg SATP_PPN  [card(44)] alias = SATP_CSR<43..0>
+#ifdef RV64I
+reg SATP_MODE [card(4)]  alias = SATP_CSR<63..60>
+reg SATP_ASID [card(16)] alias = SATP_CSR<59..44>
+reg SATP_PPN  [card(44)] alias = SATP_CSR<43..0>
+#else // RV32I
+reg SATP_MODE [BIT]      alias = SATP_CSR<31>
+reg SATP_ASID [card(9)]  alias = SATP_CSR<30..22>
+reg SATP_PPN  [card(22)] alias = SATP_CSR<21..0>
+#endif
 
 //==================================================================================================
 // Machine Information Registers
@@ -715,14 +717,16 @@ mode MSTATUS() = CSR[0x300]
 
 reg MSTATUS_CSR[CSR_TYPE] alias = CSR[0x300]
 
-@rev(RV32) reg MSTATUS_SD [BIT] alias = MSTATUS_CSR<31>
-//@rev(RV32) reg MSTATUS_WPRI [card(8)] alias = MSTATUS_CSR<30..23>
-
-@rev(RV64) reg MSTATUS_SD [BIT] alias = MSTATUS_CSR<XLEN-1>
-//@rev(RV64) reg MSTATUS_WPRI [card(XLEN-37)] alias = MSTATUS_CSR<XLEN-2..36>
-@rev(RV64) reg MSTATUS_SXL [card(2)] alias = MSTATUS_CSR<35..34>
-@rev(RV64) reg MSTATUS_UXL [card(2)] alias = MSTATUS_CSR<33..32>
-//@rev(RV64) reg MSTATUS_WPRI [card(9)] alias = MSTATUS_CSR<31..23>
+#ifdef RV64I
+reg MSTATUS_SD [BIT] alias = MSTATUS_CSR<XLEN-1>
+// reg MSTATUS_WPRI [card(XLEN-37)] alias = MSTATUS_CSR<XLEN-2..36>
+reg MSTATUS_SXL [card(2)] alias = MSTATUS_CSR<35..34>
+reg MSTATUS_UXL [card(2)] alias = MSTATUS_CSR<33..32>
+// reg MSTATUS_WPRI [card(9)] alias = MSTATUS_CSR<31..23>
+#else //RV32I
+reg MSTATUS_SD [BIT] alias = MSTATUS_CSR<31>
+// reg MSTATUS_WPRI [card(8)] alias = MSTATUS_CSR<30..23>
+#endif
 
 reg MSTATUS_TSR  [BIT] alias = MSTATUS_CSR<22>
 reg MSTATUS_TW   [BIT] alias = MSTATUS_CSR<21>

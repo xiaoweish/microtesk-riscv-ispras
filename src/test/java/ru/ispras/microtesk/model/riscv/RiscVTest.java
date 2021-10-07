@@ -241,12 +241,13 @@ public abstract class RiscVTest extends TemplateTest {
     for (final File file : files) {
 
       final String fileName = file.getName();
-      if (fileName.endsWith(EXT)) {
-        if (fileName.startsWith(getProgramPrefix())) {
-          tests.add(file);
-        } else {
-          auxFiles.add(file);
-        }
+
+      if (!fileName.endsWith(EXT)) continue;
+
+      if (fileName.startsWith(getProgramPrefix())) {
+        tests.add(file);
+      } else {
+        auxFiles.add(file);
       }
     }
 
@@ -390,8 +391,7 @@ public abstract class RiscVTest extends TemplateTest {
     args.add("-o");
     args.add(getOutElf(getNameNoExt(program)));
 
-    runCommand(
-        compiler, args.toArray(new String[0]));
+    runCommand(compiler, args.toArray(new String[0]));
 
     final File elfImage = new File(getElf(program));
 
@@ -409,13 +409,10 @@ public abstract class RiscVTest extends TemplateTest {
 
     for (final File file : files) {
 
-      final String fileName = file.getName();
+      if (!file.getName().endsWith(LINKER_SCRIPT_EXT)) continue;
 
-      if (fileName.endsWith(LINKER_SCRIPT_EXT)) {
-
-        path = file.getPath();
-        break;
-      }
+      path = file.getPath();
+      break;
     }
 
     return path;

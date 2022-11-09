@@ -172,8 +172,6 @@ dependencies {
   testCompile fileTree(include: ['*.jar'], dir: "${project.projectDir}/build/target/lib/jars")
 
   checkstyle 'com.puppycrawl.tools:checkstyle:6.12.1'
-  pmd 'net.sourceforge.pmd:pmd-core:5.4.0'
-  pmd 'net.sourceforge.pmd:pmd-java:5.4.0'
 }
 
 eclipse {
@@ -272,19 +270,11 @@ checkstyle {
 }
 
 pmd {
+  consoleOutput = true
   ignoreFailures = true
-  ruleSetFiles = files("config/pmd/java/basic.xml", "config/pmd/java/braces.xml",
-                       "config/pmd/java/clone.xml", "config/pmd/java/codesize.xml",
-                       "config/pmd/java/comments.xml", "config/pmd/java/design.xml",
-                       "config/pmd/java/empty.xml", "config/pmd/java/finalizers.xml",
-                       "config/pmd/java/imports.xml", "config/pmd/java/junit.xml",
-                       "config/pmd/java/logging-java.xml", "config/pmd/java/migrating.xml",
-                       "config/pmd/java/migrating_to_13.xml", "config/pmd/java/migrating_to_14.xml",
-                       "config/pmd/java/migrating_to_15.xml", "config/pmd/java/naming.xml",
-                       "config/pmd/java/migrating_to_junit4.xml", "config/pmd/java/strings.xml",
-                       "config/pmd/java/optimizations.xml", "config/pmd/java/strictexception.xml",
-                       "config/pmd/java/sunsecure.xml", "config/pmd/java/typeresolution.xml",
-                       "config/pmd/java/unnecessary.xml", "config/pmd/java/unusedcode.xml")
+  toolVersion = "6.21.0"
+  ruleSets = ["category/java/bestpractices.xml", "category/java/design.xml", "category/java/documentation.xml",
+              "category/java/errorprone.xml", "category/java/performance.xml", "category/java/security.xml"]
 }
 
 jacoco {

@@ -61,6 +61,11 @@ public abstract class RiscVTest extends TemplateTest {
    */
   private static final String EXT = "s";
 
+  /**
+   * Linker script file extension.
+   */
+  private static final String LINKER_SCRIPT_EXT = "ld";
+
   /* Toolchain parameters. */
 
   /**
@@ -77,8 +82,6 @@ public abstract class RiscVTest extends TemplateTest {
    * RISC-V Linux GNU toolchain components common prefix.
    */
   private static final String TCHAIN_PREFIX = "riscv64-unknown-linux-gnu";
-
-  private static final String LINKER_SCRIPT_EXT = "ld";
 
   /* QEMU for RISC-V parameters. */
 
@@ -154,23 +157,6 @@ public abstract class RiscVTest extends TemplateTest {
         "riscv",
         "build/target/arch/riscv/templates"
         );
-  }
-
-  @Override
-  public void onEventLogged(final EventType type, final String message) {
-    if (EventType.ERROR == type || EventType.WARNING == type || message.startsWith("Error")) {
-      if (!isExpectedError(message)) {
-        Assert.fail(message);
-      }
-    }
-  }
-
-  protected boolean isExpectedError(final String message) {
-    return message.contains("Exception handler for TLBMiss is not found")
-           || message.contains("Exception handler for TLBInvalid is not found")
-           || message.contains(
-           "Warning: Failed to load the MMU model. Physical memory will be accessed directly.");
-
   }
 
   @Override
@@ -542,5 +528,22 @@ public abstract class RiscVTest extends TemplateTest {
 
   private static boolean isExecutable(final File file) {
     return file.exists() && !file.isDirectory() && file.canExecute();
+  }
+
+  @Override
+  public void onEventLogged(final EventType type, final String message) {
+    if (EventType.ERROR == type || EventType.WARNING == type || message.startsWith("Error")) {
+      if (!isExpectedError(message)) {
+        Assert.fail(message);
+      }
+    }
+  }
+
+  protected boolean isExpectedError(final String message) {
+    return message.contains("Exception handler for TLBMiss is not found")
+            || message.contains("Exception handler for TLBInvalid is not found")
+            || message.contains(
+            "Warning: Failed to load the MMU model. Physical memory will be accessed directly.");
+
   }
 }

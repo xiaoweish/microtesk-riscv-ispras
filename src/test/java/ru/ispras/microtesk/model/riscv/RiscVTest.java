@@ -164,8 +164,8 @@ public abstract class RiscVTest extends TemplateTest {
     setProgramPrefix(file);
 
     final String fileDir = FileUtils.getFileDir(file);
-    final Path testDirPath = null != fileDir ? Paths.get(TEST_PATH, fileDir, getProgramPrefix())
-                                             : Paths.get(TEST_PATH, getProgramPrefix());
+    final Path testDirPath = null == fileDir ? Paths.get(TEST_PATH, getProgramPrefix())
+                                             : Paths.get(TEST_PATH, fileDir, getProgramPrefix());
     setTestDirPath(testDirPath);
 
     setCommandLineOption(Option.TRACER_LOG);

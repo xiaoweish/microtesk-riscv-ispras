@@ -165,7 +165,7 @@ public abstract class RiscVTest extends TemplateTest {
 
     final String fileDir = FileUtils.getFileDir(file);
     final Path testDirPath = null == fileDir ? Paths.get(TEST_PATH, getProgramPrefix())
-                                             : Paths.get(TEST_PATH, fileDir, getProgramPrefix());
+        : Paths.get(TEST_PATH, fileDir, getProgramPrefix());
     setTestDirPath(testDirPath);
 
     setCommandLineOption(Option.TRACER_LOG);
@@ -476,11 +476,17 @@ public abstract class RiscVTest extends TemplateTest {
           exitCode = 0;
 
         } finally {
-          process.destroyForcibly();
+          process.destroy();
+          if (process.isAlive()) {
+            process.destroyForcibly();
+          }
         }
       } else {
         exitCode = process.waitFor();
-        process.destroyForcibly();
+        process.destroy();
+        if (process.isAlive()) {
+          process.destroyForcibly();
+        }
       }
 
       if (!returnCodes.contains(exitCode)) {

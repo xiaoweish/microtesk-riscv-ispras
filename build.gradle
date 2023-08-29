@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 ISP RAS (http://www.ispras.ru)
+ * Copyright 2017-2023 ISP RAS (http://www.ispras.ru)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -234,7 +234,7 @@ test {
 
   environment 'Z3_PATH', z3path
   environment 'CVC4_PATH', cvc4path
-  environment 'QEMU_RISCV_PATH', "${project.projectDir}/build/tools/qemu/bin"
+  environment 'QEMU_RISCV_PATH', "${project.projectDir}/build/tools/qemu4v-${qemuVersion}/bin"
   environment 'TRACE_PATH', "${project.projectDir}/build/tools/traceutils"
   environment 'MICROTESK_HOME', "${project.projectDir}/build/target"
   environment 'TEST_PATH', "${project.projectDir}/build/test"
@@ -412,13 +412,13 @@ copyModels.dependsOn jar
 
 task copyQemu(type: Copy) {
   from tarTree(configurations.qemu.fileCollection { dep -> dep.name == 'qemu4v' }.singleFile)
-  into "${project.projectDir}/build/tools/qemu"
+  into "${project.projectDir}/build/tools"
 }
 
 task copyTraceUtils(type: Copy) {
   from tarTree(configurations.traceutils.fileCollection { dep -> dep.name == 'traceutils' }
           .singleFile)
-  into "${project.projectDir}/build/tools/"
+  into "${project.projectDir}/build/tools"
 }
 
 task copyBashScripts(type: Copy) {

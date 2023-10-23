@@ -443,7 +443,7 @@ op c_srli(rd: CX, shamt: card(6))
 @rev(RV128C)
 op c_srli64(rd: CX)
   init = {
-    c_srli(rd, 0).init;
+    //c_srli(rd, 0).init;
   }
   syntax = format("c.srli64 %s", rd.syntax)
   image  = format("%s", c_srli(rd, 0).image)
@@ -494,7 +494,7 @@ op c_srai(rd: CX, shamt: card(6))
 @rev(RV128C)
 op c_srai64(rd: CX)
   init = {
-    c_srai(rd, 0).init;
+    //c_srai(rd, 0).init;
   }
   syntax = format("c.srai64 %s", rd.syntax)
   image  = format("%s", c_srai(rd, 0).image)
@@ -930,7 +930,7 @@ op c_slli(rd: X /* not CX */, shamt: card(6))
 @rev(RV128C)
 op c_slli64(rd: X /* not CX */)
   init = {
-    c_slli(rd, 0).init;
+    //c_slli(rd, 0).init;
   }
   syntax = format("c.slli64 %s", rd.syntax)
   image = format("%s", c_slli(rd, 0).image)

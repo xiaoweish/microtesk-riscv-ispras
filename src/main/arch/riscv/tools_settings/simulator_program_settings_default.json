@@ -1,0 +1,10 @@
+{
+  "pc_name": "PC",
+  "memory_name": "MEM",
+  "path_out_dir": "",
+  "instruction_execution_limit": 100,
+  "final_instruction": "return",
+  "tracer_type": "riscv",
+  "frame_index_register":"FC_VAR",
+  "external_program":"exception_description/exception_address.json"
+}

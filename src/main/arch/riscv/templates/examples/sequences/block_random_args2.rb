@@ -22,39 +22,66 @@ require_relative '../../riscv_base'
 # This test template demonstrates how to create randomized instruction
 # sequences using block constructs.
 #
-class BlockRandom2Template < RiscVBaseTemplate
-  def run
+class BlockRandomArgs2Template < RiscVBaseTemplate
 
-    #
-    # Constructs 10 instruction sequences which consist of 20 instructions
-    #
-    block(:combinator => 'random') {
+  def run
+    my_dist = dist(
+      range(:value => lambda do add_sequence end, :bias => 10),
+      range(:value => lambda do sub_sequence end, :bias => 10),
+      range(:value => lambda do neg_sequence end, :bias => 10),
+      range(:value => lambda do xor_sequence end, :bias => 10),
+      range(:value => lambda do and_sequence end, :bias => 10),
+      range(:value => lambda do logic_sequence end,  :bias => 10))
+
+    block(:combinator => 'diagonal',
+          :compositor => 'catenation',
+          :permutator => 'random') {
       20.times {
-        get_instruction(Random.rand(9))
+        my_dist.next_value.call
       }
-    }.run 10
+
+      epilogue {
+        nop
+      }
+    }.run
   end
 
-  def get_instruction(value)
-    case value
-    when 0
-      add  x(_), x(_), x(_)
-    when 1
+  def add_sequence
+    iterate() {
+      add  x(rand(3,7)), x(_ FREE), x(_)
+    }
+  end
+
+  def sub_sequence
+    iterate() {
       sub  x(_), x(_), x(_)
-    when 2
+    }
+  end
+
+  def neg_sequence
+    iterate() {
       neg  x(_), x(_)
-    when 3
+    }
+  end
+
+  def xor_sequence
+    iterate() {
       Xor  x(_), x(_), x(_)
-    when 4
+    }
+  end
+
+  def and_sequence
+    iterate() {
       And  x(_), x(_), x(_)
-    when 5
+    }
+  end
+
+  def logic_sequence
+    sequence(:obfuscator => 'random') {
       ori  x(_), x(_), _
-    when 6
       xori x(_), x(_), _
-    when 7
       andi x(_), x(_), _
-    when 8
       addi x(_), x(_), _
-    end
+    }
   end
 end

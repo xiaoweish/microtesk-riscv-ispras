@@ -1,0 +1,6 @@
+[
+{"EventType":"INSTRUCTION","ThreadIdentifier":"[0-9]+ clk 0 IT \\([0-9]+\\)","PC":"[0-9a-f]{2,}+","Source":"A svc_ns : ","Instruction":"(.)+"},
+{"EventType":"MEMORY","ThreadIdentifier":"[0-9]+ clk R","Register":"[a-zA-Z0-9]{2,}+","RegisterValue":"[a-f0-9]{1,}+$"},
+{"EventType":"INFO","ThreadIdentifier":"\\[TID ([0-9a-f]){6,}+\\]","Source":"([a-zA-Z[//]])+runtime:","Info":"([a-zA-Z0-9 :]){2,}+$"},
+{"EventType":"INFO","ThreadIdentifier":"\\[TID ([0-9a-f]){6,}+\\]","Source":"([a-zA-Z[//]])+interpreter:","Info":"([a-zA-Z0-9_ :]){2,}+$"}
+]

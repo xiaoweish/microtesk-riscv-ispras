@@ -1,0 +1,9 @@
+[
+{"ThreadIdentifier":"([0-9]+ clk)(?: [0-9A-Z]+)? [A-Z]+(?: \\([0-9]+\\))?"},
+{"PC":"[0-9a-f]{2,}+"},
+{"Source": "A svc_ns : "},
+{"Instruction":"(.)+"},
+{"Register":"[a-z0-9]{2,}+"},
+{"RegisterType":"(obj|pri){1}"},
+{"RegisterValue":"[a-f0-9]{1,}+"}
+]

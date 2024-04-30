@@ -1,30 +1,25 @@
-
-
 require_relative '../../riscv_base'
 
-class ErrataMicrochip00 < RiscVBaseTemplate
+class ErrataMicrochipFCartesianProduct < RiscVBaseTemplate
   def run
     
-    # Декартово произведение
+    # Cartesian product
     block(:combinator => 'product', :compositor => 'random') {
       iterate {
-        fadd.s  x(_), x(_), x(_)
-        fsub.s  x(_), x(_), x(_)
-        fmul.s  x(_), x(_), x(_)
-        fdiv.s  x(_), x(_), x(_)
-        fsqrt.s x(_), x(_), x(_)
+        fadd_s  f(_), f(_), f(_)
+        fsub_s  f(_), f(_), f(_)
+        fmul_s  f(_), f(_), f(_)
+        fdiv_s  f(_), f(_), f(_)
+        fsqrt_s f(_), f(_)
       }
 
       iterate {
-        fadd.s  x(_), x(_), x(_)
-        fsub.s  x(_), x(_), x(_)
-        fmul.s  x(_), x(_), x(_)
-        fdiv.s  x(_), x(_), x(_)
-        fsqrt.s x(_), x(_), x(_)
+        fadd_s  f(_), f(_), f(_)
+        fsub_s  f(_), f(_), f(_)
+        fmul_s  f(_), f(_), f(_)
+        fdiv_s  f(_), f(_), f(_)
+        fsqrt_s f(_), f(_)
       }
     }.run
-
   end
-
 end
-

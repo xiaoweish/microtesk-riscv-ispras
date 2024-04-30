@@ -8,22 +8,15 @@
 require_relative '../../riscv_base'
 
 
-class ErrataMicrochip00 < RiscVBaseTemplate
+class ErrataMicrochipFlt < RiscVBaseTemplate
 
   def run
     
-    epilogue { nop }
-
-    
+    epilogue { nop }  
     sequence {
-      fadd_d ft1, 10.5, 1      # Загружаем положительное значение в регистр a1
-      fadd_d ft2, -20.25, 1     # Загружаем отрицательное значение в регистр a0
-      # Выполняем FLIM инструкцию с разными знаками операндов
-      flt_d ft3, ft1, ft2     # FLIM - операнды разных знаков     
-    
-    }.run
-
-    
+      fadd_d ft1, 10.5, 1      
+      fadd_d ft2, -20.25, 1    
+      flt_d a3, ft1, ft2           
+    }.run  
   end
-
 end

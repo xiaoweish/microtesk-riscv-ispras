@@ -18,49 +18,34 @@
 
 require_relative '../../riscv_base'
 
-class ErrataMicrochip00 < RiscVBaseTemplate
+class ErrataMicrochipFInstruction < RiscVBaseTemplate
 
   def run
     epilogue { nop }
-
-     
-    #TODO:
-
     sequence {
       fadd_d ft1, 10.5, 1 
       fadd_d ft2, 20.25, 1
-
       fadd_d ft3, ft2, f1     
-    
     }.run
-
     sequence {
       fadd_d ft1, 10.5, 1 
       fadd_d ft2, 20.25, 1
       fsub_d ft3, ft2, ft1     
-    
     }.run
-
     sequence {
       fadd_d ft1, 10.5, 1 
       fadd_d ft2, 20.25, 1
       fmul_d ft3, ft2, ft1     
-    
     }.run
-
     sequence {
       fadd_d ft1, 10.5, 1 
       fadd_d ft2, 20.25, 1
       fdiv_d ft3, ft2, ft1     
-    
     }.run
-
     sequence {
       fadd_d ft1, 10.5, 1 
       fadd_d ft2, 20.25, 1
       fsqrt_d ft3, ft1    
-    
     }.run
   end
-
 end

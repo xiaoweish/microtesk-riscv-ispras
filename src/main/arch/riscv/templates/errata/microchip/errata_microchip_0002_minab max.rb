@@ -8,26 +8,21 @@
 require_relative '../../riscv_base'
 
 
-class ErrataMicrochip00 < RiscVBaseTemplate
+class ErrataMicrochipMinMax < RiscVBaseTemplate
 
   def run
     
     epilogue { nop }
 
-    
     sequence {
-      fadd_d ft1, 10.5, 1      # Загружаем положительное значение в регистр f1
-      fadd_d ft2, -20.25, 1     # Загружаем отрицательное значение в регистр f0
-      
+      fadd_d ft1, 10.5, 1      
+      fadd_d ft2, -20.25, 1    
       fmax_d ft3, ft1, ft2     
     }.run
     sequence {
-      fadd_d ft1, 10.5, 1      # Загружаем положительное значение в регистр f1
-      fadd_d ft2, -20.25, 1     # Загружаем отрицательное значение в регистр f0
-
+      fadd_d ft1, 10.5, 1      
+      fadd_d ft2, -20.25, 1
       fmin_d ft3, ft1, ft2         
     }.run
-    
   end
-
 end

@@ -90,6 +90,10 @@ op sd(rs2: X, rs1: X, imm: int(12))
     store_rvi(tmp_address, rs2, MEM_DWORD).action;
   }
 
+// Opcode
+let OP_IMM_32 = 0b0011011
+let ADDIW_FUNCT3 = 0b000
+
 /*
   ADDIW (I-type)
 
@@ -101,7 +105,7 @@ op sd(rs2: X, rs1: X, imm: int(12))
 */
 op addiw(rd: X, rs1: X, imm: int(12))
   syntax = format("addiw %s, %s, %d", rd.syntax, rs1.syntax, imm)
-  image  = format("%12s%s000%s0011011", imm, rs1.image, rd.image)
+  image  = format("%12s%5s%3s%5s%7s", imm, rs1.image, coerce(card(3), ADDIW_FUNCT3), rd.image, coerce(card(7), OP_IMM_32))
   action = {
     rd = sign_extend(XWORD, rs1<31..0> + sign_extend(WORD, imm));
   }
@@ -128,9 +132,19 @@ op addiw(rd: X, rs1: X, imm: int(12))
   SLLI, SRLI, and SRAI but operate on 32-bit values and produce signed 32-bit results.
   SLLIW, SRLIW, and SRAIW generate an illegal instruction exception if imm[5] = 0.
 */
+
+// Opcode
+let SLLIW_FUNCT3 = 0b001
+let IMM7_000000 = 0b0000000
+
+// [pref_op_v1_4_v2_4_imm_32]
+internal op opcode_shift_rv64i(imm7: card(7), imm: card(5), rs1: X, funct3: card(3), rd: X, base_opcode: card(7))
+  image = format("%7s%5s%5s%3s%5s%7s", imm7, imm, rs1.image, funct3, rd.image, base_opcode)
+
 op slliw(rd: X, rs1: X, imm: card(5))
   syntax = format("slliw %s, %s, 0x%x", rd.syntax, rs1.syntax, imm)
-  image  = format("0000000%5s%s001%s0011011", imm, rs1.image, rd.image)
+//  image  = format("0000000%5s%s001%s0011011", imm, rs1.image, rd.image)
+  image  = format("%s", opcode_shift_rv64i(IMM7_000000, imm, rs1, SLLIW_FUNCT3, rd, OP_IMM_32).image)
   action = {
     rd = sign_extend(XWORD, rs1<31..0> << zero_extend(WORD, imm));
   }

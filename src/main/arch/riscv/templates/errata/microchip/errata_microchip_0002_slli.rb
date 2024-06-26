@@ -1,3 +1,9 @@
+# The Decimal Adjust instruction, DAW.b, may
+# improperly clear the Carry bit, C (SR<0>), when
+# executed.
+# https://www.mouser.com/PCN/Microchip-6-4-10-dsPIC30F5011-5013.pdf
+
+
 require_relative '../../riscv_base'
 
 
